@@ -1,7 +1,7 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
 //Settings for Janeway related to modules and creating the distribution
-def modulesList = ['DefectTracker', 'RequirementManager', 'PostBoard']
+def modulesList = ['DefectTracker', 'RequirementManager', 'PostBoard', 'MyNewModule']
 def modulesDir = 'modules'
 def modulesConf = 'modules.conf'
 def libsDir = 'libs'
