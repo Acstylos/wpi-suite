@@ -1,7 +1,7 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
 //Settings for Janeway related to modules and creating the distribution
-def modulesList = ['DefectTracker', 'RequirementManager', 'PostBoard']
+def modulesList = ['DefectTracker', 'RequirementManager', 'PostBoard', 'MyModule']
 def modulesDir = 'modules'
 def modulesConf = 'modules.conf'
 def libsDir = 'libs'
@@ -22,12 +22,12 @@ dependencies{
 	compile 'org.jfree:jfreechart:1.0.14'
 	compile 'org.jfree:jcommon:1.0.17'
 	compile 'com.miglayout:miglayout-swing:4.1' //Used to be 4.0, will this cause issues?
-	
+
     //Core projects
 	compile project(':JanewayAPI')
     compile project(':WPISuite-Interfaces')
     compile project(':Network')
-	
+
     //We depend on each modules
     modulesList.each {
         runtime project(":${it}")
@@ -51,7 +51,7 @@ jar {
     manifest{
         attributes('Class-Path': configurations.runtime.files.collect {
             //Don't include the modules in the manifest, we're including them in the modules folder
-            if(!modulesList.contains(it.name.minus(".jar"))) 
+            if(!modulesList.contains(it.name.minus(".jar")))
             {"${libsDir}/${it.name}"}}.join(' ') )
         attributes('Main-Class': "${mainClassName}")
     }
@@ -67,10 +67,10 @@ tasks.removeAll([distZip, distTar, installApp, startScripts])
 task modules(type: Copy) {
 	description = "Copy over each module .jar file for Janeway into the modules folder"
 	group = "Application"
-	   
+
     modulesList.each{
     	dependsOn ":${it}:jar"
-    	
+
         from(project(":${it}").libsDir) {
             include '*.jar'
         }
@@ -81,14 +81,14 @@ task modules(type: Copy) {
 task distribution(type: Zip){
 	description = "Create a .zip distribution for Janeway"
 	group = "Application"
-	
+
 	archiveName = "${project.name}.zip"
-	
+
     //Main jar
     from(jar){
         into "${project.name}"
     }
-    
+
     //Libraries
     from(configurations.runtime){
         into "${project.name}/${libsDir}"
@@ -97,16 +97,15 @@ task distribution(type: Zip){
             excludes.add("${it}.jar")
         }
     }
-    
+
     //Modules
     from(modules) {
         into "${project.name}/${modulesDir}"
-        
+
     }
-    
+
     //Module configuration file
     from(modulesConf){
         into "${project.name}"
     }
 }
-

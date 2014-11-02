@@ -1,0 +1,6 @@
+dependencies{
+    compile project(':Network')
+    compile project(':WPISuite-Interfaces')
+    compile project(':JanewayAPI')
+}
+
