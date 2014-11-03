@@ -6,4 +6,4 @@ project(":WPISuite").projectDir = new File(settingsDir, 'Core/WPISuite')
 project(":WPISuite-Interfaces").projectDir = new File(settingsDir, 'Core/WPISuite-Interfaces')
 
 //Modules
-include "DefectTracker", "RequirementManager", "PostBoard"
+include "DefectTracker", "RequirementManager", "PostBoard", "TaskManager"
