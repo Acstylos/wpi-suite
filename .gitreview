@@ -2,4 +2,3 @@
 host=review.gerrithub.io
 port=29418
 project=Acstylos/wpi-suite
-defaultbranch=master
