@@ -22,6 +22,7 @@ import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
 
 // Init commit comment.
+// Test Comment please reject
 
 /**
  * This is the main class for the WPI Suite TM module for Janeway.
