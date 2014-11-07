@@ -21,6 +21,8 @@ import javax.swing.JProgressBar;
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
 
+// Remove this comment
+
 /**
  * This is the main class for the WPI Suite TM module for Janeway.
  *
