@@ -13,7 +13,9 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.models;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import com.google.gson.Gson;
+
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.models.TaskStatus;
@@ -30,7 +32,7 @@ public class Task extends AbstractModel {
 	private int ActualEffort;
 	private Date dueDate;
 	//private List<events> Activities; 
-	//private List<dependencies> requirements;
+	//private List<Task> dependencies;
 	
 	/**
 	 * Constructor for a default Task object
@@ -44,8 +46,7 @@ public class Task extends AbstractModel {
 	    AssignedTo = new ArrayList<User>();
 	    EstimatedEffort = -1;
 	    ActualEffort = -1;
-	}
-	
+	   	    		}	
 	/**
 	 * Constructor for a task with specific properties.
 	 * Other properties are the same as the default constructor
@@ -158,6 +159,18 @@ public class Task extends AbstractModel {
 	}
 
 	@Override
+	public Boolean identify(Object o) {
+		Boolean returnValue = false;
+		if(o instanceof Task && ID == ((Task) o).getID()){
+			returnValue = true;
+	}
+		if(o instanceof String && Integer.toString(ID).equals(o)){
+			
+		}
+			return returnValue;
+	}
+
+	@Override
 	public void save() {
 		// TODO Auto-generated method stub
 		
@@ -169,9 +182,26 @@ public class Task extends AbstractModel {
 		
 	}
 
-	@Override
-	public Boolean identify(Object o) {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * @return EstimatedEffort of Task
+	 */
+	public int getEstimatedEffort() {
+		return EstimatedEffort;
 	}
+	
+	/**
+	 * @param EstimatedEffort of Task
+	 */
+	public void setEstimatedEffort(int estimatedEffort) {
+		this.EstimatedEffort = estimatedEffort;
+		}
+
+	public int getActualEffort() {
+		return ActualEffort;
+	}
+
+	public void setActualEffort(int actualEffort){
+	this.ActualEffort = actualEffort;
+	}
+
 }
