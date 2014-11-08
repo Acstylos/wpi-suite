@@ -1,0 +1,38 @@
+package edu.wpi.cs.wpisuitetng.modules.taskmanager;
+
+import javax.swing.JScrollPane;
+
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.workflow.WorkflowView;
+
+/**
+ * MainView is a scrollable window with a viewport that can
+ * view only WorkflowViews. Eventually it will support viewing
+ * of multiple types of JPanels.
+ * 
+ * @author Thefloorisjava
+ */
+public class MainView extends JScrollPane 
+{
+	private static final long serialVersionUID = -346061317795260862L;
+	private WorkflowView workflowView;
+	
+	public MainView(){ // Needs field WorkflowModel 
+		workflowView = new WorkflowView(); // Needs field BucketModel
+		setViewportView(workflowView); // Make sure the panel can be scrolled upon
+	}
+	
+	/**
+     * @return the WorkflowView being displayed
+     */
+    public WorkflowView getWorkflowView() {
+        return this.workflowView;
+    }
+    
+    /**
+     * 
+     * @param The WorkflowView to be displayed
+     */
+    public void setWorkflowView(WorkflowView workflowView){
+    	this.workflowView = workflowView;
+    }
+}
