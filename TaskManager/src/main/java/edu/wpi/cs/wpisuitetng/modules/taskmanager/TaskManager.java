@@ -34,15 +34,15 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
 public class TaskManager implements IJanewayModule
 {
   /** A list containing the one tab */
-  private List<JanewayTabModel> tabs_;
+  private List<JanewayTabModel> tabs;
 
   public TaskManager() {
     JPanel toolbarPanel = new JPanel();
     JPanel mainPanel = new JPanel();
 
     /* Create the tab model for the task manager */
-    tabs_ = new ArrayList<JanewayTabModel>();
-    tabs_.add(new JanewayTabModel("Task Manager", new ImageIcon(),
+    this.tabs = new ArrayList<JanewayTabModel>();
+    this.tabs.add(new JanewayTabModel("Task Manager", new ImageIcon(),
         toolbarPanel, mainPanel));
     
     TaskView taskView = new TaskView("Add a Duck", 100, "Add this duck to "
@@ -68,7 +68,7 @@ public class TaskManager implements IJanewayModule
   @Override
   public List<JanewayTabModel> getTabs()
   {
-    return tabs_;
+    return this.tabs;
   }
 
 }
