@@ -11,16 +11,18 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.Dimension;
-import java.text.DateFormat;
+import java.awt.Font;
+import java.awt.event.ActionListener;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.border.TitledBorder;
 
 /**
  * A {@link javax.swing.JComponent} that renders the fields of a single task and
@@ -29,10 +31,12 @@ import javax.swing.border.TitledBorder;
 public class TaskView extends JPanel {
     private static final long serialVersionUID = -997563229078386090L;
 
-    private TitledBorder title;
-    private JLabel estimatedEffort;
+    private JTextField title;
+    private JFormattedTextField estimatedEffort;
     private JTextPane description;
-    private JLabel dueDate;
+    private JFormattedTextField dueDate;
+    private JButton saveButton;
+    private JButton reloadButton;
 
     /**
      * Create a new TaskView with the specified default values.
@@ -51,32 +55,63 @@ public class TaskView extends JPanel {
      * @see #setDueDate(Date)
      */
     public TaskView(String title, int estimatedEffort, String description, Date dueDate) {
-        /*
-         * Set a TitledBorder for this panel containing the initial title of the
-         * task
-         */
-        this.title = BorderFactory.createTitledBorder(title);
-        setBorder(this.title);
+        /* Set a TitledBorder for this panel that just says "Task". */
+        setBorder(BorderFactory.createTitledBorder("Task"));
+        
+        /* Add a text field with the title */
+        this.title = new JTextField(title);
+        this.title.setFont(new Font("Dialog", Font.BOLD, 12));
+        add(this.title);
 
-        /* Add a label with the estimated effort */
-        this.estimatedEffort = new JLabel("Estimated Effort: " + estimatedEffort);
+        /* Add a text field with the estimated effort */
+        this.estimatedEffort = new JFormattedTextField(new Integer(estimatedEffort));
         add(this.estimatedEffort);
 
-        /* Add a non-editable text pane with the initial description text */
+        /* Add a text field with the initial due date */
+        this.dueDate = new JFormattedTextField(dueDate);
+        add(this.dueDate);
+
+        /* Add a text pane with the initial description text */
         this.description = new JTextPane();
-        this.description.setContentType("text/html");
-        this.description.setEditable(false);
         this.description.setText(description);
 
         /* Wrap the description text in a scroll pane to allow scrolling */
         add(new JScrollPane(this.description));
+        
+        /* Add a button to save the fields */
+        this.saveButton = new JButton("Save");
+        add(this.saveButton);
+        
+        /* Add a button to reload the fields from the database */
+        this.reloadButton = new JButton("Reload");
+        add(this.reloadButton);
+        
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(saveButton);
+        buttonPanel.add(reloadButton);
+        add(buttonPanel);
 
-        /* Add a label with the initial due date */
-        this.dueDate = new JLabel("Due by " + DateFormat.getInstance().format(dueDate));
-        add(this.dueDate);
-
-        /* Set the layout for this JFrame to a standard Swing box layout */
+        /* Set the layout for this JFrame to a standard Swing box layout, and
+         * set some basic layout properties */
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setPreferredSize(new Dimension(250, 200));
+        this.description.setPreferredSize(new Dimension(250, 100));
+    }
+    
+    /**
+     * Add an {@link ActionListener} that will be called when the task is saved by the user
+     * @param listener
+     */
+    public void addOnSaveListener(ActionListener listener) {
+        this.saveButton.addActionListener(listener);
+    }
+    
+    /**
+     * Add an {@link ActionListener} that will be called when the task is reloaded by the user
+     * @param listener
+     */
+    public void addOnReloadListener(ActionListener listener) {
+        this.reloadButton.addActionListener(listener);
     }
 
     /**
@@ -84,7 +119,14 @@ public class TaskView extends JPanel {
      *            The new title of the task
      */
     public void setTitleText(String titleText) {
-        this.title.setTitle(titleText);
+        this.title.setText(titleText);
+    }
+    
+    /**
+     * @return The title of the task
+     */
+    public String getTitleText() {
+        return this.title.getText();
     }
 
     /**
@@ -92,15 +134,28 @@ public class TaskView extends JPanel {
      *            The new estimated effort of the task, in arbitrary work units.
      */
     public void setEstimatedEffort(int estimatedEffort) {
-        this.estimatedEffort.setText("Estimated Effort: " + estimatedEffort);
+        this.estimatedEffort.setValue(estimatedEffort);
+    }
+    
+    /**
+     * @return The estimated effort of the task, in arbitrary work units.
+     */
+    public int getEstimatedEffort() {
+        return (Integer)estimatedEffort.getValue();
     }
 
     /**
-     * @param descriptionText
-     *            The new task description, which may contain HTML
+     * @param descriptionText The new task description
      */
     public void setDescriptionText(String descriptionText) {
         this.description.setText(descriptionText);
+    }
+    
+    /**
+     * @return The task description
+     */
+    public String getDescriptionText() {
+        return this.description.getText();
     }
 
     /**
@@ -108,14 +163,6 @@ public class TaskView extends JPanel {
      *            The new due date of the task
      */
     public void setDueDate(Date dueDate) {
-        this.dueDate.setText("Due by "  + DateFormat.getInstance().format(dueDate));
-    }
-
-    /**
-     * @return The default size for task views, 250 by 200 pixels
-     */
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(250, 200);
+        this.dueDate.setValue(dueDate);
     }
 }
