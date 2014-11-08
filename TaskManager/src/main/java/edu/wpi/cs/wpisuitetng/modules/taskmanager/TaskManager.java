@@ -45,7 +45,7 @@ public class TaskManager implements IJanewayModule
     tabs_.add(new JanewayTabModel("Task Manager", new ImageIcon(),
         toolbarPanel, mainPanel));
     
-    TaskView taskView = new TaskView("Add a Duck", "Add this duck to "
+    TaskView taskView = new TaskView("Add a Duck", 100, "Add this duck to "
         + "WPI Suite TM asap, this is a <b>mission critical</b> task and "
         + "must be at <i>least</i> 80% done. <br/>"
         + "<img src='http://i.imgur.com/R6cYlWl.png'/>",

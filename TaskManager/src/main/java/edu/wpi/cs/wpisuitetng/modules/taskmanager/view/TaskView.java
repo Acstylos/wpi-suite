@@ -10,10 +10,7 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Insets;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -28,16 +25,13 @@ import javax.swing.border.TitledBorder;
 /**
  * A {@link javax.swing.JComponent} that renders the fields of a single task
  * and provides the minimum amount of logic for basic user interaction.
- *
- * @see #setTitleText(String)
- * @see #setDescriptionText(String)
- * @see #setDueDate(Date)
  */
 public class TaskView extends JPanel
 {
   private static final long serialVersionUID = -997563229078386090L;
 
   private TitledBorder title_;
+  private JLabel estimatedEffort_;
   private JTextPane description_;
   private JLabel dueDate_;
 
@@ -45,13 +39,24 @@ public class TaskView extends JPanel
    * Create a new TaskView with the specified default values.
    *
    * @param title The initial task title that will be displayed
+   * @param estimatedEffort The initial estimated effort that will be displayed
    * @param description The initial in-depth description that will be displayed
    * @param dueDate The initial due date that will be displayed
+   * @see #setTitleText(String)
+   * @see #setEstimatedEffort(int)
+   * @see #setDescriptionText(String)
+   * @see #setDueDate(Date)
    */
-  public TaskView(String title, String description, Date dueDate) {
-    /* Set a TitledBorder for this panel containing the initial title of the task */
+  public TaskView(String title, int estimatedEffort, String description,
+                  Date dueDate) {
+    /* Set a TitledBorder for this panel containing the initial title of the
+     * task */
     title_ = BorderFactory.createTitledBorder(title);
     setBorder(title_);
+    
+    /* Add a label with the estimated effort */
+    estimatedEffort_ = new JLabel("Estimated Effort: " + estimatedEffort);
+    add(estimatedEffort_);
 
     /* Add a non-editable text pane with the initial description text */
     description_ = new JTextPane();
@@ -82,6 +87,16 @@ public class TaskView extends JPanel
 
 
   /**
+   * @param estimatedEffort The new estimated effort of the task, in arbitrary
+   * work units.
+   */
+  public void setEstimatedEffort(int estimatedEffort) {
+    estimatedEffort_.setText("Estimated Effort: " + estimatedEffort);
+  }
+
+
+
+  /**
    * @param descriptionText The new task description, which may contain HTML
    */
   public void setDescriptionText(String descriptionText) {
@@ -94,7 +109,7 @@ public class TaskView extends JPanel
    * @param dueDate The new due date of the task
    */
   public void setDueDate(Date dueDate) {
-    dueDate_.setText("Due: " + DateFormat.getInstance().format(dueDate));
+    dueDate_.setText("Due by " + DateFormat.getInstance().format(dueDate));
   }
 
 
