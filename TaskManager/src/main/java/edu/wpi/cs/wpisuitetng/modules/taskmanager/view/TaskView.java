@@ -23,102 +23,103 @@ import javax.swing.JTextPane;
 import javax.swing.border.TitledBorder;
 
 /**
- * A {@link javax.swing.JComponent} that renders the fields of a single task
- * and provides the minimum amount of logic for basic user interaction.
+ * A {@link javax.swing.JComponent} that renders the fields of a single task and
+ * provides the minimum amount of logic for basic user interaction.
  */
-public class TaskView extends JPanel
-{
-  private static final long serialVersionUID = -997563229078386090L;
+public class TaskView extends JPanel {
+    private static final long serialVersionUID = -997563229078386090L;
 
-  private TitledBorder title_;
-  private JLabel estimatedEffort_;
-  private JTextPane description_;
-  private JLabel dueDate_;
+    private TitledBorder title;
+    private JLabel estimatedEffort;
+    private JTextPane description;
+    private JLabel dueDate;
 
-  /**
-   * Create a new TaskView with the specified default values.
-   *
-   * @param title The initial task title that will be displayed
-   * @param estimatedEffort The initial estimated effort that will be displayed
-   * @param description The initial in-depth description that will be displayed
-   * @param dueDate The initial due date that will be displayed
-   * @see #setTitleText(String)
-   * @see #setEstimatedEffort(int)
-   * @see #setDescriptionText(String)
-   * @see #setDueDate(Date)
-   */
-  public TaskView(String title, int estimatedEffort, String description,
-                  Date dueDate) {
-    /* Set a TitledBorder for this panel containing the initial title of the
-     * task */
-    title_ = BorderFactory.createTitledBorder(title);
-    setBorder(title_);
-    
-    /* Add a label with the estimated effort */
-    estimatedEffort_ = new JLabel("Estimated Effort: " + estimatedEffort);
-    add(estimatedEffort_);
+    /**
+     * Create a new TaskView with the specified default values.
+     *
+     * @param title
+     *            The initial task title that will be displayed
+     * @param estimatedEffort
+     *            The initial estimated effort that will be displayed
+     * @param description
+     *            The initial in-depth description that will be displayed
+     * @param dueDate
+     *            The initial due date that will be displayed
+     * @see #setTitleText(String)
+     * @see #setEstimatedEffort(int)
+     * @see #setDescriptionText(String)
+     * @see #setDueDate(Date)
+     */
+    public TaskView(String title, int estimatedEffort, String description,
+            Date dueDate) {
+        /*
+         * Set a TitledBorder for this panel containing the initial title of the
+         * task
+         */
+        this.title = BorderFactory.createTitledBorder(title);
+        setBorder(this.title);
 
-    /* Add a non-editable text pane with the initial description text */
-    description_ = new JTextPane();
-    description_.setContentType("text/html");
-    description_.setEditable(false);
-    description_.setText(description);
+        /* Add a label with the estimated effort */
+        this.estimatedEffort = new JLabel("Estimated Effort: "
+                + estimatedEffort);
+        add(this.estimatedEffort);
 
-    /* Wrap the description text in a scroll pane to allow scrolling */
-    add(new JScrollPane(description_));
+        /* Add a non-editable text pane with the initial description text */
+        this.description = new JTextPane();
+        this.description.setContentType("text/html");
+        this.description.setEditable(false);
+        this.description.setText(description);
 
-    /* Add a label with the initial due date */
-    dueDate_ = new JLabel("Due by " + DateFormat.getInstance().format(dueDate));
-    add(dueDate_);
+        /* Wrap the description text in a scroll pane to allow scrolling */
+        add(new JScrollPane(this.description));
 
-    /* Set the layout for this JFrame to a standard Swing box layout */
-    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-  }
+        /* Add a label with the initial due date */
+        this.dueDate = new JLabel("Due by "
+                + DateFormat.getInstance().format(dueDate));
+        add(this.dueDate);
 
+        /* Set the layout for this JFrame to a standard Swing box layout */
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    }
 
+    /**
+     * @param titleText
+     *            The new title of the task
+     */
+    public void setTitleText(String titleText) {
+        this.title.setTitle(titleText);
+    }
 
-  /**
-   * @param titleText The new title of the task
-   */
-  public void setTitleText(String titleText) {
-    title_.setTitle(titleText);
-  }
+    /**
+     * @param estimatedEffort
+     *            The new estimated effort of the task, in arbitrary work units.
+     */
+    public void setEstimatedEffort(int estimatedEffort) {
+        this.estimatedEffort.setText("Estimated Effort: " + estimatedEffort);
+    }
 
+    /**
+     * @param descriptionText
+     *            The new task description, which may contain HTML
+     */
+    public void setDescriptionText(String descriptionText) {
+        this.description.setText(descriptionText);
+    }
 
+    /**
+     * @param dueDate
+     *            The new due date of the task
+     */
+    public void setDueDate(Date dueDate) {
+        this.dueDate.setText("Due by "
+                + DateFormat.getInstance().format(dueDate));
+    }
 
-  /**
-   * @param estimatedEffort The new estimated effort of the task, in arbitrary
-   * work units.
-   */
-  public void setEstimatedEffort(int estimatedEffort) {
-    estimatedEffort_.setText("Estimated Effort: " + estimatedEffort);
-  }
-
-
-
-  /**
-   * @param descriptionText The new task description, which may contain HTML
-   */
-  public void setDescriptionText(String descriptionText) {
-    description_.setText(descriptionText);
-  }
-
-
-
-  /**
-   * @param dueDate The new due date of the task
-   */
-  public void setDueDate(Date dueDate) {
-    dueDate_.setText("Due by " + DateFormat.getInstance().format(dueDate));
-  }
-
-
-
-  /**
-   * @return The default size for task views, 250 by 200 pixels
-   */
-  @Override
-  public Dimension getPreferredSize() {
-    return new Dimension(250, 200);
-  }
+    /**
+     * @return The default size for task views, 250 by 200 pixels
+     */
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(250, 200);
+    }
 }
