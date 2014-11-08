@@ -13,15 +13,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.models.TaskStatus;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 
  public class TaskTest {
 	User Keenan;
 	User Yihao;
 	List<User> testList;
-	Task t1;
-	Task t2;
-	Task t3;
+	TaskModel t1;
+	TaskModel t2;
+	TaskModel t3;
 	
 	@Before
 	public void setUpTask(){
@@ -30,9 +30,9 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.models.TaskStatus;
 		testList = new ArrayList();
 		testList.add(Keenan);
 		testList.add(Yihao);
-		t1 = new Task();
-		t2 = new Task(1928, "TaskTwo","This is task two", 400);
-		t3 = new Task();
+		t1 = new TaskModel();
+		t2 = new TaskModel(1928, "TaskTwo","This is task two", 400);
+		t3 = new TaskModel();
 		t3.setId(2000);
 		t3.setTitle("TaskThree");
 		t3.setDescription("This is task three");	
@@ -46,7 +46,6 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.models.TaskStatus;
 		assertEquals(-1, t1.getID());
 		assertEquals("", t1.getTitle());
 		assertEquals("", t1.getDescription());
-		assertEquals(TaskStatus.NEW, t1.getStatus());
 		assertEquals(-1, t1.getEstimatedEffort());
 		assertEquals(-1, t1.getActualEffort());
 	    
@@ -57,7 +56,6 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.models.TaskStatus;
 		assertEquals(1928, t2.getID());
 		assertEquals("TaskTwo", t2.getTitle());
 		assertEquals("This is task two", t2.getDescription());
-		assertEquals(TaskStatus.NEW, t2.getStatus());
 		assertEquals(400, t2.getEstimatedEffort());
 		assertEquals(-1, t2.getActualEffort());
 	}

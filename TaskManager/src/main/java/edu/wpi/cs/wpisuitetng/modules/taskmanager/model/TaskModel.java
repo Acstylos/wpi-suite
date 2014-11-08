@@ -8,7 +8,7 @@
  *
  ******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.models;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,15 +18,13 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.models.TaskStatus;
 
 /**
  * The model end of the Task object
  */
-public class Task extends AbstractModel {
+public class TaskModel extends AbstractModel {
 	private int ID;
 	private String Title, Description;
-	private TaskStatus Status;
 	private List<User> AssignedTo;  
 	private int EstimatedEffort;
 	private int ActualEffort;
@@ -38,11 +36,10 @@ public class Task extends AbstractModel {
 	 * Constructor for a default Task object
 	 * 
 	 */
-	public Task(){
+	public TaskModel(){
 		ID = -1;
 		Title ="";
 		Description = "";	
-		Status = TaskStatus.NEW;
 	    AssignedTo = new ArrayList<User>();
 	    EstimatedEffort = -1;
 	    ActualEffort = -1;
@@ -56,7 +53,7 @@ public class Task extends AbstractModel {
 	 * @param Description the description of the Task
 	
 	 */
-	public Task(int id, String title, String description, int estimatedEffort) {
+	public TaskModel(int id, String title, String description, int estimatedEffort) {
 		this();
 		this.ID = id;
 		this.Title = title;
@@ -105,21 +102,7 @@ public class Task extends AbstractModel {
 	public void setDescription(String description) {
 		this.Description = description;
 	}
-	
-	/**
-	 * @return the Status of this Task
-	 */
-	public TaskStatus getStatus() {
-		return Status;
-	}
-	
-	/**
-	 * @param status the Status of this Task
-	 */
-	public void setStatus(TaskStatus status) {
-		this.Status = status;
-	}
-	
+		
 	/**
 	 * @return the list of users assigned to this Task
 	 */
@@ -161,7 +144,7 @@ public class Task extends AbstractModel {
 	@Override
 	public Boolean identify(Object o) {
 		Boolean returnValue = false;
-		if(o instanceof Task && ID == ((Task) o).getID()){
+		if(o instanceof TaskModel && ID == ((TaskModel) o).getID()){
 			returnValue = true;
 	}
 		if(o instanceof String && Integer.toString(ID).equals(o)){
