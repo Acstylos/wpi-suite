@@ -30,7 +30,7 @@ public class Task extends AbstractModel {
 	private int ActualEffort;
 	private Date dueDate;
 	//private List<events> Activities; 
-	//private List<dependencies> requirements;
+	//private List<Task> dependencies;
 	
 	/**
 	 * Constructor for a default Task object
@@ -155,18 +155,6 @@ public class Task extends AbstractModel {
 		Gson gson = new Gson();
 		json = gson.toJson(tlist, Task.class);
 		return json;
-	}
-
-	@Override
-	public void save() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void delete() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
