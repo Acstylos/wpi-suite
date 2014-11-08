@@ -24,10 +24,11 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  */
 public class TaskModel extends AbstractModel {
 	private int ID;
-	private String Title, Description;
-	private List<User> AssignedTo;  
-	private int EstimatedEffort;
-	private int ActualEffort;
+	private String title;
+	private String description;
+	private List<User> assignedTo;  
+	private int estimatedEffort;
+	private int actualEffort;
 	private Date dueDate;
 	//private List<events> Activities; 
 	//private List<Task> dependencies;
@@ -38,27 +39,27 @@ public class TaskModel extends AbstractModel {
 	 */
 	public TaskModel(){
 		ID = -1;
-		Title ="";
-		Description = "";	
-	    AssignedTo = new ArrayList<User>();
-	    EstimatedEffort = -1;
-	    ActualEffort = -1;
+		title ="";
+		description = "";	
+	    assignedTo = new ArrayList<User>();
+	    estimatedEffort = -1;
+	    actualEffort = -1;
 	   	    		}	
 	/**
 	 * Constructor for a task with specific properties.
 	 * Other properties are the same as the default constructor
 	 * 
 	 * @param ID the unique id of the Task
-	 * @param Title the title of the Task
-	 * @param Description the description of the Task
+	 * @param title the title of the Task
+	 * @param description the description of the Task
 	
 	 */
 	public TaskModel(int id, String title, String description, int estimatedEffort) {
 		this();
 		this.ID = id;
-		this.Title = title;
-		this.Description = description;
-		this.EstimatedEffort = estimatedEffort;
+		this.title = title;
+		this.description = description;
+		this.estimatedEffort = estimatedEffort;
 	}
 
 	/**
@@ -79,42 +80,42 @@ public class TaskModel extends AbstractModel {
 	 * @return the Title of this task
 	 */
 	public String getTitle() {
-		return Title;
+		return title;
 	}
 
 	/**
 	 * @param title, The task Title
 	 */
 	public void setTitle(String title) {
-		this.Title = title;
+		this.title = title;
 	}
 	
 	/**
 	 * @return the description of this Task
 	 */
 	public String getDescription() {
-		return Description;
+		return description;
 	}
 
 	/**
 	 * @param description, the Description of this Task
 	 */
 	public void setDescription(String description) {
-		this.Description = description;
+		this.description = description;
 	}
 		
 	/**
 	 * @return the list of users assigned to this Task
 	 */
 	public List<User> getAssignedTo() {
-		return AssignedTo;
+		return assignedTo;
 	}
 	
 	/**
 	 * @param user adds a user to the list of assigned users
 	 */
 	public void setAssignedTo(User user){
-		this.AssignedTo.add(user);
+		this.assignedTo.add(user);
 		
 	}
 		
@@ -125,7 +126,7 @@ public class TaskModel extends AbstractModel {
 	public String toJson() {
 		String json;
 		Gson gson = new Gson();
-		json = gson.toJson(this, Task.class);
+		json = gson.toJson(this, TaskModel.class);
 		return json;
 	}
 	
@@ -134,10 +135,10 @@ public class TaskModel extends AbstractModel {
 	 * @param tlist a list of Task
 	 * @return a string in JSON representing the list of Tasks
 	 */
-	public static String toJSON(Task[] tlist) {
+	public static String toJSON(TaskModel[] tlist) {
 		String json;
 		Gson gson = new Gson();
-		json = gson.toJson(tlist, Task.class);
+		json = gson.toJson(tlist, TaskModel.class);
 		return json;
 	}
 
@@ -169,22 +170,22 @@ public class TaskModel extends AbstractModel {
 	 * @return EstimatedEffort of Task
 	 */
 	public int getEstimatedEffort() {
-		return EstimatedEffort;
+		return estimatedEffort;
 	}
 	
 	/**
 	 * @param EstimatedEffort of Task
 	 */
 	public void setEstimatedEffort(int estimatedEffort) {
-		this.EstimatedEffort = estimatedEffort;
+		this.estimatedEffort = estimatedEffort;
 		}
 
 	public int getActualEffort() {
-		return ActualEffort;
+		return actualEffort;
 	}
 
 	public void setActualEffort(int actualEffort){
-	this.ActualEffort = actualEffort;
+	this.actualEffort = actualEffort;
 	}
 
 }
