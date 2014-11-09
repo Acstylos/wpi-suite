@@ -23,44 +23,65 @@ public class BucketModel extends AbstractModel {
 	}
 	
 	
-	
+	/**
+	 * Will Implement Later
+	 */
 	@Override
 	public void save() {
 		// TODO Auto-generated method stub
 		
 	}
-
+	/**
+	 * Will Implement Later
+	 */
 	@Override
 	public void delete() {
 		// TODO Auto-generated method stub
 		
 	}
-
+	/**
+	 * Gives JSon Server instance of this class
+	 */
 	@Override
 	public String toJson() {
 		return new Gson().toJson(this, BucketModel.class);
 
 	}
-
+	/**
+	 * Will Implement Later
+	 */
 	@Override
 	public Boolean identify(Object o) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+	/**
+	 * retrieves the ID of Bucket.
+	 * @return ID serialized integer value of bucket
+	 */
 	public int getID(){
 		return ID;
 	}
 	
+	/**
+	 * gets private field title
+	 * @return Title of Bucket
+	 */
 	public String getTitle(){
 		return title;
 	}
-
+	/**
+	 * Sets private field Bucket
+	 * @param newBucket the new list of Integers to be set
+	 */
 	public void setBucket(ArrayList <Integer> newBucket){
 		this.bucket=newBucket;
 		
 	}
-	
+	/**
+	 * returns the private field bucket 
+	 * @return bucket (list of integers)
+	 */
 	public ArrayList<Integer> getBucket(){
 		return this.bucket;
 	}
