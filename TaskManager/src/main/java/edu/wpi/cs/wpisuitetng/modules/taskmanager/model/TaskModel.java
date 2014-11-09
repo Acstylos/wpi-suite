@@ -32,7 +32,7 @@ public class TaskModel extends AbstractModel {
 	private Date dueDate;
 	//private List<events> Activities; 
 	//private List<Task> dependencies;
-	
+
 	/**
 	 * Constructor for a default Task object
 	 * 
@@ -52,14 +52,14 @@ public class TaskModel extends AbstractModel {
 	 * @param ID the unique id of the Task
 	 * @param title the title of the Task
 	 * @param description the description of the Task
-	
 	 */
-	public TaskModel(int id, String title, String description, int estimatedEffort) {
+	public TaskModel(int id, String title, String description, int estimatedEffort, Date dueDate) {
 		this();
 		this.ID = id;
 		this.title = title;
 		this.description = description;
 		this.estimatedEffort = estimatedEffort;
+		this.dueDate = dueDate;
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class TaskModel extends AbstractModel {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
+
 	/**
 	 * @return the description of this Task
 	 */
@@ -103,22 +103,35 @@ public class TaskModel extends AbstractModel {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-		
+	
 	/**
 	 * @return the list of users assigned to this Task
 	 */
 	public List<User> getAssignedTo() {
 		return assignedTo;
 	}
-	
+
 	/**
 	 * @param user adds a user to the list of assigned users
 	 */
 	public void setAssignedTo(User user){
-		this.assignedTo.add(user);
-		
+		this.assignedTo.add(user);	
 	}
-		
+
+	/**
+	 * @return the due date of this Task
+	 */
+	public Date getDueDate() {
+		return dueDate;
+	}
+
+	/**
+	 * @param Sets the due date to the given date.
+	 */
+	public void setDueDate(Date dueDate){
+		this.dueDate = dueDate;	
+	}
+
 	/**
 	 * Converts this Task to a JSON string
 	 * @return a string in JSON representing this Task
@@ -129,7 +142,7 @@ public class TaskModel extends AbstractModel {
 		json = gson.toJson(this, TaskModel.class);
 		return json;
 	}
-	
+
 	/**
 	 * Converts the given list of Task to a JSON string
 	 * @param tlist a list of Task
@@ -142,7 +155,6 @@ public class TaskModel extends AbstractModel {
 		return json;
 	}
 
-	@Override
 	public Boolean identify(Object o) {
 		Boolean returnValue = false;
 		if(o instanceof TaskModel && ID == ((TaskModel) o).getID()){
@@ -154,16 +166,12 @@ public class TaskModel extends AbstractModel {
 			return returnValue;
 	}
 
-	@Override
 	public void save() {
 		// TODO Auto-generated method stub
-		
 	}
 
-	@Override
 	public void delete() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	/**
@@ -172,7 +180,7 @@ public class TaskModel extends AbstractModel {
 	public int getEstimatedEffort() {
 		return estimatedEffort;
 	}
-	
+
 	/**
 	 * @param EstimatedEffort of Task
 	 */
