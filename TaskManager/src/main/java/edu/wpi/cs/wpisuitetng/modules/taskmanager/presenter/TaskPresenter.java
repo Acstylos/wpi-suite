@@ -12,6 +12,8 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Date;
 
 /**
@@ -35,14 +37,49 @@ public class TaskPresenter {
 		this.model = model;
 		view = new TaskView(model.getTitle(), model.getEstimatedEffort(),
 		                    model.getDescription(), new Date(114, 11, 18));
+		registerCallbacks();
+	}
+	
+	/**
+	 * Register callbacks with the local view.
+	 */
+	public void registerCallbacks() {
+	    view.addOnSaveListener(
+		    (ActionEvent event) -> {
+			TaskPresenter.this.saveView();
+		    });
+	    view.addOnReloadListener(
+		    (ActionEvent event) -> {
+			TaskPresenter.this.reloadView();
+		    });
 	}
 
 	/**
 	 * Get the view for this Task.
-	 * @return This provider's view.
 	 */
 	public TaskView getView() {
-		return view;
+	    return view;
+	}
+
+	/**
+	 * Save the fields entered in the view.
+	 */
+	public void saveView() {
+	    model.setTitle(view.getTitleText());
+	    model.setEstimatedEffort(view.getEstimatedEffort());
+	    model.setDescription(view.getDescriptionText());
+	    model.setDueDate(view.getDueDate());
+	}
+
+	/**
+	 * Have the presenter reload the view from
+	 * the model.
+	 */
+	public void reloadView() {
+	    view.setTitleText(model.getTitle());
+	    view.setEstimatedEffort(model.getEstimatedEffort());
+	    view.setDescriptionText(model.getDescription());
+	    view.setDueDate(model.getDueDate());
 	}
 
 	/**
