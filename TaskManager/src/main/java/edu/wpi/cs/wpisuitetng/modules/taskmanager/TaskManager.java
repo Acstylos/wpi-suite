@@ -10,6 +10,7 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager;
 
+import java.awt.event.ActionEvent;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class TaskManager implements IJanewayModule
 {
   /** A list containing the one tab */
   private List<JanewayTabModel> tabs;
-
+  
   public TaskManager() {
     JPanel toolbarPanel = new JPanel();
     JPanel mainPanel = new JPanel();
@@ -45,12 +46,28 @@ public class TaskManager implements IJanewayModule
     this.tabs.add(new JanewayTabModel("Task Manager", new ImageIcon(),
         toolbarPanel, mainPanel));
     
-    TaskView taskView = new TaskView("Add a Duck", 100, "Add this duck to "
-        + "WPI Suite TM asap, this is a <b>mission critical</b> task and "
-        + "must be at <i>least</i> 80% done. <br/>"
-        + "<img src='http://i.imgur.com/R6cYlWl.png'/>",
-        new Date(114, 11, 18));
+    String title = "Duck";
+    int effort = 100;
+    String description = "Add a duck";
+    Date dueDate = new Date(114, 11, 18);
+    
+    final TaskView taskView = new TaskView(title, effort, description, dueDate);
     mainPanel.add(taskView);
+    
+    taskView.addOnSaveListener((ActionEvent action) -> {
+        System.out.println("Save");
+        System.out.println(taskView.getTitleText());
+        System.out.println(taskView.getEstimatedEffort());
+        System.out.println(taskView.getDescriptionText());
+    });
+    
+    taskView.addOnReloadListener((ActionEvent action) -> {
+        System.out.println("Reload");
+        taskView.setTitleText(title);
+        taskView.setEstimatedEffort(effort);
+        taskView.setDescriptionText(description);
+        taskView.setDueDate(dueDate);
+    });
   }
 
   /**
