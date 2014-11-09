@@ -22,24 +22,33 @@ public class WorkflowModel extends AbstractModel{
 		this.listOfBucket=new ArrayList<BucketModel>();
 		
 	}
+	/**
+	 * Will Implement Later
+	 */
 	@Override
 	public void save() {
 		// TODO Auto-generated method stub
 		
 	}
-
+	/**
+	 * Will Implement Later
+	 */
 	@Override
 	public void delete() {
 		// TODO Auto-generated method stub
 		
 	}
-
+	/**
+	 * Passes JSON Server an instance of this Class.
+	 */
 	@Override
 	public String toJson() {
 		return new Gson().toJson(this, WorkflowModel.class);
 
 	}
-
+	/**
+	 * Will Implement Later
+	 */
 	@Override
 	public Boolean identify(Object o) {
 		// TODO Auto-generated method stub
