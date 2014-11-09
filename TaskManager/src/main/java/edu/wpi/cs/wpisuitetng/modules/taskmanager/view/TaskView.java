@@ -165,4 +165,11 @@ public class TaskView extends JPanel {
     public void setDueDate(Date dueDate) {
         this.dueDate.setValue(dueDate);
     }
+
+    /**
+     * @return The due date.
+     */
+    public Date getDueDate() {
+        return (Date) dueDate.getValue();
+    }
 }
