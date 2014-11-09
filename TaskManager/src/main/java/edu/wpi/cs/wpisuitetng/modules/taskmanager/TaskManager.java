@@ -10,21 +10,18 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager;
 
-import java.awt.event.ActionEvent;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
-
-// Remove this comment Blah
 
 /**
  * This is the main class for the WPI Suite TM module for Janeway.
@@ -36,7 +33,7 @@ public class TaskManager implements IJanewayModule
 {
   /** A list containing the one tab */
   private List<JanewayTabModel> tabs;
-  
+
   public TaskManager() {
     JPanel toolbarPanel = new JPanel();
     JPanel mainPanel = new JPanel();
@@ -45,35 +42,23 @@ public class TaskManager implements IJanewayModule
     this.tabs = new ArrayList<JanewayTabModel>();
     this.tabs.add(new JanewayTabModel("Task Manager", new ImageIcon(),
         toolbarPanel, mainPanel));
-    
+
     String title = "Duck";
     int effort = 100;
     String description = "Add a duck";
     Date dueDate = new Date(114, 11, 18);
-    
-    final TaskView taskView = new TaskView(title, effort, description, dueDate);
+
+    final TaskModel taskModel = new TaskModel(1, title, description, effort, dueDate);
+
+    final TaskPresenter taskPresenter = new TaskPresenter(taskModel);
+
+    final TaskView taskView = taskPresenter.getView();
     mainPanel.add(taskView);
-    
-    taskView.addOnSaveListener((ActionEvent action) -> {
-        System.out.println("Save");
-        System.out.println(taskView.getTitleText());
-        System.out.println(taskView.getEstimatedEffort());
-        System.out.println(taskView.getDescriptionText());
-    });
-    
-    taskView.addOnReloadListener((ActionEvent action) -> {
-        System.out.println("Reload");
-        taskView.setTitleText(title);
-        taskView.setEstimatedEffort(effort);
-        taskView.setDescriptionText(description);
-        taskView.setDueDate(dueDate);
-    });
   }
 
   /**
    * @return The name of the module ("Task Manager")
    */
-  @Override
   public String getName()
   {
     return "Task Manager";
@@ -82,10 +67,8 @@ public class TaskManager implements IJanewayModule
   /**
    * {@inheritDoc}
    */
-  @Override
   public List<JanewayTabModel> getTabs()
   {
     return this.tabs;
   }
-
 }
