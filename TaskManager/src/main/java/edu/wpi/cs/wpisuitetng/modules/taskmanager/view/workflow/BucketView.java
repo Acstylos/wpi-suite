@@ -6,6 +6,7 @@ import javax.swing.border.TitledBorder;
 
 import java.awt.Dimension;
 import java.util.List;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;;
 
 /**
  * BucketView is the view that displays a list of tasks. These tasks are
@@ -21,13 +22,16 @@ public class BucketView extends JPanel
     // CHANGE JPANEL TO BE TASKVIEWS WHEN MERGED
     private List<JPanel> taskViews;
     private String title;
+    private BucketPresenter presenter;
 
     /**
      * Constructor for BucketViews.
      * @param title Temporary constructor that will title the buckets
      */
     public BucketView(String title){ // Pass in title from BucketModel
-        // Tasks will be structured from top to bottom
+    	presenter = new BucketPresenter(this);
+    	this.taskViews = presenter.getTaskViews();
+    	// Tasks will be structured from top to bottom
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setPreferredSize(new Dimension(250, 500));
         setMinimumSize(new Dimension(250, 500));
