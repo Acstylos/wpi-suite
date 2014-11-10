@@ -30,6 +30,8 @@ public class TaskModel extends AbstractModel {
 	private int estimatedEffort;
 	private int actualEffort;
 	private Date dueDate;
+	private int bucketID;
+	
 	//private List<events> Activities; 
 	//private List<Task> dependencies;
 
@@ -44,6 +46,7 @@ public class TaskModel extends AbstractModel {
 	    assignedTo = new ArrayList<User>();
 	    estimatedEffort = -1;
 	    actualEffort = -1;
+	    bucketID = -1;
 	   	    		}	
 	/**
 	 * Constructor for a task with specific properties.
@@ -53,13 +56,14 @@ public class TaskModel extends AbstractModel {
 	 * @param title the title of the Task
 	 * @param description the description of the Task
 	 */
-	public TaskModel(int id, String title, String description, int estimatedEffort, Date dueDate) {
+	public TaskModel(int id, String title, String description, int estimatedEffort, Date dueDate, int bucketID) {
 		this();
 		this.ID = id;
 		this.title = title;
 		this.description = description;
 		this.estimatedEffort = estimatedEffort;
 		this.dueDate = dueDate;
+		this.bucketID = bucketID;
 	}
 
 	/**
@@ -72,7 +76,7 @@ public class TaskModel extends AbstractModel {
 	/**
 	 * @param id, The task ID 
 	 */
-	public void setId(int id) {
+	public void setID(int id) {
 		this.ID = id;
 	}
 
@@ -132,6 +136,20 @@ public class TaskModel extends AbstractModel {
 		this.dueDate = dueDate;	
 	}
 
+	/**
+	 * @return the ID of the bucket.  Returns -1 by default
+	 */
+	public int getBucketID() {
+		return bucketID;
+	}
+
+	/**
+	 * @param bucketID, The ID of the bucket
+	 */
+	public void setBucketID(int bucketID) {
+		this.bucketID = bucketID;
+	}
+	
 	/**
 	 * Converts this Task to a JSON string
 	 * @return a string in JSON representing this Task
