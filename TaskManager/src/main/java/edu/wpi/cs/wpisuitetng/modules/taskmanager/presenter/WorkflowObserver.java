@@ -28,11 +28,13 @@ public class WorkflowObserver implements RequestObserver {
      */
     @Override
     public void responseSuccess(IRequest iReq) {
+        System.err.println(iReq.getResponse().getBody() + method);
         // Store the response
         final ResponseModel response = iReq.getResponse();
 
         // Parse the message
         final WorkflowModel model = WorkflowModel.fromJSON(response.getBody());
+        System.err.println(model.getTitle());
 
         switch (method) {
         case GET:

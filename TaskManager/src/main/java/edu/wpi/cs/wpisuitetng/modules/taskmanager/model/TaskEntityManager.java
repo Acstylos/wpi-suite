@@ -20,7 +20,6 @@ import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.IDModel;
 
 /**
  * This is the entity manager for {@link TaskModel}s in the Task Manager module.
@@ -47,11 +46,12 @@ public class TaskEntityManager implements EntityManager<TaskModel> {
         /* Make a new task corresponding to the JSON data */
         TaskModel taskModel = TaskModel.fromJSON(content);
 
-        IDModel nextIDModel = new IDModel("task", 0, s.getProject());
-        int nextID = nextIDModel.getNextID(db);
-        nextIDModel.increment(db);
+        int nextID = 1;
+        for (TaskModel i : getAll(s))
+            if (nextID < i.getID())
+                nextID = i.getID();
 
-        taskModel.setId(nextID);
+        taskModel.setId(nextID + 1);
         /* Save it to the database */
         if (!db.save(taskModel, s.getProject())) {
             throw new WPISuiteException("Error saving task to database");

@@ -20,7 +20,6 @@ import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.IDModel;
 
 /**
  * This is the entity manager for {@link BucketModel}s in the Bucket Manager
@@ -48,11 +47,12 @@ public class BucketEntityManager implements EntityManager<BucketModel> {
         /* Make a new Bucket corresponding to the JSON data */
         BucketModel bucketModel = BucketModel.fromJSON(content);
 
-        IDModel nextIDModel = new IDModel("bucket", 0, s.getProject());
-        int nextID = nextIDModel.getNextID(db);
-        nextIDModel.increment(db);
+        int nextID = 1;
+        for (BucketModel i : getAll(s))
+            if (nextID < i.getID())
+                nextID = i.getID();
 
-        bucketModel.setID(nextID);
+        bucketModel.setID(nextID + 1);
         /* Save it to the database */
         if (!db.save(bucketModel, s.getProject())) {
             throw new WPISuiteException("Error saving Bucket to database");

@@ -58,12 +58,13 @@ public class WorkflowPresenter {
         // Sends a request for the TaskViews associated with the BucketView
         final Request request = Network.getInstance().makeRequest(
                 "taskmanager/workflow" + id, method);
-        request.addObserver(new WorkflowObserver(this, method)); // add an
+        request.addObserver(new WorkflowObserver(this, method));
         request.setBody(model.toJson());
         request.send();
     }
 
     public void writeModelToView() {
+        view.setTitle(model.getTitle());
         view = new WorkflowView(model.getTitle());
         List<BucketView> bucketViews = new ArrayList<BucketView>();
         for (int i : model.getBucketIDs()) {
@@ -85,7 +86,8 @@ public class WorkflowPresenter {
     }
 
     public void responsePut(WorkflowModel model) {
-        this.model = new WorkflowModel();
+        model.setTitle("Wolf.");
+        this.model = model;
         writeModelToView();
     }
 
