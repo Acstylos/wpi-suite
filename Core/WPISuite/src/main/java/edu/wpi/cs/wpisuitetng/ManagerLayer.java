@@ -39,7 +39,7 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModelEntityManager;
 
 /**
  * This singleton class responds to API requests directed at 
- * models by contacting their respective entity managers
+ * models by contacting their respective entity managers 
  * 
  * eagerly initialized, the instance of this class is thread safe, provided all methods are thread safe
  * 
@@ -79,7 +79,7 @@ public class ManagerLayer {
 		map.put("taskmanager" + "taskmodel", new TaskModelEntityManager(data));
 
 		//add just your module to this list
-		String[] fullModuleList = {"core","defecttracker","postboard","requirementmanager"};
+		String[] fullModuleList = {"core","defecttracker","postboard","requirementmanager","taskmanager"};
 		((ProjectManager)map.get("coreproject")).setAllModules(fullModuleList);
 		String ssid = null;
 		

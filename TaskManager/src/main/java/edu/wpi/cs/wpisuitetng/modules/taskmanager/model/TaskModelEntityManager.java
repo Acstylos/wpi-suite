@@ -34,7 +34,7 @@ public class TaskModelEntityManager implements EntityManager<TaskModel> {
 	 * Constructs the entity manager. This constructor is called by
 	 * {@link edu.wpi.cs.wpisuitetng.ManagerLayer#ManagerLayer()}. To make sure
 	 * this happens, be sure to place add this entity manager to the map in the
-	 * ManagerLayer file.
+	 * ManagerLayer file. 
 	 * 
 	 * @param db
 	 *            a reference to the persistent database.
