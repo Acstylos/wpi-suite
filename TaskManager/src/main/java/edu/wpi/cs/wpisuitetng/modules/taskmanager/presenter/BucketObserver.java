@@ -32,8 +32,7 @@ public class BucketObserver implements RequestObserver{
 		final ResponseModel response = iReq.getResponse();
 		
 		// Parse the message
-		final BucketModel model = new BucketModel();
-		// model = BucketModel.fromJSON(response.getBody()); fromJSON not implemented yet
+		final BucketModel model = BucketModel.fromJSON(response.getBody());
 		
 		switch(method){
 		case GET:
@@ -56,7 +55,7 @@ public class BucketObserver implements RequestObserver{
 	 */
 	@Override
 	public void responseError(IRequest iReq) {
-        System.err.println("The request to " + httpMethodToString(method) + " a message failed.");
+        System.err.println("The request to " + httpMethodToString(method) + " a bucket failed.");
 	}
 
 	/**
@@ -64,7 +63,7 @@ public class BucketObserver implements RequestObserver{
 	 */
 	@Override
 	public void fail(IRequest iReq, Exception exception) {
-        System.err.println("The request to " + httpMethodToString(method) + " a message failed.");
+        System.err.println("The request to " + httpMethodToString(method) + " a bucket failed.");
 	}
 
 	private static String httpMethodToString(HttpMethod method_) {

@@ -32,8 +32,7 @@ public class WorkflowObserver implements RequestObserver{
 		final ResponseModel response = iReq.getResponse();
 		
 		// Parse the message
-		final WorkflowModel model = new WorkflowModel();
-		// model = BucketModel.fromJSON(response.getBody()); fromJSON not implemented yet
+		final WorkflowModel model = WorkflowModel.fromJSON(response.getBody());
 		
 		switch(method){
 		case GET:
@@ -56,7 +55,7 @@ public class WorkflowObserver implements RequestObserver{
 	 */
 	@Override
 	public void responseError(IRequest iReq) {
-        System.err.println("The request to " + httpMethodToString(method) + " a message failed.");
+        System.err.println("The request to " + httpMethodToString(method) + " a workflow failed.");
 	}
 
 	/**
@@ -64,7 +63,7 @@ public class WorkflowObserver implements RequestObserver{
 	 */
 	@Override
 	public void fail(IRequest iReq, Exception exception) {
-        System.err.println("The request to " + httpMethodToString(method) + " a message failed.");
+        System.err.println("The request to " + httpMethodToString(method) + " a workflow failed.");
 		
 	}
 
