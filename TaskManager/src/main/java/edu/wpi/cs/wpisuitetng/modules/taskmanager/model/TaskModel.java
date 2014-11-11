@@ -154,6 +154,21 @@ public class TaskModel extends AbstractModel {
 		json = gson.toJson(tlist, TaskModel.class);
 		return json;
 	}
+	
+	/**
+	 * Returns an instance of TaskModel constructed using the given
+	 * TaskModel encoded as a JSON string.
+	 * 
+	 * @param body the
+	 *            JSON-encoded Iteration to deserialize
+	
+	 * @return the TaskModel contained in the given JSON */
+	public static TaskModel fromJson(String body) {
+		final Gson parser = new Gson();
+		TaskModel test = parser.fromJson(body, TaskModel.class);
+
+		return test;
+	}
 
 	public Boolean identify(Object o) {
 		Boolean returnValue = false;
@@ -196,4 +211,21 @@ public class TaskModel extends AbstractModel {
 	this.actualEffort = actualEffort;
 	}
 
+	/**
+	 * Copies all of the values from the given TaskModel to this TaskModel
+	 * excluding the Id.
+	 * 
+	 * @param toCopyFrom
+	 *            the TaskModel to copy from.
+	 */
+	public void copyFrom(TaskModel toCopyFrom) {
+		this.ID = toCopyFrom.ID;
+		this.title = toCopyFrom.title;
+		this.description = toCopyFrom.description;
+		this.assignedTo = toCopyFrom.assignedTo;
+		this.estimatedEffort = toCopyFrom.estimatedEffort;
+		this.actualEffort = toCopyFrom.actualEffort;
+		this.dueDate = toCopyFrom.dueDate;
+	}
 }
+			
