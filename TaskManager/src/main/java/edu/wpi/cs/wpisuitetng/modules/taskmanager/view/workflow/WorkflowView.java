@@ -5,8 +5,8 @@ import javax.swing.BoxLayout;
 import javax.swing.border.TitledBorder;
 
 import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.List;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
 
 /**
  * WorkflowView is the panel that holds the list of buckets that represents the
@@ -21,7 +21,6 @@ public class WorkflowView extends JPanel
     private static final long serialVersionUID = -5937582878085666950L;
     private String title;
     private List<BucketView> bucketViews;
-    private WorkflowPresenter presenter;
 
     /**
      * Constructor for the panel that holds the workflow of buckets.
@@ -31,9 +30,8 @@ public class WorkflowView extends JPanel
         /* Buckets will be created left to right, never on top 
          * of each other.
          */
-    	presenter = new WorkflowPresenter(this);
-    	setBucketViews(presenter.getBucketViews());
-    	    
+    	this.title = title;
+    	bucketViews = new ArrayList<BucketView>();
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBorder(new TitledBorder(null, title, TitledBorder.LEADING, TitledBorder.TOP, null, null));
     }
