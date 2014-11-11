@@ -39,7 +39,7 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModelEntityManager;
 
 /**
  * This singleton class responds to API requests directed at 
- * models by contacting their respective entity managers
+ * models by contacting their respective entity managers 
  * 
  * eagerly initialized, the instance of this class is thread safe, provided all methods are thread safe
  * 
