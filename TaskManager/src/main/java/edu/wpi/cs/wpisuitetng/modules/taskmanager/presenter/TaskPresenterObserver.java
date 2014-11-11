@@ -35,10 +35,11 @@ public class TaskPresenterObserver implements RequestObserver {
      */
     public void responseSuccess(IRequest iReq) {
         // Get the request.
+        System.out.println("Success: " + iReq.getResponse().getBody() + httpMethodToString(method));
         final ResponseModel response = iReq.getResponse();
 
         // Parse the message.
-        final TaskModel model = new TaskModel(); // TaskModel.fromJSON(response.getBody());
+        final TaskModel model = TaskModel.fromJSON(response.getBody());
 
         switch (method) {
         case GET: presenter.responseGet(model); break;

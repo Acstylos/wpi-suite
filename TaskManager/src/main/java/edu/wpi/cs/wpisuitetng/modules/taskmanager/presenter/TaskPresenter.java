@@ -43,7 +43,7 @@ public class TaskPresenter {
         this.model = new TaskModel();
         view = new TaskView("Loading...", 0, "Loading...", new Date());
         registerCallbacks();
-	loadModel();
+	loadModel();	
     }
 
     /**
@@ -97,8 +97,8 @@ public class TaskPresenter {
 	} else { // Get
 	    method = HttpMethod.GET;
 	}
-
-	Request request = Network.getInstance().makeRequest("taskmanager/taskmodel/" + model.getID(), method);
+	Request request = Network.getInstance().makeRequest("taskmanager/task/" + model.getID(), method);
+	request.setBody(model.toJson());
 	request.addObserver(new TaskPresenterObserver(this, method));
 	request.send();
     }
@@ -107,7 +107,7 @@ public class TaskPresenter {
      * Write the model to the network/database. Must be created already.
      */
     private void saveModel() {
-	Request request = Network.getInstance().makeRequest("taskmanager/taskmodel/" + model.getID(), HttpMethod.POST); // Update.
+	Request request = Network.getInstance().makeRequest("taskmanager/task/" + model.getID(), HttpMethod.POST); // Update.
 	request.setBody(model.toJson());
 	request.addObserver(new TaskPresenterObserver(this, HttpMethod.POST));
 	request.send();

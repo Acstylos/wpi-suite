@@ -157,7 +157,7 @@ public class TaskModel extends AbstractModel {
      * 
      * @return a string in JSON representing this Task
      */
-    public String toJson() {
+    public String toJSON() {
         String json;
         Gson gson = new Gson();
         json = gson.toJson(this, TaskModel.class);
@@ -181,7 +181,7 @@ public class TaskModel extends AbstractModel {
     /**
      * Convert the given JSON string to a TaskModel instance
      */
-    public static TaskModel fromJson(String json) {
+    public static TaskModel fromJSON(String json) {
         final Gson parser = new Gson();
         return parser.fromJson(json, TaskModel.class);
     }
@@ -226,5 +226,9 @@ public class TaskModel extends AbstractModel {
 
     public void setActualEffort(int actualEffort) {
         this.actualEffort = actualEffort;
+    }
+
+    public String toJson() {
+        return toJSON();
     }
 }

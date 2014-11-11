@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2014 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
 
 import java.util.List;
@@ -11,6 +20,7 @@ import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.IDModel;
 
 /**
  * This is the entity manager for {@link TaskModel}s in the Task Manager
@@ -19,7 +29,7 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
 public class TaskEntityManager implements EntityManager<TaskModel> {
 
     private Data db;
-    
+
     /**
      * Construct the entity manager.  This is called by 
      * {@link edu.wpi.cs.wpisuitetng.ManagerLayer#ManagerLayer()}.
@@ -33,10 +43,16 @@ public class TaskEntityManager implements EntityManager<TaskModel> {
     @Override
     public TaskModel makeEntity(Session s, String content)
             throws BadRequestException, ConflictException, WPISuiteException {
+        System.out.println("makeEntity");
         /* Make a new task corresponding to the JSON data */
-        TaskModel taskModel = TaskModel.fromJson(content);
-        
-        /* Save it to the database */
+        TaskModel taskModel = TaskModel.fromJSON(content);
+
+	IDModel nextIDModel = new IDModel("task", 0, s.getProject());
+	int nextID = nextIDModel.getNextID(db);
+	nextIDModel.increment(db);
+
+	taskModel.setId(nextID);
+	/* Save it to the database */
         if(!db.save(taskModel, s.getProject())) {
             throw new WPISuiteException("Error saving task to database");
         }
@@ -48,6 +64,7 @@ public class TaskEntityManager implements EntityManager<TaskModel> {
     @Override
     public TaskModel[] getEntity(Session s, String id)
             throws NotFoundException, WPISuiteException {
+        System.out.println("get");
         /* Retrieve the task model(s) with the given ID */
         List<Model> models = db.retrieve(TaskModel.class, "ID", Integer.parseInt(id), s.getProject());
         return models.toArray(new TaskModel[0]);
@@ -64,7 +81,8 @@ public class TaskEntityManager implements EntityManager<TaskModel> {
 
     @Override
     public TaskModel update(Session s, String content) throws WPISuiteException {
-        TaskModel newTaskModel = TaskModel.fromJson(content);
+        System.out.println("update");
+        TaskModel newTaskModel = TaskModel.fromJSON(content);
         
         /* Retrieve the task model(s) with the given ID */
         List<Model> models = db.retrieve(TaskModel.class, "ID", newTaskModel.getID(), s.getProject());
