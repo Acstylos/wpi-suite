@@ -38,12 +38,12 @@ public class TaskModel extends AbstractModel {
 	 * 
 	 */
 	public TaskModel(){
-		ID = -1;
-		title ="";
-		description = "";	
+		ID = 0;
+		title ="Title";
+		description = "Description";	
 	    assignedTo = new ArrayList<User>();
-	    estimatedEffort = -1;
-	    actualEffort = -1;
+	    estimatedEffort = 0;
+	    actualEffort = 0;
 	   	    		}	
 	/**
 	 * Constructor for a task with specific properties.

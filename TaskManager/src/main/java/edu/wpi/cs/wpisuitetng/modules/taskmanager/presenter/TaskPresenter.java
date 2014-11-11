@@ -10,7 +10,12 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenterObserver;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
+import edu.wpi.cs.wpisuitetng.network.Network;
+import edu.wpi.cs.wpisuitetng.network.Request;
+import edu.wpi.cs.wpisuitetng.network.RequestObserver;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 import java.awt.event.ActionEvent;
 import java.util.Date;
@@ -23,9 +28,9 @@ import java.util.Date;
 public class TaskPresenter {
 
     /** View for the task. */
-    private final TaskView view;
+    private TaskView view;
     /** Model for the task. */
-    private final TaskModel model;
+    private TaskModel model;
 
     /**
      * Constructs a TaskPresenter for the given model. Constructs the view
@@ -34,11 +39,11 @@ public class TaskPresenter {
      * @param model
      *            model to copy
      */
-    public TaskPresenter(TaskModel model) {
-        this.model = model;
-        view = new TaskView(model.getTitle(), model.getEstimatedEffort(),
-                model.getDescription(),  model.getDueDate());
+    public TaskPresenter(int TaskID) {
+        this.model = new TaskModel();
+        view = new TaskView("Loading...", 0, "Loading...", new Date());
         registerCallbacks();
+	loadModel();
     }
 
     /**
@@ -46,22 +51,35 @@ public class TaskPresenter {
      */
     private void registerCallbacks() {
         view.addOnSaveListener((ActionEvent event) -> {
-            TaskPresenter.this.saveView();
-        });
+		TaskPresenter.this.writeViewToModel();
+		TaskPresenter.this.saveModel();
+	    });
         view.addOnReloadListener((ActionEvent event) -> {
-            TaskPresenter.this.reloadView();
-        });
+		TaskPresenter.this.loadModel();
+		TaskPresenter.this.writeModelToView();
+	    });
     }
 
     /**
      * Save the fields entered in the view.
      */
-    private void saveView() {
+    private void writeViewToModel() {
         model.setTitle(view.getTitleText());
         model.setEstimatedEffort(view.getEstimatedEffort());
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
     }
+
+    /**
+     * Have the presenter reload the view from the model.
+     */
+    private void writeModelToView() {
+        view.setTitleText(model.getTitle());
+        view.setEstimatedEffort(model.getEstimatedEffort());
+        view.setDescriptionText(model.getDescription());
+        view.setDueDate(model.getDueDate());
+    }
+
     /**
      * Get the view for this Task.
      */
@@ -70,18 +88,65 @@ public class TaskPresenter {
     }
 
     /**
-     * Have the presenter reload the view from the model.
+     * Load the model from the network/database. Creates if TaskID is zero.
      */
-    public void reloadView() {
-        view.setTitleText(model.getTitle());
-        view.setEstimatedEffort(model.getEstimatedEffort());
-        view.setDescriptionText(model.getDescription());
-        view.setDueDate(model.getDueDate());
+    private void loadModel() {
+	HttpMethod method;
+	if (model.getID() == 0) { // Create
+	    method = HttpMethod.PUT;
+	} else { // Get
+	    method = HttpMethod.GET;
+	}
+
+	Request request = Network.getInstance().makeRequest("taskmanager/taskmodel/" + model.getID(), method);
+	request.addObserver(new TaskPresenterObserver(this, method));
+	request.send();
+    }
+
+    /**
+     * Write the model to the network/database. Must be created already.
+     */
+    private void saveModel() {
+	Request request = Network.getInstance().makeRequest("taskmanager/taskmodel/" + model.getID(), HttpMethod.POST); // Update.
+	request.setBody(model.toJson());
+	request.addObserver(new TaskPresenterObserver(this, HttpMethod.POST));
+	request.send();
+    }
+
+    /**
+     * Respond to a get.
+     */
+    public void responseGet(TaskModel model) {
+	if (model.getID() == 0)
+	    return;
+	this.model = model;
+	writeModelToView();
+    }
+
+    /**
+     * Respond to an update.
+     */
+    public void responseUpdate(TaskModel model) {
+
+    }
+
+    /**
+     * Respond to a get.
+     */
+    public void responseCreate(TaskModel model) {
+
+    }
+
+    /**
+     * Respond to a Delete.
+     */
+    public void responseDelete(TaskModel model) {
+
     }
 
     /**
      * Get the model for this class.
-     * 
+     *
      * @return This provider's model.
      */
     public TaskModel getModel() {
