@@ -12,15 +12,15 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
-
+import javax.swing.JScrollPane;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
 
 /**
@@ -33,27 +33,26 @@ public class TaskManager implements IJanewayModule
 {
   /** A list containing the one tab */
   private List<JanewayTabModel> tabs;
+  private TaskPresenter mainPresenter;
 
   public TaskManager() {
     JPanel toolbarPanel = new JPanel();
     JPanel mainPanel = new JPanel();
+    JButton button = new JButton("Load your workflow.");
 
+    button.addActionListener((ActionEvent e) -> {
+      if (TaskManager.this.mainPresenter == null) {
+        mainPresenter = new TaskPresenter(0);
+        mainPanel.remove(button);
+        mainPanel.add(new JScrollPane(mainPresenter.getView()));
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+      }});
+
+    mainPanel.add(button);
     /* Create the tab model for the task manager */
     this.tabs = new ArrayList<JanewayTabModel>();
     this.tabs.add(new JanewayTabModel("Task Manager", new ImageIcon(),
         toolbarPanel, mainPanel));
-
-    String title = "Duck";
-    int effort = 100;
-    String description = "Add a duck";
-    Date dueDate = new Date(114, 11, 18);
-
-    final TaskModel taskModel = new TaskModel(1, title, description, effort, dueDate);
-
-    final TaskPresenter taskPresenter = new TaskPresenter(taskModel);
-
-    final TaskView taskView = taskPresenter.getView();
-    mainPanel.add(taskView);
   }
 
   /**

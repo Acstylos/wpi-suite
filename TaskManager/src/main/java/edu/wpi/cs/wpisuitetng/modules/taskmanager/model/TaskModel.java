@@ -36,12 +36,12 @@ public class TaskModel extends AbstractModel {
      * 
      */
     public TaskModel() {
-        id = -1;
-        title = "";
-        description = "";
+        id = 0;
+        title = "Title";
+        description = "Description";
         assignedTo = new ArrayList<User>();
-        estimatedEffort = -1;
-        actualEffort = -1;
+        estimatedEffort = 0;
+        actualEffort = 0;
     }
 
     /**
@@ -56,7 +56,7 @@ public class TaskModel extends AbstractModel {
      *            the description of the Task
      */
     public TaskModel(int id, String title, String description,
-                     int estimatedEffort, Date dueDate) {
+            int estimatedEffort, Date dueDate) {
         this();
         this.id = id;
         this.title = title;
@@ -142,6 +142,7 @@ public class TaskModel extends AbstractModel {
 
     /**
      * Copy all of the fields from another TaskModel
+     * 
      * @param other
      */
     public void copyFrom(TaskModel other) {
@@ -151,13 +152,13 @@ public class TaskModel extends AbstractModel {
         this.estimatedEffort = other.getEstimatedEffort();
         this.actualEffort = other.getActualEffort();
     }
-    
+
     /**
      * Converts this Task to a JSON string
      * 
      * @return a string in JSON representing this Task
      */
-    public String toJson() {
+    public String toJSON() {
         String json;
         Gson gson = new Gson();
         json = gson.toJson(this, TaskModel.class);
@@ -181,7 +182,7 @@ public class TaskModel extends AbstractModel {
     /**
      * Convert the given JSON string to a TaskModel instance
      */
-    public static TaskModel fromJson(String json) {
+    public static TaskModel fromJSON(String json) {
         final Gson parser = new Gson();
         return parser.fromJson(json, TaskModel.class);
     }
@@ -228,4 +229,7 @@ public class TaskModel extends AbstractModel {
         this.actualEffort = actualEffort;
     }
 
+    public String toJson() {
+        return toJSON();
+    }
 }
