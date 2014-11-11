@@ -56,7 +56,7 @@ public class TaskModel extends AbstractModel {
      *            the description of the Task
      */
     public TaskModel(int id, String title, String description,
-                     int estimatedEffort, Date dueDate) {
+            int estimatedEffort, Date dueDate) {
         this();
         this.id = id;
         this.title = title;
@@ -142,6 +142,7 @@ public class TaskModel extends AbstractModel {
 
     /**
      * Copy all of the fields from another TaskModel
+     * 
      * @param other
      */
     public void copyFrom(TaskModel other) {
@@ -151,7 +152,7 @@ public class TaskModel extends AbstractModel {
         this.estimatedEffort = other.getEstimatedEffort();
         this.actualEffort = other.getActualEffort();
     }
-    
+
     /**
      * Converts this Task to a JSON string
      * 

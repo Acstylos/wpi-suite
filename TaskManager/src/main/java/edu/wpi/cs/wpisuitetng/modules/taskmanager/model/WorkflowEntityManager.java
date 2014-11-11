@@ -31,14 +31,15 @@ public class WorkflowEntityManager implements EntityManager<WorkflowModel> {
     private Data db;
 
     /**
-     * Construct the entity manager.  This is called by 
+     * Construct the entity manager. This is called by
      * {@link edu.wpi.cs.wpisuitetng.ManagerLayer#ManagerLayer()}.
+     * 
      * @param db
      */
     public WorkflowEntityManager(Data db) {
         this.db = db;
     }
-    
+
     /** @inheritDoc */
     @Override
     public WorkflowModel makeEntity(Session s, String content)
@@ -47,16 +48,16 @@ public class WorkflowEntityManager implements EntityManager<WorkflowModel> {
         /* Make a new Workflow corresponding to the JSON data */
         WorkflowModel workflowModel = WorkflowModel.fromJSON(content);
 
-	IDModel nextIDModel = new IDModel("workflow", 0, s.getProject());
-	int nextID = nextIDModel.getNextID(db);
-	nextIDModel.increment(db);
+        IDModel nextIDModel = new IDModel("workflow", 0, s.getProject());
+        int nextID = nextIDModel.getNextID(db);
+        nextIDModel.increment(db);
 
-	workflowModel.setID(nextID);
-	/* Save it to the database */
-        if(!db.save(workflowModel, s.getProject())) {
+        workflowModel.setID(nextID);
+        /* Save it to the database */
+        if (!db.save(workflowModel, s.getProject())) {
             throw new WPISuiteException("Error saving Workflow to database");
         }
-        
+
         return workflowModel;
     }
 
@@ -66,7 +67,8 @@ public class WorkflowEntityManager implements EntityManager<WorkflowModel> {
             throws NotFoundException, WPISuiteException {
         System.out.println("get");
         /* Retrieve the Workflow model(s) with the given ID */
-        List<Model> models = db.retrieve(WorkflowModel.class, "ID", Integer.parseInt(id), s.getProject());
+        List<Model> models = db.retrieve(WorkflowModel.class, "ID",
+                Integer.parseInt(id), s.getProject());
         return models.toArray(new WorkflowModel[0]);
     }
 
@@ -75,26 +77,29 @@ public class WorkflowEntityManager implements EntityManager<WorkflowModel> {
     public WorkflowModel[] getAll(Session s) throws WPISuiteException {
         System.out.println("getAll");
         /* Get all of the WorkflowModel objects */
-        List<Model> Workflows = db.retrieveAll(new WorkflowModel(), s.getProject());
+        List<Model> Workflows = db.retrieveAll(new WorkflowModel(),
+                s.getProject());
         return Workflows.toArray(new WorkflowModel[0]);
     }
 
     @Override
-    public WorkflowModel update(Session s, String content) throws WPISuiteException {
+    public WorkflowModel update(Session s, String content)
+            throws WPISuiteException {
         System.out.println("update");
         WorkflowModel newWorkflowModel = WorkflowModel.fromJSON(content);
-        
+
         /* Retrieve the Workflow model(s) with the given ID */
-        List<Model> models = db.retrieve(WorkflowModel.class, "ID", newWorkflowModel.getID(), s.getProject());
-        if(models.size() == 0) {
+        List<Model> models = db.retrieve(WorkflowModel.class, "ID",
+                newWorkflowModel.getID(), s.getProject());
+        if (models.size() == 0) {
             throw new NotFoundException();
         }
-        
+
         /* Update the records to the new model */
-        for(Model model : models) {
-            ((WorkflowModel)model).copyFrom(newWorkflowModel);
+        for (Model model : models) {
+            ((WorkflowModel) model).copyFrom(newWorkflowModel);
         }
-        
+
         return newWorkflowModel;
     }
 
@@ -119,13 +124,13 @@ public class WorkflowEntityManager implements EntityManager<WorkflowModel> {
     public void deleteAll(Session s) throws WPISuiteException {
         System.out.println("deleteAll");
         // TODO Auto-generated method stub
-        
+
     }
 
     /** @inheritDoc */
     @Override
     public int Count() throws WPISuiteException {
-       return db.retrieveAll(new WorkflowModel()).size();
+        return db.retrieveAll(new WorkflowModel()).size();
     }
 
     /** Not implemented */

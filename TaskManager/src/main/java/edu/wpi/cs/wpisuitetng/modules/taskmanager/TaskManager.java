@@ -23,7 +23,6 @@ import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
 
-
 /**
  * This is the main class for the WPI Suite TM module for Janeway.
  *
@@ -44,27 +43,27 @@ public class TaskManager implements IJanewayModule {
 
         button.addActionListener((ActionEvent e) -> {
             if (TaskManager.this.mainPresenter == null) {
-		mainPresenter = new WorkflowPresenter(0);
+                mainPresenter = new WorkflowPresenter(0);
                 mainPanel.remove(button);
                 mainPanel.add(new JScrollPane(mainPresenter.getView()));
                 mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-            }});
+            }
+        });
 
         mainPanel.add(button);
         /* Create the tab model for the task manager */
         tabs = new ArrayList<JanewayTabModel>();
         tabs.add(new JanewayTabModel("Task Manager", new ImageIcon(),
-				     toolbarPanel, mainPanel));
-        
-	this.mainPresenter = null;
+                toolbarPanel, mainPanel));
+
+        this.mainPresenter = null;
     }
 
     /**
      * @return The name of the module ("Task Manager")
      */
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "Task Manager";
     }
 
@@ -72,8 +71,7 @@ public class TaskManager implements IJanewayModule {
      * {@inheritDoc}
      */
     @Override
-    public List<JanewayTabModel> getTabs()
-    {
+    public List<JanewayTabModel> getTabs() {
         return tabs;
     }
 }

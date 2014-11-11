@@ -31,14 +31,15 @@ public class BucketEntityManager implements EntityManager<BucketModel> {
     private Data db;
 
     /**
-     * Construct the entity manager.  This is called by 
+     * Construct the entity manager. This is called by
      * {@link edu.wpi.cs.wpisuitetng.ManagerLayer#ManagerLayer()}.
+     * 
      * @param db
      */
     public BucketEntityManager(Data db) {
         this.db = db;
     }
-    
+
     /** @inheritDoc */
     @Override
     public BucketModel makeEntity(Session s, String content)
@@ -47,16 +48,16 @@ public class BucketEntityManager implements EntityManager<BucketModel> {
         /* Make a new Bucket corresponding to the JSON data */
         BucketModel bucketModel = BucketModel.fromJSON(content);
 
-	IDModel nextIDModel = new IDModel("bucket", 0, s.getProject());
-	int nextID = nextIDModel.getNextID(db);
-	nextIDModel.increment(db);
+        IDModel nextIDModel = new IDModel("bucket", 0, s.getProject());
+        int nextID = nextIDModel.getNextID(db);
+        nextIDModel.increment(db);
 
-	bucketModel.setID(nextID);
-	/* Save it to the database */
-        if(!db.save(bucketModel, s.getProject())) {
+        bucketModel.setID(nextID);
+        /* Save it to the database */
+        if (!db.save(bucketModel, s.getProject())) {
             throw new WPISuiteException("Error saving Bucket to database");
         }
-        
+
         return bucketModel;
     }
 
@@ -66,7 +67,8 @@ public class BucketEntityManager implements EntityManager<BucketModel> {
             throws NotFoundException, WPISuiteException {
         System.out.println("get");
         /* Retrieve the Bucket model(s) with the given ID */
-        List<Model> models = db.retrieve(BucketModel.class, "ID", Integer.parseInt(id), s.getProject());
+        List<Model> models = db.retrieve(BucketModel.class, "ID",
+                Integer.parseInt(id), s.getProject());
         return models.toArray(new BucketModel[0]);
     }
 
@@ -80,21 +82,23 @@ public class BucketEntityManager implements EntityManager<BucketModel> {
     }
 
     @Override
-    public BucketModel update(Session s, String content) throws WPISuiteException {
+    public BucketModel update(Session s, String content)
+            throws WPISuiteException {
         System.out.println("update");
         BucketModel newBucketModel = BucketModel.fromJSON(content);
-        
+
         /* Retrieve the Bucket model(s) with the given ID */
-        List<Model> models = db.retrieve(BucketModel.class, "ID", newBucketModel.getID(), s.getProject());
-        if(models.size() == 0) {
+        List<Model> models = db.retrieve(BucketModel.class, "ID",
+                newBucketModel.getID(), s.getProject());
+        if (models.size() == 0) {
             throw new NotFoundException();
         }
-        
+
         /* Update the records to the new model */
-        for(Model model : models) {
-            ((BucketModel)model).copyFrom(newBucketModel);
+        for (Model model : models) {
+            ((BucketModel) model).copyFrom(newBucketModel);
         }
-        
+
         return newBucketModel;
     }
 
@@ -119,13 +123,13 @@ public class BucketEntityManager implements EntityManager<BucketModel> {
     public void deleteAll(Session s) throws WPISuiteException {
         System.out.println("deleteAll");
         // TODO Auto-generated method stub
-        
+
     }
 
     /** @inheritDoc */
     @Override
     public int Count() throws WPISuiteException {
-       return db.retrieveAll(new BucketModel()).size();
+        return db.retrieveAll(new BucketModel()).size();
     }
 
     /** Not implemented */
