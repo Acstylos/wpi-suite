@@ -12,14 +12,20 @@ import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
  */
 public class BucketModel extends AbstractModel {
 	
-	private static int ID=0;//Bucket ID
+	private int ID;//Bucket ID
 	private String title; //title of Bucket
 	private ArrayList <Integer> bucket; //list of serialized IDs of tasks 
 	
-	BucketModel(String title){
-		this.title=title;
-		this.bucket=new ArrayList <Integer>();
-		ID++;
+	public BucketModel(int ID, String title, ArrayList<Integer> bucket){
+		this.ID = ID;
+		this.title = title;
+		this.bucket = bucket;
+	}
+	
+	public BucketModel(){
+		this.ID = 0;
+		this.title = "title";
+		this.bucket = new ArrayList<Integer>();
 	}
 	
 	
@@ -55,6 +61,15 @@ public class BucketModel extends AbstractModel {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	/**
+	 * sets the ID of the bucket
+	 * @param ID serialized integer value of bucket
+	 */
+	public void setID(int ID){
+		this.ID = ID;
+	}
+	
 	/**
 	 * retrieves the ID of Bucket.
 	 * @return ID serialized integer value of bucket

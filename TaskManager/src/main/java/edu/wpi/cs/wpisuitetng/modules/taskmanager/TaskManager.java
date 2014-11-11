@@ -10,11 +10,14 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager;
 
+import java.awt.event.ActionEvent;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
@@ -31,24 +34,38 @@ public class TaskManager implements IJanewayModule
 {
     /** A list containing the one tab */
     private List<JanewayTabModel> tabs_;
-
+    
+    /** Current main view. */
+    private MainView view;
+    
     public TaskManager() {
         JPanel toolbarPanel = new JPanel();
         JPanel mainPanel = new JPanel();
 
+        JButton button = new JButton();
+        
+        button.addActionListener((ActionEvent e) -> {
+            if (TaskManager.this.view == null) {
+                view = new MainView();
+                mainPanel.remove(button);
+                mainPanel.add(view);
+                mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+                System.err.println("Focussed (TB)!");
+            }});
+
+        mainPanel.add(button);
         /*
          * The main panel of the tab contains a scroll pane, 
          * which holds a BucketView that acts as the workflow.
          */
-
-        mainPanel.add(new MainView());
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
 
         /* Create the tab model for the task manager */
         tabs_ = new ArrayList<JanewayTabModel>();
         tabs_.add(new JanewayTabModel("Task Manager", new ImageIcon(),
                 toolbarPanel, mainPanel));
+        
+        view = null;
 
     }
 

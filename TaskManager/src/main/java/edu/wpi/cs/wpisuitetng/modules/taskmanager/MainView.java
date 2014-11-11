@@ -2,7 +2,7 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager;
 
 import javax.swing.JScrollPane;
 
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.workflow.WorkflowView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
 
 /**
  * MainView is a scrollable window with a viewport that can
@@ -14,27 +14,27 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.workflow.WorkflowView;
 public class MainView extends JScrollPane 
 {
     private static final long serialVersionUID = -346061317795260862L;
-    private WorkflowView workflowView;
+    private WorkflowPresenter workflowPresenter;
 
     /**
      * Constructor for the scrollable main view.  
      */
-    public MainView(){ // Needs field WorkflowModel 
-        workflowView = new WorkflowView("New Workflow");
-        setViewportView(workflowView); // Make sure the panel can be scrolled upon
+    public MainView(){
+        workflowPresenter = new WorkflowPresenter(0);
+        setViewportView(workflowPresenter.getView()); // Make sure the panel can be scrolled upon
     }
 
     /**
      * @return the WorkflowView being displayed
      */
-    public WorkflowView getWorkflowView() {
-        return this.workflowView;
+    public WorkflowPresenter getWorkflowPresenter() {
+        return this.workflowPresenter;
     }
 
     /**
      * @param workflowView The WorkflowView to be displayed
      */
-    public void setWorkflowView(WorkflowView workflowView){
-        this.workflowView = workflowView;
+    public void setWorkflowPresenter(WorkflowPresenter workflowPresenter){
+        this.workflowPresenter = workflowPresenter;
     }
 }
