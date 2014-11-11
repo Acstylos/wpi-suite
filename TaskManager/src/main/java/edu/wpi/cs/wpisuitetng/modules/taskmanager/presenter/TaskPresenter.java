@@ -11,6 +11,9 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
+import edu.wpi.cs.wpisuitetng.network.Network;
+import edu.wpi.cs.wpisuitetng.network.Request;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 import java.awt.event.ActionEvent;
 import java.util.Date;
