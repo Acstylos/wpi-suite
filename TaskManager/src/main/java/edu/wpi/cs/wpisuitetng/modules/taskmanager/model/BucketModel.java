@@ -50,6 +50,16 @@ public class BucketModel extends AbstractModel {
     }
 
     /**
+     * Copy all of the fields from another BucketModel.
+     * @param other
+     */
+    public void copyFrom(BucketModel other) {
+        this.ID = other.getID();
+        this.title = other.getTitle();
+        this.bucket = other.getBucket();
+    }
+
+    /**
      * sets the ID of the bucket
      * @param ID serialized integer value of bucket
      */

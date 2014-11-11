@@ -10,8 +10,10 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager;
 
 import java.awt.event.ActionEvent;
+
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JScrollPane;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -31,8 +33,6 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
 public class TaskManager implements IJanewayModule {
     /* Current main presenter. */
     private WorkflowPresenter mainPresenter;
-    /* Current main view. */
-    private MainView mainView;
 
     /** A list containing the one tab */
     private List<JanewayTabModel> tabs;
@@ -45,9 +45,8 @@ public class TaskManager implements IJanewayModule {
         button.addActionListener((ActionEvent e) -> {
             if (TaskManager.this.mainPresenter == null) {
 		mainPresenter = new WorkflowPresenter(0);
-		mainView = new MainView(mainPresenter.getView());
                 mainPanel.remove(button);
-                mainPanel.add(mainView);
+                mainPanel.add(new JScrollPane(mainPresenter.getView()));
                 mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
             }});
 

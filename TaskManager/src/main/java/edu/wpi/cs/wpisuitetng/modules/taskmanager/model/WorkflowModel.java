@@ -52,7 +52,17 @@ public class WorkflowModel extends AbstractModel{
 	// TODO Auto-generated method stub
 	return null;
     }
-	
+
+    /**
+     * Copy all of the fields from another WorkflowModel
+     * @param other
+     */
+    public void copyFrom(WorkflowModel other) {
+        this.ID = other.getID();
+        this.title = other.getTitle();
+        this.bucketIDs = other.getBucketIDs();
+    }
+
     /**
      * sets the ID of the workflow
      * @param ID serialized integer value of workflow
