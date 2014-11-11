@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.workflow.model.bucket;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -24,23 +24,5 @@ public class TestBucket {
     public void createNonNullIteration() {
         assertNotNull(new BucketModel());    
     }
-	
-	@Test
-    public void bucketGettersTest() {
-		// Mock network
-        Network.setInstance(new MockNetwork());
-        Network.getInstance().setDefaultNetworkConfiguration(
-                new NetworkConfiguration("http://wpisuitetng"));
-        
-        BucketModel bk = new BucketModel();
-        bk.setId(10);
-        bk.setName("bucket10");
-        
-        assertEquals(10, bk.getId());
-        assertEquals("bucket10", bk.getName());
-        		
-	}
-	
-	
 	
 }

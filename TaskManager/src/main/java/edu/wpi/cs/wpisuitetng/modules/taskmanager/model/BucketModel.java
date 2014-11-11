@@ -1,79 +1,125 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
-
 /**
- * Basic Bucket class that contains the data to be stored for a Bucket
- * 
- * @version
- * @author Thefloorislava
+ * Bucket is a list of serialized ID's of tasks
+ * @author TheFloorIsJava
+ *
  */
+public class BucketModel extends AbstractModel {
+	
+	private int ID = 0;//Bucket ID
+	private String title; //title of Bucket
+	private ArrayList <Integer> bucket; //list of serialized IDs of tasks 
+	
+	BucketModel(String title){
+		this.title=title;
+		this.bucket=new ArrayList <Integer>();
+		ID++;
+	}
+	
+	
+	
+	/**
+	 * Will Implement Later
+	 */
+	@Override
+	public void save() {
+		// TODO Auto-generated method stub
+		
+	}
+	/**
+	 * Will Implement Later
+	 */
+	@Override
+	public void delete() {
+		// TODO Auto-generated method stub
+		
+	}
+	/**
+	 * Gives JSon Server instance of this class
+	 */
+	@Override
+	public String toJson() {
+		return new Gson().toJson(this, BucketModel.class);
 
-
-
-
-public class BucketModel extends AbstractModel  {
-
-	/** an ID for a Bucket  */
-    private int id; // 
+	}
+	/**
+	 * Will Implement Later
+	 */
+	@Override
+	public Boolean identify(Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	/**
+	 * retrieves the ID of Bucket.
+	 * @return ID serialized integer value of bucket
+	 */
+	public int getID(){
+		return ID;
+	}
+	
+	/**
+	 * gets private field title
+	 * @return Title of Bucket
+	 */
+	public String getTitle(){
+		return title;
+	}
+	/**
+	 * Sets private field Bucket
+	 * @param newBucket the new list of Integers to be set
+	 */
+	public void setBucket(ArrayList <Integer> newBucket){
+		this.bucket=newBucket;
+		
+	}
+	/**
+	 * returns the private field bucket 
+	 * @return bucket (list of integers)
+	 */
+	public ArrayList<Integer> getBucket(){
+		return this.bucket;
+	}
+	
+	/**
+     * Constructs a bucket with default characteristics
+     */
+    public BucketModel(int id, String name) {
+    	
+    	this.ID = id;
+    	this.title = name;
+    	if (name.trim().length() == 0)
+			this.title = "Backlog";
+    }
     
-    /** the name of the bucket */
-    private String name;
-    
-    /** 
-     * list of integer because we need class of tasks done by other team 
-     * will be changed later
-     **/
-    private List<Integer> TaskIDs = new ArrayList <Integer>();
-   
     /**
-     *  Getter for name 
-     *  @return name
-     */
-	public String getName() {
-		return name;
-	}
-	
-	/**
-	 * Setter for the name
-	 * @param name
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	/**
-     *  Getter for id
-     *  
-     *  @return id
-     */
-	public int getId() {
-		return id;
-	}
-	
-	/**
-	 * Setter for the id
-	 * @param id
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	/**
      * Constructs a bucket with default characteristics
      */
     public BucketModel() {
     	super();
-    	id = 1;
-    	name = "";
+    	ID = 1;
+    	title = "";
     }
-    
+
+
+
     /**
+	 * Copies all of the values from the given BucketModel to this Bucket
+	 * excluding the Id.
+	 * 
+	 * @param toCopyFrom the BucketModel to copy from.
+	 */
+	public void copyFrom(BucketModel toCopyFrom) { 
+		this.title = toCopyFrom.title;
+	}
+	
+	/**
      * Returns an instance of workflow constructed using the given
      * workflow encoded as a JSON string.
      * 
@@ -84,52 +130,9 @@ public class BucketModel extends AbstractModel  {
     public static BucketModel fromJson(String json) {
         return new Gson().fromJson(json, BucketModel.class);
     }
+
+
+    
 	
-	
-    /**
-     * Method save.
-     * 
-     * @see edu.wpi.cs.wpisuitetng.modules.Model#save()
-     */
-	@Override
-	public void save() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	/**
-     * Method delete.
-     * 
-     * @see edu.wpi.cs.wpisuitetng.modules.Model#delete()
-     */
-	@Override
-	public void delete() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	 /**
-     * Method toJSON. @return String * @see
-     * edu.wpi.cs.wpisuitetng.modules.Model#toJSON() * @see
-     * edu.wpi.cs.wpisuitetng.modules.Model#toJSON()
-     */
-	@Override
-	public String toJson() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	/**
-     * Method identify.
-     * 
-     * @param o Object @return Boolean * @see
-     *            edu.wpi.cs.wpisuitetng.modules.Model#identify(Object) * @see
-     *            edu.wpi.cs.wpisuitetng.modules.Model#identify(Object)
-     */
-	@Override
-	public Boolean identify(Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }
