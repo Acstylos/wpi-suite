@@ -20,7 +20,6 @@ import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.IDModel;
 
 /**
  * This is the entity manager for {@link WorkflowModel}s in the Workflow Manager
@@ -44,19 +43,21 @@ public class WorkflowEntityManager implements EntityManager<WorkflowModel> {
     @Override
     public WorkflowModel makeEntity(Session s, String content)
             throws BadRequestException, ConflictException, WPISuiteException {
-        System.out.println("makeEntity");
+        System.out.println("makeEntity: " + content);
         /* Make a new Workflow corresponding to the JSON data */
         WorkflowModel workflowModel = WorkflowModel.fromJSON(content);
 
-        IDModel nextIDModel = new IDModel("workflow", 0, s.getProject());
-        int nextID = nextIDModel.getNextID(db);
-        nextIDModel.increment(db);
+        int nextID = 1;
+        for (WorkflowModel i : getAll(s))
+            if (nextID < i.getID())
+                nextID = i.getID();
 
-        workflowModel.setID(nextID);
+        workflowModel.setID(nextID + 1);
         /* Save it to the database */
         if (!db.save(workflowModel, s.getProject())) {
             throw new WPISuiteException("Error saving Workflow to database");
         }
+        System.out.println("/makeEntity: " + workflowModel.toJson());
 
         return workflowModel;
     }
@@ -65,7 +66,7 @@ public class WorkflowEntityManager implements EntityManager<WorkflowModel> {
     @Override
     public WorkflowModel[] getEntity(Session s, String id)
             throws NotFoundException, WPISuiteException {
-        System.out.println("get");
+        System.out.println("get: " + id);
         /* Retrieve the Workflow model(s) with the given ID */
         List<Model> models = db.retrieve(WorkflowModel.class, "ID",
                 Integer.parseInt(id), s.getProject());
@@ -85,7 +86,7 @@ public class WorkflowEntityManager implements EntityManager<WorkflowModel> {
     @Override
     public WorkflowModel update(Session s, String content)
             throws WPISuiteException {
-        System.out.println("update");
+        System.out.println("update: " + content);
         WorkflowModel newWorkflowModel = WorkflowModel.fromJSON(content);
 
         /* Retrieve the Workflow model(s) with the given ID */
@@ -106,7 +107,7 @@ public class WorkflowEntityManager implements EntityManager<WorkflowModel> {
     /** @inheritDoc */
     @Override
     public void save(Session s, WorkflowModel model) throws WPISuiteException {
-        System.out.println("save");
+        System.out.println("save: " + model.toJson());
         /* Save the Workflow */
         db.save(model);
     }
@@ -114,7 +115,7 @@ public class WorkflowEntityManager implements EntityManager<WorkflowModel> {
     /** @inheritDoc */
     @Override
     public boolean deleteEntity(Session s, String id) throws WPISuiteException {
-        System.out.println("deleteEntity");
+        System.out.println("deleteEntity: " + id);
         // TODO Auto-generated method stub
         return false;
     }

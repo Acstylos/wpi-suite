@@ -3,4 +3,5 @@ dependencies{
     compile project(':WPISuite-Interfaces')
     compile project(':JanewayAPI')
     compile files('miglayout15-swing.jar')
+    compile 'com.miglayout:miglayout:3.7.4'
 }

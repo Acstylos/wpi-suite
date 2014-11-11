@@ -24,7 +24,8 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 	TaskModel t2;
 	TaskModel t3;
 	
-	@Before
+	@SuppressWarnings({ "deprecation", "unchecked" })
+    @Before
 	public void setUpTask(){
 		Keenan = new User("Krgray","keenan","",-1);
 		Yihao = new User ("Yih", "yihao", "", -1);
