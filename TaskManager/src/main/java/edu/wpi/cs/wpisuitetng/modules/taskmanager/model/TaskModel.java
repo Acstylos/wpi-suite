@@ -20,7 +20,7 @@ import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
- * The model end of the Task object
+ * The model end of the Task object 
  */
 public class TaskModel extends AbstractModel {
 	private int ID;
