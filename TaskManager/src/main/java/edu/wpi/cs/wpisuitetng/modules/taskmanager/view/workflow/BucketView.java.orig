@@ -4,13 +4,19 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 import java.awt.Dimension;
-import java.util.ArrayList;
+<<<<<<< HEAD
+import java.util.List;
 
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;;
+=======
+import java.util.ArrayList;
+import java.util.List;;
+>>>>>>> Changed some parts of the view for the Main, Bucket, and Workflow and the Model for Bucket and Workflow. Added a button to TaskManager due to null network errors. Added network requests to the Workflow and Bucket presenters and added ResponseObservers for the presenters.
 
 /**
  * BucketView is the view that displays a list of tasks. These tasks are
@@ -25,19 +31,33 @@ public class BucketView extends JPanel
     private static final long serialVersionUID = -5937582878085666950L;
     // CHANGE JPANEL TO BE TASKVIEWS WHEN MERGED
     private String title;
+<<<<<<< HEAD
     private JPanel taskViewHolderPanel;
     private JScrollPane scrollPane;
     private JButton addTaskButton;
+    private BucketPresenter presenter;
     
+=======
+    private List<JPanel> taskViews;
+
+>>>>>>> Changed some parts of the view for the Main, Bucket, and Workflow and the Model for Bucket and Workflow. Added a button to TaskManager due to null network errors. Added network requests to the Workflow and Bucket presenters and added ResponseObservers for the presenters.
     /**
      * Constructor for BucketViews.
      * @param title Temporary constructor that will title the buckets
      */
+<<<<<<< HEAD
     public BucketView(String title){
         setMaximumSize(new Dimension(250, 32767));
+    	presenter = new BucketPresenter(this);
+    	this.taskViews = presenter.getTaskViews();
+=======
+    public BucketView(String title){ // Pass in title from BucketModel
+    	// Tasks will be structured from top to bottom
     	
     	this.title = title;
     	taskViews = new ArrayList<JPanel>();
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+>>>>>>> Changed some parts of the view for the Main, Bucket, and Workflow and the Model for Bucket and Workflow. Added a button to TaskManager due to null network errors. Added network requests to the Workflow and Bucket presenters and added ResponseObservers for the presenters.
         setPreferredSize(new Dimension(250, 500));
         setMinimumSize(new Dimension(250, 500));
         setBorder(new TitledBorder(null, title, TitledBorder.LEADING, TitledBorder.TOP, null, null));

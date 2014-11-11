@@ -12,15 +12,20 @@ import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
  */
 public class WorkflowModel extends AbstractModel{
 
-	private static int ID=0;
-	private String workflowTitle;
-	private ArrayList <BucketModel> listOfBucket;
+	private int ID;
+	private String title;
+	private ArrayList<Integer> bucketIDs;
 	
-	WorkflowModel(String title){
-		this.ID++;
-		this.workflowTitle=title;
-		this.listOfBucket=new ArrayList<BucketModel>();
-		
+	public WorkflowModel(int ID, String title, ArrayList<Integer> bucketIDs){
+		this.ID = ID;
+		this.title = title;
+		this.bucketIDs = bucketIDs;
+	}
+	
+	public WorkflowModel(){
+		this.ID = 0;
+		this.title = "title";
+		this.bucketIDs = new ArrayList<Integer>();
 	}
 	/**
 	 * Will Implement Later
@@ -54,12 +59,29 @@ public class WorkflowModel extends AbstractModel{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	/**
+	 * sets the ID of the workflow
+	 * @param ID serialized integer value of workflow
+	 */
+	public void setID(int ID){
+		this.ID = ID;
+	}
+	
+	/**
+	 * retrieves the ID of workflow
+	 * @return ID serialized integer value of workflow
+	 */
+	public int getID(){
+		return ID;
+	}
+	
 	/**
 	 * gets the list of Buckets
 	 * @return the List of Buckets
 	 */
-	public ArrayList<BucketModel> getWorkflow(){
-		return this.listOfBucket;
+	public ArrayList<Integer> getBucketIDs(){
+		return this.bucketIDs;
 	}
 	
 	/**
@@ -67,7 +89,7 @@ public class WorkflowModel extends AbstractModel{
 	 * @return workflowTitle
 	 */
 	public String getTitle(){
-		return this.workflowTitle;
+		return this.title;
 	}
 	
 	/**
@@ -75,6 +97,6 @@ public class WorkflowModel extends AbstractModel{
 	 * @param title
 	 */
 	public void setTitle(String title){
-		this.workflowTitle=title;
+		this.title=title;
 	}
 }

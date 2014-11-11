@@ -10,47 +10,88 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.workflow.BucketView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.workflow.WorkflowView;
+import edu.wpi.cs.wpisuitetng.network.Network;
+import edu.wpi.cs.wpisuitetng.network.Request;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 /**
- * Creates 4 static buckets for the workflow and passes it to the view
+ * The presenter for the WorkflowView which sends the view 
+ * all of the BucketViews associated with the view. 
+ * Creates 4 static buckets and passes it to the view
  * 
  * @author TheFloorIsJava 
  * 
  */
 
 public class WorkflowPresenter{
-	
+
 	private WorkflowView view;
 	
+	private WorkflowModel model;
 	/**
-	 * Constructor currently does nothing right now
+	 * Constructor does nothing for now
 	 * 
 	 * @param view The view associated with this presenter
 	 */
-	public WorkflowPresenter(WorkflowView view) {
-		this.view = view;
+	public WorkflowPresenter(int workflowID) {
+		this.model = new WorkflowModel();
+		model.setID(workflowID);
+		this.view = new WorkflowView("Loading...");
+		
+		load();
 	}
 	
-	/**
-	 * Creates 4 static bucket views to add to the view
-	 * Then returns the list of BucketViews associated with view
-	 * 
-	 * @return List of BucketViews to be displayed in the view
-	 */
-	public List<BucketView> getBucketViews(){
-
-        List<BucketView> bucketList = new ArrayList<BucketView>();
-        BucketView bucket1 = new BucketView("New");
-        BucketView bucket2 = new BucketView("Scheduled");
-        BucketView bucket3 = new BucketView("In Progress");
-        BucketView bucket4 = new BucketView("Completed");
-        bucketList.add(bucket1);
-        bucketList.add(bucket2);
-        bucketList.add(bucket3);
-        bucketList.add(bucket4);
+	public void load(){
+		HttpMethod method;
+		if(model.getID() == 0) // Put = create a new model
+			method = HttpMethod.PUT;
+		else // Retrieve a model
+			method = HttpMethod.GET;
 		
-		return bucketList;
+		// Sends a request for the TaskViews associated with the BucketView
+		final Request request = Network.getInstance().makeRequest("taskmanager/workflowmodel/" + model.getID(), method);
+		request.addObserver(new WorkflowObserver(this, method)); // add an observer to the response
+        request.send();
+	}
+	
+	public void writeModelToView(){
+		view = new WorkflowView(model.getTitle());
+		List<BucketView> bucketViews = new ArrayList<BucketView>();
+		for(int i: model.getBucketIDs()){
+			BucketPresenter bucketPresenter = new BucketPresenter(i);
+			bucketViews.add(bucketPresenter.getView());
+		}
+		view.setBucketViews(bucketViews);
+	}
+
+	public void responseGet(WorkflowModel model) {
+		if(model.getID() == 0)
+			return;
+		this.model = model;
+		writeModelToView();
+	}
+
+	public void responsePost(WorkflowModel model) {
+		
+	}
+
+	public void responsePut(WorkflowModel model) {
+		this.model = new WorkflowModel();
+		writeModelToView();
+	}
+
+	public void responseDelete(WorkflowModel model) {
+		
+	}
+	
+	public WorkflowView getView(){
+		return view;
+	}
+	
+	public WorkflowModel getModel(){
+		return model;
 	}
 }

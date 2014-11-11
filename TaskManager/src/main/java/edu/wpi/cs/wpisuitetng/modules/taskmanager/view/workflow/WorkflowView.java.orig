@@ -6,7 +6,11 @@ import javax.swing.border.TitledBorder;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
+<<<<<<< HEAD
 import net.miginfocom.swing.MigLayout;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
+=======
+>>>>>>> Changed some parts of the view for the Main, Bucket, and Workflow and the Model for Bucket and Workflow. Added a button to TaskManager due to null network errors. Added network requests to the Workflow and Bucket presenters and added ResponseObservers for the presenters.
 
 /**
  * WorkflowView is the panel that holds the list of buckets that represents the
@@ -30,8 +34,14 @@ public class WorkflowView extends JPanel
         /* Buckets will be created left to right, never on top 
          * of each other.
          */
+<<<<<<< HEAD
+    	presenter = new WorkflowPresenter(this);
+    	setBucketViews(presenter.getBucketViews());
+=======
     	this.title = title;
     	bucketViews = new ArrayList<BucketView>();
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+>>>>>>> Changed some parts of the view for the Main, Bucket, and Workflow and the Model for Bucket and Workflow. Added a button to TaskManager due to null network errors. Added network requests to the Workflow and Bucket presenters and added ResponseObservers for the presenters.
         setBorder(new TitledBorder(null, title, TitledBorder.LEADING, TitledBorder.TOP, null, null));
         setLayout(new MigLayout("fill"));
     }
