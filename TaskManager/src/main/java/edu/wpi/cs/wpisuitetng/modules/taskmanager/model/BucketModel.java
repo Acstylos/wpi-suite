@@ -74,6 +74,17 @@ public class BucketModel extends AbstractModel  {
     }
     
     /**
+     * Constructs a bucket with default characteristics
+     */
+    public BucketModel(int id, String name) {
+    	
+    	this.id = id;
+    	this.name = name;
+    	if (name.trim().length() == 0)
+			this.name = "Backlog";
+    }
+    
+    /**
      * Returns an instance of workflow constructed using the given
      * workflow encoded as a JSON string.
      * 
@@ -84,6 +95,17 @@ public class BucketModel extends AbstractModel  {
     public static BucketModel fromJson(String json) {
         return new Gson().fromJson(json, BucketModel.class);
     }
+    
+    /**
+     * Method toJSON. @return String * @see
+     * edu.wpi.cs.wpisuitetng.modules.Model#toJSON() * @see
+     * edu.wpi.cs.wpisuitetng.modules.Model#toJSON()
+     */
+	@Override
+	public String toJson() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
     /**
@@ -108,16 +130,7 @@ public class BucketModel extends AbstractModel  {
 		
 	}
 	
-	 /**
-     * Method toJSON. @return String * @see
-     * edu.wpi.cs.wpisuitetng.modules.Model#toJSON() * @see
-     * edu.wpi.cs.wpisuitetng.modules.Model#toJSON()
-     */
-	@Override
-	public String toJson() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	 
 	
 	/**
      * Method identify.
@@ -130,6 +143,16 @@ public class BucketModel extends AbstractModel  {
 	public Boolean identify(Object o) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	/**
+	 * Copies all of the values from the given BucketModel to this Bucket
+	 * excluding the Id.
+	 * 
+	 * @param toCopyFrom the BucketModel to copy from.
+	 */
+	public void copyFrom(BucketModel toCopyFrom) { 
+		this.name = toCopyFrom.name;
 	}
 
 }
