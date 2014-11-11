@@ -1,14 +1,18 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
 
+import java.util.List;
+
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
+import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
+import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
-import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.iterations.Iteration;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 
 /**
  * This is the entity manager for the Bucket
@@ -39,18 +43,18 @@ public class BucketEntityManager implements EntityManager<BucketModel> {
 	@Override
 	public BucketModel makeEntity(Session s, String content)
 			throws BadRequestException, ConflictException, WPISuiteException {
-		final BucketModel newWorkflow = BucketModel.fromJson(content);
-		if(!db.save(newWorkflow, s.getProject())){
+		final BucketModel newBucket = BucketModel.fromJson(content);
+		if(!db.save(newBucket, s.getProject())){
 			throw new WPISuiteException();
 		}
-		return newWorkflow;
+		return newBucket;
 	}
 	
 
 	
 	
 	/**
-	 * Retrieves a single Bucket from the database
+	 * Retrieves a single Bucket from the database with the ID
 	 * @param s the session
 	 * @param id the id number of the Bucket to retrieve
 	 * 
@@ -123,7 +127,7 @@ public class BucketEntityManager implements EntityManager<BucketModel> {
 	@Override
 	public void deleteAll(Session s) throws WPISuiteException {
 		//ensureRole(s, Role.ADMIN);
-		db.deleteAll(new Iteration(), s.getProject());
+		db.deleteAll(new BucketModel(), s.getProject());
 	}
 	
 	/**
@@ -134,39 +138,83 @@ public class BucketEntityManager implements EntityManager<BucketModel> {
 	 */
 	@Override
 	public int Count() throws WPISuiteException {
-		// TODO Auto-generated method stub
-		return 0;
+		return db.retrieveAll(new BucketModel()).size();
 	}
 	
+	
+	
+	/**
+	 * Updates the given Buckets in the database
+	 * @param session the session the Bucket to be updated is in
+	 * @param content the updated Bucket as a Json string	
+	 * @return the old Buckets prior to updating 
+	 * @throws WPISuiteException 
+	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#update(Session, String) 
+	 * */
+	@Override
+	public BucketModel update(Session session, String content) throws WPISuiteException {
+		BucketModel updatedBucketModel = BucketModel.fromJson(content);
+		/*
+		 * Because of the disconnected objects problem in db4o, we can't just save updatedBucketModel.
+		 * We have to get the original BucketModel from db4o, copy properties from updatedBucketModel,
+		 * then save the original BucketModel again.
+		 */
+		List<Model> oldBucketModels = db.retrieve(BucketModel.class, "id", updatedBucketModel.getID(), session.getProject());
+		if (oldBucketModels.size() < 1 || oldBucketModels.get(0) == null) {
+			throw new BadRequestException("BucketModel with ID does not exist.");
+		}
+		BucketModel existingBucketModel = (BucketModel)oldBucketModels.get(0);
+		
+		// copy values to old BucketModel and fill in our changeset appropriately
+		existingBucketModel.copyFrom(updatedBucketModel);
+		
+		if(!db.save(existingBucketModel, session.getProject())) {
+			throw new WPISuiteException();
+		}
+		return existingBucketModel;
+	}
+	
+	/**
+	 * Method advancedGet.
+	 * @param arg0 Session
+	 * @param arg1 String[]
+	 * @return String 
+	 * @throws NotImplementedException 
+	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedGet(Session, String[])
+	 */
 	@Override
 	public String advancedGet(Session s, String[] args)
-			throws WPISuiteException {
-		// TODO Auto-generated method stub
-		return null;
+			throws NotImplementedException {
+		throw new NotImplementedException();
 	}
 	
-	
-	
-	
-	
+	/**
+	 * Method advancedPut.
+	 * @param arg0 Session
+	 * @param arg1 String[]
+	 * @param arg2 String	
+	 * @return String 
+	 * @throws NotImplementedException 
+	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedPut(Session, String[], String)
+	 */
 	@Override
 	public String advancedPut(Session s, String[] args, String content)
-			throws WPISuiteException {
-		// TODO Auto-generated method stub
-		return null;
+			throws NotImplementedException {
+		throw new NotImplementedException();
 	}
-	
+	/**
+	 * Method advancedPost.
+	 * @param arg0 Session
+	 * @param arg1 String
+	 * @param arg2 String	
+	 * @return String
+	 * @throws NotImplementedException 
+	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedPost(Session, String, String)
+	 */
 	@Override
 	public String advancedPost(Session s, String string, String content)
-			throws WPISuiteException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public BucketModel update(Session s, String content) throws WPISuiteException {
-		// TODO Auto-generated method stub
-		return null;
+			throws NotImplementedException {
+		throw new NotImplementedException();
 	}
 	
 

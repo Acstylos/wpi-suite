@@ -76,7 +76,7 @@ public class ManagerLayer {
 		map.put("postboardpostboardmessage", new PostBoardEntityManager(data));
 		map.put("requirementmanager" + "requirement", new RequirementEntityManager(data));
 		map.put("requirementmanager" + "iteration", new IterationEntityManager(data));
-		map.put("taskmanager" + "bucket", new BucketEntityManager(data));
+		//map.put("taskmanager" + "bucketModel", new BucketEntityManager(data));
 		//add just your module to this list
 		String[] fullModuleList = {"core","defecttracker","postboard","requirementmanager"};
 		((ProjectManager)map.get("coreproject")).setAllModules(fullModuleList);
