@@ -1,12 +1,13 @@
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.view.workflow;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import javax.swing.JPanel;
-import javax.swing.BoxLayout;
 import javax.swing.border.TitledBorder;
+import javax.swing.BoxLayout;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
+import net.miginfocom.swing.MigLayout;
 
 /**
  * WorkflowView is the panel that holds the list of buckets that represents the
@@ -34,6 +35,7 @@ public class WorkflowView extends JPanel
     	bucketViews = new ArrayList<BucketView>();
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBorder(new TitledBorder(null, title, TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        setLayout(new MigLayout("fill"));
     }
 
     /**
@@ -51,6 +53,8 @@ public class WorkflowView extends JPanel
     }
 
     /**
+     * Adds buckets into the workFlowView by smashing them to the left, allowing them
+     * to collide and sit next to what was added before it. 
      * @param buckets List of buckets corresponding to the buckets in the workflow process.
      */
     public void setBucketViews(List<BucketView> buckets){
@@ -59,7 +63,7 @@ public class WorkflowView extends JPanel
             bucket.setPreferredSize(new Dimension(250, 500));
             bucket.setMinimumSize(new Dimension(250, 500));
             bucket.setMaximumSize(new Dimension(500, 700));
-            add(bucket);
+            add(bucket, "dock west");
         }
     }
 
