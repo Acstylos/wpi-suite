@@ -42,7 +42,7 @@ public class TaskPresenter {
         this.model = new TaskModel();
         view = new TaskView("Loading...", 0, "Loading...", new Date());
         registerCallbacks();
-	loadModel();	
+        loadModel();
     }
 
     /**
@@ -50,13 +50,13 @@ public class TaskPresenter {
      */
     private void registerCallbacks() {
         view.addOnSaveListener((ActionEvent event) -> {
-		TaskPresenter.this.writeViewToModel();
-		TaskPresenter.this.saveModel();
-	    });
+            TaskPresenter.this.writeViewToModel();
+            TaskPresenter.this.saveModel();
+        });
         view.addOnReloadListener((ActionEvent event) -> {
-		TaskPresenter.this.loadModel();
-		TaskPresenter.this.writeModelToView();
-	    });
+            TaskPresenter.this.loadModel();
+            TaskPresenter.this.writeModelToView();
+        });
     }
 
     /**
@@ -90,36 +90,40 @@ public class TaskPresenter {
      * Load the model from the network/database. Creates if TaskID is zero.
      */
     private void loadModel() {
-	HttpMethod method;
-	if (model.getID() == 0) { // Create
-	    method = HttpMethod.PUT;
-	} else { // Get
-	    method = HttpMethod.GET;
-	}
-	Request request = Network.getInstance().makeRequest("taskmanager/task/" + model.getID(), method);
-	request.setBody(model.toJson());
-	request.addObserver(new TaskPresenterObserver(this, method));
-	request.send();
+        HttpMethod method;
+        String id = "/" + model.getID();
+        if (model.getID() == 0) { // Create
+            method = HttpMethod.PUT;
+            id = "";
+        } else { // Get
+            method = HttpMethod.GET;
+        }
+        Request request = Network.getInstance().makeRequest(
+                "taskmanager/task" + id, method);
+        request.setBody(model.toJson());
+        request.addObserver(new TaskPresenterObserver(this, method));
+        request.send();
     }
 
     /**
      * Write the model to the network/database. Must be created already.
      */
     private void saveModel() {
-	Request request = Network.getInstance().makeRequest("taskmanager/task/" + model.getID(), HttpMethod.POST); // Update.
-	request.setBody(model.toJson());
-	request.addObserver(new TaskPresenterObserver(this, HttpMethod.POST));
-	request.send();
+        Request request = Network.getInstance().makeRequest(
+                "taskmanager/task/" + model.getID(), HttpMethod.POST); // Update.
+        request.setBody(model.toJson());
+        request.addObserver(new TaskPresenterObserver(this, HttpMethod.POST));
+        request.send();
     }
 
     /**
      * Respond to a get.
      */
     public void responseGet(TaskModel model) {
-	if (model.getID() == 0)
-	    return;
-	this.model = model;
-	writeModelToView();
+        if (model.getID() == 0)
+            return;
+        this.model = model;
+        writeModelToView();
     }
 
     /**

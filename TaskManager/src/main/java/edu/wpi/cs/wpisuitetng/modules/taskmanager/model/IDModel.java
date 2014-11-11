@@ -29,66 +29,72 @@ class IDModel extends AbstractModel {
     Project project;
 
     public IDModel(String modelName, int ID, Project aProject) {
-	this.modelName = modelName;
-	this.ID = ID;
-	this.project = aProject;
+        this.modelName = modelName;
+        this.ID = ID;
+        this.project = aProject;
     }
 
     public int getNextID(Data db) throws WPISuiteException {
-	List<Model> models = db.retrieve(IDModel.class, "modelName", modelName, project);
-	if (models.size() == 0) return 1;
-	else return ((IDModel)models.get(0)).getID() + 1;
+        List<Model> models = db.retrieve(IDModel.class, "modelName", modelName,
+                project);
+        if (models.size() == 0)
+            return 1;
+        else
+            return ((IDModel) models.get(0)).getID() + 1;
     }
 
     public void increment(Data db) throws WPISuiteException {
-	ID = getNextID(db);
-	db.save(this,this.project);
+        ID = getNextID(db);
+        db.save(this, this.project);
     }
 
     public int getID() {
-	return ID;
+        return ID;
     }
 
     public void setID(int ID) {
-	this.ID = ID;
+        this.ID = ID;
     }
 
     public String getModelName() {
-	return modelName;
+        return modelName;
     }
 
     public void setModelName(String modelName) {
-	this.modelName = modelName;
+        this.modelName = modelName;
     }
 
     public String toJSON() {
-	String json;
-	Gson gson = new Gson();
-	json = gson.toJson(this, IDModel.class);
-	return json;
+        String json;
+        Gson gson = new Gson();
+        json = gson.toJson(this, IDModel.class);
+        return json;
     }
 
     public static String toJSON(IDModel[] idlist) {
-	String json;
-	Gson gson = new Gson();
-	json = gson.toJson(idlist, IDModel.class);
-	return json;
+        String json;
+        Gson gson = new Gson();
+        json = gson.toJson(idlist, IDModel.class);
+        return json;
     }
 
     public static IDModel fromJSON(String json) {
-	final Gson parser = new Gson();
-	return parser.fromJson(json, IDModel.class);
+        final Gson parser = new Gson();
+        return parser.fromJson(json, IDModel.class);
     }
 
     public Boolean identify(Object o) {
-	Boolean returnValue = false;
-	if (o instanceof IDModel && modelName == ((IDModel) o).getModelName())
-	    returnValue = true;
-	return returnValue;
+        Boolean returnValue = false;
+        if (o instanceof IDModel && modelName == ((IDModel) o).getModelName())
+            returnValue = true;
+        return returnValue;
     }
 
-    public void save() {}
-    public void delete() {}
+    public void save() {
+    }
+
+    public void delete() {
+    }
 
     @Override
     public String toJson() {

@@ -17,13 +17,13 @@ import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 /**
- * This observer deals with responses from the server relating to TaskPresenter queries.
+ * This observer deals with responses from the server relating to TaskPresenter
+ * queries.
  */
 public class TaskPresenterObserver implements RequestObserver {
 
     private final TaskPresenter presenter;
     private final HttpMethod method;
-
 
     public TaskPresenterObserver(TaskPresenter presenter, HttpMethod method) {
         this.presenter = presenter;
@@ -41,10 +41,18 @@ public class TaskPresenterObserver implements RequestObserver {
         final TaskModel model = TaskModel.fromJSON(response.getBody());
 
         switch (method) {
-        case GET: presenter.responseGet(model); break;
-        case POST: presenter.responseUpdate(model); break;
-        case PUT: presenter.responseCreate(model); break;
-        case DELETE: presenter.responseDelete(model); break;
+        case GET:
+            presenter.responseGet(model);
+            break;
+        case POST:
+            presenter.responseUpdate(model);
+            break;
+        case PUT:
+            presenter.responseCreate(model);
+            break;
+        case DELETE:
+            presenter.responseDelete(model);
+            break;
         }
     }
 
@@ -52,14 +60,16 @@ public class TaskPresenterObserver implements RequestObserver {
      * Handle a failure.
      */
     public void responseError(IRequest iReq) {
-        System.err.println("The request to " + httpMethodToString(method) + " a task failed.");
+        System.err.println("The request to " + httpMethodToString(method)
+                + " a task failed.");
     }
 
     /**
      * Handle a failure.
      */
     public void fail(IRequest iReq, Exception exception) {
-        System.err.println("The request to " + httpMethodToString(method) + " a task failed.");
+        System.err.println("The request to " + httpMethodToString(method)
+                + " a task failed.");
     }
 
     /**
@@ -68,10 +78,18 @@ public class TaskPresenterObserver implements RequestObserver {
     private static String httpMethodToString(HttpMethod method_) {
         String methodString = "";
         switch (method_) {
-        case GET: methodString = "fetch"; break;
-        case POST: methodString = "update"; break;
-        case PUT: methodString = "create"; break;
-        case DELETE: methodString = "delete"; break;
+        case GET:
+            methodString = "fetch";
+            break;
+        case POST:
+            methodString = "update";
+            break;
+        case PUT:
+            methodString = "create";
+            break;
+        case DELETE:
+            methodString = "delete";
+            break;
         }
         return methodString;
     }

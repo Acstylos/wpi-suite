@@ -23,22 +23,22 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.IDModel;
 
 /**
- * This is the entity manager for {@link TaskModel}s in the Task Manager
- * module.
+ * This is the entity manager for {@link TaskModel}s in the Task Manager module.
  */
 public class TaskEntityManager implements EntityManager<TaskModel> {
 
     private Data db;
 
     /**
-     * Construct the entity manager.  This is called by 
+     * Construct the entity manager. This is called by
      * {@link edu.wpi.cs.wpisuitetng.ManagerLayer#ManagerLayer()}.
+     * 
      * @param db
      */
     public TaskEntityManager(Data db) {
         this.db = db;
     }
-    
+
     /** @inheritDoc */
     @Override
     public TaskModel makeEntity(Session s, String content)
@@ -47,16 +47,16 @@ public class TaskEntityManager implements EntityManager<TaskModel> {
         /* Make a new task corresponding to the JSON data */
         TaskModel taskModel = TaskModel.fromJSON(content);
 
-	IDModel nextIDModel = new IDModel("task", 0, s.getProject());
-	int nextID = nextIDModel.getNextID(db);
-	nextIDModel.increment(db);
+        IDModel nextIDModel = new IDModel("task", 0, s.getProject());
+        int nextID = nextIDModel.getNextID(db);
+        nextIDModel.increment(db);
 
-	taskModel.setId(nextID);
-	/* Save it to the database */
-        if(!db.save(taskModel, s.getProject())) {
+        taskModel.setId(nextID);
+        /* Save it to the database */
+        if (!db.save(taskModel, s.getProject())) {
             throw new WPISuiteException("Error saving task to database");
         }
-        
+
         return taskModel;
     }
 
@@ -66,7 +66,8 @@ public class TaskEntityManager implements EntityManager<TaskModel> {
             throws NotFoundException, WPISuiteException {
         System.out.println("get");
         /* Retrieve the task model(s) with the given ID */
-        List<Model> models = db.retrieve(TaskModel.class, "ID", Integer.parseInt(id), s.getProject());
+        List<Model> models = db.retrieve(TaskModel.class, "ID",
+                Integer.parseInt(id), s.getProject());
         return models.toArray(new TaskModel[0]);
     }
 
@@ -83,18 +84,19 @@ public class TaskEntityManager implements EntityManager<TaskModel> {
     public TaskModel update(Session s, String content) throws WPISuiteException {
         System.out.println("update");
         TaskModel newTaskModel = TaskModel.fromJSON(content);
-        
+
         /* Retrieve the task model(s) with the given ID */
-        List<Model> models = db.retrieve(TaskModel.class, "ID", newTaskModel.getID(), s.getProject());
-        if(models.size() == 0) {
+        List<Model> models = db.retrieve(TaskModel.class, "ID",
+                newTaskModel.getID(), s.getProject());
+        if (models.size() == 0) {
             throw new NotFoundException();
         }
-        
+
         /* Update the records to the new model */
-        for(Model model : models) {
-            ((TaskModel)model).copyFrom(newTaskModel);
+        for (Model model : models) {
+            ((TaskModel) model).copyFrom(newTaskModel);
         }
-        
+
         return newTaskModel;
     }
 
@@ -119,13 +121,13 @@ public class TaskEntityManager implements EntityManager<TaskModel> {
     public void deleteAll(Session s) throws WPISuiteException {
         System.out.println("deleteAll");
         // TODO Auto-generated method stub
-        
+
     }
 
     /** @inheritDoc */
     @Override
     public int Count() throws WPISuiteException {
-       return db.retrieveAll(new TaskModel()).size();
+        return db.retrieveAll(new TaskModel()).size();
     }
 
     /** Not implemented */

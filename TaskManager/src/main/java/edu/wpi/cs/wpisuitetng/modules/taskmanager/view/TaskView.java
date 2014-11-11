@@ -54,17 +54,19 @@ public class TaskView extends JPanel {
      * @see #setDescriptionText(String)
      * @see #setDueDate(Date)
      */
-    public TaskView(String title, int estimatedEffort, String description, Date dueDate) {
+    public TaskView(String title, int estimatedEffort, String description,
+            Date dueDate) {
         /* Set a TitledBorder for this panel that just says "Task". */
         setBorder(BorderFactory.createTitledBorder("Task"));
-        
+
         /* Add a text field with the title */
         this.title = new JTextField(title);
         this.title.setFont(new Font("Dialog", Font.BOLD, 12));
         add(this.title);
 
         /* Add a text field with the estimated effort */
-        this.estimatedEffort = new JFormattedTextField(new Integer(estimatedEffort));
+        this.estimatedEffort = new JFormattedTextField(new Integer(
+                estimatedEffort));
         add(this.estimatedEffort);
 
         /* Add a text field with the initial due date */
@@ -77,37 +79,43 @@ public class TaskView extends JPanel {
 
         /* Wrap the description text in a scroll pane to allow scrolling */
         add(new JScrollPane(this.description));
-        
+
         /* Add a button to save the fields */
         this.saveButton = new JButton("Save");
         add(this.saveButton);
-        
+
         /* Add a button to reload the fields from the database */
         this.reloadButton = new JButton("Reload");
         add(this.reloadButton);
-        
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(saveButton);
         buttonPanel.add(reloadButton);
         add(buttonPanel);
 
-        /* Set the layout for this JFrame to a standard Swing box layout, and
-         * set some basic layout properties */
+        /*
+         * Set the layout for this JFrame to a standard Swing box layout, and
+         * set some basic layout properties
+         */
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setPreferredSize(new Dimension(250, 200));
         this.description.setPreferredSize(new Dimension(250, 100));
     }
-    
+
     /**
-     * Add an {@link ActionListener} that will be called when the task is saved by the user
+     * Add an {@link ActionListener} that will be called when the task is saved
+     * by the user
+     * 
      * @param listener
      */
     public void addOnSaveListener(ActionListener listener) {
         this.saveButton.addActionListener(listener);
     }
-    
+
     /**
-     * Add an {@link ActionListener} that will be called when the task is reloaded by the user
+     * Add an {@link ActionListener} that will be called when the task is
+     * reloaded by the user
+     * 
      * @param listener
      */
     public void addOnReloadListener(ActionListener listener) {
@@ -121,7 +129,7 @@ public class TaskView extends JPanel {
     public void setTitleText(String titleText) {
         this.title.setText(titleText);
     }
-    
+
     /**
      * @return The title of the task
      */
@@ -136,21 +144,22 @@ public class TaskView extends JPanel {
     public void setEstimatedEffort(int estimatedEffort) {
         this.estimatedEffort.setValue(estimatedEffort);
     }
-    
+
     /**
      * @return The estimated effort of the task, in arbitrary work units.
      */
     public int getEstimatedEffort() {
-        return (Integer)estimatedEffort.getValue();
+        return (Integer) estimatedEffort.getValue();
     }
 
     /**
-     * @param descriptionText The new task description
+     * @param descriptionText
+     *            The new task description
      */
     public void setDescriptionText(String descriptionText) {
         this.description.setText(descriptionText);
     }
-    
+
     /**
      * @return The task description
      */
