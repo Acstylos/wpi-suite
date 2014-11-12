@@ -12,17 +12,28 @@ import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
  */
 public class WorkflowModel extends AbstractModel{
 
+<<<<<<< HEAD
 	private static int increment=1;
 	private int ID;
+=======
+	private static int ID=0;
+>>>>>>> 3503417... BucketEntityManager.java and its tests class
 	private String workflowTitle;
 	private ArrayList <BucketModel> listOfBucket;
 	
 	WorkflowModel(String title){
+<<<<<<< HEAD
 		
 		this.ID=increment; 
 		this.workflowTitle=title;
 		this.listOfBucket=new ArrayList<BucketModel>();
 		WorkflowModel.increment++;
+=======
+		this.ID++;
+		this.workflowTitle=title;
+		this.listOfBucket=new ArrayList<BucketModel>();
+		
+>>>>>>> 3503417... BucketEntityManager.java and its tests class
 	}
 	/**
 	 * Will Implement Later
@@ -32,7 +43,10 @@ public class WorkflowModel extends AbstractModel{
 		// TODO Auto-generated method stub
 		
 	}
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3503417... BucketEntityManager.java and its tests class
 	/**
 	 * Will Implement Later
 	 */
@@ -80,6 +94,7 @@ public class WorkflowModel extends AbstractModel{
 	public void setTitle(String title){
 		this.workflowTitle=title;
 	}
+<<<<<<< HEAD
 	/**
 	 * returns the ID of this workflow Model
 	 * @return ID
@@ -89,3 +104,7 @@ public class WorkflowModel extends AbstractModel{
 	}
 
 }
+=======
+}
+
+>>>>>>> 3503417... BucketEntityManager.java and its tests class
