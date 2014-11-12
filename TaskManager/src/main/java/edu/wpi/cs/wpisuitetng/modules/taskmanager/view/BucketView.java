@@ -12,13 +12,11 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 import javax.swing.JScrollPane;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
-
 
 /**
  * BucketView is the view that displays a list of tasks. These tasks are
@@ -37,7 +35,6 @@ public class BucketView extends JPanel
     private JScrollPane scrollPane;
     private JButton addTaskButton;
     private BucketPresenter presenter;
-    
 
     /**
      * Constructor for BucketViews.
@@ -69,7 +66,7 @@ public class BucketView extends JPanel
         taskViewHolderPanel.setBorder(null);
         scrollPane.setViewportView(taskViewHolderPanel);
         taskViewHolderPanel.setLayout(new MigLayout("fill"));
-        
+         
         addTaskButton = new JButton("Add New Task...");
         // This is added to the 0th column, 1st row in the layout, and keeps it on the bottom.
         add(addTaskButton, "cell 0 1, grow");
@@ -104,8 +101,14 @@ public class BucketView extends JPanel
         this.taskViews = taskViews;
         for (TaskView task : taskViews) {
             taskViewHolderPanel.add(task, "dock north");
-
         }
+    }
+    
+    /**
+     * @param task 
+     */
+    public void addTaskToView(TaskView task){
+        taskViewHolderPanel.add(task, "dock north");
     }
 
     /**

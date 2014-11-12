@@ -8,9 +8,12 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import java.awt.event.ActionEvent;
+import java.util.Date;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
@@ -38,7 +41,7 @@ public class BucketPresenter {
         this.model = new BucketModel();
         this.model.setId(bucketId);
         this.view = new BucketView("Loading...");
-
+        registerCallbacks();
         load();
     }
 
@@ -105,6 +108,12 @@ public class BucketPresenter {
     }
     
     public void addNewTaskToView(){
+        TaskModel task = new TaskModel(10, "New Task", "", 50, new Date(114, 10, 12));
+        TaskPresenter taskPresenter = new TaskPresenter(task);
+        TaskView taskView = taskPresenter.getView();
+        view.addTaskToView(taskView);
+        view.revalidate();
+        view.repaint();
     }
 
     /**
