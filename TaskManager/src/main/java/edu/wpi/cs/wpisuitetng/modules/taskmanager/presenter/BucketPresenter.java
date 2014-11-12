@@ -8,6 +8,7 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Date;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
@@ -94,6 +95,14 @@ public class BucketPresenter {
     	}
     	
         view.setTitle(model.getTitle());
+        ArrayList<Integer> bucket = model.getBucket();
+        for(int i: bucket){
+        	TaskPresenter taskPresenter = new TaskPresenter(i, this);
+        	TaskView taskView = taskPresenter.getView();
+        	view.addTaskToView(taskView);
+        }
+        view.revalidate();
+        view.repaint();
         // Add taskviews to the BucketView
         saveModel();
     }
@@ -108,12 +117,19 @@ public class BucketPresenter {
     }
     
     public void addNewTaskToView(){
-        TaskModel task = new TaskModel(10, "New Task", "", 50, new Date(114, 10, 12));
-        TaskPresenter taskPresenter = new TaskPresenter(task);
+        TaskModel task = new TaskModel(0, "New Task", "", 50, new Date(114, 10, 12));
+        TaskPresenter taskPresenter = new TaskPresenter(task, this);
         TaskView taskView = taskPresenter.getView();
         view.addTaskToView(taskView);
         view.revalidate();
         view.repaint();
+    }
+    
+    public void saveTask(int id){
+    	ArrayList<Integer> bucket = this.model.getBucket();
+        bucket.add(id);
+        this.model.setBucket(bucket);
+        saveModel();
     }
 
     /**

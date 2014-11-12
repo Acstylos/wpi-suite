@@ -40,6 +40,7 @@ public class TaskManager implements IJanewayModule
     public TaskManager() {
         JPanel toolbarPanel = new JPanel();
         JPanel mainPanel = new JPanel();
+        
         JButton button = new JButton("Load Workflow");
 
         button.addActionListener((ActionEvent e) -> {
@@ -51,6 +52,7 @@ public class TaskManager implements IJanewayModule
           }});
         
         toolbarPanel.add(button, "cell 0 1, grow");
+        
         /* Create the tab model for the task manager */
         tabs = new ArrayList<JanewayTabModel>();
         tabs.add(new JanewayTabModel("Task Manager", new ImageIcon(),

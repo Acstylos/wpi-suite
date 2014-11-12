@@ -139,5 +139,6 @@ public class BucketModel extends AbstractModel {
      */
     public void copyFrom(BucketModel toCopyFrom) { 
         this.title = toCopyFrom.title;
+        this.bucket = toCopyFrom.bucket;
     }
 }
