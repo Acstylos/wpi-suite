@@ -12,18 +12,19 @@ import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
  */
 public class BucketModel extends AbstractModel {
 	
+
 	private static int increment=1;
 	private int ID;//Bucket ID
 	private String title; //title of Bucket
 	private ArrayList <Integer> bucket; //list of serialized IDs of tasks 
 	
 	BucketModel(String title){
+
 		this.ID=increment;
 		this.title=title;
 		this.bucket=new ArrayList <Integer>();
 		BucketModel.increment++;
 	}
-	
 	
 	/**
 	 * Will Implement Later
@@ -88,5 +89,51 @@ public class BucketModel extends AbstractModel {
 		return this.bucket;
 	}
 	
+	/**
+     * Constructs a bucket with default characteristics
+     */
+    public BucketModel(int id, String name) {
+    	
+    	this.ID = id;
+    	this.title = name;
+    	if (name.trim().length() == 0)
+			this.title = "Backlog";
+    }
+    
+    /**
+     * Constructs a bucket with default characteristics
+     */
+    public BucketModel() {
+    	super();
+    	ID = 1;
+    	title = "";
+    }
+
+
+
+    /**
+	 * Copies all of the values from the given BucketModel to this Bucket
+	 * excluding the Id.
+	 * 
+	 * @param toCopyFrom the BucketModel to copy from.
+	 */
+	public void copyFrom(BucketModel toCopyFrom) { 
+		this.title = toCopyFrom.title;
+	}
+	
+	/**
+     * Returns an instance of workflow constructed using the given
+     * workflow encoded as a JSON string.
+     * 
+     * @param json
+     *            JSON-encoded Requirement to deserialize @return the
+     *            workflow contained in the given JSON
+     */
+    public static BucketModel fromJson(String json) {
+        return new Gson().fromJson(json, BucketModel.class);
+    }
+
+
+ 
 
 }

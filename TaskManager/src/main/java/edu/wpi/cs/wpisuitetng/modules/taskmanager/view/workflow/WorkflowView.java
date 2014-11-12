@@ -5,8 +5,10 @@ import javax.swing.border.TitledBorder;
 
 import java.awt.Dimension;
 import java.util.List;
+
 import net.miginfocom.swing.MigLayout;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
+
 
 /**
  * WorkflowView is the panel that holds the list of buckets that represents the
@@ -22,6 +24,7 @@ public class WorkflowView extends JPanel
     private String title;
     private List<BucketView> bucketViews;
     private WorkflowPresenter presenter;
+
 
     /**
      * Constructor for the panel that holds the workflow of buckets.
@@ -52,8 +55,11 @@ public class WorkflowView extends JPanel
     }
 
     /**
+<<<<<<< HEAD
      * Adds buckets into the workFlowView by smashing them to the left, allowing them
      * to collide and sit next to what was added before it. 
+=======
+>>>>>>> 3503417... BucketEntityManager.java and its tests class
      * @param buckets List of buckets corresponding to the buckets in the workflow process.
      */
     public void setBucketViews(List<BucketView> buckets){
