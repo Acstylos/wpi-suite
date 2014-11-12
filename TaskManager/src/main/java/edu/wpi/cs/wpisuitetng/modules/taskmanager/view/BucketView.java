@@ -1,17 +1,23 @@
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.view.workflow;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.miginfocom.swing.MigLayout;
+
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.JScrollPane;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;;
+
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
 
 
 /**
@@ -25,9 +31,8 @@ public class BucketView extends JPanel
 {
 
     private static final long serialVersionUID = -5937582878085666950L;
-    // CHANGE JPANEL TO BE TASKVIEWS WHEN MERGED
-    private List<JPanel> taskViews;
     private String title;
+    private List<TaskView> taskViews;
     private JPanel taskViewHolderPanel;
     private JScrollPane scrollPane;
     private JButton addTaskButton;
@@ -38,13 +43,16 @@ public class BucketView extends JPanel
      * Constructor for BucketViews.
      * @param title Temporary constructor that will title the buckets
      */
-    public BucketView(String title){
-        setMaximumSize(new Dimension(250, 32767));
-    	presenter = new BucketPresenter(this);
-    	this.taskViews = presenter.getTaskViews();
-        setPreferredSize(new Dimension(250, 500));
-        setMinimumSize(new Dimension(250, 500));
-        setBorder(new TitledBorder(null, title, TitledBorder.LEADING, TitledBorder.TOP, null, null));
+    public BucketView(String title) { // Pass in title from BucketModel
+        // Tasks will be structured from top to bottom
+
+        this.title = title;
+        taskViews = new ArrayList<TaskView>();
+        setMaximumSize(new Dimension(300, 32767));
+        setPreferredSize(new Dimension(300, 500));
+        setMinimumSize(new Dimension(300, 500));
+        setBorder(new TitledBorder(null, title, TitledBorder.LEADING,
+                TitledBorder.TOP, null, null));
         setLayout(new MigLayout("", "[grow]", "[max][min]"));
         
         // Need a scroll pane to allow us to scroll through all tasks in the bucketView. 
@@ -71,14 +79,15 @@ public class BucketView extends JPanel
                 */
             }
         });
-        // This is added to the 0th column, 1st row in the layout, and keeps it on the bottom.
-        add(addTaskButton, "cell 0 1, grow");
+        // This is added to the 0th column, 1st row in the layout, and keeps it
+        // on the bottom.
+        // add(addTaskButton, "cell 0 1, grow");
     }
 
     /**
      * @return Returns a list of JPanels. Will Eventually return a list of TaskViews
      */
-    public List<JPanel> getTaskViews(){
+    public List<TaskView> getTaskViews() {
         return this.taskViews;
     }
 
@@ -92,9 +101,9 @@ public class BucketView extends JPanel
     /**
      * @param taskViews A list of TaskViews
      */
-    public void setTaskViews(List<JPanel> taskViews){
+    public void setTaskViews(List<TaskView> taskViews) {
         this.taskViews = taskViews;
-        for(JPanel task: taskViews){
+        for (TaskView task : taskViews) {
             taskViewHolderPanel.add(task, "dock north");
 
         }
@@ -105,6 +114,8 @@ public class BucketView extends JPanel
      */
     public void setTitle(String title) {
         this.title = title;
+        setBorder(new TitledBorder(null, title, TitledBorder.LEADING,
+                TitledBorder.TOP, null, null));
     }
 
 }
