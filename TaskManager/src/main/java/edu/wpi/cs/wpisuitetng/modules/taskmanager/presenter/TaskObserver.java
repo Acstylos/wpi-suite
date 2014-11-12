@@ -7,7 +7,7 @@ import edu.wpi.cs.wpisuitetng.network.models.IRequest;
 /**
  * Observes the result of network requests for tasks
  */
-public class TaskRequestObserver implements RequestObserver {
+public class TaskObserver implements RequestObserver {
 
     TaskPresenter presenter;
 
@@ -17,7 +17,7 @@ public class TaskRequestObserver implements RequestObserver {
      * @param presenter
      *            The presenter that make the request
      */
-    public TaskRequestObserver(TaskPresenter presenter) {
+    public TaskObserver(TaskPresenter presenter) {
         this.presenter = presenter;
     }
 
