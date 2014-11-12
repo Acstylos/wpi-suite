@@ -64,7 +64,7 @@ public class TaskPresenter {
         
         Request request = Network.getInstance().makeRequest("taskmanager/task/" + this.model.getID(), HttpMethod.POST);
         request.setBody(this.model.toJson());
-        request.addObserver(new TaskRequestObserver(this));
+        request.addObserver(new TaskObserver(this));
         request.send();
     }
 
@@ -73,7 +73,7 @@ public class TaskPresenter {
      */
     private void reloadView() {
         Request request = Network.getInstance().makeRequest("taskmanager/task/" + this.model.getID(), HttpMethod.GET);
-        request.addObserver(new TaskRequestObserver(this));
+        request.addObserver(new TaskObserver(this));
         request.send();
     }
     
