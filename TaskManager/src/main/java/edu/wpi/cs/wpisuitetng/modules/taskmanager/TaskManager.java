@@ -30,7 +30,7 @@ import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
 public class TaskManager implements IJanewayModule
 {
     /** A list containing the one tab */
-    private List<JanewayTabModel> tabs_;
+    private List<JanewayTabModel> tabs;
 
     public TaskManager() {
         JPanel toolbarPanel = new JPanel();
@@ -40,14 +40,13 @@ public class TaskManager implements IJanewayModule
          * The main panel of the tab contains a scroll pane, 
          * which holds a BucketView that acts as the workflow.
          */
-
         mainPanel.add(new MainView());
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
 
         /* Create the tab model for the task manager */
-        tabs_ = new ArrayList<JanewayTabModel>();
-        tabs_.add(new JanewayTabModel("Task Manager", new ImageIcon(),
+        tabs = new ArrayList<JanewayTabModel>();
+        tabs.add(new JanewayTabModel("Task Manager", new ImageIcon(),
                 toolbarPanel, mainPanel));
 
     }
@@ -67,7 +66,6 @@ public class TaskManager implements IJanewayModule
     @Override
     public List<JanewayTabModel> getTabs()
     {
-        return tabs_;
+        return tabs;
     }
-
 }

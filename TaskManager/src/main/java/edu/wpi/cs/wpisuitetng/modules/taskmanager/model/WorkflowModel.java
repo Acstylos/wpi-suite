@@ -21,11 +21,6 @@ public class WorkflowModel extends AbstractModel{
 	this("", -1);
     }
 
-    public WorkflowModel(WorkflowModel another){
-	this.ID = another.ID;
-	this.workflowTitle = another.workflowTitle;
-	this.listOfBucket = another.listOfBucket;
-    }
 
     public WorkflowModel(String title, int ID){
 	this.ID = ID;
@@ -102,6 +97,19 @@ public class WorkflowModel extends AbstractModel{
      */
     public int getID(){
 	return this.ID;
+    }
+    
+
+    /**
+     * Copies all of the values from the given WorkflowModel to this Workflow
+     * excluding the Id.
+     * 
+     * @param toCopyFrom the BucketModel to copy from.
+     */
+    public void copyFrom(WorkflowModel toCopyFrom) { 
+	this.ID = toCopyFrom.ID;
+	this.workflowTitle = toCopyFrom.workflowTitle;
+	this.listOfBucket = toCopyFrom.listOfBucket;
     }
 
 

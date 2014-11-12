@@ -100,7 +100,7 @@ public class WorkflowModelEntityManager implements EntityManager<WorkflowModel> 
 	WorkflowModel existingWorkflowModel = (WorkflowModel)oldWorkflowModels.get(0);		
 
 	// copy values to old requirement and fill in our changeset appropriately
-	existingWorkflowModel = new WorkflowModel(updatedWorkflowModel);
+	existingWorkflowModel.copyFrom(updatedWorkflowModel);
 
 	if(!db.save(existingWorkflowModel, s.getProject())) {
 	    throw new WPISuiteException();
