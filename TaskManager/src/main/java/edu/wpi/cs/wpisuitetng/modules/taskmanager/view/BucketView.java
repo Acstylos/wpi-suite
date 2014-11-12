@@ -71,17 +71,16 @@ public class BucketView extends JPanel
         taskViewHolderPanel.setLayout(new MigLayout("fill"));
         
         addTaskButton = new JButton("Add New Task...");
-        addTaskButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                /* TODO: make this add a task to model's list of tasks
-                 * and call setTaskView from this class to update the tasks
-                 * in the view.
-                */
-            }
-        });
-        // This is added to the 0th column, 1st row in the layout, and keeps it
-        // on the bottom.
-        // add(addTaskButton, "cell 0 1, grow");
+        // This is added to the 0th column, 1st row in the layout, and keeps it on the bottom.
+        add(addTaskButton, "cell 0 1, grow");
+    }
+    
+    /**
+     * Add an {@link ActionListener} that will be called when a task is added by the user
+     * @param listener
+     */
+    public void addOnAddTaskListener(ActionListener listener){
+        this.addTaskButton.addActionListener(listener);
     }
 
     /**

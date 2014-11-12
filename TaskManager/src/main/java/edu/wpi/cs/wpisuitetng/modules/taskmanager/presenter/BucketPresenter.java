@@ -7,6 +7,8 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import java.awt.event.ActionEvent;
+
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
 import edu.wpi.cs.wpisuitetng.network.Network;
@@ -91,6 +93,18 @@ public class BucketPresenter {
         view.setTitle(model.getTitle());
         // Add taskviews to the BucketView
         saveModel();
+    }
+    
+    /**
+     * Register callbacks with the local view.
+     */
+    private void registerCallbacks() {
+        view.addOnAddTaskListener((ActionEvent event) -> {
+            BucketPresenter.this.addNewTaskToView();
+        });
+    }
+    
+    public void addNewTaskToView(){
     }
 
     /**
