@@ -11,7 +11,6 @@ import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
-import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 
 /**
@@ -63,32 +62,29 @@ public class BucketEntityManager implements EntityManager<BucketModel> {
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getEntity(Session, String)
 	 */
 	@Override
-	public BucketModel[] getEntity(Session s, String id) throws NotFoundException,
-			WPISuiteException {
+	public BucketModel[] getEntity(Session s, String id) throws NotFoundException {
 		final int intId = Integer.parseInt(id);
 		if (intId < 1) {
 			throw new NotFoundException();
 		}
-		BucketModel[] Buckets = null;
+		BucketModel[] buckets = null;
 		try {
-			Buckets = db.retrieve(BucketModel.class, "id", intId, s.getProject()).toArray(new BucketModel[0]);			
+			buckets = db.retrieve(BucketModel.class, "id", intId, s.getProject()).toArray(new BucketModel[0]);			
 		} catch (WPISuiteException e) {
 			e.printStackTrace();
 		}
-		if (Buckets.length < 1 || Buckets[0] == null) {
+		if (buckets.length < 1 || buckets[0] == null) {
 			throw new NotFoundException();
 		}
-		return Buckets;
+        
+        return buckets;
 	}
 	
 	/**
-	 * Retrieves all Buckets from the database
-	 * @param s the session
-	 * @return array of all stored Buckets 
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getAll(Session)
 	 */
 	@Override
-	public BucketModel[] getAll(Session s) throws WPISuiteException {
+	public BucketModel[] getAll(Session s) {
 		return db.retrieveAll(new BucketModel(), s.getProject()).toArray(new BucketModel[0]);
 	}
 	

@@ -17,7 +17,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.MockData;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.iterations.Iteration;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowModelEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowEntityManager;
 
 
 public class TestWorkflowModelEntityManager {
@@ -27,7 +27,7 @@ public class TestWorkflowModelEntityManager {
     User testUser;
     String mockSsid;
     WorkflowModel wfm;
-    WorkflowModelEntityManager manager;
+    WorkflowEntityManager manager;
 
     @Before
     public void setUp() {
@@ -38,7 +38,7 @@ public class TestWorkflowModelEntityManager {
 	mockSsid = "abc123";
 	defaultSession = new Session(testUser, testProject, mockSsid);
 	wfm = new WorkflowModel();
-	manager = new WorkflowModelEntityManager(db);
+	manager = new WorkflowEntityManager(db);
 	db.save(testUser);
     }
 
