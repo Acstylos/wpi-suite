@@ -1,5 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
 
+import java.awt.Component;
 import java.util.ArrayList;
 
 import com.google.gson.Gson;
@@ -15,7 +16,7 @@ public class WorkflowModel extends AbstractModel{
 
     private int ID;
     private String workflowTitle;
-    private ArrayList <BucketModel> listOfBucket;
+    private ArrayList<Integer> bucketIDs;
     
     public WorkflowModel(){
 	this("", -1);
@@ -25,7 +26,7 @@ public class WorkflowModel extends AbstractModel{
     public WorkflowModel(String title, int ID){
 	this.ID = ID;
 	this.workflowTitle=title;
-	this.listOfBucket=new ArrayList<>();
+	this.bucketIDs=new ArrayList<>();
 
     }
     @Override
@@ -51,6 +52,11 @@ public class WorkflowModel extends AbstractModel{
         final Gson parser = new Gson();
         return parser.fromJson(json, WorkflowModel.class);
     }
+    
+    public static WorkflowModel[] fromJSONArray(String json) {
+        final Gson parser = new Gson();
+        return parser.fromJson(json, WorkflowModel[].class);
+    }
 
     @Override
     public String toJson() {
@@ -67,8 +73,17 @@ public class WorkflowModel extends AbstractModel{
      * gets the list of Buckets
      * @return the List of Buckets
      */
-    public ArrayList<BucketModel> getWorkflow(){
-	return this.listOfBucket;
+    public ArrayList<Integer> getWorkflow(){
+	return this.bucketIDs;
+    }
+    
+    /**
+     * Sets the list of bucket IDs
+     * 
+     * @param bucketIDs The list of bucketIDs
+     */
+    public void setBucketIDs(ArrayList<Integer> bucketIDs) {
+    	this.bucketIDs = bucketIDs;
     }
 
     /**
@@ -94,7 +109,14 @@ public class WorkflowModel extends AbstractModel{
     public int getID(){
 	return this.ID;
     }
-    
+
+    /**
+     * set the ID of WorkflowModel
+     * @param ID
+     */
+    public void setID(int ID){
+    	this.ID = ID;
+    }
     
     /**
 	 * Copies all of the values from the given WorkflowModel to this WorkflowModel
@@ -105,7 +127,13 @@ public class WorkflowModel extends AbstractModel{
     public void copyFrom(WorkflowModel toCopyFrom) { 
 	this.ID = toCopyFrom.ID;
 	this.workflowTitle = toCopyFrom.workflowTitle;
-	this.listOfBucket = toCopyFrom.listOfBucket;
+	this.bucketIDs = toCopyFrom.bucketIDs;
     }
+
+
+	public ArrayList<Integer> getBucketIDs() {
+		// TODO Auto-generated method stub
+		return bucketIDs;
+	}
 
 }
