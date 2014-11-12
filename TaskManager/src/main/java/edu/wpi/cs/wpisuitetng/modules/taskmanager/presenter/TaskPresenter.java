@@ -11,6 +11,9 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
+import edu.wpi.cs.wpisuitetng.network.Network;
+import edu.wpi.cs.wpisuitetng.network.Request;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 import java.awt.event.ActionEvent;
 import java.util.Date;
@@ -57,26 +60,48 @@ public class TaskPresenter {
      * Save the fields entered in the view.
      */
     private void saveView() {
-        model.setTitle(view.getTitleText());
-        model.setEstimatedEffort(view.getEstimatedEffort());
-        model.setDescription(view.getDescriptionText());
-        model.setDueDate(view.getDueDate());
-    }
-    /**
-     * Get the view for this Task.
-     */
-    public TaskView getView() {
-        return view;
+        updateModel();
+        
+        Request request = Network.getInstance().makeRequest("taskmanager/task/" + this.model.getID(), HttpMethod.POST);
+        request.setBody(this.model.toJson());
+        request.addObserver(new TaskRequestObserver(this));
+        request.send();
     }
 
     /**
      * Have the presenter reload the view from the model.
      */
-    public void reloadView() {
+    private void reloadView() {
+        Request request = Network.getInstance().makeRequest("taskmanager/task/" + this.model.getID(), HttpMethod.GET);
+        request.addObserver(new TaskRequestObserver(this));
+        request.send();
+    }
+    
+    /**
+     * Update the model with data from the view
+     */
+    public void updateModel() {
+        model.setTitle(view.getTitleText());
+        model.setEstimatedEffort(view.getEstimatedEffort());
+        model.setDescription(view.getDescriptionText());
+        model.setDueDate(view.getDueDate());
+    }
+    
+    /**
+     * Update the view with data from the model
+     */
+    public void updateView() {
         view.setTitleText(model.getTitle());
         view.setEstimatedEffort(model.getEstimatedEffort());
         view.setDescriptionText(model.getDescription());
         view.setDueDate(model.getDueDate());
+    }
+    
+    /**
+     * Get the view for this Task.
+     */
+    public TaskView getView() {
+        return view;
     }
 
     /**

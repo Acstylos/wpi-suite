@@ -36,6 +36,16 @@ public class TaskEntityManager implements EntityManager<TaskModel> {
         /* Make a new task corresponding to the JSON data */
         TaskModel taskModel = TaskModel.fromJson(content);
         
+        /* Find the highest used ID and assign the next number to this task */
+        int id = 0;
+        for(TaskModel model : getAll(s)) {
+            if(model.getID() >= id) {
+                id = model.getID() + 1;
+            }
+        }
+        
+        taskModel.setId(id);
+        
         /* Save it to the database */
         if(!db.save(taskModel, s.getProject())) {
             throw new WPISuiteException("Error saving task to database");
