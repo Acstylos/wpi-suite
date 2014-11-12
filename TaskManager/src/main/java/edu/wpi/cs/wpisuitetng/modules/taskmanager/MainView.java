@@ -19,9 +19,8 @@ public class MainView extends JScrollPane
     /**
      * Constructor for the scrollable main view.  
      */
-    public MainView(){ // Needs field WorkflowModel 
-        workflowView = new WorkflowView("New Workflow");
-        setViewportView(workflowView); // Make sure the panel can be scrolled upon
+    public MainView(WorkflowView workflowView){
+        setWorkflowView(workflowView);
     }
 
     /**

@@ -11,7 +11,6 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;;
 
 /**
  * BucketView is the view that displays a list of tasks. These tasks are
@@ -30,7 +29,6 @@ public class BucketView extends JPanel
     private JPanel taskViewHolderPanel;
     private JScrollPane scrollPane;
     private JButton addTaskButton;
-    private BucketPresenter presenter;
     
     /**
      * Constructor for BucketViews.
@@ -38,8 +36,6 @@ public class BucketView extends JPanel
      */
     public BucketView(String title){
         setMaximumSize(new Dimension(250, 32767));
-    	presenter = new BucketPresenter(this);
-    	this.taskViews = presenter.getTaskViews();
         setPreferredSize(new Dimension(250, 500));
         setMinimumSize(new Dimension(250, 500));
         setBorder(new TitledBorder(null, title, TitledBorder.LEADING, TitledBorder.TOP, null, null));

@@ -10,15 +10,20 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager;
 
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.MainView;
+
 
 
 /**
@@ -27,29 +32,34 @@ import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
  * WPI Suite TM is a task manager consisting of one tab that provides an
  * interface for keeping track of flow-based tasks.
  */
-public class TaskManager implements IJanewayModule
-{
+public class TaskManager implements IJanewayModule {
+    /* Current main presenter. */
+    private WorkflowPresenter mainPresenter;
+
     /** A list containing the one tab */
-    private List<JanewayTabModel> tabs_;
+    private List<JanewayTabModel> tabs;
 
     public TaskManager() {
         JPanel toolbarPanel = new JPanel();
         JPanel mainPanel = new JPanel();
+        JButton button = new JButton("Load your workflow.");
 
-        /*
-         * The main panel of the tab contains a scroll pane, 
-         * which holds a BucketView that acts as the workflow.
-         */
+        button.addActionListener((ActionEvent e) -> {
+            if (TaskManager.this.mainPresenter == null) {
+                mainPresenter = new WorkflowPresenter(0);
+                mainPanel.remove(button);
+                mainPanel.add(new MainView(mainPresenter.getView()));
+                mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+            }
+        });
 
-        mainPanel.add(new MainView());
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-
-
+        mainPanel.add(button);
         /* Create the tab model for the task manager */
-        tabs_ = new ArrayList<JanewayTabModel>();
-        tabs_.add(new JanewayTabModel("Task Manager", new ImageIcon(),
+        tabs = new ArrayList<JanewayTabModel>();
+        tabs.add(new JanewayTabModel("Task Manager", new ImageIcon(),
                 toolbarPanel, mainPanel));
 
+        this.mainPresenter = null;
     }
 
     /**
@@ -67,7 +77,7 @@ public class TaskManager implements IJanewayModule
     @Override
     public List<JanewayTabModel> getTabs()
     {
-        return tabs_;
+        return tabs;
     }
 
 }
