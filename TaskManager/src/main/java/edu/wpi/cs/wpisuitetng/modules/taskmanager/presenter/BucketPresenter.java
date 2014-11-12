@@ -108,7 +108,7 @@ public class BucketPresenter {
     }
     
     public void addNewTaskToView(){
-        TaskModel task = new TaskModel(10, "New Task", "", 50, new Date(114, 10, 12));
+        TaskModel task = new TaskModel(10, "New Task", "Description Here", 50, new Date(114, 10, 12));
         TaskPresenter taskPresenter = new TaskPresenter(task);
         TaskView taskView = taskPresenter.getView();
         view.addTaskToView(taskView);
