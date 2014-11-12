@@ -2,5 +2,5 @@ dependencies{
     compile project(':Network')
     compile project(':WPISuite-Interfaces')
     compile project(':JanewayAPI')
-    compile ('com.miglayout:miglayout-swing:3.7.4')
+    compile ('com.miglayout:miglayout:3.7.4')
 }
