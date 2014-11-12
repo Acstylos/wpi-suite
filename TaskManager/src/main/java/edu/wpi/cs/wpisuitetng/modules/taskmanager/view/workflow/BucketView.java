@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;;
-
 /**
  * BucketView is the view that displays a list of tasks. These tasks are
  * sorted by the title that is on the bucket. The default titles for the
