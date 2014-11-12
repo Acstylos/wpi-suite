@@ -12,15 +12,17 @@ import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
  */
 public class WorkflowModel extends AbstractModel{
 
-	private static int ID=0;
+	private static int increment=1;
+	private int ID;
 	private String workflowTitle;
 	private ArrayList <BucketModel> listOfBucket;
 	
 	WorkflowModel(String title){
-		this.ID++;
+		
+		this.ID=increment; 
 		this.workflowTitle=title;
 		this.listOfBucket=new ArrayList<BucketModel>();
-		
+		WorkflowModel.increment++;
 	}
 	/**
 	 * Will Implement Later
@@ -30,6 +32,7 @@ public class WorkflowModel extends AbstractModel{
 		// TODO Auto-generated method stub
 		
 	}
+
 	/**
 	 * Will Implement Later
 	 */
@@ -77,4 +80,12 @@ public class WorkflowModel extends AbstractModel{
 	public void setTitle(String title){
 		this.workflowTitle=title;
 	}
+	/**
+	 * returns the ID of this workflow Model
+	 * @return ID
+	 */
+	public int getID() {
+		return ID;
+	}
+
 }
