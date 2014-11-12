@@ -1,5 +1,7 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view.workflow;
 
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
@@ -7,11 +9,16 @@ import java.awt.Dimension;
 import java.util.List;
 
 import net.miginfocom.swing.MigLayout;
+
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.JScrollPane;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;;
+
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.workflow.AddNewTaskDialogue;
 
 /**
  * BucketView is the view that displays a list of tasks. These tasks are
@@ -67,6 +74,9 @@ public class BucketView extends JPanel
                  * and call setTaskView from this class to update the tasks
                  * in the view.
                 */
+        	AddNewTaskDialogue dialog = new AddNewTaskDialogue();
+        	dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+    	    	dialog.setVisible(true);
             }
         });
         // This is added to the 0th column, 1st row in the layout, and keeps it on the bottom.
