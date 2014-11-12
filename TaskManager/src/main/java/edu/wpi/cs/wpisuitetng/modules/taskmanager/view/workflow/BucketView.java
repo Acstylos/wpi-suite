@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;;
 
+
 /**
  * BucketView is the view that displays a list of tasks. These tasks are
  * sorted by the title that is on the bucket. The default titles for the
@@ -32,6 +33,7 @@ public class BucketView extends JPanel
     private JButton addTaskButton;
     private BucketPresenter presenter;
     
+
     /**
      * Constructor for BucketViews.
      * @param title Temporary constructor that will title the buckets
@@ -94,6 +96,7 @@ public class BucketView extends JPanel
         this.taskViews = taskViews;
         for(JPanel task: taskViews){
             taskViewHolderPanel.add(task, "dock north");
+
         }
     }
 
