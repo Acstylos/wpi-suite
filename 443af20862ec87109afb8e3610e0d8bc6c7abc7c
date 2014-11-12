@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a65312a_57f84ee5",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/model/TaskEntityManager.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-11-12T00:26:08Z",
+      "side": 1,
+      "message": "Probably don\u0027t include printlns",
+      "revId": "443af20862ec87109afb8e3610e0d8bc6c7abc7c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a65312a_b7dc4276",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/model/TaskEntityManager.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-11-12T00:26:08Z",
+      "side": 1,
+      "message": "Also here",
+      "revId": "443af20862ec87109afb8e3610e0d8bc6c7abc7c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a65312a_97d94686",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/model/TaskModel.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-11-12T00:26:08Z",
+      "side": 1,
+      "message": "Let\u0027s just stick to camel case names.",
+      "revId": "443af20862ec87109afb8e3610e0d8bc6c7abc7c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a65312a_f7e6ba43",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/model/TaskModel.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-11-12T00:26:08Z",
+      "side": 1,
+      "message": "Why?",
+      "revId": "443af20862ec87109afb8e3610e0d8bc6c7abc7c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a65312a_d7e3be31",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenterObserver.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-11-12T00:26:08Z",
+      "side": 1,
+      "message": "Just use toString().",
+      "revId": "443af20862ec87109afb8e3610e0d8bc6c7abc7c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a65312a_37d03253",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/TaskView.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-11-12T00:26:08Z",
+      "side": 1,
+      "message": "Nothing changed here?",
+      "revId": "443af20862ec87109afb8e3610e0d8bc6c7abc7c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
