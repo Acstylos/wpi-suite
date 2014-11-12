@@ -48,7 +48,11 @@ public class BucketModel extends AbstractModel {
 	@Override
 	public String toJson() {
 		return new Gson().toJson(this, BucketModel.class);
+	}
 
+    public static BucketModel[] fromJsonArray(String json) {
+        final Gson parser = new Gson();
+        return parser.fromJson(json, BucketModel[].class);
 	}
 	/**
 	 * Will Implement Later
@@ -67,11 +71,24 @@ public class BucketModel extends AbstractModel {
 	}
 	
 	/**
+	 * stores the ID of Bucket.
+	 * @param ID serialized integer value of bucket
+	 */
+	public void setID(int ID){
+		this.ID = ID;
+	}
+	
+	/**
 	 * gets private field title
 	 * @return Title of Bucket
 	 */
 	public String getTitle(){
 		return title;
+    }
+    
+
+    public void setTitle(String title) {
+        this.title = title;
 	}
 	/**
 	 * Sets private field Bucket
@@ -132,8 +149,6 @@ public class BucketModel extends AbstractModel {
     public static BucketModel fromJson(String json) {
         return new Gson().fromJson(json, BucketModel.class);
     }
-
-
  
 
 }
