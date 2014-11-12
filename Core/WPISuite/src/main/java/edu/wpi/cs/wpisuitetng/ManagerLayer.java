@@ -36,6 +36,7 @@ import edu.wpi.cs.wpisuitetng.modules.postboard.model.PostBoardEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.RequirementEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.iterations.IterationEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowModelEntityManager;
 
 /**
  * This singleton class responds to API requests directed at 
@@ -76,9 +77,11 @@ public class ManagerLayer {
 		map.put("postboardpostboardmessage", new PostBoardEntityManager(data));
 		map.put("requirementmanager" + "requirement", new RequirementEntityManager(data));
 		map.put("requirementmanager" + "iteration", new IterationEntityManager(data));
-		//map.put("taskmanager" + "bucketModel", new BucketEntityManager(data));
+		map.put("taskmanager" + "bucketModel", new BucketEntityManager(data));
+		map.put("taskmanager" + "workflowmodel", new WorkflowModelEntityManager(data));
+
 		//add just your module to this list
-		String[] fullModuleList = {"core","defecttracker","postboard","requirementmanager"};
+		String[] fullModuleList = {"core","defecttracker","postboard","requirementmanager","taskmanager"};
 		((ProjectManager)map.get("coreproject")).setAllModules(fullModuleList);
 		String ssid = null;
 		
