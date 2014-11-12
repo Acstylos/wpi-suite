@@ -12,14 +12,16 @@ import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
  */
 public class BucketModel extends AbstractModel {
 	
-	private static int ID=0;//Bucket ID
+	private static int increment=1;
+	private int ID;//Bucket ID
 	private String title; //title of Bucket
 	private ArrayList <Integer> bucket; //list of serialized IDs of tasks 
 	
 	BucketModel(String title){
+		this.ID=increment;
 		this.title=title;
 		this.bucket=new ArrayList <Integer>();
-		ID++;
+		BucketModel.increment++;
 	}
 	
 	
