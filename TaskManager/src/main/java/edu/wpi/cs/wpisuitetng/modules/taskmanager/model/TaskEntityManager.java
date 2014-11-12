@@ -33,14 +33,15 @@ public class TaskEntityManager implements EntityManager<TaskModel> {
     @Override
     public TaskModel makeEntity(Session s, String content)
             throws BadRequestException, ConflictException, WPISuiteException {
-        /* Make a new task corresponding to the JSON data */
+    	System.out.println("Make Task: " + content);
+        // Make a new task corresponding to the JSON data
         TaskModel taskModel = TaskModel.fromJson(content);
         
-        /* Find the highest used ID and assign the next number to this task */
-        int id = 0;
+        // Find the highest used ID and assign the next number to this task
+        int id = 1;
         for(TaskModel model : getAll(s)) {
-            if(model.getID() >= id) {
-                id = model.getID() + 1;
+            if(model.getId() >= id) {
+                id = model.getId() + 1;
             }
         }
         
@@ -57,16 +58,34 @@ public class TaskEntityManager implements EntityManager<TaskModel> {
     /** @inheritDoc */
     @Override
     public TaskModel[] getEntity(Session s, String id)
-            throws NotFoundException, WPISuiteException {
-        /* Retrieve the task model(s) with the given ID */
-        List<Model> models = db.retrieve(TaskModel.class, "ID", Integer.parseInt(id), s.getProject());
-        return models.toArray(new TaskModel[0]);
+            throws NotFoundException {
+    	System.out.println("Get Task ID: " + id);
+        // Retrieve the task model(s) with the given ID
+    	final int intId = Integer.parseInt(id);
+    	
+    	if(intId < 1){
+    		throw new NotFoundException();
+    	}
+    	TaskModel[] models = null;
+    	try{
+    		models = db.retrieve(TaskModel.class, "id", intId, s.getProject()).toArray(new TaskModel[0]);
+    	} catch (WPISuiteException e) {
+    		e.printStackTrace();
+    	}
+    	
+    	if(models.length < 1 || models[0] == null) {
+    		throw new NotFoundException();
+    	}
+    	
+    	System.out.println("Got: " + models[0].toJson());
+    	
+    	return models;
     }
 
     /** @inheritDoc */
     @Override
     public TaskModel[] getAll(Session s) throws WPISuiteException {
-        System.out.println("getAll");
+        System.out.println("Get All Tasks");
         /* Get all of the TaskModel objects */
         List<Model> tasks = db.retrieveAll(new TaskModel(), s.getProject());
         return tasks.toArray(new TaskModel[0]);
@@ -74,26 +93,34 @@ public class TaskEntityManager implements EntityManager<TaskModel> {
 
     @Override
     public TaskModel update(Session s, String content) throws WPISuiteException {
-        TaskModel newTaskModel = TaskModel.fromJson(content);
+        System.out.println("Update Task:" + content);
+    	TaskModel newTaskModel = TaskModel.fromJson(content);
         
         /* Retrieve the task model(s) with the given ID */
-        List<Model> models = db.retrieve(TaskModel.class, "ID", newTaskModel.getID(), s.getProject());
+        List<Model> models = db.retrieve(TaskModel.class, "id", newTaskModel.getId(), s.getProject());
+        
         if(models.size() == 0) {
             throw new NotFoundException();
         }
         
         /* Update the records to the new model */
-        for(Model model : models) {
-            ((TaskModel)model).copyFrom(newTaskModel);
+        TaskModel currentModel = (TaskModel)models.get(0);
+        System.out.println("Old Task: " + currentModel.toJson());
+        currentModel.copyFrom(newTaskModel);
+        
+        if(!db.save(currentModel, s.getProject())){
+        	throw new WPISuiteException();
+        } else {
+        	System.out.println("Sucessfully saved");
         }
         
-        return newTaskModel;
+        return currentModel;
     }
 
     /** @inheritDoc */
     @Override
     public void save(Session s, TaskModel model) throws WPISuiteException {
-        System.out.println("save");
+        System.out.println("Saving Task: " + model.toJson());
         /* Save the task */
         db.save(model);
     }
@@ -101,15 +128,16 @@ public class TaskEntityManager implements EntityManager<TaskModel> {
     /** @inheritDoc */
     @Override
     public boolean deleteEntity(Session s, String id) throws WPISuiteException {
-        System.out.println("deleteEntity");
+        System.out.println("Delete Task ID: " + id);
         // TODO Auto-generated method stub
-        return false;
+		return (db.delete(getEntity(s, id)[0]) != null) ? true : false;
     }
 
     /** @inheritDoc */
     @Override
     public void deleteAll(Session s) throws WPISuiteException {
-        System.out.println("deleteAll");
+        System.out.println("Delete All Tasks");
+        db.deleteAll(new TaskModel(), s.getProject());
         // TODO Auto-generated method stub
         
     }

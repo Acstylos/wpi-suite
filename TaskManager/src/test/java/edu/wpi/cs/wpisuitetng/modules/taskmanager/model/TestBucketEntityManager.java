@@ -114,7 +114,7 @@ public class TestBucketEntityManager {
         BucketModel bkmList[] = manager.getEntity(defaultSession, "4");
         
         assertEquals(1, bkmList.length);
-        assertEquals(4, bkmList[0].getID());
+        assertEquals(4, bkmList[0].getId());
         assertEquals("test 4", bkmList[0].getTitle());
     }
 
@@ -173,7 +173,7 @@ public class TestBucketEntityManager {
     public void testUpdatingAnInteration() throws WPISuiteException {
         manager.save(defaultSession, new BucketModel(3, "test 3"));
         assertEquals(1, manager.Count());
-        assertEquals(3, manager.getEntity(defaultSession, "3")[0].getID());
+        assertEquals(3, manager.getEntity(defaultSession, "3")[0].getId());
         
         
         assertEquals("test 3", manager.getEntity(defaultSession, "3")[0].getTitle());

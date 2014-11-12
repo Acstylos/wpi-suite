@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+
 /**
  * Bucket is a list of serialized ID's of tasks
  * @author TheFloorIsJava
@@ -12,18 +13,26 @@ import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
  */
 public class BucketModel extends AbstractModel {
 	
-
-	private static int increment=1;
-	private int ID;//Bucket ID
-	private String title; //title of Bucket
-	private ArrayList <Integer> bucket; //list of serialized IDs of tasks 
+	private int id;
+	private String title;
+	private ArrayList<Integer> bucket;
 	
-	BucketModel(String title){
-
-		this.ID=increment;
+	/**
+	 * Default constructor
+	 */
+	public BucketModel(){
+		this(-1, "Title");
+	}
+	
+	/**
+	 * Constructor for the bucket model
+	 * @param id
+	 * @param title
+	 */
+	public BucketModel(int id, String title){
+		this.id = id;
 		this.title=title;
-		this.bucket=new ArrayList <Integer>();
-		BucketModel.increment++;
+		this.bucket = new ArrayList <Integer>();
 	}
 	
 	/**
@@ -34,6 +43,7 @@ public class BucketModel extends AbstractModel {
 		// TODO Auto-generated method stub
 		
 	}
+	
 	/**
 	 * Will Implement Later
 	 */
@@ -42,98 +52,92 @@ public class BucketModel extends AbstractModel {
 		// TODO Auto-generated method stub
 		
 	}
+	
 	/**
-	 * Gives JSon Server instance of this class
+	 * @return The JSON string for the object
 	 */
 	@Override
 	public String toJson() {
 		return new Gson().toJson(this, BucketModel.class);
-
 	}
+
 	/**
-	 * Will Implement Later
+	 * Parses a JSON string to an object
+	 * @param json The JSON string for the BucketModel
+	 * @return The BucketModel parsed from the JSON string
+	 */
+	public static BucketModel fromJson(String json) {
+		final Gson parser = new Gson();
+		return parser.fromJson(json, BucketModel.class);
+	}
+	
+	/**
+	 * Parses a JSON string to an array of objects
+	 * @param json The JSON string for the array of BucketModels
+	 * @return An array of BucketModels parsed from a Json array
+	 */
+    public static BucketModel[] fromJsonArray(String json) {
+        final Gson parser = new Gson();
+        return parser.fromJson(json, BucketModel[].class);
+	}
+    
+	/**
+	 * Will implement later
+	 * @see edu.wpi.cs.wpisuitetng.modules.Model#identify(java.lang.Object)
 	 */
 	@Override
 	public Boolean identify(Object o) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
 	/**
-	 * retrieves the ID of Bucket.
-	 * @return ID serialized integer value of bucket
+	 * @return The ID of the bucket
 	 */
-	public int getID(){
-		return ID;
+	public int getId(){
+		return id;
 	}
 	
 	/**
-	 * gets private field title
-	 * @return Title of Bucket
+	 * @param ID The ID of the bucket to be set
+	 */
+	public void setId(int id){
+		this.id = id;
+	}
+	
+	/**
+	 * @return The title of the bucket
 	 */
 	public String getTitle(){
 		return title;
+    }
+    
+	/**
+	 * @param title The title of the bucket to be set
+	 */
+    public void setTitle(String title) {
+        this.title = title;
 	}
 	/**
-	 * Sets private field Bucket
-	 * @param newBucket the new list of Integers to be set
+	 * @param newBucket The list of task IDs to be set
 	 */
 	public void setBucket(ArrayList <Integer> newBucket){
-		this.bucket=newBucket;
-		
+		this.bucket = newBucket;
 	}
+	
 	/**
-	 * returns the private field bucket 
-	 * @return bucket (list of integers)
+	 * @return The list of task IDs
 	 */
 	public ArrayList<Integer> getBucket(){
 		return this.bucket;
 	}
-	
-	/**
-     * Constructs a bucket with default characteristics
-     */
-    public BucketModel(int id, String name) {
-    	
-    	this.ID = id;
-    	this.title = name;
-    	if (name.trim().length() == 0)
-			this.title = "Backlog";
-    }
-    
-    /**
-     * Constructs a bucket with default characteristics
-     */
-    public BucketModel() {
-    	super();
-    	ID = 1;
-    	title = "";
-    }
-
-
 
     /**
 	 * Copies all of the values from the given BucketModel to this Bucket
 	 * excluding the Id.
-	 * 
 	 * @param toCopyFrom the BucketModel to copy from.
 	 */
 	public void copyFrom(BucketModel toCopyFrom) { 
 		this.title = toCopyFrom.title;
 	}
-	
-	/**
-     * Returns an instance of workflow constructed using the given
-     * workflow encoded as a JSON string.
-     * 
-     * @param json
-     *            JSON-encoded Requirement to deserialize @return the
-     *            workflow contained in the given JSON
-     */
-    public static BucketModel fromJson(String json) {
-        return new Gson().fromJson(json, BucketModel.class);
-    }
-
-
- 
-
 }

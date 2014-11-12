@@ -7,43 +7,63 @@ import com.google.gson.Gson;
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 
 /**
- * Workflow Model is the full screen (mainly the list of buckets)
+ * Workflow is the container for the buckets
  * @author TheFloorIsJava
  *
  */
 public class WorkflowModel extends AbstractModel{
 
-    private int ID;
-    private String workflowTitle;
-    private ArrayList <BucketModel> listOfBucket;
+    private int id;
+    private String title;
+    private ArrayList<Integer> bucketIds;
     
+    /**
+     * Default constructor
+     */
     public WorkflowModel(){
-	this("", -1);
+    	this(-1, "");
     }
 
-
-    public WorkflowModel(String title, int ID){
-	this.ID = ID;
-	this.workflowTitle=title;
-	this.listOfBucket=new ArrayList<>();
-
+    /**
+     * Constructor for the workflow model
+     * @param title
+     * @param ID
+     */
+    public WorkflowModel(int ID, String title){
+    	this.id = ID;
+    	this.title=title;
+    	this.bucketIds=new ArrayList<>();
     }
+    
+    /**
+     * Will implement later
+     */
     @Override
     public void save() {
 	// TODO Auto-generated method stub
 
     }
 
+    /**
+     * Will implement later
+     */
     @Override
     public void delete() {
 	// TODO Auto-generated method stub
 
     }
-
+    
     /**
-     * Returns an instance of WorkflowModel constructed using the given
-     * WorkflowModel encoded as a JSON string.
-     * 
+     * @return The Json string for the object
+     */
+    @Override
+    public String toJson(){
+    	Gson gson = new Gson();
+    	return gson.toJson(this, WorkflowModel.class);
+    }
+    
+    /**
+     * Parses a Json string to an object
      * @param json the json-encoded WorkflowModel to deserialize
      * @return the WorkflowModel contained in the given JSON
      */
@@ -51,61 +71,79 @@ public class WorkflowModel extends AbstractModel{
         final Gson parser = new Gson();
         return parser.fromJson(json, WorkflowModel.class);
     }
-
-    @Override
-    public String toJson() {
-	return new Gson().toJson(this, WorkflowModel.class);
-
+    
+    /**
+     * Parses a Json string to an array of objects
+     * @param json The Json string for the array of BucketModels
+     * @return An array of BucketModels parsed from the Json array
+     */
+    public static WorkflowModel[] fromJSONArray(String json) {
+        final Gson parser = new Gson();
+        return parser.fromJson(json, WorkflowModel[].class);
     }
 
+    /**
+     * Will implement later
+     * @see edu.wpi.cs.wpisuitetng.modules.Model#identify(java.lang.Object)
+     */
     @Override
     public Boolean identify(Object o) {
-	// TODO Auto-generated method stub
-	return null;
+    	// TODO Auto-generated method stub
+    	return null;
     }
+    
     /**
-     * gets the list of Buckets
-     * @return the List of Buckets
+     * gets the list of bucket IDs
+     * @return the List of bucket IDs
      */
-    public ArrayList<BucketModel> getWorkflow(){
-	return this.listOfBucket;
+    public ArrayList<Integer> getBucketIds(){
+    	return this.bucketIds;
+    }
+    
+    /**
+     * Sets the list of bucket IDs
+     * @param bucketIDs The list of bucketIDs
+     */
+    public void setBucketIds(ArrayList<Integer> bucketIds) {
+    	this.bucketIds = bucketIds;
     }
 
     /**
-     * get Title of WorkflowModel
-     * @return workflowTitle
+     * @return The title of the workflow
      */
     public String getTitle(){
-	return this.workflowTitle;
+    	return this.title;
     }
 
     /**
-     * set title of WorkflowModel
-     * @param title
+     * @param title The title of the workflow to be set
      */
     public void setTitle(String title){
-	this.workflowTitle=title;
+    	this.title = title;
     }
     
     /**
-     * get the ID of WorkflowModel
-     * @return ID
+     * @return The ID of the workflow
      */
-    public int getID(){
-	return this.ID;
+    public int getId(){
+    	return this.id;
     }
-    
+
+    /**
+     * @param ID The ID of the workflow to be set
+     */
+    public void setId(int id){
+    	this.id = id;
+    }
     
     /**
 	 * Copies all of the values from the given WorkflowModel to this WorkflowModel
 	 * excluding the Id.
-	 * 
 	 * @param toCopyFrom the BucketModel to copy from.
 	 */
     public void copyFrom(WorkflowModel toCopyFrom) { 
-	this.ID = toCopyFrom.ID;
-	this.workflowTitle = toCopyFrom.workflowTitle;
-	this.listOfBucket = toCopyFrom.listOfBucket;
+    	this.id = toCopyFrom.id;
+    	this.title = toCopyFrom.title;
+    	this.bucketIds = toCopyFrom.bucketIds;
     }
-
 }

@@ -47,13 +47,10 @@ public class TaskModel extends AbstractModel {
     /**
      * Constructor for a task with specific properties. Other properties are the
      * same as the default constructor
-     * 
-     * @param id
-     *            the unique id of the Task
-     * @param title
-     *            the title of the Task
-     * @param description
-     *            the description of the Task
+     * @param id The unique id of the task
+     * @param title The title of the task
+     * @param description The description of the task
+     * @param dueDate The due date for the task
      */
     public TaskModel(int id, String title, String description,
                      int estimatedEffort, Date dueDate) {
@@ -66,75 +63,70 @@ public class TaskModel extends AbstractModel {
     }
 
     /**
-     * @return the ID of the task. Returns -1 by default
+     * @return The ID of the task. Returns -1 by default
      */
-    public int getID() {
+    public int getId() {
         return id;
     }
 
     /**
-     * @param id
-     *            , The task ID
+     * @param id The task ID to be set
      */
     public void setId(int id) {
         this.id = id;
     }
 
     /**
-     * @return the Title of this task
+     * @return The title of this task
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     * @param title
-     *            , The task Title
+     * @param title The task title to be set
      */
     public void setTitle(String title) {
         this.title = title;
     }
 
     /**
-     * @return the description of this Task
+     * @return The description of this Task
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     * @param description
-     *            , the Description of this Task
+     * @param description The description of this task to be set
      */
     public void setDescription(String description) {
         this.description = description;
     }
 
     /**
-     * @return the list of users assigned to this Task
+     * @return The list of users assigned to this task
      */
     public List<User> getAssignedTo() {
         return assignedTo;
     }
 
     /**
-     * @param user
-     *            adds a user to the list of assigned users
+     * @param user Adds a user to the list of assigned users
      */
     public void setAssignedTo(User user) {
         this.assignedTo.add(user);
     }
 
     /**
-     * @return the due date of this Task
+     * @return The due date of this task
      */
     public Date getDueDate() {
         return dueDate;
     }
 
     /**
-     * @param Sets
-     *            the due date to the given date.
+     * @param dueDate The due date of the task to be set.
      */
     public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
@@ -142,7 +134,7 @@ public class TaskModel extends AbstractModel {
 
     /**
      * Copy all of the fields from another TaskModel
-     * @param other
+     * @param other The TaskModel to be copied
      */
     public void copyFrom(TaskModel other) {
         this.title = other.getTitle();
@@ -153,9 +145,8 @@ public class TaskModel extends AbstractModel {
     }
     
     /**
-     * Converts this Task to a JSON string
-     * 
-     * @return a string in JSON representing this Task
+     * Converts this task object to a JSON string
+     * @return A string in JSON representing this Task
      */
     public String toJson() {
         String json;
@@ -165,11 +156,9 @@ public class TaskModel extends AbstractModel {
     }
 
     /**
-     * Converts the given list of Task to a JSON string
-     * 
-     * @param tlist
-     *            a list of Task
-     * @return a string in JSON representing the list of Tasks
+     * Converts the given list of tasks to a JSON string
+     * @param tlist A list of Tasks
+     * @return A string in JSON representing the list of tasks
      */
     public static String toJson(TaskModel[] tlist) {
         String json;
@@ -180,6 +169,7 @@ public class TaskModel extends AbstractModel {
 
     /**
      * Convert the given JSON string to a TaskModel instance
+     * @return The JSON string representing the object
      */
     public static TaskModel fromJson(String json) {
         final Gson parser = new Gson();
@@ -187,24 +177,22 @@ public class TaskModel extends AbstractModel {
     }
     
     /**
-     * Convert the given JSON string with a JSON array of tasks into a
-     * TaskModel instance, ignoring all but the first element.
-     * @return The first TaskModel in the JSON array, or null if it's empty
+     * Convert the given JSON string with a JSON array of tasks
+     * into an array of tasks
+     * @return TaskModel array
      */
-    public static TaskModel fromJsonArray(String json) {
+    public static TaskModel[] fromJsonArray(String json) {
         final Gson parser = new Gson();
-        TaskModel[] models = parser.fromJson(json, TaskModel[].class);
-        
-        if(models.length > 0) {
-            return models[0];
-        } else {
-            return null;
-        }
+        return parser.fromJson(json, TaskModel[].class);
     }
     
+    /**
+     * NEEDS A COMMENT
+     * @see edu.wpi.cs.wpisuitetng.modules.Model#identify(java.lang.Object)
+     */
     public Boolean identify(Object o) {
         Boolean returnValue = false;
-        if (o instanceof TaskModel && id == ((TaskModel) o).getID()) {
+        if (o instanceof TaskModel && id == ((TaskModel) o).getId()) {
             returnValue = true;
         }
         if (o instanceof String && Integer.toString(id).equals(o)) {
@@ -212,34 +200,45 @@ public class TaskModel extends AbstractModel {
         }
         return returnValue;
     }
-
+    
+    /**
+     * Will implement later
+     */
     public void save() {
         // TODO Auto-generated method stub
     }
 
+    /**
+     * Will implement later
+     */
     public void delete() {
         // TODO Auto-generated method stub
     }
 
     /**
-     * @return EstimatedEffort of Task
+     * @return The estimated effort of this task
      */
     public int getEstimatedEffort() {
         return estimatedEffort;
     }
 
     /**
-     * @param EstimatedEffort
-     *            of Task
+     * @param estimatedEffort The estimated effort of this task to be set
      */
     public void setEstimatedEffort(int estimatedEffort) {
         this.estimatedEffort = estimatedEffort;
     }
 
+    /**
+     * @return The actual effort of this task
+     */
     public int getActualEffort() {
         return actualEffort;
     }
 
+    /**
+     * @param actualEffort The actual effort of this task to be set
+     */
     public void setActualEffort(int actualEffort) {
         this.actualEffort = actualEffort;
     }

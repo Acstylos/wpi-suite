@@ -16,7 +16,6 @@ import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 import java.awt.event.ActionEvent;
-import java.util.Date;
 
 /**
  * This class creates a TaskView and updates the task with new information from
@@ -62,9 +61,9 @@ public class TaskPresenter {
     private void saveView() {
         updateModel();
         
-        Request request = Network.getInstance().makeRequest("taskmanager/task/" + this.model.getID(), HttpMethod.POST);
+        Request request = Network.getInstance().makeRequest("taskmanager/task/" + this.model.getId(), HttpMethod.POST);
         request.setBody(this.model.toJson());
-        request.addObserver(new TaskRequestObserver(this));
+        request.addObserver(new TaskObserver(this));
         request.send();
     }
 
@@ -72,8 +71,8 @@ public class TaskPresenter {
      * Have the presenter reload the view from the model.
      */
     private void reloadView() {
-        Request request = Network.getInstance().makeRequest("taskmanager/task/" + this.model.getID(), HttpMethod.GET);
-        request.addObserver(new TaskRequestObserver(this));
+        Request request = Network.getInstance().makeRequest("taskmanager/task/" + this.model.getId(), HttpMethod.GET);
+        request.addObserver(new TaskObserver(this));
         request.send();
     }
     

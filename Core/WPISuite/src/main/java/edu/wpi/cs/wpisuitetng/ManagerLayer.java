@@ -37,7 +37,7 @@ import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.RequirementEntit
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.iterations.IterationEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskEntityManager;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowModelEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowEntityManager;
 
 /**
  * This singleton class responds to API requests directed at 
@@ -79,7 +79,8 @@ public class ManagerLayer {
 		map.put("requirementmanager" + "requirement", new RequirementEntityManager(data));
 		map.put("requirementmanager" + "iteration", new IterationEntityManager(data));
 		map.put("taskmanager" + "task", new TaskEntityManager(data));
-		map.put("taskmanager" + "workflowmodel", new WorkflowModelEntityManager(data));
+		map.put("taskmanager" + "workflow", new WorkflowEntityManager(data));
+		map.put("taskmanager" + "bucket", new BucketEntityManager(data));
 
 		//add just your module to this list
 		String[] fullModuleList = {"core","defecttracker","postboard","requirementmanager","taskmanager"};

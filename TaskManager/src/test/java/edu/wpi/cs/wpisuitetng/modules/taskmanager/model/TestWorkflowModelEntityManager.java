@@ -17,7 +17,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.MockData;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.iterations.Iteration;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowModelEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowEntityManager;
 
 
 public class TestWorkflowModelEntityManager {
@@ -27,7 +27,7 @@ public class TestWorkflowModelEntityManager {
     User testUser;
     String mockSsid;
     WorkflowModel wfm;
-    WorkflowModelEntityManager manager;
+    WorkflowEntityManager manager;
 
     @Before
     public void setUp() {
@@ -38,7 +38,7 @@ public class TestWorkflowModelEntityManager {
 	mockSsid = "abc123";
 	defaultSession = new Session(testUser, testProject, mockSsid);
 	wfm = new WorkflowModel();
-	manager = new WorkflowModelEntityManager(db);
+	manager = new WorkflowEntityManager(db);
 	db.save(testUser);
     }
 
@@ -108,13 +108,13 @@ public class TestWorkflowModelEntityManager {
      */
     @Test
     public void testGetEntity() throws WPISuiteException {
-	manager.save(defaultSession, new WorkflowModel("test 3", 3));
-	manager.save(defaultSession, new WorkflowModel("test 4", 4));
-	manager.save(defaultSession, new WorkflowModel("test 5", 5));
+	manager.save(defaultSession, new WorkflowModel(3, "test 3"));
+	manager.save(defaultSession, new WorkflowModel(4, "test 4"));
+	manager.save(defaultSession, new WorkflowModel(5, "test 5"));
 	WorkflowModel wfmList[] = manager.getEntity(defaultSession, "4");
 
 	assertEquals(1, wfmList.length);
-	assertEquals(4, wfmList[0].getID());
+	assertEquals(4, wfmList[0].getId());
 	assertEquals("test 4", wfmList[0].getTitle());
     }
 
@@ -134,9 +134,9 @@ public class TestWorkflowModelEntityManager {
     @Test
     public void testGetEntityForBucketNotFound() throws WPISuiteException {
 	boolean exceptionThrown = false;
-	manager.save(defaultSession, new WorkflowModel("test 3", 3));
-	manager.save(defaultSession, new WorkflowModel("test 4", 4));
-	manager.save(defaultSession, new WorkflowModel("test 5", 5));
+	manager.save(defaultSession, new WorkflowModel(3, "test 3"));
+	manager.save(defaultSession, new WorkflowModel(4, "test 4"));
+	manager.save(defaultSession, new WorkflowModel(5, "test 5"));
 	try {
 	    manager.getEntity(defaultSession, "6");
 	} catch (NotFoundException e) {
@@ -151,7 +151,7 @@ public class TestWorkflowModelEntityManager {
      */
     @Test
     public void testDeleteEntity() throws WPISuiteException {
-	manager.save(defaultSession, new WorkflowModel("test 3", 3));
+	manager.save(defaultSession, new WorkflowModel(3, "test 3"));
 	assertEquals(1, manager.Count());
 	assertTrue(manager.deleteEntity(defaultSession, "3"));
 	assertEquals(0, manager.Count());
@@ -171,18 +171,18 @@ public class TestWorkflowModelEntityManager {
      */
     @Test
     public void testUpdatingAnInteration() throws WPISuiteException {
-	manager.save(defaultSession, new WorkflowModel("test 3", 3));
+	manager.save(defaultSession, new WorkflowModel(3, "test 3"));
 	assertEquals(1, manager.Count());
-	assertEquals(3, manager.getEntity(defaultSession, "3")[0].getID());
+	assertEquals(3, manager.getEntity(defaultSession, "3")[0].getId());
 	assertEquals("test 3", manager.getEntity(defaultSession, "3")[0].getTitle());
 
-	manager.update(defaultSession, new WorkflowModel("changed", 3).toJson());
+	manager.update(defaultSession, new WorkflowModel(3, "changed").toJson());
 	assertEquals(1, manager.Count());
 	assertEquals("changed", manager.getEntity(defaultSession, "3")[0].getTitle());
 
 	boolean exceptionThrown = false;
 	try {
-	    manager.update(defaultSession, new WorkflowModel("change Id 4", 4).toJson());
+	    manager.update(defaultSession, new WorkflowModel(4, "change Id 4").toJson());
 	} catch (BadRequestException e) {
 	    exceptionThrown = true;
 	}

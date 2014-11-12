@@ -11,7 +11,6 @@ import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
-import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 
 /**
@@ -21,33 +20,46 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
  */
 public class BucketEntityManager implements EntityManager<BucketModel> {
 	
-	/** The database */
-	Data db;
+	private Data db;
 	
 	/**
 	 * Constructs the entity manager. This constructor is called by
 	 * {@link edu.wpi.cs.wpisuitetng.ManagerLayer#ManagerLayer()}. To make sure
 	 * this happens, be sure to place add this entity manager to the map in
 	 * the ManagerLayer file.
-	 * 
 	 * @param db a reference to the persistent database
 	 */
 	public BucketEntityManager(Data db) {
 		this.db = db;
 	}
+	
 	/**
-	 * Saves a Workflow when it is received from a client
+	 * Saves a Bucket when it is received from a client
 	 * 
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#makeEntity(edu.wpi.cs.wpisuitetng.Session, java.lang.String)
 	 */
 	@Override
 	public BucketModel makeEntity(Session s, String content)
 			throws BadRequestException, ConflictException, WPISuiteException {
-		final BucketModel newBucket = BucketModel.fromJson(content);
-		if(!db.save(newBucket, s.getProject())){
-			throw new WPISuiteException();
-		}
-		return newBucket;
+        System.out.println("Make Bucket: " + content);
+        /* Make a new Bucket corresponding to the JSON data */
+        BucketModel bucketModel = BucketModel.fromJson(content);
+
+        int id = 1;
+        for (BucketModel model : getAll(s)){
+            if(model.getId() >= id) {
+                id = model.getId() + 1;
+            }
+        }
+        
+        bucketModel.setId(id);
+        
+        /* Save it to the database */
+        if (!db.save(bucketModel, s.getProject())) {
+            throw new WPISuiteException("Error saving Workflow to database");
+        }
+
+        return bucketModel;
 	}
 	
 
@@ -63,33 +75,74 @@ public class BucketEntityManager implements EntityManager<BucketModel> {
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getEntity(Session, String)
 	 */
 	@Override
-	public BucketModel[] getEntity(Session s, String id) throws NotFoundException,
-			WPISuiteException {
+	public BucketModel[] getEntity(Session s, String id) throws NotFoundException {
+		System.out.println("Get Task ID: " + id);
 		final int intId = Integer.parseInt(id);
+		
 		if (intId < 1) {
 			throw new NotFoundException();
 		}
-		BucketModel[] Buckets = null;
+		BucketModel[] buckets = null;
 		try {
-			Buckets = db.retrieve(BucketModel.class, "id", intId, s.getProject()).toArray(new BucketModel[0]);			
+			buckets = db.retrieve(BucketModel.class, "id", intId, s.getProject()).toArray(new BucketModel[0]);			
 		} catch (WPISuiteException e) {
 			e.printStackTrace();
 		}
-		if (Buckets.length < 1 || Buckets[0] == null) {
+		
+		if (buckets.length < 1 || buckets[0] == null) {
 			throw new NotFoundException();
 		}
-		return Buckets;
+        
+		System.out.println("Got: " + buckets[0].toJson());
+		
+        return buckets;
 	}
 	
 	/**
-	 * Retrieves all Buckets from the database
-	 * @param s the session
-	 * @return array of all stored Buckets 
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getAll(Session)
 	 */
 	@Override
-	public BucketModel[] getAll(Session s) throws WPISuiteException {
+	public BucketModel[] getAll(Session s) {
+        System.out.println("Get All Buckets");
 		return db.retrieveAll(new BucketModel(), s.getProject()).toArray(new BucketModel[0]);
+	}
+	
+	/**
+	 * Updates the given Buckets in the database
+	 * @param session the session the Bucket to be updated is in
+	 * @param content the updated Bucket as a Json string	
+	 * @return the old Buckets prior to updating 
+	 * @throws WPISuiteException 
+	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#update(Session, String) 
+	 * */
+	@Override
+	public BucketModel update(Session s, String content) throws WPISuiteException {
+        System.out.println("Update Bucket: " + content);
+		BucketModel newBucketModel = BucketModel.fromJson(content);
+		/*
+		 * Because of the disconnected objects problem in db4o, we can't just save updatedBucketModel.
+		 * We have to get the original BucketModel from db4o, copy properties from updatedBucketModel,
+		 * then save the original BucketModel again.
+		 */
+		List<Model> models = db.retrieve(BucketModel.class, "id", newBucketModel.getId(), s.getProject());
+
+		if(models.size() == 0) {
+			throw new NotFoundException();
+		}
+		
+		BucketModel currentModel = (BucketModel)models.get(0);
+        System.out.println("Old Bucket: " + currentModel.toJson());
+		
+		// copy values to old BucketModel and fill in our changeset appropriately
+		currentModel.copyFrom(newBucketModel);
+		
+		if(!db.save(currentModel, s.getProject())) {
+			throw new WPISuiteException();
+		} else{
+        	System.out.println("Sucessfully saved");
+		}
+		
+		return currentModel;
 	}
 	
 	/**
@@ -99,6 +152,7 @@ public class BucketEntityManager implements EntityManager<BucketModel> {
 	 */
 	@Override
 	public void save(Session s, BucketModel model) throws WPISuiteException {
+		System.out.println("Saving Bucket: " + model.toJson());
 		db.save(model, s.getProject());	
 	}
 	
@@ -113,6 +167,7 @@ public class BucketEntityManager implements EntityManager<BucketModel> {
 	 */
 	@Override
 	public boolean deleteEntity(Session s, String id) throws WPISuiteException {
+        System.out.println("Delete Task ID: " + id);
 		//ensureRole(s, Role.ADMIN);
 		return (db.delete(getEntity(s, id)[0]) != null) ? true : false;
 	}
@@ -127,6 +182,7 @@ public class BucketEntityManager implements EntityManager<BucketModel> {
 	@Override
 	public void deleteAll(Session s) throws WPISuiteException {
 		//ensureRole(s, Role.ADMIN);
+		System.out.println("Delet All Buckets");
 		db.deleteAll(new BucketModel(), s.getProject());
 	}
 	
@@ -139,39 +195,6 @@ public class BucketEntityManager implements EntityManager<BucketModel> {
 	@Override
 	public int Count() throws WPISuiteException {
 		return db.retrieveAll(new BucketModel()).size();
-	}
-	
-	
-	
-	/**
-	 * Updates the given Buckets in the database
-	 * @param session the session the Bucket to be updated is in
-	 * @param content the updated Bucket as a Json string	
-	 * @return the old Buckets prior to updating 
-	 * @throws WPISuiteException 
-	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#update(Session, String) 
-	 * */
-	@Override
-	public BucketModel update(Session session, String content) throws WPISuiteException {
-		BucketModel updatedBucketModel = BucketModel.fromJson(content);
-		/*
-		 * Because of the disconnected objects problem in db4o, we can't just save updatedBucketModel.
-		 * We have to get the original BucketModel from db4o, copy properties from updatedBucketModel,
-		 * then save the original BucketModel again.
-		 */
-		List<Model> oldBucketModels = db.retrieve(BucketModel.class, "id", updatedBucketModel.getID(), session.getProject());
-		if (oldBucketModels.size() < 1 || oldBucketModels.get(0) == null) {
-			throw new BadRequestException("BucketModel with ID does not exist.");
-		}
-		BucketModel existingBucketModel = (BucketModel)oldBucketModels.get(0);
-		
-		// copy values to old BucketModel and fill in our changeset appropriately
-		existingBucketModel.copyFrom(updatedBucketModel);
-		
-		if(!db.save(existingBucketModel, session.getProject())) {
-			throw new WPISuiteException();
-		}
-		return existingBucketModel;
 	}
 	
 	/**
