@@ -141,6 +141,7 @@ public class TaskModel extends AbstractModel {
         this.description = other.getDescription();
         this.assignedTo = other.getAssignedTo();
         this.estimatedEffort = other.getEstimatedEffort();
+        this.dueDate = other.getDueDate();
         this.actualEffort = other.getActualEffort();
     }
     

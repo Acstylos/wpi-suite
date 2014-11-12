@@ -91,7 +91,7 @@ public class TaskView extends JPanel {
         this.description.setText(description);
 
         /* Wrap the description text in a scroll pane to allow scrolling */
-        add(new JScrollPane(this.description), "cell 1 3 2 1,alignx center,aligny center");
+        add(new JScrollPane(this.description), "cell 1 3 2 1,grow");
         
         /* Add a button to save the fields */
         this.saveButton = new JButton("Save");
