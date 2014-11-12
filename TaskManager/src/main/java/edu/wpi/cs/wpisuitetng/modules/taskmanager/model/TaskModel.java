@@ -171,7 +171,7 @@ public class TaskModel extends AbstractModel {
      *            a list of Task
      * @return a string in JSON representing the list of Tasks
      */
-    public static String toJSON(TaskModel[] tlist) {
+    public static String toJson(TaskModel[] tlist) {
         String json;
         Gson gson = new Gson();
         json = gson.toJson(tlist, TaskModel.class);
@@ -185,7 +185,23 @@ public class TaskModel extends AbstractModel {
         final Gson parser = new Gson();
         return parser.fromJson(json, TaskModel.class);
     }
-
+    
+    /**
+     * Convert the given JSON string with a JSON array of tasks into a
+     * TaskModel instance, ignoring all but the first element.
+     * @return The first TaskModel in the JSON array, or null if it's empty
+     */
+    public static TaskModel fromJsonArray(String json) {
+        final Gson parser = new Gson();
+        TaskModel[] models = parser.fromJson(json, TaskModel[].class);
+        
+        if(models.length > 0) {
+            return models[0];
+        } else {
+            return null;
+        }
+    }
+    
     public Boolean identify(Object o) {
         Boolean returnValue = false;
         if (o instanceof TaskModel && id == ((TaskModel) o).getID()) {
