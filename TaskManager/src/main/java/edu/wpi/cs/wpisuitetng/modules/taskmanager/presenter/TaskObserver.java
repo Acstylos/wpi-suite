@@ -33,18 +33,25 @@ public class TaskObserver implements RequestObserver {
          * Take the appropriate action based on what the method of the request
          * was.
          */
+
+    	String json = iReq.getResponse().getBody();
+    	TaskModel model = new TaskModel();
         switch (iReq.getHttpMethod()) {
         case GET:
+            model = TaskModel.fromJsonArray(json)[0];
+        	this.presenter.setModel(model);
+        	this.presenter.updateView();
+        	break;
         case PUT:
-            String json = iReq.getResponse().getBody();
-            TaskModel model = TaskModel.fromJsonArray(json)[0];
-            
+            model = TaskModel.fromJson(json);
             /* Set the new model and update the view to reflect the new
              * data.  GET and PUT requests both respond with a modified
              * task - GET returns the task stored in the database and PUT
              * returns the same task but with a new ID assigned. */
-            this.presenter.getModel().copyFrom(model);
+            this.presenter.setModel(model);
             this.presenter.updateView();
+            
+            this.presenter.getBucket().saveTask(model.getId());
             
             break;
 
