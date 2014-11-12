@@ -79,7 +79,7 @@ public class ManagerLayer {
 		map.put("taskmanager" + "workflowmodel", new WorkflowModelEntityManager(data));
 
 		//add just your module to this list
-		String[] fullModuleList = {"core","defecttracker","postboard","requirementmanager"};
+		String[] fullModuleList = {"core","defecttracker","postboard","requirementmanager","taskmanager"};
 		((ProjectManager)map.get("coreproject")).setAllModules(fullModuleList);
 		String ssid = null;
 		

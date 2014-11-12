@@ -16,11 +16,11 @@ public class WorkflowModel extends AbstractModel{
     private int ID;
     private String workflowTitle;
     private ArrayList <BucketModel> listOfBucket;
-    
+
     public WorkflowModel(){
 	this("", -1);
     }
-    
+
     public WorkflowModel(WorkflowModel another){
 	this.ID = another.ID;
 	this.workflowTitle = another.workflowTitle;
@@ -53,16 +53,20 @@ public class WorkflowModel extends AbstractModel{
      * @return the WorkflowModel contained in the given JSON
      */
     public static WorkflowModel fromJson(String json) {
-        final Gson parser = new Gson();
-        return parser.fromJson(json, WorkflowModel.class);
+	final Gson parser = new Gson();
+	return parser.fromJson(json, WorkflowModel.class);
     }
 
-    @Override
+    /**
+     * Passes JSON Server an instance of this Class.
+     */
     public String toJson() {
 	return new Gson().toJson(this, WorkflowModel.class);
 
     }
-
+    /**
+     * Will Implement Later
+     */
     @Override
     public Boolean identify(Object o) {
 	// TODO Auto-generated method stub
@@ -91,7 +95,7 @@ public class WorkflowModel extends AbstractModel{
     public void setTitle(String title){
 	this.workflowTitle=title;
     }
-    
+
     /**
      * get the ID of WorkflowModel
      * @return ID
@@ -99,4 +103,5 @@ public class WorkflowModel extends AbstractModel{
     public int getID(){
 	return this.ID;
     }
+
 }
