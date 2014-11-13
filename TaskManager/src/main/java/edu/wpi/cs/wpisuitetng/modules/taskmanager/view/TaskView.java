@@ -23,6 +23,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import net.miginfocom.swing.MigLayout;
+import javax.swing.JLabel;
 
 /**
  * A {@link javax.swing.JComponent} that renders the fields of a single task and
@@ -37,6 +39,9 @@ public class TaskView extends JPanel {
     private JFormattedTextField dueDate;
     private JButton saveButton;
     private JButton reloadButton;
+    private JLabel lblName;
+    private JLabel lblEstimatedEffort;
+    private JLabel lblDateDue;
 
     /**
      * Create a new TaskView with the specified default values.
@@ -59,41 +64,47 @@ public class TaskView extends JPanel {
         setBorder(BorderFactory.createTitledBorder("Task"));
         
         /* Add a text field with the title */
-        this.title = new JTextField(title);
-        this.title.setFont(new Font("Dialog", Font.BOLD, 12));
-        add(this.title);
+        setLayout(new MigLayout("", "[][][238px]", "[22px][20px][20px][82px][33px]"));
 
         /* Add a text field with the estimated effort */
-        this.estimatedEffort = new JFormattedTextField(new Integer(estimatedEffort));
-        add(this.estimatedEffort);
+        
+        lblName = new JLabel("Name:");
+        add(lblName, "cell 1 0,alignx left");
+        this.title = new JTextField(title);
+        this.title.setFont(new Font("Dialog", Font.BOLD, 12));
+        add(this.title, "cell 2 0,grow");
 
         /* Add a text field with the initial due date */
-        this.dueDate = new JFormattedTextField(dueDate);
-        add(this.dueDate);
+        
+        lblEstimatedEffort = new JLabel("Est. Effort:");
+        add(lblEstimatedEffort, "cell 1 1,alignx left");
+        this.estimatedEffort = new JFormattedTextField(new Integer(estimatedEffort));
+        add(this.estimatedEffort, "cell 2 1,grow");
 
         /* Add a text pane with the initial description text */
+        
+        lblDateDue = new JLabel("Date Due:");
+        add(lblDateDue, "cell 1 2,alignx left");
+        this.dueDate = new JFormattedTextField(dueDate);
+        add(this.dueDate, "cell 2 2,grow");
         this.description = new JTextPane();
         this.description.setText(description);
 
         /* Wrap the description text in a scroll pane to allow scrolling */
-        add(new JScrollPane(this.description));
+        add(new JScrollPane(this.description), "cell 1 3 2 1,grow");
         
         /* Add a button to save the fields */
         this.saveButton = new JButton("Save");
-        add(this.saveButton);
+        //add(this.saveButton);
         
         /* Add a button to reload the fields from the database */
         this.reloadButton = new JButton("Reload");
-        add(this.reloadButton);
+        //add(this.reloadButton);
         
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(saveButton);
         buttonPanel.add(reloadButton);
-        add(buttonPanel);
-
-        /* Set the layout for this JFrame to a standard Swing box layout, and
-         * set some basic layout properties */
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        add(buttonPanel, "cell 0 4 3 1,alignx center,aligny center");
         setPreferredSize(new Dimension(250, 200));
         this.description.setPreferredSize(new Dimension(250, 100));
     }

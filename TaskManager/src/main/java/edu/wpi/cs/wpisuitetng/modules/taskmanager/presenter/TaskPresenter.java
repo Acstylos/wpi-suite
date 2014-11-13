@@ -9,7 +9,9 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
@@ -26,10 +28,14 @@ import java.util.Date;
 public class TaskPresenter {
 
     /** View for the task. */
-    private final TaskView view;
+    private TaskView view;
     /** Model for the task. */
-    private final TaskModel model;
+    private TaskModel model;
+    
+    private BucketPresenter bucket;
 
+    
+    
     /**
      * Constructs a TaskPresenter for the given model. Constructs the view
      * offscreen, available if you call getView().
@@ -37,13 +43,33 @@ public class TaskPresenter {
      * @param model
      *            model to copy
      */
-    public TaskPresenter(TaskModel model) {
+    public TaskPresenter(TaskModel model, BucketPresenter bucket) {
         this.model = model;
+        this.bucket = bucket;
         view = new TaskView(model.getTitle(), model.getEstimatedEffort(),
                 model.getDescription(),  model.getDueDate());
         registerCallbacks();
+        
+        Request request = Network.getInstance().makeRequest("taskmanager/task", HttpMethod.PUT);
+        request.setBody(this.model.toJson());
+        request.addObserver(new TaskObserver(this));
+        request.send();
     }
 
+    
+    /**
+     * 
+     * @param id
+     */
+    public TaskPresenter(int id, BucketPresenter bucket){
+    	this.bucket = bucket;
+        this.model = new TaskModel();
+        this.model.setId(id);
+        this.view = new TaskView("Loading...", 0, "", new Date(0, 0, 1));
+        
+    	reloadView();
+    }
+    
     /**
      * Register callbacks with the local view.
      */
@@ -62,9 +88,9 @@ public class TaskPresenter {
     private void saveView() {
         updateModel();
         
-        Request request = Network.getInstance().makeRequest("taskmanager/task/" + this.model.getID(), HttpMethod.POST);
+        Request request = Network.getInstance().makeRequest("taskmanager/task", HttpMethod.POST);
         request.setBody(this.model.toJson());
-        request.addObserver(new TaskRequestObserver(this));
+        request.addObserver(new TaskObserver(this));
         request.send();
     }
 
@@ -72,8 +98,8 @@ public class TaskPresenter {
      * Have the presenter reload the view from the model.
      */
     private void reloadView() {
-        Request request = Network.getInstance().makeRequest("taskmanager/task/" + this.model.getID(), HttpMethod.GET);
-        request.addObserver(new TaskRequestObserver(this));
+        Request request = Network.getInstance().makeRequest("taskmanager/task/" + this.model.getId(), HttpMethod.GET);
+        request.addObserver(new TaskObserver(this));
         request.send();
     }
     
@@ -111,5 +137,18 @@ public class TaskPresenter {
      */
     public TaskModel getModel() {
         return model;
+    }
+    
+    /**
+     * Set the model for this class.
+     * 
+     * @param model This provider's model.
+     */
+    public void setModel(TaskModel model) {
+        this.model = model;
+    }
+    
+    public BucketPresenter getBucket(){
+    	return bucket;
     }
 }

@@ -45,7 +45,7 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 	}
 	@Test
 	public void testCreateDefaultTask(){
-		assertEquals(-1, t1.getID());
+		assertEquals(-1, t1.getId());
 		assertEquals("", t1.getTitle());
 		assertEquals("", t1.getDescription());
 		assertEquals(-1, t1.getEstimatedEffort());
@@ -55,7 +55,7 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 
 	@Test
 	public void testCreateTask(){
-		assertEquals(1928, t2.getID());
+		assertEquals(1928, t2.getId());
 		assertEquals("TaskTwo", t2.getTitle());
 		assertEquals("This is task two", t2.getDescription());
 		assertEquals(400, t2.getEstimatedEffort());
@@ -64,7 +64,7 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
  
  	@Test
  	public void testModifyTask(){
- 		assertEquals(2000, t3.getID());
+ 		assertEquals(2000, t3.getId());
  		assertEquals("TaskThree", t3.getTitle());
  		assertEquals("This is task three", t3.getDescription());
  		assertEquals(testList, t3.getAssignedTo());
