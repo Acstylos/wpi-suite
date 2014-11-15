@@ -7,7 +7,6 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -111,9 +110,9 @@ public class BucketPresenter {
      * Register callbacks with the local view. 
      */
     private void registerCallbacks() {
-        view.addOnAddTaskListener((ActionEvent event) -> {
+        /*view.addOnAddTaskListener((ActionEvent event) -> {
             BucketPresenter.this.addNewTaskToView();
-        });
+        });*/
     }
     
     public void addNewTaskToView(){

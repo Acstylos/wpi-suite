@@ -1,22 +1,18 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
-import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
-
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.util.ArrayList;
-import java.util.List;
+
+import javax.swing.Box;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
-
-import javax.swing.JButton;
-
-import java.awt.event.ActionListener;
-
-import javax.swing.JScrollPane;
-
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
 
 /**
  * BucketView is the view that displays a list of tasks. These tasks are
@@ -29,61 +25,47 @@ public class BucketView extends JPanel
 {
 
     private static final long serialVersionUID = -5937582878085666950L;
+    private ArrayList<TaskView> taskViews = new ArrayList<TaskView>();
     private String title;
-    private List<TaskView> taskViews;
-    private JPanel taskViewHolderPanel;
-    private JScrollPane scrollPane;
-    private JButton addTaskButton;
-    private BucketPresenter presenter;
+    private JLabel titleLabel = new JLabel();
+    private JPanel titlePanel = new JPanel();
+    private JPanel taskViewHolderPanel = new JPanel();
+    private JScrollPane taskScrollPane = new JScrollPane();
 
     /**
      * Constructor for BucketViews.
      * @param title Temporary constructor that will title the buckets
      */
-    public BucketView(String title) { // Pass in title from BucketModel
-        // Tasks will be structured from top to bottom
-
+    public BucketView(String title) {
+        // Ensure the layout and properties of this panel is correct
         this.title = title;
-        taskViews = new ArrayList<TaskView>();
-        setMaximumSize(new Dimension(300, 32767));
-        setPreferredSize(new Dimension(300, 500));
-        setMinimumSize(new Dimension(300, 500));
-        setBorder(new TitledBorder(null, title, TitledBorder.LEADING,
-                TitledBorder.TOP, null, null));
-        setLayout(new MigLayout("", "[grow]", "[max][min]"));
+        this.setMaximumSize(new Dimension(300, 32767));
+        this.setPreferredSize(new Dimension(300, 400));
+        this.setMinimumSize(new Dimension(300, 400));
+        this.setBackground(Color.LIGHT_GRAY);
+        this.setBorder(new EmptyBorder(0, 5, 5, 5));
+        this.setLayout(new MigLayout("fill"));
+        this.titleLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        
+        // Start by adding the changeable title to the top of the view
+        this.add(titlePanel, "dock north");
+        this.titlePanel.setBackground(Color.LIGHT_GRAY);
+        this.titlePanel.setBorder(null);
+        this.titlePanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
+        this.titlePanel.add(titleLabel, "cell 0 0, alignx center, aligny center");
+        
         
         // Need a scroll pane to allow us to scroll through all tasks in the bucketView. 
-        scrollPane = new JScrollPane();
-        scrollPane.setBorder(null);
-        // This is added to the 0th column, 0th row in the layout.
-        add(scrollPane, "cell 0 0, grow");
-        
-        /* This panel will be holding all of the tasks. It's inside of a scrollable
-         * pane, allowing multiple tasks to be added without changing the screen,
-         * and allowing scrolling capability to see all tasks.
-         */
-        taskViewHolderPanel = new JPanel();
-        taskViewHolderPanel.setBorder(null);
-        scrollPane.setViewportView(taskViewHolderPanel);
-        taskViewHolderPanel.setLayout(new MigLayout("fill"));
-         
-        addTaskButton = new JButton("Add New Task...");
-        // This is added to the 0th column, 1st row in the layout, and keeps it on the bottom.
-        add(addTaskButton, "cell 0 1, grow");
+        this.add(taskScrollPane, "dock north");
+        this.taskViewHolderPanel.setBackground(Color.LIGHT_GRAY);
+        this.taskViewHolderPanel.setLayout(new MigLayout("fill"));
+        this.taskScrollPane.setViewportView(taskViewHolderPanel);    
     }
     
     /**
-     * Add an {@link ActionListener} that will be called when a task is added by the user
-     * @param listener
+     * @return Returns a list of TaskViews
      */
-    public void addOnAddTaskListener(ActionListener listener){
-        this.addTaskButton.addActionListener(listener);
-    }
-
-    /**
-     * @return Returns a list of JPanels. Will Eventually return a list of TaskViews
-     */
-    public List<TaskView> getTaskViews() {
+    public ArrayList<TaskView> getTaskViews() {
         return this.taskViews;
     }
 
@@ -91,33 +73,38 @@ public class BucketView extends JPanel
      * @return Returns the title of the bucket
      */
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     /**
+     * TODO: DO WE NEED THIS?
      * @param taskViews A list of TaskViews
      */
-    public void setTaskViews(List<TaskView> taskViews) {
+    public void setTaskViews(ArrayList<TaskView> taskViews) {
         this.taskViews = taskViews;
         for (TaskView task : taskViews) {
-            taskViewHolderPanel.add(task, "dock north");
+            this.taskViewHolderPanel.add(task, "dock north");
         }
     }
     
     /**
-     * @param task 
+     * Adds a single MiniTaskView to the bucket, with spacers
+     * @param task The MiniTaskView to be added to the bucket
      */
     public void addTaskToView(TaskView task){
-        taskViewHolderPanel.add(task, "dock north");
+        this.taskViews.add(task);
+        this.taskViewHolderPanel.add(task, "dock north");
+        Component spacerStrut = Box.createVerticalStrut(5);
+        this.taskViewHolderPanel.add(spacerStrut, "dock north");
     }
 
     /**
+     * Changes the title label of the bucket to reflect the buckets name.
      * @param title A string that corresponds to the title of the bucket
      */
     public void setTitle(String title) {
         this.title = title;
-        setBorder(new TitledBorder(null, title, TitledBorder.LEADING,
-                TitledBorder.TOP, null, null));
+        this.titleLabel.setText(title);
     }
 
 }

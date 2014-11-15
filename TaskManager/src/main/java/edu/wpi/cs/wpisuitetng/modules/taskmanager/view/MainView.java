@@ -3,8 +3,6 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import javax.swing.JScrollPane;
 
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.WorkflowView;
-
 /**
  * MainView is a scrollable window with a viewport that can
  * view only WorkflowViews. Eventually it will support viewing

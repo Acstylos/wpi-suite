@@ -8,7 +8,6 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
@@ -82,7 +81,7 @@ public class WorkflowPresenter {
     	
     	ArrayList<Integer> newBuckets = new ArrayList<Integer>();
         view.setTitle(model.getTitle());
-        List<BucketView> bucketViews = new ArrayList<BucketView>();
+        ArrayList<BucketView> bucketViews = new ArrayList<BucketView>();
         for (int i : model.getBucketIds()) {
             BucketPresenter bucketPresenter = new BucketPresenter(i);
             bucketPresenter = new BucketPresenter(hardCodedId);
