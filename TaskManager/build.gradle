@@ -2,5 +2,6 @@ dependencies{
     compile project(':Network')
     compile project(':WPISuite-Interfaces')
     compile project(':JanewayAPI')
+    compile project(':RequirementManager')
     compile ('com.miglayout:miglayout:3.7.4')
 }
