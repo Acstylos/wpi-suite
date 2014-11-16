@@ -10,6 +10,8 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
 
+import java.util.Date;
+
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
@@ -22,6 +24,7 @@ public class ActivityModel {
 
     private int activityId;
     private User user;
+    private Date date;
     private String activity;
 
     /**
@@ -31,6 +34,7 @@ public class ActivityModel {
 	this.activityId = -1;
 	this.user = new User("", "","", -1);
 	this.activity = "";
+	this.date = new Date();
     }
 
     /**
@@ -40,10 +44,25 @@ public class ActivityModel {
      * @param user the user that added the activity
      * @param activity either auto-generated or manually added comments
      */
-    public ActivityModel(int activityId, User user, String activity) {
+    public ActivityModel(int activityId, User user, String activity, Date date) {
 	this.activityId = activityId;
 	this.user = user;
 	this.activity = activity;
+	this.date = date;
+    }
+    
+    /**
+     * @return the date of the activity
+     */
+    public Date getDate() {
+	return date;
+    }
+    
+    /**
+     * @param date the date of the activity
+     */
+    public void setDate(Date date) {
+	this.date = date;
     }
 
     /**
