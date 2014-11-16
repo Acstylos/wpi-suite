@@ -84,8 +84,8 @@ public class WorkflowPresenter {
         view.setTitle(model.getTitle());
         List<BucketView> bucketViews = new ArrayList<BucketView>();
         for (int i : model.getBucketIds()) {
-            BucketPresenter bucketPresenter = new BucketPresenter(i);
-            bucketPresenter = new BucketPresenter(hardCodedId);
+            BucketPresenter bucketPresenter = new BucketPresenter(i, this);
+            bucketPresenter = new BucketPresenter(hardCodedId, this);
             hardCodedId++;
             
             newBuckets.add(bucketPresenter.getModel().getId());
