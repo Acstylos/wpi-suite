@@ -10,21 +10,25 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Date;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JSplitPane;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SpinnerNumberModel;
+
 import net.miginfocom.swing.MigLayout;
-import javax.swing.JLabel;
+
+import org.jdesktop.swingx.JXDatePicker;
 
 /**
  * A {@link javax.swing.JComponent} that renders the fields of a single task and
@@ -32,17 +36,28 @@ import javax.swing.JLabel;
  */
 public class TaskView extends JPanel {
     private static final long serialVersionUID = -997563229078386090L;
-
-    private JTextField title;
-    private JFormattedTextField estimatedEffort;
-    private JTextPane description;
-    private JFormattedTextField dueDate;
-    private JButton saveButton;
-    private JButton reloadButton;
-    private JLabel lblName;
-    private JLabel lblEstimatedEffort;
-    private JLabel lblDateDue;
-
+    
+    private JComboBox<BucketView> statusComboBox = new JComboBox<BucketView>();
+    private JLabel taskNameLabel = new JLabel("Task Name:");
+    private JLabel dateLabel = new JLabel("Due Date:");
+    private JLabel statusLabel = new JLabel("Status:");
+    private JLabel actualEffortLabel = new JLabel("Actual Effort:");
+    private JLabel estEffortLabel = new JLabel("Estimated Effort:");
+    private JPanel buttonPanel = new TaskButtonsPanel();
+    private JPanel commentPanel = new JPanel();
+    private JPanel descriptionPanel = new JPanel();
+    private JPanel detailsPanel = new JPanel();
+    private JPanel infoPanel = new JPanel();
+    private JPanel splitPanel = new JPanel();
+    private JPanel usersPanel = new JPanel();
+    private JScrollPane scrollPane = new JScrollPane();
+    private JSpinner actualEffortSpinner = new JSpinner();
+    private JSpinner estEffortSpinner = new JSpinner();
+    private JSplitPane splitPane = new JSplitPane();
+    private JWriteinText descriptionMessage = new JWriteinText();
+    private JTextField taskNameField = new JTextField();
+    private JXDatePicker datePicker = new JXDatePicker();
+    
     /**
      * Create a new TaskView with the specified default values.
      *
@@ -54,119 +69,128 @@ public class TaskView extends JPanel {
      *            The initial in-depth description that will be displayed
      * @param dueDate
      *            The initial due date that will be displayed
-     * @see #setTitleText(String)
+     * @see #setTaskNameField(String)
      * @see #setEstimatedEffort(int)
      * @see #setDescriptionText(String)
      * @see #setDueDate(Date)
      */
     public TaskView(String title, int estimatedEffort, String description, Date dueDate) {
-        /* Set a TitledBorder for this panel that just says "Task". */
-        setBorder(BorderFactory.createTitledBorder("Task"));
+        this.setBorder(null);
+        // Set layouts for all panels
+        this.setLayout(new MigLayout("", "[grow]", "[grow][min]"));
         
-        /* Add a text field with the title */
-        setLayout(new MigLayout("", "[][][238px]", "[22px][20px][20px][82px][33px]"));
+        this.buttonPanel.setLayout(new MigLayout("", "[][][]", "[]"));
+        this.commentPanel.setLayout(new MigLayout("", "[]", "[]"));
+        this.descriptionPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
+        this.detailsPanel.setLayout(new MigLayout("", "[grow]", "[][grow][grow]"));
+        this.infoPanel.setLayout(new MigLayout("", "[][][grow]", "[][][][][]"));
+        this.splitPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
+        this.usersPanel.setLayout(new MigLayout("", "[]", "[]"));
+        
+        this.add(buttonPanel, "cell 0 1,grow");
+        this.add(splitPanel, "cell 0 0,grow");
+        this.splitPanel.add(splitPane, "cell 0 0,grow");
+        
 
-        /* Add a text field with the estimated effort */
-        
-        lblName = new JLabel("Name:");
-        add(lblName, "cell 1 0,alignx left");
-        this.title = new JTextField(title);
-        this.title.setFont(new Font("Dialog", Font.BOLD, 12));
-        add(this.title, "cell 2 0,grow");
+        this.splitPane.setResizeWeight(0.5);
+        this.splitPane.setRightComponent(commentPanel);
+        this.splitPane.setLeftComponent(detailsPanel);
 
-        /* Add a text field with the initial due date */
-        
-        lblEstimatedEffort = new JLabel("Est. Effort:");
-        add(lblEstimatedEffort, "cell 1 1,alignx left");
-        this.estimatedEffort = new JFormattedTextField(new Integer(estimatedEffort));
-        add(this.estimatedEffort, "cell 2 1,grow");
+        // Format the detailsPanel layout with components
+        this.detailsPanel.add(infoPanel, "cell 0 0, grow");
+        this.detailsPanel.add(descriptionPanel, "cell 0 1,grow");
+        this.detailsPanel.add(usersPanel, "cell 0 2,grow");
 
-        /* Add a text pane with the initial description text */
-        
-        lblDateDue = new JLabel("Date Due:");
-        add(lblDateDue, "cell 1 2,alignx left");
-        this.dueDate = new JFormattedTextField(dueDate);
-        add(this.dueDate, "cell 2 2,grow");
-        this.description = new JTextPane();
-        this.description.setText(description);
+        // Format the infoPanel layout with components
+        this.infoPanel.add(taskNameLabel, "cell 0 0");
+        this.infoPanel.add(taskNameField, "cell 1 0 2 1, grow");
+        this.taskNameField.setText(title);
+        this.infoPanel.add(dateLabel, "cell 0 1");
+        this.infoPanel.add(datePicker, "cell 1 1, grow");
+        this.datePicker.setDate(dueDate);
+        this.infoPanel.add(statusLabel, "cell 0 2");
+        this.infoPanel.add(statusComboBox, "cell 1 2");
+        // TODO: Integrate this ComboBox with changing tasks between BucketViews
+        this.statusComboBox.setModel(new DefaultComboBoxModel(new String[] {"New", "Selected", "In Progress", "Completed"}));
+        this.infoPanel.add(actualEffortLabel, "cell 0 3");
+        this.infoPanel.add(actualEffortSpinner, "cell 1 3");
+        this.actualEffortSpinner.setModel(new SpinnerNumberModel(0, 0, 99999, 1));
+        this.infoPanel.add(estEffortLabel, "cell 0 4");
+        this.infoPanel.add(estEffortSpinner, "cell 1 4");
+        this.estEffortSpinner.setModel(new SpinnerNumberModel(0, 0, 99999, 1));
+        this.estEffortSpinner.setValue(estimatedEffort);
 
-        /* Wrap the description text in a scroll pane to allow scrolling */
-        add(new JScrollPane(this.description), "cell 1 3 2 1,grow");
+        // Format the descriptionPanel layout with components
+        this.descriptionPanel.add(scrollPane, "cell 0 0,grow");
+        this.scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        this.scrollPane.setViewportView(descriptionMessage);
         
-        /* Add a button to save the fields */
-        this.saveButton = new JButton("Save");
-        //add(this.saveButton);
-        
-        /* Add a button to reload the fields from the database */
-        this.reloadButton = new JButton("Reload");
-        //add(this.reloadButton);
-        
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(saveButton);
-        buttonPanel.add(reloadButton);
-        add(buttonPanel, "cell 0 4 3 1,alignx center,aligny center");
-        setPreferredSize(new Dimension(250, 200));
-        this.description.setPreferredSize(new Dimension(250, 100));
-    }
-    
-    /**
-     * Add an {@link ActionListener} that will be called when the task is saved by the user
-     * @param listener
-     */
-    public void addOnSaveListener(ActionListener listener) {
-        this.saveButton.addActionListener(listener);
-    }
-    
-    /**
-     * Add an {@link ActionListener} that will be called when the task is reloaded by the user
-     * @param listener
-     */
-    public void addOnReloadListener(ActionListener listener) {
-        this.reloadButton.addActionListener(listener);
+        this.descriptionMessage.setWrapStyleWord(true);
+        this.descriptionMessage.setLineWrap(true);
+        this.descriptionMessage.setStartText("Description Here...");
+        this.descriptionMessage.setText(description);
+        this.descriptionMessage.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                descriptionMessage.clicked();
+            }
+        });
     }
 
     /**
-     * @param titleText
-     *            The new title of the task
+     * @param titleText The new title of the task
      */
-    public void setTitleText(String titleText) {
-        this.title.setText(titleText);
+    public void setTaskNameField(String titleText) {
+        this.taskNameField.setText(titleText);
     }
-    
+
     /**
      * @return The title of the task
      */
-    public String getTitleText() {
-        return this.title.getText();
+    public String getTaskNameField() {
+        return this.taskNameField.getText();
+    }
+    
+    /**
+     * @param actualEffort The new actual effort of the task, in arbitrary work units.
+     */
+    public void setActualEffort(int actualEffort) {
+        this.actualEffortSpinner.setValue(actualEffort);
     }
 
     /**
-     * @param estimatedEffort
-     *            The new estimated effort of the task, in arbitrary work units.
+     * @return The estimated effort of the task, in arbitrary work units.
+     */
+    public int getActualEffort() {
+        return (int) this.actualEffortSpinner.getValue();
+    }
+
+    /**
+     * @param estimatedEffort The new estimated effort of the task, in arbitrary work units.
      */
     public void setEstimatedEffort(int estimatedEffort) {
-        this.estimatedEffort.setValue(estimatedEffort);
+        this.estEffortSpinner.setValue(estimatedEffort);
     }
-    
+
     /**
      * @return The estimated effort of the task, in arbitrary work units.
      */
     public int getEstimatedEffort() {
-        return (Integer)estimatedEffort.getValue();
+        return (int) this.estEffortSpinner.getValue();
     }
 
     /**
      * @param descriptionText The new task description
      */
     public void setDescriptionText(String descriptionText) {
-        this.description.setText(descriptionText);
+        this.descriptionMessage.setText(descriptionText);
     }
-    
+
     /**
      * @return The task description
      */
     public String getDescriptionText() {
-        return this.description.getText();
+        return this.descriptionMessage.getText();
     }
 
     /**
@@ -174,13 +198,13 @@ public class TaskView extends JPanel {
      *            The new due date of the task
      */
     public void setDueDate(Date dueDate) {
-        this.dueDate.setValue(dueDate);
+        this.datePicker.setDate(dueDate);
     }
 
     /**
      * @return The due date.
      */
     public Date getDueDate() {
-        return (Date) dueDate.getValue();
+        return this.datePicker.getDate();
     }
 }

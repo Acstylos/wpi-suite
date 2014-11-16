@@ -1,39 +1,72 @@
+/*******************************************************************************
+ * Copyright (c) 2014 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 
+import java.beans.PropertyChangeEvent;
+
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
 
 /**
  * MainView is a scrollable window with a viewport that can
- * view only WorkflowViews. Eventually it will support viewing
- * of multiple types of JPanels.
- * 
- * @author Thefloorisjava
+ * view only WorkflowViews.
  */
-public class MainView extends JScrollPane 
+public class MainView extends JTabbedPane 
 {
     private static final long serialVersionUID = -346061317795260862L;
-    private WorkflowView workflowView;
+    private JScrollPane scrollPane = new JScrollPane();
+    private WorkflowPresenter workflowPresenter = new WorkflowPresenter(0);
+    private static final MainView mainView = new MainView();
+    
+    private MainView(){
+        this.addTab("Workflow", scrollPane);    
+        this.setWorkflowPresenter(workflowPresenter);
+        
+        /* As soon as this is added to a container, load the workflow */
+        addPropertyChangeListener("ancestor", (PropertyChangeEvent evt) -> {
+           this.workflowPresenter.load();
+        });
+    }
+    
+    public static MainView getInstance(){
+        return mainView;
+    }
 
     /**
      * Constructor for the scrollable main view.  
      */
-    public MainView(){ // Needs field WorkflowModel 
-        workflowView = new WorkflowView("New Workflow");
-        setViewportView(workflowView); // Make sure the panel can be scrolled upon
+    private MainView(WorkflowPresenter workflowPresenter){
+        this.addTab("Workflow", scrollPane);    
+        this.setWorkflowPresenter(workflowPresenter);
+        
+        /* As soon as this is added to a container, load the workflow */
+        addPropertyChangeListener("ancestor", (PropertyChangeEvent evt) -> {
+           this.workflowPresenter.load();
+        });
     }
 
     /**
-     * @return the WorkflowView being displayed
+     * @return the WorkflowPresenter being displayed
      */
-    public WorkflowView getWorkflowView() {
-        return this.workflowView;
+    public WorkflowPresenter getWorkflowPresenter() {
+        return this.workflowPresenter;
     }
 
     /**
      * @param workflowView The WorkflowView to be displayed
      */
-    public void setWorkflowView(WorkflowView workflowView){
-        this.workflowView = workflowView;
+    public void setWorkflowPresenter(WorkflowPresenter workflowPresenter) {
+        this.workflowPresenter = workflowPresenter;
+        this.scrollPane.setViewportView(workflowPresenter.getView());
     }
 }

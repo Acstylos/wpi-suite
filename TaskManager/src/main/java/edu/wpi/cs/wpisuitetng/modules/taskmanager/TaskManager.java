@@ -10,20 +10,16 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager;
 
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JScrollPane;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JPanel;
 
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.CommentView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ToolbarView;
 
 
 /**
@@ -36,29 +32,18 @@ public class TaskManager implements IJanewayModule
 {
     /** A list containing the one tab */
     private List<JanewayTabModel> tabs;
-    private WorkflowPresenter mainPresenter;
+
+    MainView mainView;
 
     public TaskManager() {
-        JPanel toolbarPanel = new JPanel();
-        JPanel mainPanel = new JPanel();
+        ToolbarView toolbarPanel = new ToolbarView();
 
-        JButton button = new JButton("Load Workflow");
-
-        button.addActionListener((ActionEvent e) -> {
-          if (TaskManager.this.mainPresenter == null) {
-            mainPresenter = new WorkflowPresenter(0);
-            toolbarPanel.remove(button);
-            mainPanel.add(new JScrollPane(mainPresenter.getView()));
-            mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-          }});
-        
-        toolbarPanel.add(button, "cell 0 1, grow");
-        
+        mainView = MainView.getInstance();//   new MainView(workflowPresenter);
         /* Create the tab model for the task manager */
         tabs = new ArrayList<JanewayTabModel>();
         tabs.add(new JanewayTabModel("Task Manager", new ImageIcon(),
-                toolbarPanel, mainPanel));
-  //      mainPanel.add(new CommentView());
+                toolbarPanel, mainView));
+        //      mainPanel.add(new CommentView());
 
     }
 
