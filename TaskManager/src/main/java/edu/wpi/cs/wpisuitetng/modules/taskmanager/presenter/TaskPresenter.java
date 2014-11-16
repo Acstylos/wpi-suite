@@ -9,16 +9,14 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
+import java.awt.event.ActionEvent;
+import java.util.Date;
+
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
-
-import java.awt.event.ActionEvent;
-import java.util.Date;
 
 /**
  * This class creates a TaskView and updates the task with new information from
@@ -74,12 +72,6 @@ public class TaskPresenter {
      * Register callbacks with the local view.
      */
     private void registerCallbacks() {
-        view.addOnSaveListener((ActionEvent event) -> {
-            TaskPresenter.this.saveView();
-        });
-        view.addOnReloadListener((ActionEvent event) -> {
-            TaskPresenter.this.reloadView();
-        });
     }
 
     /**
@@ -107,7 +99,7 @@ public class TaskPresenter {
      * Update the model with data from the view
      */
     public void updateModel() {
-        model.setTitle(view.getTitleText());
+        model.setTitle(view.getTaskNameField());
         model.setEstimatedEffort(view.getEstimatedEffort());
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
@@ -117,7 +109,7 @@ public class TaskPresenter {
      * Update the view with data from the model
      */
     public void updateView() {
-        view.setTitleText(model.getTitle());
+        view.setTaskNameField(model.getTitle());
         view.setEstimatedEffort(model.getEstimatedEffort());
         view.setDescriptionText(model.getDescription());
         view.setDueDate(model.getDueDate());
