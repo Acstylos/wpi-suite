@@ -18,6 +18,8 @@ import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Date;
 
 /**
@@ -107,17 +109,17 @@ public class TaskPresenter {
      * Update the model with data from the view
      */
     public void updateModel() {
-        model.setTitle(view.getTitleText());
+        model.setTitle(view.getTaskNameField());
         model.setEstimatedEffort(view.getEstimatedEffort());
         model.setDescription(view.getDescriptionText());
-        model.setDueDate(view.getDueDate());
+        //model.setDueDate(view.getDueDate());
     }
     
     /**
      * Update the view with data from the model
      */
     public void updateView() {
-        view.setTitleText(model.getTitle());
+        view.setTaskNameField(model.getTitle());
         view.setEstimatedEffort(model.getEstimatedEffort());
         view.setDescriptionText(model.getDescription());
         view.setDueDate(model.getDueDate());

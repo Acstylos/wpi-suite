@@ -40,12 +40,13 @@ public class BucketView extends JPanel
         // Ensure the layout and properties of this panel is correct
         this.title = title;
         this.setMaximumSize(new Dimension(300, 32767));
-        this.setPreferredSize(new Dimension(300, 400));
-        this.setMinimumSize(new Dimension(300, 400));
+        this.setPreferredSize(new Dimension(300, 200));
+        this.setMinimumSize(new Dimension(300, 200));
         this.setBackground(Color.LIGHT_GRAY);
         this.setBorder(new EmptyBorder(0, 5, 5, 5));
         this.setLayout(new MigLayout("fill"));
         this.titleLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        this.titleLabel.setText(title);
         
         // Start by adding the changeable title to the top of the view
         this.add(titlePanel, "dock north");
