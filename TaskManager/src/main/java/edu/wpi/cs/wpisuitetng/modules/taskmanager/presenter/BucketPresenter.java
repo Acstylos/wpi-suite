@@ -42,7 +42,6 @@ public class BucketPresenter {
     public BucketPresenter(BucketModel model, WorkflowPresenter workflow) {
 	this.model = model;
 	this.workflow = workflow;
-	//TODO
     }
 
     /**
@@ -109,7 +108,7 @@ public class BucketPresenter {
     	}
     	
         view.setTitle(model.getTitle());
-        ArrayList<Integer> bucket = model.getBucket();
+        ArrayList<Integer> bucket = model.getTaskIds();
         for(int i: bucket){
         	TaskPresenter taskPresenter = new TaskPresenter(i, this);
         	TaskView taskView = taskPresenter.getView();
@@ -125,11 +124,13 @@ public class BucketPresenter {
      * Register callbacks with the local view. 
      */
     private void registerCallbacks() {
-        view.addOnAddTaskListener((ActionEvent event) -> {
-            BucketPresenter.this.addNewTaskToView();
-        });
+	//buckets have no buttons, leave empty for now
     }
     
+    /**
+     * construct a new task presenter and add the task view of this presenter to the view of this bucket
+     * then refreshes the view
+     */
     public void addNewTaskToView(){
         TaskModel task = new TaskModel(0, "New Task", "Description Here", 50, new Date(114, 10, 12));
         TaskPresenter taskPresenter = new TaskPresenter(task, this);
@@ -139,10 +140,12 @@ public class BucketPresenter {
         view.repaint();
     }
     
+    /**
+     * save the id to the list of taskIds
+     * @param id
+     */
     public void saveTask(int id){
-    	ArrayList<Integer> bucket = this.model.getBucket();
-        bucket.add(id);
-        this.model.setBucket(bucket);
+	model.addId(id);
         saveModel();
     }
 

@@ -73,9 +73,9 @@ public class WorkflowPresenter {
      */
     public void writeModelToView() {
     	while(model.getBucketIds().size() < 4){
-    		ArrayList<Integer> buckets = model.getBucketIds();
-    		buckets.add(0);
-    		model.setBucketIds(buckets);
+    		ArrayList<Integer> bucketIds = model.getBucketIds();
+    		bucketIds.add(0);
+    		model.setBucketIds(bucketIds);
     	}
     	
     	int hardCodedId = 1;
