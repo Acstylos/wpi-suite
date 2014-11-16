@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.CommentView;
 
 
 /**
@@ -40,7 +41,7 @@ public class TaskManager implements IJanewayModule
     public TaskManager() {
         JPanel toolbarPanel = new JPanel();
         JPanel mainPanel = new JPanel();
-        
+
         JButton button = new JButton("Load Workflow");
 
         button.addActionListener((ActionEvent e) -> {
@@ -57,6 +58,7 @@ public class TaskManager implements IJanewayModule
         tabs = new ArrayList<JanewayTabModel>();
         tabs.add(new JanewayTabModel("Task Manager", new ImageIcon(),
                 toolbarPanel, mainPanel));
+  //      mainPanel.add(new CommentView());
 
     }
 
