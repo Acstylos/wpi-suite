@@ -11,6 +11,9 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager;
 
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.time.chrono.JapaneseDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +26,7 @@ import javax.swing.JPanel;
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 
 
 /**
@@ -35,28 +39,20 @@ public class TaskManager implements IJanewayModule
 {
     /** A list containing the one tab */
     private List<JanewayTabModel> tabs;
-    private WorkflowPresenter mainPresenter;
+    
+    MainView mainView;
 
     public TaskManager() {
         JPanel toolbarPanel = new JPanel();
-        JPanel mainPanel = new JPanel();
         
-        JButton button = new JButton("Load Workflow");
+        WorkflowPresenter workflowPresenter = new WorkflowPresenter(0);
 
-        button.addActionListener((ActionEvent e) -> {
-          if (TaskManager.this.mainPresenter == null) {
-            mainPresenter = new WorkflowPresenter(0);
-            toolbarPanel.remove(button);
-            mainPanel.add(new JScrollPane(mainPresenter.getView()));
-            mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-          }});
-        
-        toolbarPanel.add(button, "cell 0 1, grow");
+        mainView = new MainView(workflowPresenter);
         
         /* Create the tab model for the task manager */
         tabs = new ArrayList<JanewayTabModel>();
         tabs.add(new JanewayTabModel("Task Manager", new ImageIcon(),
-                toolbarPanel, mainPanel));
+                toolbarPanel, mainView));
 
     }
 

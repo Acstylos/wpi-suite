@@ -1,41 +1,59 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 
-import javax.swing.JScrollPane;
+import java.beans.PropertyChangeEvent;
 
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.WorkflowView;
+import javafx.scene.control.ProgressBar;
+
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
 
 /**
  * MainView is a scrollable window with a viewport that can
- * view only WorkflowViews. Eventually it will support viewing
- * of multiple types of JPanels.
- * 
- * @author Thefloorisjava
+ * view only WorkflowViews.
  */
-public class MainView extends JScrollPane 
+public class MainView extends JPanel 
 {
     private static final long serialVersionUID = -346061317795260862L;
-    private WorkflowView workflowView;
-
+    
+    private WorkflowPresenter workflowPresenter;
+    private JScrollPane scrollPane;
+    
     /**
      * Constructor for the scrollable main view.  
      */
-    public MainView(){ // Needs field WorkflowModel 
-        workflowView = new WorkflowView("New Workflow");
-        setViewportView(workflowView); // Make sure the panel can be scrolled upon
+    public MainView(WorkflowPresenter workflowPresenter) {
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        
+        scrollPane = new JScrollPane();
+        add(scrollPane);
+        
+        setWorkflowPresenter(workflowPresenter);
+        
+        /* As soon as this is added to a container, load the workflow */
+        addPropertyChangeListener("ancestor", (PropertyChangeEvent evt) -> {
+           this.workflowPresenter.load();
+        });
     }
 
     /**
-     * @return the WorkflowView being displayed
+     * @return the WorkflowPresenter being displayed
      */
-    public WorkflowView getWorkflowView() {
-        return this.workflowView;
+    public WorkflowPresenter getWorkflowPresenter() {
+        return this.workflowPresenter;
     }
 
     /**
      * @param workflowView The WorkflowView to be displayed
      */
-    public void setWorkflowView(WorkflowView workflowView){
-        this.workflowView = workflowView;
+    public void setWorkflowPresenter(WorkflowPresenter workflowPresenter) {
+        this.workflowPresenter = workflowPresenter;
+        this.scrollPane.setViewportView(workflowPresenter.getView());
     }
 }

@@ -33,15 +33,13 @@ public class WorkflowPresenter {
     /**
      * Constructor does nothing for now
      *
-     * @param view
+     * @param mainView
      *            The view associated with this presenter
      */
     public WorkflowPresenter(int workflowId) {
         this.model = new WorkflowModel();
         model.setId(workflowId);
         this.view = new WorkflowView("Loading...");
-
-        load();
     }
     
     /**
