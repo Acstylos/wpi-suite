@@ -31,6 +31,19 @@ public class BucketPresenter {
     private BucketView view;
 
     private BucketModel model;
+    
+    private WorkflowPresenter workflow;
+
+    /**
+     * Constructs a BucketPresenter for the given model.
+     * @param model
+     * @param workflow
+     */
+    public BucketPresenter(BucketModel model, WorkflowPresenter workflow) {
+	this.model = model;
+	this.workflow = workflow;
+	//TODO
+    }
 
     /**
      * Constructor for a bucket presenter
@@ -38,7 +51,8 @@ public class BucketPresenter {
      * @param view
      *            The view associated with this presenter
      */
-    public BucketPresenter(int bucketId) {
+    public BucketPresenter(int bucketId, WorkflowPresenter workflow) {
+	this.workflow = workflow;
         this.model = new BucketModel();
         this.model.setId(bucketId);
         this.view = new BucketView("Loading...");
