@@ -98,7 +98,7 @@ public class BucketPresenter {
         for(int i: bucket){
         	TaskPresenter taskPresenter = new TaskPresenter(i, this);
         	TaskView taskView = taskPresenter.getView();
-        	view.addTaskToView(taskView);
+        	//view.addTaskToView(taskView);
         }
         view.revalidate();
         view.repaint();
