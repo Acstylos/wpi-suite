@@ -16,6 +16,22 @@ public class WorkflowModel extends AbstractModel{
     private int id;
     private String title;
     private ArrayList<Integer> bucketIds;
+    private ArrayList<Integer> archive;
+    
+    /**
+     * 
+     */
+    public void addToArchive(int id){
+	archive.add(id);
+    }
+    
+    public ArrayList<Integer> getFromArchive(){
+	return archive;
+    }
+    
+    public void removeFromArchive(int id){
+	archive.remove(id);
+    }
     
     /**
      * Default constructor

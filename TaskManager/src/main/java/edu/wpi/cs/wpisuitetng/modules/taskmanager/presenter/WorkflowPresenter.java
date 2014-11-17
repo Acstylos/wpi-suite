@@ -162,12 +162,32 @@ public class WorkflowPresenter {
         return model;
     }
     
+    /**
+     * move tasks from one bucket to another
+     * @param taskId	The id of tasks needed to be moved
+     * @param toId	The id of the bucket task moved to
+     * @param fromId	The id of the bucket task moved from
+     */
     public void moveTask(int taskId, int toId, int fromId){
 	BucketPresenter toPresenter, fromPresenter;
 	toPresenter = new BucketPresenter(toId, this);
 	fromPresenter = new BucketPresenter(fromId, this);
 	toPresenter.saveTask(taskId);
 	fromPresenter.removeTask(taskId);
+	writeModelToView();
+    }
+    
+    /**
+     * moves a task from a bucket to the archive
+     * @param taskId
+     * 		id of the task being moved
+     * @param bucketId
+     * 		id of the bucket the task is being removed from
+     */
+    public void archiveTask(int taskId, int bucketId){
+	BucketPresenter bucket = new BucketPresenter(bucketId, this);
+	bucket.removeTask(taskId);
+	model.addToArchive(taskId);
 	writeModelToView();
     }
 }
