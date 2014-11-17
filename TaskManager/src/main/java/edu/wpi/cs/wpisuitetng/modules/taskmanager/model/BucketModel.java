@@ -105,8 +105,20 @@ public class BucketModel extends AbstractModel {
         this.id = id;
     }
     
+    /**
+     * add an task id to the tasks
+     * @param id
+     */
     public void addId(int id){
 	taskIds.add(id);
+    }
+    
+    /**
+     * remove the task with id from the tasks
+     * @param id
+     */
+    public void removeId(int id){
+	taskIds.remove(id);
     }
 
     /**

@@ -150,6 +150,14 @@ public class BucketPresenter {
     }
 
     /**
+     * remove the id from the list of taskIds
+     * @param id
+     */
+    public void removeTask(int id){
+	model.removeId(id);
+	saveModel();
+    }
+    /**
      * Write the model to the network/database. Must be created already.
      */
     private void saveModel() {
@@ -217,4 +225,5 @@ public class BucketPresenter {
         this.model = model;
         writeModelToView();
     }
+
 }

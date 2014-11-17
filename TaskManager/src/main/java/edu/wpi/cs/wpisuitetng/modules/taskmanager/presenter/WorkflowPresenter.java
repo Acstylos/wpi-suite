@@ -161,4 +161,13 @@ public class WorkflowPresenter {
     public WorkflowModel getModel() {
         return model;
     }
+    
+    public void moveTask(int taskId, int toId, int fromId){
+	BucketPresenter toPresenter, fromPresenter;
+	toPresenter = new BucketPresenter(toId, this);
+	fromPresenter = new BucketPresenter(fromId, this);
+	toPresenter.saveTask(taskId);
+	fromPresenter.removeTask(taskId);
+	writeModelToView();
+    }
 }
