@@ -81,7 +81,11 @@ public class TaskView extends JPanel {
         this.detailsPanel.setLayout(new MigLayout("", "[grow]", "[][grow][grow]"));
         this.infoPanel.setLayout(new MigLayout("", "[][][grow]", "[][][][][]"));
         this.usersPanel.setLayout(new MigLayout("", "[]", "[]"));
-
+        
+        CommentView commentView = new CommentView();
+        //commentView.add(new MessageView());
+        this.commentPanel.add(commentView);//here
+        
         this.splitPane.setResizeWeight(0.5);
         this.add(splitPane, "cell 0 0, grow");
 

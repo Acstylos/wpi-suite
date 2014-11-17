@@ -33,8 +33,16 @@ public class CommentView extends JPanel {
 
         //scroll bar for box containing all comments
         JScrollPane commentScroll = new JScrollPane();
+        MessageView messageView = new MessageView();
+        messageView.setMessage("test label. Can you see this?");
+        
         commentPanel.add(commentScroll, "cell 0 0,grow");
-
+        
+        JPanel allCommentpanel = new JPanel();
+        commentScroll.setViewportView(allCommentpanel);
+        allCommentpanel.setLayout(new MigLayout("", "[164px]", "[42px]"));
+        allCommentpanel.add(messageView, "cell 0 0,alignx left,aligny top");
+        messageView.setLayout(new MigLayout("", "[]", "[]"));
         //scroll bar for box containing comment currently being edited
         JScrollPane editCommentScroll = new JScrollPane();
         commentPanel.add(editCommentScroll, "cell 0 1,grow");

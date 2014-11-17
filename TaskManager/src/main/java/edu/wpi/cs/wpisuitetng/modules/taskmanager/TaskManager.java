@@ -19,6 +19,7 @@ import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MessageView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ToolbarView;
 
 
@@ -43,7 +44,7 @@ public class TaskManager implements IJanewayModule
         tabs = new ArrayList<JanewayTabModel>();
         tabs.add(new JanewayTabModel("Task Manager", new ImageIcon(),
                 toolbarPanel, mainView));
-        //      mainPanel.add(new CommentView());
+          //    mainView.add(new MessageView());
 
     }
 
