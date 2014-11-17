@@ -10,108 +10,141 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
 
+import java.util.Date;
+
 import com.google.gson.Gson;
 
+import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
- * The model end of the Activity object, the history is an auto generated activity
- * while the comments are manually added activities
+ * The model end of the Activity object, the history is an auto generated
+ * activity while the comments are manually added activities
  */
-public class ActivityModel {
+public class ActivityModel extends AbstractModel {
 
-    private int activityId;
+    private int id;
     private User user;
+    private Date date;
     private String activity;
 
     /**
      * Default constructor for a default ActivityModel
      */
     public ActivityModel() {
-	this.activityId = -1;
-	this.user = new User("", "","", -1);
-	this.activity = "";
+        this.id = -1;
+        this.user = new User("", "", "", -1);
+        this.activity = "";
+        this.date = new Date();
     }
 
     /**
      * Constructor for a activity with specific properties. Other properties are
      * the same as the default constructor
-     * @param activityId the id of the activity
-     * @param user the user that added the activity
-     * @param activity either auto-generated or manually added comments
+     * 
+     * @param id
+     *            the id of the activity
+     * @param user
+     *            the user that added the activity
+     * @param activity
+     *            either auto-generated or manually added comments
      */
-    public ActivityModel(int activityId, User user, String activity) {
-	this.activityId = activityId;
-	this.user = user;
-	this.activity = activity;
+    public ActivityModel(int id, User user, String activity, Date date) {
+        this.id = id;
+        this.user = user;
+        this.activity = activity;
+        this.date = date;
+    }
+
+    /**
+     * @return the date of the activity
+     */
+    public Date getDate() {
+        return date;
+    }
+
+    /**
+     * @param date
+     *            the date of the activity
+     */
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     /**
      * @return the activity ID
      */
-    public int getActivityId() {
-	return activityId;
+    public int getId() {
+        return id;
     }
 
     /**
-     * @param activityId the activity ID to be set
+     * @param id
+     *            the activity ID to be set
      */
-    public void setActivityId(int activityId) {
-	this.activityId = activityId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**
      * @return the user
      */
     public User getUser() {
-	return user;
+        return user;
     }
 
     /**
-     * @param user the user to be set
+     * @param user
+     *            the user to be set
      */
     public void setUser(User user) {
-	this.user = user;
+        this.user = user;
     }
 
     /**
      * @return the activity
      */
     public String getActivity() {
-	return activity;
+        return activity;
     }
 
     /**
-     * @param activity the activity to be set
+     * @param activity
+     *            the activity to be set
      */
     public void setActivity(String activity) {
-	this.activity = activity;
+        this.activity = activity;
     }
-    
+
     /**
      * Copy all of the fields from another ActivityModel
-     * @param other the ActivtyModel to be copied
+     * 
+     * @param other
+     *            the ActivtyModel to be copied
      */
     public void copyFrom(ActivityModel other) {
-	this.activity = other.getActivity();
-	this.activityId = other.getActivityId();
-	this.user = other.getUser();
+        this.activity = other.getActivity();
+        this.id = other.getId();
+        this.user = other.getUser();
     }
-    
+
     /**
      * Converts this activity object to a JSON string
+     * 
      * @return A string in JSON representing this activity
      */
     public String toJson() {
-	String json;
-	Gson gson = new Gson();
-	json = gson.toJson(this, ActivityModel.class);
-	return json;
+        String json;
+        Gson gson = new Gson();
+        json = gson.toJson(this, ActivityModel.class);
+        return json;
     }
-    
+
     /**
      * Converts the given list of activities to a JSON string
-     * @param alist A list of activities
+     * 
+     * @param alist
+     *            A list of activities
      * @return A string in JSON representing the list of activities
      */
     public static String toJson(ActivityModel[] alist) {
@@ -120,23 +153,43 @@ public class ActivityModel {
         json = gson.toJson(alist, ActivityModel.class);
         return json;
     }
-    
+
     /**
      * Convert the given JSON string to a ActivityModel instance
+     * 
      * @return The JSON string representing the object
      */
     public static ActivityModel fromJson(String json) {
         final Gson parser = new Gson();
         return parser.fromJson(json, ActivityModel.class);
     }
-    
+
     /**
-     * Convert the given JSON string with a JSON array of activities
-     * into an array of activities
+     * Convert the given JSON string with a JSON array of activities into an
+     * array of activities
+     * 
      * @return ActivityModel array
      */
     public static ActivityModel[] fromJsonArray(String json) {
         final Gson parser = new Gson();
         return parser.fromJson(json, ActivityModel[].class);
+    }
+
+    @Override
+    public void save() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void delete() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public Boolean identify(Object o) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
