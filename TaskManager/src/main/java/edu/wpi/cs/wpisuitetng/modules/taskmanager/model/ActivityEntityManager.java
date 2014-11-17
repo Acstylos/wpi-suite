@@ -17,7 +17,7 @@ public class ActivityEntityManager implements EntityManager<ActivityModel>{
 		
 		private Data db;
 		
-		/**
+		/** 
 		 * Constructs the entity manager. This constructor is called by
 		 * {@link edu.wpi.cs.wpisuitetng.ManagerLayer#ManagerLayer()}. To make sure
 		 * this happens, be sure to place add this entity manager to the map in

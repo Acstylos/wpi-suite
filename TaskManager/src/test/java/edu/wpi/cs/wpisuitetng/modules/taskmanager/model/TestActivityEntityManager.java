@@ -33,7 +33,7 @@ public class TestActivityEntityManager {
 	        mockSsid = "abc123";
 	        defaultSession = new Session(testUser, testProject, mockSsid);
 	        actm = new ActivityModel();
-	        manager = new ActivityEntityManager(db);
+	        manager = new ActivityEntityManager(db); 
 	        db.save(testUser);
 	    }
 		
