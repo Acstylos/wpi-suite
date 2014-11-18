@@ -162,7 +162,7 @@ public class TestActivityEntityManager {
      * @throws WPISuiteException
      *             if not valid request
      */
-    @Test 
+    @Test  
     public void testDeleteEntity() throws WPISuiteException {
         manager.save(defaultSession, new ActivityModel(3, new User(
                 "willisthebest", "willisthebest", "101", 3), "test 3",
