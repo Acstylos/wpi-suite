@@ -42,7 +42,7 @@ public class CommentView extends JPanel {
         
         postedCommentPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
         ActivityView testActivity = new ActivityView();
-        postedCommentPanel.add(testActivity, "cell 0 0,alignx left,aligny top");
+       // postedCommentPanel.add(testActivity, "cell 0 0,alignx left,aligny top");
         testActivity.setMessage("Hi John!");
         commentScroll.setViewportView(postedCommentPanel);
         
@@ -59,6 +59,16 @@ public class CommentView extends JPanel {
         JButton btnPostComment = new JButton("Post");
         btnPostComment.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                String str=commentText.getText();
+                if (!str.equals("")){
+                    ActivityView newComment = new ActivityView();
+                    newComment.setMessage(str);
+                    postedCommentPanel.add(newComment, "dock north");
+                    commentText.setText("");
+                    postedCommentPanel.revalidate();
+                    postedCommentPanel.repaint();
+                    
+                }
             }
         });
         commentPanel.add(btnPostComment, "flowx,cell 0 2,alignx left,aligny center");
