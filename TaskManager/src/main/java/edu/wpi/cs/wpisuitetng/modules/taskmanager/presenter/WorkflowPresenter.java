@@ -78,12 +78,21 @@ public class WorkflowPresenter {
     		model.setBucketIds(bucketIds);
     	}
     	
+    	//create archive, bucket id = 5
+	ArrayList<Integer> bucketIds = model.getBucketIds();
+	bucketIds.add(0);
+	model.setBucketIds(bucketIds);
+    	
     	int hardCodedId = 1;
     	
     	ArrayList<Integer> newBuckets = new ArrayList<Integer>();
         view.setTitle(model.getTitle());
         List<BucketView> bucketViews = new ArrayList<BucketView>();
         for (int i : model.getBucketIds()) {
+            //don't show archive
+            if (i == 5) {
+        	break;
+            }
             BucketPresenter bucketPresenter = new BucketPresenter(i, this);
             bucketPresenter = new BucketPresenter(hardCodedId, this);
             hardCodedId++;
@@ -185,9 +194,7 @@ public class WorkflowPresenter {
      * 		id of the bucket the task is being removed from
      */
     public void archiveTask(int taskId, int bucketId){
-	BucketPresenter bucket = new BucketPresenter(bucketId, this);
-	bucket.removeTask(taskId);
-	model.addToArchive(taskId);
-	writeModelToView();
+	moveTask(taskId, 5, bucketId);
     }
+
 }

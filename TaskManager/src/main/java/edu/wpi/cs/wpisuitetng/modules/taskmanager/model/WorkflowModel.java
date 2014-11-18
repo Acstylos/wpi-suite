@@ -16,33 +16,6 @@ public class WorkflowModel extends AbstractModel{
     private int id;
     private String title;
     private ArrayList<Integer> bucketIds;
-    private ArrayList<Integer> archive;
-    
-    /**
-     * add task with the id to archive
-     * @param id
-     * 		id of the task that adds to the archive
-     */
-    public void addToArchive(int id){
-	archive.add(id);
-    }
-    
-    /**
-     * get all the list of task ids in the archive
-     * @return	a list of tasks ids in the archive
-     */
-    public ArrayList<Integer> getArchive(){
-	return archive;
-    }
-    
-    /**
-     * remove a specific task id from archive
-     * @param id
-     * 		id of the task that removes from the archive
-     */
-    public void removeFromArchive(int id){
-	archive.remove(id);
-    }
     
     /**
      * Default constructor

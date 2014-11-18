@@ -102,6 +102,9 @@ public class BucketPresenter {
     	case 4:
     		name = "Completed";
     		break;
+    	case 5:
+    	    	name = "Archive";
+    	    	break;
     	}
     	if(name.length() > 1){
     		model.setTitle(name);
@@ -141,7 +144,7 @@ public class BucketPresenter {
     }
     
     /**
-     * save the id to the list of taskIds
+     * save the task to the bucket
      * @param id
      */
     public void saveTask(int id){
@@ -150,13 +153,22 @@ public class BucketPresenter {
     }
 
     /**
-     * remove the id from the list of taskIds
+     * remove the task from the bucket
      * @param id
      */
     public void removeTask(int id){
 	model.removeId(id);
 	saveModel();
     }
+    
+    /**
+     * remove all the tasks from the bucket
+     */
+    public void removeAllTasks(){
+	model.removeAll();
+	saveModel();
+    }
+    
     /**
      * Write the model to the network/database. Must be created already.
      */
