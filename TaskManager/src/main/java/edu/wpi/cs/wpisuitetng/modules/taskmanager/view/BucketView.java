@@ -25,7 +25,7 @@ public class BucketView extends JPanel
 {
 
     private static final long serialVersionUID = -5937582878085666950L;
-    private ArrayList<TaskView> taskViews = new ArrayList<TaskView>();
+    private ArrayList<MiniTaskView> taskViews = new ArrayList<MiniTaskView>();
     private String title;
     private JLabel titleLabel = new JLabel();
     private JPanel titlePanel = new JPanel();
@@ -66,7 +66,7 @@ public class BucketView extends JPanel
     /**
      * @return Returns a list of TaskViews
      */
-    public ArrayList<TaskView> getTaskViews() {
+    public ArrayList<MiniTaskView> getTaskViews() {
         return this.taskViews;
     }
 
@@ -81,9 +81,9 @@ public class BucketView extends JPanel
      * TODO: DO WE NEED THIS?
      * @param taskViews A list of TaskViews
      */
-    public void setTaskViews(ArrayList<TaskView> taskViews) {
+    public void setTaskViews(ArrayList<MiniTaskView> taskViews) {
         this.taskViews = taskViews;
-        for (TaskView task : taskViews) {
+        for (MiniTaskView task : taskViews) {
             this.taskViewHolderPanel.add(task, "dock north");
         }
     }
@@ -92,7 +92,7 @@ public class BucketView extends JPanel
      * Adds a single MiniTaskView to the bucket, with spacers
      * @param task The MiniTaskView to be added to the bucket
      */
-    public void addTaskToView(TaskView task){
+    public void addTaskToView(MiniTaskView task){
         this.taskViews.add(task);
         this.taskViewHolderPanel.add(task, "dock north");
         Component spacerStrut = Box.createVerticalStrut(5);

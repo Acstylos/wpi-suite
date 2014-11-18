@@ -9,11 +9,12 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
-import java.awt.event.ActionEvent;
 import java.util.Date;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ViewMode;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
@@ -27,6 +28,7 @@ public class TaskPresenter {
 
     /** View for the task. */
     private TaskView view;
+    private MiniTaskView miniView;
     /** Model for the task. */
     private TaskModel model;
     
@@ -38,14 +40,14 @@ public class TaskPresenter {
      * Constructs a TaskPresenter for the given model. Constructs the view
      * offscreen, available if you call getView().
      * 
-     * @param model
-     *            model to copy
+     * @param model model to copy
      */
-    public TaskPresenter(TaskModel model, BucketPresenter bucket) {
+    public TaskPresenter(TaskModel model, BucketPresenter bucket, ViewMode viewMode) {
         this.model = model;
         this.bucket = bucket;
-        view = new TaskView(model.getTitle(), model.getEstimatedEffort(),
-                model.getDescription(),  model.getDueDate());
+        this.view = new TaskView(model.getTitle(), model.getEstimatedEffort(),
+                model.getDescription(),  model.getDueDate(), viewMode);
+        this.miniView = new MiniTaskView(model.getTitle(), model.getDueDate());
         registerCallbacks();
         
         Request request = Network.getInstance().makeRequest("taskmanager/task", HttpMethod.PUT);
@@ -59,11 +61,12 @@ public class TaskPresenter {
      * 
      * @param id
      */
-    public TaskPresenter(int id, BucketPresenter bucket){
+    public TaskPresenter(int id, BucketPresenter bucket, ViewMode viewMode){
     	this.bucket = bucket;
         this.model = new TaskModel();
         this.model.setId(id);
-        this.view = new TaskView("Loading...", 0, "", new Date(0, 0, 1));
+        this.view = new TaskView("Loading...", 0, "", new Date(0, 0, 1), viewMode);
+        this.miniView = new MiniTaskView(model.getTitle(), model.getDueDate());
         
     	reloadView();
     }
@@ -120,6 +123,13 @@ public class TaskPresenter {
      */
     public TaskView getView() {
         return view;
+    }
+    
+    /**
+     * Get the miniView for this Task.
+     */
+    public MiniTaskView getMiniView() {
+        return miniView;
     }
 
     /**

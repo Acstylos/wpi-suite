@@ -12,7 +12,9 @@ import java.util.Date;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ViewMode;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
@@ -96,9 +98,9 @@ public class BucketPresenter {
         view.setTitle(model.getTitle());
         ArrayList<Integer> bucket = model.getBucket();
         for (int i : bucket) {
-            TaskPresenter taskPresenter = new TaskPresenter(i, this);
-            TaskView taskView = taskPresenter.getView();
-            view.addTaskToView(taskView);
+            //TaskPresenter taskPresenter = new TaskPresenter(i, this);
+            //TaskView taskView = taskPresenter.getView();
+            //view.addTaskToView(taskView);
         }
         view.revalidate();
         view.repaint();
@@ -115,9 +117,9 @@ public class BucketPresenter {
     public void addNewTaskToView() {
         TaskModel task = new TaskModel(0, "New Task", "Description Here", 50,
                 new Date(114, 10, 12));
-        TaskPresenter taskPresenter = new TaskPresenter(task, this);
-        TaskView taskView = taskPresenter.getView();
-        view.addTaskToView(taskView);
+        TaskPresenter taskPresenter = new TaskPresenter(task, this, ViewMode.EDITING);
+        MiniTaskView miniTaskView = taskPresenter.getMiniView();
+        view.addTaskToView(miniTaskView);
         view.revalidate();
         view.repaint();
     }
