@@ -20,6 +20,9 @@ public class CommentView extends JPanel {
 
     private static final long serialVersionUID = 6161339014039149740L;
 
+    /**
+     * Constructor sets up TabbedPanes Comments and History
+     */
     public CommentView() {
         setLayout(new MigLayout("", "[grow]", "[grow]"));
 
@@ -35,19 +38,20 @@ public class CommentView extends JPanel {
         
         commentPanel.add(commentScroll, "cell 0 0 3 1,grow");
         
-        JPanel pastCommentpanel = new JPanel();
+        JPanel postedCommentPanel = new JPanel();
         
-        pastCommentpanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
+        postedCommentPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
         ActivityView testActivity = new ActivityView();
-        pastCommentpanel.add(testActivity, "cell 0 0,alignx left,aligny top");
+        postedCommentPanel.add(testActivity, "cell 0 0,alignx left,aligny top");
         testActivity.setMessage("Hi John!");
-        commentScroll.setViewportView(pastCommentpanel);
+        commentScroll.setViewportView(postedCommentPanel);
+        
         //scroll bar for box containing comment currently being edited
         JScrollPane editCommentScroll = new JScrollPane();
         commentPanel.add(editCommentScroll, "cell 0 1 3 1,grow");
 
         //Write-in box for comments
-        JWriteInText commentText = new JWriteInText();
+        PresetTextArea commentText = new PresetTextArea();
         commentText.setStartText("Comment here");
         editCommentScroll.setViewportView(commentText);
 
@@ -85,13 +89,13 @@ public class CommentView extends JPanel {
         JScrollPane historyScroll = new JScrollPane();
         historyPanel.add(historyScroll, "cell 0 0,grow");
         
-        JPanel panel = new JPanel();
-        panel.setLayout(new MigLayout("", "[grow]", "[grow]"));
+        JPanel postedHistoryPanel = new JPanel();
+        postedHistoryPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
         ActivityView testActivity2 = new ActivityView();
         testActivity2.setMessage("Hello Alex!");
-        panel.add(testActivity2, "cell 0 0,alignx left,aligny top");
+        postedHistoryPanel.add(testActivity2, "cell 0 0,alignx left,aligny top");
         
-        historyScroll.setViewportView(panel);
+        historyScroll.setViewportView(postedHistoryPanel);
     }
 
 }

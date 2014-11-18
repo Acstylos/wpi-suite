@@ -10,7 +10,7 @@ import javax.swing.JTextArea;
  * When clicked, the text is cleared and the user can type freely,
  * and the text will be black.
  */
-public class JWriteInText extends JTextArea{
+public class PresetTextArea extends JTextArea{
 
     private static final long serialVersionUID = 1940773640674478555L;
     /*Parameters:
@@ -23,7 +23,7 @@ public class JWriteInText extends JTextArea{
     /**
      * Empty constructor
      */
-    public JWriteInText(){
+    public PresetTextArea(){
         setFont(new Font("Tahoma", Font.PLAIN, 14));
         
     }
@@ -32,9 +32,8 @@ public class JWriteInText extends JTextArea{
      * Constructor for starting with a specific field.
      * @param startText Text that the field starts with.
      */
-    public JWriteInText(String startText){
+    public PresetTextArea(String startText){
         this.startText = startText;
-     //   this.setFont(new Font("Times New Roman", Font.PLAIN, 14));
     }
 
     /**
@@ -42,7 +41,6 @@ public class JWriteInText extends JTextArea{
      */
     public void resetText(){
         this.setForeground(Color.LIGHT_GRAY);
-      //  this.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         this.setToolTipText("");
         this.setText(this.startText);
         this.commentTyped = false;

@@ -54,7 +54,7 @@ public class TaskView extends JPanel {
     private JSpinner actualEffortSpinner = new JSpinner();
     private JSpinner estEffortSpinner = new JSpinner();
     private JSplitPane splitPane = new JSplitPane();
-    private JWriteInText descriptionMessage = new JWriteInText();
+    private PresetTextArea descriptionMessage = new PresetTextArea();
     private JTextField taskNameField = new JTextField();
     private JXDatePicker datePicker = new JXDatePicker();
     

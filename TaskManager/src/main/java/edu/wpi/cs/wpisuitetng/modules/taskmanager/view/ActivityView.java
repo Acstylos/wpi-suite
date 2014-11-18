@@ -21,17 +21,18 @@ import java.awt.event.MouseEvent;
 public class ActivityView extends JPanel {
 
     /**
-     * 
+     * serialVersionUID
      */
     private static final long serialVersionUID = 7743312885538872898L;
     /**
      * Create the panel.
      */
     private String message = "";
-    private JPanel panel;
-    private JPanel panel_1;
     private JPanel pastMessagePanel;
 
+    /**
+     * Constructor sets up panel and colors
+     */
     public ActivityView() {
         setLayout(new MigLayout("", "[grow]", "[]"));
 
@@ -42,30 +43,30 @@ public class ActivityView extends JPanel {
         pastMessagePanel.setLayout(new MigLayout("", "[grow][]", "[]"));
         this.pastMessagePanel = pastMessagePanel;
         
-        
-
 
     }
 
-    /*setMessage: sets the message within a MessageView and sets it up
-     * message: message within MessageView
+    /**
+     * sets the message within a MessageView and sets it up
+     * @param message: message within MessageView
      */
     public void setMessage(String message){
         this.message = message;
-        JLabel lblNewLabel = new JLabel(message);
-        this.pastMessagePanel.add(lblNewLabel, "cell 0 0");
-        lblNewLabel.setForeground(Color.WHITE);
-        lblNewLabel.setBackground(Color.LIGHT_GRAY);
+        JLabel pastActivityLabel = new JLabel(message);
+        this.pastMessagePanel.add(pastActivityLabel, "cell 0 0");
+        pastActivityLabel.setForeground(Color.WHITE);
+        pastActivityLabel.setBackground(Color.LIGHT_GRAY);
 
     }
     
-    /*Makes X button appear when mouse is over message
-     * (not yet working)
+    /**
+     * Makes X button appear when mouse is over message (not yet working)
+     * @param e: MouseEvent
      */
     public void mouseEntered(MouseEvent e) {
-        JButton btnNewButton = new JButton("X");
-        pastMessagePanel.add(btnNewButton, "cell 1 0");
-        btnNewButton.addActionListener(new ActionListener() {
+        JButton deleteActivityButton = new JButton("X");
+        pastMessagePanel.add(deleteActivityButton, "cell 1 0");
+        deleteActivityButton.addActionListener(new ActionListener() {
         
             public void actionPerformed(ActionEvent e) {
                 
@@ -74,4 +75,3 @@ public class ActivityView extends JPanel {
         
      }
 }
-
