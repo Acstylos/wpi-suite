@@ -17,7 +17,6 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.MockData;
 
 public class TestActivityEntityManager {
-
     MockData db;
     Session defaultSession;
     Project testProject;
@@ -219,5 +218,6 @@ public class TestActivityEntityManager {
             }
             assertTrue(exceptionThrown);
     }
+
 
 }
