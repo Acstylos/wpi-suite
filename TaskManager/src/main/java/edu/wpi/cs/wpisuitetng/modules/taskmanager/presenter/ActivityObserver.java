@@ -16,16 +16,36 @@ import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 import edu.wpi.cs.wpisuitetng.network.models.IRequest;
 import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 
+/**
+ * Observes the activity network response for activities
+ * 
+ * @author TheFloorIsJava
+ *
+ */
 public class ActivityObserver implements RequestObserver {
 
     private ActivityPresenter presenter;
     private HttpMethod method;
 
+    /**
+     * Constructor for ActivityObserver.
+     * 
+     * @param presenter
+     *            ActivityPresenter
+     * @param method
+     *            HttpMethod
+     */
     public ActivityObserver(ActivityPresenter presenter, HttpMethod method) {
         this.presenter = presenter;
         this.method = method;
     }
 
+    /**
+     * Constructor for ActivityObserver.
+     * 
+     * @param presenter
+     *            ActivityPresenter
+     */
     public ActivityObserver(ActivityPresenter presenter) {
         this.presenter = presenter;
     }
@@ -33,6 +53,10 @@ public class ActivityObserver implements RequestObserver {
     /**
      * Parse the ActivityViews from the response received by the network
      *
+     * @param iReq
+     *            IRequest
+     * 
+     * @see edu.wpi.cs.wpisuitetng.network.RequestObserver#responseSuccess(IRequest)
      */
     public void responseSuccess(IRequest iReq) {
         // Store the response
@@ -66,6 +90,9 @@ public class ActivityObserver implements RequestObserver {
     }
 
     /**
+     * Takes an action if the response results in an error. Specifically,
+     * outputs that the request failed.
+     * 
      * @see edu.wpi.cs.wpisuitetng.network.RequestObserver#responseError(edu.wpi.cs.wpisuitetng.network.models.IRequest)
      */
     public void responseError(IRequest iReq) {
@@ -74,15 +101,28 @@ public class ActivityObserver implements RequestObserver {
     }
 
     /**
+     * Takes an action if the response fails. Specifically, outputs that the
+     * request failed.
      *
      * @param iReq
      * @param exception
+     * 
+     * @see edu.wpi.cs.wpisuitetng.network.RequestObserver#fail(IRequest,
+     *      Exception)
      */
     public void fail(IRequest iReq, Exception exception) {
         System.err.println("The request to " + httpMethodToString(method)
                 + " an activity failed.");
     }
 
+    /**
+     * Method httpMethodToString.
+     * 
+     * @param method_
+     *            HttpMethod
+     * 
+     * @return String
+     */
     private static String httpMethodToString(HttpMethod method_) {
         String methodString = "";
         switch (method_) {
@@ -103,6 +143,7 @@ public class ActivityObserver implements RequestObserver {
     }
 
     /**
+     * 
      * @return The presenter
      */
     public ActivityPresenter getPresenter() {
