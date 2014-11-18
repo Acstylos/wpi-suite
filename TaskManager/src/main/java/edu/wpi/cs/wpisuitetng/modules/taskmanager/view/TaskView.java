@@ -44,7 +44,7 @@ public class TaskView extends JPanel {
     private JLabel actualEffortLabel = new JLabel("Actual Effort:");
     private JLabel estEffortLabel = new JLabel("Estimated Effort:");
     private JPanel buttonPanel = new TaskButtonsPanel();
-    private JPanel commentPanel = new JPanel();
+    private JPanel commentPanel = new CommentView();
     private JPanel descriptionPanel = new JPanel();
     private JPanel detailsPanel = new JPanel();
     private JPanel infoPanel = new JPanel();
@@ -54,7 +54,7 @@ public class TaskView extends JPanel {
     private JSpinner actualEffortSpinner = new JSpinner();
     private JSpinner estEffortSpinner = new JSpinner();
     private JSplitPane splitPane = new JSplitPane();
-    private JWriteinText descriptionMessage = new JWriteinText();
+    private PresetTextArea descriptionMessage = new PresetTextArea();
     private JTextField taskNameField = new JTextField();
     private JXDatePicker datePicker = new JXDatePicker();
     
@@ -80,7 +80,6 @@ public class TaskView extends JPanel {
         this.setLayout(new MigLayout("", "[grow]", "[grow][min]"));
         
         this.buttonPanel.setLayout(new MigLayout("", "[][][]", "[]"));
-        this.commentPanel.setLayout(new MigLayout("", "[]", "[]"));
         this.descriptionPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
         this.detailsPanel.setLayout(new MigLayout("", "[grow]", "[][grow][grow]"));
         this.infoPanel.setLayout(new MigLayout("", "[][][grow]", "[][][][][]"));
@@ -135,6 +134,7 @@ public class TaskView extends JPanel {
                 descriptionMessage.clicked();
             }
         });
+         
     }
 
     /**
