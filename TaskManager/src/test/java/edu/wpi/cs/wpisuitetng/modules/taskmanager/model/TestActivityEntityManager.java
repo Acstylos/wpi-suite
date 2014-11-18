@@ -174,7 +174,7 @@ public class TestActivityEntityManager {
         try {
             manager.deleteEntity(defaultSession, "3");
         } catch (NotFoundException e) {
-            exceptionThrown = true;
+            exceptionThrown = true; 
         }
         assertTrue(exceptionThrown);
     }
