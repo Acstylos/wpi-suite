@@ -28,6 +28,8 @@ public class ToolbarView extends JPanel
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Creating a new task!");
                 MainView.getInstance().addTab("New Task", new TaskView("New Task", 700, null, null, ViewMode.CREATING));
+                int tabCount = MainView.getInstance().getTabCount();
+                MainView.getInstance().setSelectedIndex(tabCount-1);
             }
         });
         add(createNewTaskButton, "dock east");

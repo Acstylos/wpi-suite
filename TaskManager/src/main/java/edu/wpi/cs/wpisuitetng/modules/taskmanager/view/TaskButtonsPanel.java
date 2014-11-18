@@ -30,7 +30,7 @@ public class TaskButtonsPanel extends JPanel {
     private final JButton okButton = new JButton();
     private final JButton cancelButton = new JButton("Cancel");
     private final JButton clearButton = new JButton();
-    private final JButton deleteButton = new JButton("Delete");
+    private final JButton deleteButton = new JButton("Archive");
     private final String okString;
     private final String clearString;
 
@@ -55,8 +55,6 @@ public class TaskButtonsPanel extends JPanel {
         this.add(cancelButton);
         this.okButton.setText(okString);
         this.clearButton.setText(clearString);
-        okButton.setEnabled(false);
-        clearButton.setEnabled(false);
         this.setupListeners();
     }
 
