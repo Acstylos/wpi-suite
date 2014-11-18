@@ -10,7 +10,6 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Date;
@@ -43,7 +42,7 @@ public class TaskView extends JPanel {
     private JLabel statusLabel = new JLabel("Status:");
     private JLabel actualEffortLabel = new JLabel("Actual Effort:");
     private JLabel estEffortLabel = new JLabel("Estimated Effort:");
-    private JPanel buttonPanel = new TaskButtonsPanel();
+    private JPanel buttonPanel;
     private JPanel commentPanel = new CommentView();
     private JPanel descriptionPanel = new JPanel();
     private JPanel detailsPanel = new JPanel();
@@ -74,18 +73,18 @@ public class TaskView extends JPanel {
      * @see #setDescriptionText(String)
      * @see #setDueDate(Date)
      */
-    public TaskView(String title, int estimatedEffort, String description, Date dueDate) {
+    public TaskView(String title, int estimatedEffort, String description, Date dueDate, ViewMode viewMode) {
         this.setBorder(null);
         // Set layouts for all panels
         this.setLayout(new MigLayout("", "[grow]", "[grow][min]"));
         
-        this.buttonPanel.setLayout(new MigLayout("", "[][][]", "[]"));
         this.descriptionPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
         this.detailsPanel.setLayout(new MigLayout("", "[grow]", "[][grow][grow]"));
         this.infoPanel.setLayout(new MigLayout("", "[][][grow]", "[][][][][]"));
         this.splitPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
         this.usersPanel.setLayout(new MigLayout("", "[]", "[]"));
         
+        this.buttonPanel = new TaskButtonsPanel(this, viewMode);
         this.add(buttonPanel, "cell 0 1,grow");
         this.add(splitPanel, "cell 0 0,grow");
         this.splitPanel.add(splitPane, "cell 0 0,grow");
@@ -133,8 +132,31 @@ public class TaskView extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 descriptionMessage.clicked();
             }
-        });
-         
+        });     
+    }
+    
+    /**
+     * These do nothing yet. Need to integrate with presenter somehow.
+     */
+    /**
+     * This should call something to save task to the model
+     */
+    public void saveTask(){
+    }
+    /**
+     * This should call something to refresh the view with the model
+     */
+    public void clearTask(){
+    }
+    /**
+     * This calls something to refresh, and closes the tab this view is open in
+     */
+    public void cancelTask(){
+    }
+    /**
+     * This calls something to move the task to the archive
+     */
+    public void deleteTask(){
     }
 
     /**
