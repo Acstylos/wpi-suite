@@ -24,15 +24,13 @@ import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
 
-
 /**
  * This is the main class for the WPI Suite TM module for Janeway.
  *
  * WPI Suite TM is a task manager consisting of one tab that provides an
  * interface for keeping track of flow-based tasks.
  */
-public class TaskManager implements IJanewayModule
-{
+public class TaskManager implements IJanewayModule {
     /** A list containing the one tab */
     private List<JanewayTabModel> tabs;
     private WorkflowPresenter mainPresenter;
@@ -40,19 +38,20 @@ public class TaskManager implements IJanewayModule
     public TaskManager() {
         JPanel toolbarPanel = new JPanel();
         JPanel mainPanel = new JPanel();
-        
+
         JButton button = new JButton("Load Workflow");
 
         button.addActionListener((ActionEvent e) -> {
-          if (TaskManager.this.mainPresenter == null) {
-            mainPresenter = new WorkflowPresenter(0);
-            toolbarPanel.remove(button);
-            mainPanel.add(new JScrollPane(mainPresenter.getView()));
-            mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-          }});
-        
+            if (TaskManager.this.mainPresenter == null) {
+                mainPresenter = new WorkflowPresenter(0);
+                toolbarPanel.remove(button);
+                mainPanel.add(new JScrollPane(mainPresenter.getView()));
+                mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+            }
+        });
+
         toolbarPanel.add(button, "cell 0 1, grow");
-        
+
         /* Create the tab model for the task manager */
         tabs = new ArrayList<JanewayTabModel>();
         tabs.add(new JanewayTabModel("Task Manager", new ImageIcon(),
@@ -64,8 +63,7 @@ public class TaskManager implements IJanewayModule
      * @return The name of the module ("Task Manager")
      */
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "Task Manager";
     }
 
@@ -73,8 +71,7 @@ public class TaskManager implements IJanewayModule
      * {@inheritDoc}
      */
     @Override
-    public List<JanewayTabModel> getTabs()
-    {
+    public List<JanewayTabModel> getTabs() {
         return tabs;
     }
 }
