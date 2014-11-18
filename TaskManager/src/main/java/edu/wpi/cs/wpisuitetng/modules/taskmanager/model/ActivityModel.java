@@ -36,6 +36,7 @@ public class ActivityModel extends AbstractModel {
         this.user = new User("", "", "", -1);
         this.activity = "";
         this.date = new Date();
+
     }
 
     /**
@@ -84,6 +85,7 @@ public class ActivityModel extends AbstractModel {
      */
     public void setId(int id) {
         this.id = id;
+
     }
 
     /**
@@ -99,6 +101,7 @@ public class ActivityModel extends AbstractModel {
      */
     public void setUser(User user) {
         this.user = user;
+
     }
 
     /**
@@ -145,6 +148,7 @@ public class ActivityModel extends AbstractModel {
      * 
      * @param alist
      *            A list of activities
+
      * @return A string in JSON representing the list of activities
      */
     public static String toJson(ActivityModel[] alist) {
@@ -192,4 +196,5 @@ public class ActivityModel extends AbstractModel {
         // TODO Auto-generated method stub
         return null;
     }
+
 }
