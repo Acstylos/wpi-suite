@@ -98,9 +98,9 @@ public class BucketPresenter {
         view.setTitle(model.getTitle());
         ArrayList<Integer> bucket = model.getBucket();
         for (int i : bucket) {
-            //TaskPresenter taskPresenter = new TaskPresenter(i, this);
-            //TaskView taskView = taskPresenter.getView();
-            //view.addTaskToView(taskView);
+            TaskPresenter taskPresenter = new TaskPresenter(i, this, ViewMode.EDITING);
+            MiniTaskView miniTaskView = taskPresenter.getMiniView();
+            view.addTaskToView(miniTaskView);
         }
         view.revalidate();
         view.repaint();

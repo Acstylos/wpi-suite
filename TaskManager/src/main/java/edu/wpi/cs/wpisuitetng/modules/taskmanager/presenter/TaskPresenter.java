@@ -56,10 +56,10 @@ public class TaskPresenter {
         request.send();
     }
 
-    
     /**
-     * 
-     * @param id
+     * Constructs a TaskPresenter for the given model. Constructs the view
+     * offscreen, available if you call getView().
+     * @param id ID of the bucket to create
      */
     public TaskPresenter(int id, BucketPresenter bucket, ViewMode viewMode){
     	this.bucket = bucket;

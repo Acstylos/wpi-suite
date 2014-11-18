@@ -29,6 +29,7 @@ public class MainView extends JTabbedPane
     private static final MainView mainView = new MainView();
     
     private MainView(){
+        this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         this.addTab("Workflow", scrollPane);    
         this.setWorkflowPresenter(workflowPresenter);
         

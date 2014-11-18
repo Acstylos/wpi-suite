@@ -35,14 +35,14 @@ import org.jdesktop.swingx.JXDatePicker;
  */
 public class TaskView extends JPanel {
     private static final long serialVersionUID = -997563229078386090L;
-    
+
     private JComboBox<BucketView> statusComboBox = new JComboBox<BucketView>();
     private JLabel taskNameLabel = new JLabel("Task Name:");
     private JLabel dateLabel = new JLabel("Due Date:");
     private JLabel statusLabel = new JLabel("Status:");
     private JLabel actualEffortLabel = new JLabel("Actual Effort:");
     private JLabel estEffortLabel = new JLabel("Estimated Effort:");
-    private JPanel buttonPanel;
+    private TaskButtonsPanel buttonPanel;
     private JPanel commentPanel = new CommentView();
     private JPanel descriptionPanel = new JPanel();
     private JPanel detailsPanel = new JPanel();
@@ -56,7 +56,7 @@ public class TaskView extends JPanel {
     private PresetTextArea descriptionMessage = new PresetTextArea();
     private JTextField taskNameField = new JTextField();
     private JXDatePicker datePicker = new JXDatePicker();
-    
+
     /**
      * Create a new TaskView with the specified default values.
      *
@@ -73,22 +73,23 @@ public class TaskView extends JPanel {
      * @see #setDescriptionText(String)
      * @see #setDueDate(Date)
      */
-    public TaskView(String title, int estimatedEffort, String description, Date dueDate, ViewMode viewMode) {
+    public TaskView(String title, int estimatedEffort, String description,
+            Date dueDate, ViewMode viewMode) {
         this.setBorder(null);
         // Set layouts for all panels
         this.setLayout(new MigLayout("", "[grow]", "[grow][min]"));
-        
+
         this.descriptionPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
-        this.detailsPanel.setLayout(new MigLayout("", "[grow]", "[][grow][grow]"));
+        this.detailsPanel.setLayout(new MigLayout("", "[grow]",
+                "[][grow][grow]"));
         this.infoPanel.setLayout(new MigLayout("", "[][][grow]", "[][][][][]"));
         this.splitPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
         this.usersPanel.setLayout(new MigLayout("", "[]", "[]"));
-        
+
         this.buttonPanel = new TaskButtonsPanel(this, viewMode);
         this.add(buttonPanel, "cell 0 1,grow");
         this.add(splitPanel, "cell 0 0,grow");
         this.splitPanel.add(splitPane, "cell 0 0,grow");
-        
 
         this.splitPane.setResizeWeight(0.5);
         this.splitPane.setRightComponent(commentPanel);
@@ -109,10 +110,12 @@ public class TaskView extends JPanel {
         this.infoPanel.add(statusLabel, "cell 0 2");
         this.infoPanel.add(statusComboBox, "cell 1 2");
         // TODO: Integrate this ComboBox with changing tasks between BucketViews
-        this.statusComboBox.setModel(new DefaultComboBoxModel(new String[] {"New", "Selected", "In Progress", "Completed"}));
+        this.statusComboBox.setModel(new DefaultComboBoxModel(new String[] {
+                "New", "Selected", "In Progress", "Completed" }));
         this.infoPanel.add(actualEffortLabel, "cell 0 3");
         this.infoPanel.add(actualEffortSpinner, "cell 1 3");
-        this.actualEffortSpinner.setModel(new SpinnerNumberModel(0, 0, 99999, 1));
+        this.actualEffortSpinner
+                .setModel(new SpinnerNumberModel(0, 0, 99999, 1));
         this.infoPanel.add(estEffortLabel, "cell 0 4");
         this.infoPanel.add(estEffortSpinner, "cell 1 4");
         this.estEffortSpinner.setModel(new SpinnerNumberModel(0, 0, 99999, 1));
@@ -120,9 +123,10 @@ public class TaskView extends JPanel {
 
         // Format the descriptionPanel layout with components
         this.descriptionPanel.add(scrollPane, "cell 0 0,grow");
-        this.scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        this.scrollPane
+                .setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         this.scrollPane.setViewportView(descriptionMessage);
-        
+
         this.descriptionMessage.setWrapStyleWord(true);
         this.descriptionMessage.setLineWrap(true);
         this.descriptionMessage.setStartText("Description Here...");
@@ -132,35 +136,39 @@ public class TaskView extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 descriptionMessage.clicked();
             }
-        });     
+        });
     }
-    
+
     /**
      * These do nothing yet. Need to integrate with presenter somehow.
      */
     /**
      * This should call something to save task to the model
      */
-    public void saveTask(){
-    }
-    /**
-     * This should call something to refresh the view with the model
-     */
-    public void clearTask(){
-    }
-    /**
-     * This calls something to refresh, and closes the tab this view is open in
-     */
-    public void cancelTask(){
-    }
-    /**
-     * This calls something to move the task to the archive
-     */
-    public void deleteTask(){
+    public void saveTask() {
     }
 
     /**
-     * @param titleText The new title of the task
+     * This should call something to refresh the view with the model
+     */
+    public void clearTask() {
+    }
+
+    /**
+     * This calls something to refresh, and closes the tab this view is open in
+     */
+    public void cancelTask() {
+    }
+
+    /**
+     * This calls something to move the task to the archive
+     */
+    public void deleteTask() {
+    }
+
+    /**
+     * @param titleText
+     *            The new title of the task
      */
     public void setTaskNameField(String titleText) {
         this.taskNameField.setText(titleText);
@@ -172,9 +180,10 @@ public class TaskView extends JPanel {
     public String getTaskNameField() {
         return this.taskNameField.getText();
     }
-    
+
     /**
-     * @param actualEffort The new actual effort of the task, in arbitrary work units.
+     * @param actualEffort
+     *            The new actual effort of the task, in arbitrary work units.
      */
     public void setActualEffort(int actualEffort) {
         this.actualEffortSpinner.setValue(actualEffort);
@@ -188,7 +197,8 @@ public class TaskView extends JPanel {
     }
 
     /**
-     * @param estimatedEffort The new estimated effort of the task, in arbitrary work units.
+     * @param estimatedEffort
+     *            The new estimated effort of the task, in arbitrary work units.
      */
     public void setEstimatedEffort(int estimatedEffort) {
         this.estEffortSpinner.setValue(estimatedEffort);
@@ -202,7 +212,8 @@ public class TaskView extends JPanel {
     }
 
     /**
-     * @param descriptionText The new task description
+     * @param descriptionText
+     *            The new task description
      */
     public void setDescriptionText(String descriptionText) {
         this.descriptionMessage.setText(descriptionText);
