@@ -27,11 +27,12 @@ public class TaskModel extends AbstractModel {
     private int id;
     private String title;
     private String description;
-    private List<User> assignedTo;
     private int estimatedEffort;
     private int actualEffort;
     private Date dueDate;
-    private List<Requirement> requirements;
+    private List<Integer> userIds;
+    private List<Integer> requirementIds;
+    private List<Integer> activityIds;
 
     /**
      * Constructor for a default Task object
@@ -41,10 +42,11 @@ public class TaskModel extends AbstractModel {
         id = -1;
         title = "";
         description = "Description Here";
-        assignedTo = new ArrayList<User>();
         estimatedEffort = -1;
         actualEffort = -1;
-        requirements = new ArrayList<Requirement>();
+        userIds = new ArrayList<>();
+        requirementIds = new ArrayList<>();
+        activityIds = new ArrayList<>();
     }
 
     /**
@@ -110,15 +112,15 @@ public class TaskModel extends AbstractModel {
     /**
      * @return The list of users assigned to this task
      */
-    public List<User> getAssignedTo() {
-        return assignedTo;
+    public List<Integer> getUserIds() {
+        return userIds;
     }
 
     /**
      * @param user Adds a user to the list of assigned users
      */
-    public void setAssignedTo(User user) {
-        this.assignedTo.add(user);
+    public void setUserIds(int id) {
+        this.userIds.add(id);
     }
 
     /**
@@ -142,11 +144,12 @@ public class TaskModel extends AbstractModel {
     public void copyFrom(TaskModel other) {
         this.title = other.getTitle();
         this.description = other.getDescription();
-        this.assignedTo = other.getAssignedTo();
         this.estimatedEffort = other.getEstimatedEffort();
         this.dueDate = other.getDueDate();
         this.actualEffort = other.getActualEffort();
-        this.requirements = other.getRequirements();
+        this.userIds = other.getUserIds();
+        this.requirementIds = other.getRequirementIds();
+        this.activityIds = other.getActivityIds();
     }
     
     /**
@@ -249,17 +252,31 @@ public class TaskModel extends AbstractModel {
     }
     
     /**
-     * @param requirements To be set
+     * @param requirements List of ids corresponding to requirements associated with this task
      */
-    public void setRequirements(List<Requirement> requirements){
-    	this.requirements = requirements;
+    public void setRequirementIds(List<Integer> ids){
+    	this.requirementIds = ids;
     }
     
     /**
-     * @return A list of requirement set for the task
+     * @return A list of ids corresponding to requirement associated with the task
      */
-    public List<Requirement> getRequirements(){
-    	return requirements;
+    public List<Integer> getRequirementIds(){
+    	return requirementIds;
+    }
+    
+    /**
+     * @param requirements List of ids corresponding to activities associated with this task
+     */
+    public void setActivityIds(List<Integer> ids){
+    	this.activityIds = ids;
+    }
+    
+    /**
+     * @return A list of ids corresponding to activities associated with the task
+     */
+    public List<Integer> getActivityIds(){
+    	return activityIds;
     }
 
 }

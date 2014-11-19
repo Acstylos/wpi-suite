@@ -18,7 +18,7 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
  public class TaskTest {
 	User Keenan;
 	User Yihao;
-	List<User> testList;
+	List<Integer> testList;
 	Date testDate;
 	TaskModel t1;
 	TaskModel t2;
@@ -29,8 +29,8 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 		Keenan = new User("Krgray","keenan","",-1);
 		Yihao = new User ("Yih", "yihao", "", -1);
 		testList = new ArrayList();
-		testList.add(Keenan);
-		testList.add(Yihao);
+		testList.add(Keenan.getIdNum());
+		testList.add(Yihao.getIdNum());
 		testDate = new Date(114, 11, 18);
 		t1 = new TaskModel();
 		t2 = new TaskModel(1928, "TaskTwo","This is task two", 400, testDate);
@@ -38,8 +38,8 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 		t3.setId(2000);
 		t3.setTitle("TaskThree");
 		t3.setDescription("This is task three");	
-		t3.setAssignedTo(Keenan);
-		t3.setAssignedTo(Yihao);
+		t3.setUserIds(Keenan.getIdNum());
+		t3.setUserIds(Yihao.getIdNum());
 		t3.setEstimatedEffort(150);
 		
 	}
@@ -67,7 +67,7 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
  		assertEquals(2000, t3.getId());
  		assertEquals("TaskThree", t3.getTitle());
  		assertEquals("This is task three", t3.getDescription());
- 		assertEquals(testList, t3.getAssignedTo());
+ 		assertEquals(testList, t3.getUserIds());
  		assertEquals(150, t3.getEstimatedEffort());
  		
  		

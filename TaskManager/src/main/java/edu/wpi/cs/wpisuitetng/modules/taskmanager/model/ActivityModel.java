@@ -24,7 +24,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public class ActivityModel extends AbstractModel {
 
     private int id;
-    private User user;
+    private int userId;
     private Date date;
     private String activity;
 
@@ -33,7 +33,7 @@ public class ActivityModel extends AbstractModel {
      */
     public ActivityModel() {
         this.id = -1;
-        this.user = new User("", "", "", -1);
+        this.userId = -1;
         this.activity = "";
         this.date = new Date();
 
@@ -50,9 +50,9 @@ public class ActivityModel extends AbstractModel {
      * @param activity
      *            either auto-generated or manually added comments
      */
-    public ActivityModel(int id, User user, String activity, Date date) {
+    public ActivityModel(int id, int userId, String activity, Date date) {
         this.id = id;
-        this.user = user;
+        this.userId = userId;
         this.activity = activity;
         this.date = date;
     }
@@ -89,18 +89,17 @@ public class ActivityModel extends AbstractModel {
     }
 
     /**
-     * @return the user
+     * @return the id corresponding to the user who commented to create this activity
      */
-    public User getUser() {
-        return user;
+    public int getUserId() {
+        return userId;
     }
 
     /**
-     * @param user
-     *            the user to be set
+     * @param user The id corresponding to the user who commented to create this activity
      */
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(int id) {
+        this.userId = id;
 
     }
 
@@ -128,7 +127,7 @@ public class ActivityModel extends AbstractModel {
     public void copyFrom(ActivityModel other) {
         this.activity = other.getActivity();
         this.id = other.getId();
-        this.user = other.getUser();
+        this.userId = other.getUserId();
     }
 
     /**
