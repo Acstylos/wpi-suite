@@ -9,13 +9,11 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ViewMode;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -51,11 +49,11 @@ public class TaskButtonsPanel extends JPanel {
         if (viewMode == ViewMode.CREATING) {
             okString = "Create";
             clearString = "Clear";
-            this.remove(deleteButton);
+            //this.remove(deleteButton);
         } else {
             okString = "Update";
             clearString = "Undo Changes";
-            this.add(deleteButton);
+            //this.add(deleteButton);
         }
         this.okButton.setText(okString);
         this.clearButton.setText(clearString);
