@@ -2,8 +2,8 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -22,7 +22,6 @@ public class CommentView extends JTabbedPane {
 
     private static final long serialVersionUID = 6161339014039149740L;
 
-    private final String commentStartText = "Commment here";
     private JPanel commentPanel = new JPanel();
     private JPanel historyPanel = new JPanel();
     private JPanel postedHistoryPanel = new JPanel();
@@ -32,7 +31,7 @@ public class CommentView extends JTabbedPane {
     private ActivityView testActivity = new ActivityView();
     private ActivityView testActivity2 = new ActivityView();
     private JScrollPane editCommentScroll = new JScrollPane();
-    private PresetTextArea commentText = new PresetTextArea();
+    private PresetTextArea commentText = new PresetTextArea("Comment here");
     private JButton postCommentButton = new JButton("Post");
     private JButton clearCommentButton = new JButton("Clear");
 
@@ -55,7 +54,7 @@ public class CommentView extends JTabbedPane {
         this.commentPanel.add(editCommentScroll, "cell 0 1,grow");
         this.commentPanel.add(postCommentButton, "cell 0 2,alignx left,growy");
         this.commentPanel.add(clearCommentButton, "cell 0 2,alignx left,growy");
-        this.commentText.setStartText(commentStartText);
+        this.commentText.setStartText("Comment here");
         this.commentText.setWrapStyleWord(true);
         this.commentText.setLineWrap(true);
         
@@ -95,24 +94,23 @@ public class CommentView extends JTabbedPane {
         // Post button
         this.postCommentButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ActivityView newComment = new ActivityView();
-                String str = commentText.getText();
-                newComment.setMessage(str);
+                ActivityView newComment = new ActivityView(commentText.getText());
                 postedCommentPanel.add(newComment, "dock south");
-                commentText.setStartText(commentStartText);
+                commentText.resetText();
                 JScrollBar vertical = commentScroll.getVerticalScrollBar();
                 JScrollBar horizontal = commentScroll.getHorizontalScrollBar();
                 postedCommentPanel.revalidate();
                 postedCommentPanel.repaint();
                 vertical.setValue(vertical.getMinimum());
                 horizontal.setValue(horizontal.getMinimum());
+                validateButtons(commentText.isCommentTyped());
             }
         });
 
         // when clicked, the screen will clear if the original text is inside
-        this.commentText.addMouseListener(new MouseAdapter() {
+        this.commentText.addFocusListener(new FocusAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void focusGained(FocusEvent e) {
                 commentText.clicked();
             }
             
