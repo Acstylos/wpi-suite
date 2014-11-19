@@ -28,23 +28,26 @@ public class ActivityView extends JPanel {
     /**
      * Create the panel.
      */
-    private String message = "";
-    private JPanel pastMessagePanel;
+    private JPanel pastMessagePanel = new JPanel();
+    private JTextArea pastActivityText = new JTextArea();
 
     /**
      * Constructor sets up panel and colors
      */
     public ActivityView() {
-        setLayout(new MigLayout("", "[grow]", "[]"));
-
-        pastMessagePanel = new JPanel();
+        this.setLayout(new MigLayout("", "[grow]", "[grow]"));
+        
+        pastActivityText.setEditable(false);
         pastMessagePanel.setForeground(Color.WHITE);
         pastMessagePanel.setBackground(Color.LIGHT_GRAY);
         add(pastMessagePanel, "cell 0 0,grow");
-        pastMessagePanel.setLayout(new MigLayout("", "[grow][]", "[]"));
-        this.pastMessagePanel = pastMessagePanel;
-
-
+        pastMessagePanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
+        this.pastMessagePanel.add(pastActivityText, "cell 0 0, grow");
+        pastActivityText.setForeground(Color.BLACK);
+        pastActivityText.setBackground(Color.LIGHT_GRAY);
+        this.pastActivityText.setWrapStyleWord(true);
+        this.pastActivityText.setLineWrap(true);
+        this.pastActivityText.setMinimumSize(this.getMinimumSize());
     }
 
     /**
@@ -52,63 +55,11 @@ public class ActivityView extends JPanel {
      * @param message: message within MessageView
      */
     public void setMessage(String message){
-        this.message = message;
-        JTextArea pastActivityLabel = new JTextArea();
-
-        pastActivityLabel.setEditable(false);
-        message = this.stringConverter(message, 20);
-        pastActivityLabel.replaceSelection(message);
-        this.pastMessagePanel.add(pastActivityLabel, "cell 0 0");
-        pastActivityLabel.setForeground(Color.WHITE);
-        pastActivityLabel.setBackground(Color.LIGHT_GRAY);
+        this.pastActivityText.setText(message);
     }
-
-
-    /**
-     * Takes a string and converts it into a certain number of
-     * characters per line
-     * @param startString: String to be converted
-     * @param maxPerLine: max number of characters per line
-     * @return
-     */
-    public String stringConverter(String startString, int maxPerLine){
-        List<Character> startInChar = new ArrayList<Character>();
-        String finalString="";
-        int lastFoundSpace=0;
-        int j=0;
-        
-        for(char c: startString.toCharArray()){
-            startInChar.add(c);
-        }
-        for(int i=0; i<startInChar.size(); i++){
-            if (startInChar.get(i)==' '){
-                lastFoundSpace=i;
-            }
-            if (startInChar.get(i)=='\n'){
-                j=0;
-                lastFoundSpace=i;
-            }
-            if (j==maxPerLine){
-                if (lastFoundSpace!=0){
-                    startInChar.set(lastFoundSpace, '\n');
-                    i=lastFoundSpace;
-                }
-                else{
-                    startInChar.add(i+1, startInChar.get(i));
-                    startInChar.set(i, '\n');
-                }
-                j=0;
-                lastFoundSpace=0;
-
-            }
-            else{
-                j++;
-            }
-        }
-        for (int k=0; k<startInChar.size(); k++){
-            finalString= finalString + startInChar.get(k);
-        }
-        return finalString;
+    
+    public String getMessage(){
+        return this.pastActivityText.getText();
     }
 
     /**

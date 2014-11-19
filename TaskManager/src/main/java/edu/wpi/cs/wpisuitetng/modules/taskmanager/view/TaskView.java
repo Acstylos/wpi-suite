@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
@@ -43,7 +44,7 @@ public class TaskView extends JPanel {
     private JLabel actualEffortLabel = new JLabel("Actual Effort:");
     private JLabel estEffortLabel = new JLabel("Estimated Effort:");
     private TaskButtonsPanel buttonPanel;
-    private JPanel commentPanel = new CommentView();
+    private JTabbedPane commentPanel = new CommentView();
     private JPanel descriptionPanel = new JPanel();
     private JPanel detailsPanel = new JPanel();
     private JPanel infoPanel = new JPanel();

@@ -1,111 +1,146 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
-import javax.swing.JPanel;
-
-import net.miginfocom.swing.MigLayout;
-
-import javax.swing.JTabbedPane;
-import javax.swing.JScrollPane;
-import javax.swing.JButton;
-
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import net.miginfocom.swing.MigLayout;
 
 /*
  * Part of Task editor containing comments and history
  */
-public class CommentView extends JPanel {
+public class CommentView extends JTabbedPane {
 
     private static final long serialVersionUID = 6161339014039149740L;
 
+    private final String commentStartText = "Commment here";
+    private JPanel commentPanel = new JPanel();
+    private JPanel historyPanel = new JPanel();
+    private JPanel postedHistoryPanel = new JPanel();
+    private JScrollPane historyScroll = new JScrollPane();
+    private JScrollPane commentScroll = new JScrollPane();
+    private JPanel postedCommentPanel = new JPanel();
+    private ActivityView testActivity = new ActivityView();
+    private ActivityView testActivity2 = new ActivityView();
+    private JScrollPane editCommentScroll = new JScrollPane();
+    private PresetTextArea commentText = new PresetTextArea();
+    private JButton postCommentButton = new JButton("Post");
+    private JButton clearCommentButton = new JButton("Clear");
+
     /**
-     * Constructor sets up TabbedPanes Comments and History
+     * Constructor sets up Comments and History
      */
     public CommentView() {
-        setLayout(new MigLayout("", "[grow]", "[grow]"));
+        this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        this.addTab("Comments", null, commentPanel, null);
+        this.addTab("History", null, historyPanel, null);
 
-        JTabbedPane commentPane = new JTabbedPane(JTabbedPane.TOP);
-        add(commentPane, "cell 0 0,grow");
+        // Set layouts
+        this.commentPanel.setLayout(new MigLayout("", "[grow]", "[grow][50px:n][min]"));
+        this.historyPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
+        this.postedCommentPanel.setLayout(new MigLayout("fill"));
+        this.postedHistoryPanel.setLayout(new MigLayout("fill"));
 
-        JPanel commentPanel = new JPanel();
-        commentPane.addTab("Comments", null, commentPanel, null);
-        commentPanel.setLayout(new MigLayout("", "[grow][grow][23px]", "[grow][41px][23px]"));
-
-        //scroll bar for box containing all comments
-        JScrollPane commentScroll = new JScrollPane();
+        // Add components to commentPanel
+        this.commentPanel.add(commentScroll, "cell 0 0,grow");
+        this.commentPanel.add(editCommentScroll, "cell 0 1,grow");
+        this.commentPanel.add(postCommentButton, "cell 0 2,alignx left,growy");
+        this.commentPanel.add(clearCommentButton, "cell 0 2,alignx left,growy");
+        this.commentText.setStartText(commentStartText);
+        this.commentText.setWrapStyleWord(true);
+        this.commentText.setLineWrap(true);
         
-        commentPanel.add(commentScroll, "cell 0 0 3 1,grow");
+        this.historyPanel.add(historyScroll, "cell 0 0,grow");        
         
-        JPanel postedCommentPanel = new JPanel();
-        
-        postedCommentPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
-        ActivityView testActivity = new ActivityView();
-       // postedCommentPanel.add(testActivity, "cell 0 0,alignx left,aligny top");
-        testActivity.setMessage("Hi John!");
-        commentScroll.setViewportView(postedCommentPanel);
-        
-        //scroll bar for box containing comment currently being edited
-        JScrollPane editCommentScroll = new JScrollPane();
-        commentPanel.add(editCommentScroll, "cell 0 1 3 1,grow");
+        // Set scrollpane viewports
+        this.commentScroll.setViewportView(postedCommentPanel);
+        this.editCommentScroll.setViewportView(commentText);
+        this.historyScroll.setViewportView(postedHistoryPanel);
 
-        //Write-in box for comments
-        PresetTextArea commentText = new PresetTextArea();
-        commentText.setStartText("Comment here");
-        editCommentScroll.setViewportView(commentText);
+        this.testActivity.setMessage("Hi John!");
+        this.testActivity2.setMessage("Hello Alex!");
 
-        //Post button
-        JButton btnPostComment = new JButton("Post");
-        btnPostComment.addActionListener(new ActionListener() {
+        this.postedHistoryPanel.add(testActivity2, "dock north");
+        this.postCommentButton.setEnabled(false);
+        this.clearCommentButton.setEnabled(false);
+        this.setupListeners();
+    }
+    
+    private void validateButtons(boolean commentTyped){
+        if(!commentTyped){
+            this.postCommentButton.setEnabled(false);
+            this.clearCommentButton.setEnabled(false);
+        } else if(this.commentText.getText().equals("")){
+            this.postCommentButton.setEnabled(false);
+            this.clearCommentButton.setEnabled(false);
+        } else {
+            this.postCommentButton.setEnabled(true);
+            this.clearCommentButton.setEnabled(true);
+        }
+    }
+    
+    /**
+     * Sets up the button listeners so that buttons can do things.
+     */
+    private void setupListeners() {
+        // Post button
+        this.postCommentButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String str=commentText.getText();
-                if (!str.equals("")){
-                    ActivityView newComment = new ActivityView();
-                    newComment.setMessage(str);
-                    postedCommentPanel.add(newComment, "dock north");
-                    commentText.setText("");
-                    postedCommentPanel.revalidate();
-                    postedCommentPanel.repaint();
-                    
-                }
+                ActivityView newComment = new ActivityView();
+                String str = commentText.getText();
+                newComment.setMessage(str);
+                postedCommentPanel.add(newComment, "dock south");
+                commentText.setStartText(commentStartText);
+                JScrollBar vertical = commentScroll.getVerticalScrollBar();
+                JScrollBar horizontal = commentScroll.getHorizontalScrollBar();
+                postedCommentPanel.revalidate();
+                postedCommentPanel.repaint();
+                vertical.setValue(vertical.getMinimum());
+                horizontal.setValue(horizontal.getMinimum());
             }
         });
-        commentPanel.add(btnPostComment, "flowx,cell 0 2,alignx left,aligny center");
 
         // when clicked, the screen will clear if the original text is inside
-        commentText.addMouseListener(new MouseAdapter() {
+        this.commentText.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 commentText.clicked();
             }
+            
+        });
+
+        // Clear button (resets comment)
+        this.clearCommentButton.addActionListener((ActionEvent e) -> {
+            commentText.resetText();
+            validateButtons(commentText.isCommentTyped());
         });
         
-                //Clear button (resets comment)
-                JButton btnClearComment = new JButton("Clear");
-                btnClearComment.addActionListener((ActionEvent e) -> {
-                    commentText.resetText();
-                });
-                
-                        commentPanel.add(btnClearComment, "cell 0 2,alignx left,aligny top");
-        
-        
-        //history panel
-        JPanel historyPanel = new JPanel();
-        commentPane.addTab("History", null, historyPanel, null);
-        historyPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
+        this.commentText.getDocument().addDocumentListener(new DocumentListener() {
 
-        //scroll bar for history
-        JScrollPane historyScroll = new JScrollPane();
-        historyPanel.add(historyScroll, "cell 0 0,grow");
-        
-        JPanel postedHistoryPanel = new JPanel();
-        postedHistoryPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
-        ActivityView testActivity2 = new ActivityView();
-        testActivity2.setMessage("Hello Alex!");
-        postedHistoryPanel.add(testActivity2, "cell 0 0,alignx left,aligny top");
-        
-        historyScroll.setViewportView(postedHistoryPanel);
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                validateButtons(commentText.isCommentTyped());
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                validateButtons(commentText.isCommentTyped());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent arg0) {
+                validateButtons(commentText.isCommentTyped());
+            }
+        });
     }
 
 }

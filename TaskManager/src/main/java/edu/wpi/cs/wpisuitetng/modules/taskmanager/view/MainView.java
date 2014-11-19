@@ -9,30 +9,26 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
-
 import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
-import java.util.LinkedList;
 
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
-import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
 
 /**
- * MainView is a scrollable window with a viewport that can
- * view only WorkflowViews.
+ * MainView is a scrollable window with a viewport that can view only
+ * WorkflowViews.
  */
-public class MainView extends JTabbedPane 
-{
+public class MainView extends JTabbedPane {
     private static final long serialVersionUID = -346061317795260862L;
     private JScrollPane workflowScrollPane = new JScrollPane();
     private WorkflowPresenter workflowPresenter = new WorkflowPresenter(0);
     private static final MainView mainView = new MainView();
 
-    private MainView(){
+    private MainView() {
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         this.addTab("Workflow", workflowScrollPane);
 
@@ -43,8 +39,8 @@ public class MainView extends JTabbedPane
         JPanel archivePanel = new JPanel();
         archiveScrollPane.setViewportView(archivePanel);
         archivePanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
-        archivePanel.add(new BucketView("Archive"), "cell 0 0,alignx center,growy");
-
+        archivePanel.add(new BucketView("Archive"),
+                "cell 0 0,alignx center,growy");
 
         this.setWorkflowPresenter(workflowPresenter);
 
@@ -54,15 +50,16 @@ public class MainView extends JTabbedPane
         });
     }
 
-    public static MainView getInstance(){
+    public static MainView getInstance() {
         return mainView;
     }
 
     /**
-     * Constructor for the scrollable main view.  
+     * Constructor for the scrollable main view.
      */
-    private MainView(WorkflowPresenter workflowPresenter){
-        this.addTab("Workflow", workflowScrollPane);    
+    private MainView(WorkflowPresenter workflowPresenter) {
+        this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        this.addTab("Workflow", workflowScrollPane);
         this.setWorkflowPresenter(workflowPresenter);
 
         /* As soon as this is added to a container, load the workflow */
@@ -79,7 +76,8 @@ public class MainView extends JTabbedPane
     }
 
     /**
-     * @param workflowView The WorkflowView to be displayed
+     * @param workflowView
+     *            The WorkflowView to be displayed
      */
     public void setWorkflowPresenter(WorkflowPresenter workflowPresenter) {
         this.workflowPresenter = workflowPresenter;

@@ -19,7 +19,7 @@ public class PresetTextArea extends JTextArea{
      */    
     private String startText;
     private boolean commentTyped = false;
-    
+
     /**
      * Empty constructor
      */
@@ -67,6 +67,13 @@ public class PresetTextArea extends JTextArea{
         this.startText = startText;
         this.setForeground(Color.LIGHT_GRAY);
         this.setText(startText);
-    }	
+    }
+    
+    /**
+     * @return True if comment has been typed, false otherwise
+     */
+    public boolean isCommentTyped() {
+        return this.commentTyped;
+    }
 
 }
