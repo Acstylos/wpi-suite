@@ -38,8 +38,8 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 		t3.setId(2000);
 		t3.setTitle("TaskThree");
 		t3.setDescription("This is task three");	
-		t3.setAssignedTo(Keenan);
-		t3.setAssignedTo(Yihao);
+		t3.setUserIds(Keenan.getIdNum());
+		t3.setUserIds(Yihao.getIdNum());
 		t3.setEstimatedEffort(150);
 		
 	}
@@ -67,7 +67,7 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
  		assertEquals(2000, t3.getId());
  		assertEquals("TaskThree", t3.getTitle());
  		assertEquals("This is task three", t3.getDescription());
- 		assertEquals(testList, t3.getAssignedTo());
+ 		assertEquals(testList, t3.getUserIds());
  		assertEquals(150, t3.getEstimatedEffort());
  		
  		
