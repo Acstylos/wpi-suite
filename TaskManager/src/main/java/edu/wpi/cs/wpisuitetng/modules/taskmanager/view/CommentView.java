@@ -65,9 +65,6 @@ public class CommentView extends JTabbedPane {
         this.editCommentScroll.setViewportView(commentText);
         this.historyScroll.setViewportView(postedHistoryPanel);
 
-        this.testActivity.setMessage("Hi John!");
-        this.testActivity2.setMessage("Hello Alex!");
-
         this.postedHistoryPanel.add(testActivity2, "dock north");
         this.postCommentButton.setEnabled(false);
         this.clearCommentButton.setEnabled(false);
