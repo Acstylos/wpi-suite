@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.Requirement;
 
 /**
  * The model end of the Task object
@@ -30,6 +31,7 @@ public class TaskModel extends AbstractModel {
     private int estimatedEffort;
     private int actualEffort;
     private Date dueDate;
+    private List<Requirement> requirements;
 
     /**
      * Constructor for a default Task object
@@ -42,6 +44,7 @@ public class TaskModel extends AbstractModel {
         assignedTo = new ArrayList<User>();
         estimatedEffort = -1;
         actualEffort = -1;
+        requirements = new ArrayList<Requirement>();
     }
 
     /**
@@ -143,6 +146,7 @@ public class TaskModel extends AbstractModel {
         this.estimatedEffort = other.getEstimatedEffort();
         this.dueDate = other.getDueDate();
         this.actualEffort = other.getActualEffort();
+        this.requirements = other.getRequirements();
     }
     
     /**
@@ -242,6 +246,20 @@ public class TaskModel extends AbstractModel {
      */
     public void setActualEffort(int actualEffort) {
         this.actualEffort = actualEffort;
+    }
+    
+    /**
+     * @param requirements To be set
+     */
+    public void setRequirements(List<Requirement> requirements){
+    	this.requirements = requirements;
+    }
+    
+    /**
+     * @return A list of requirement set for the task
+     */
+    public List<Requirement> getRequirements(){
+    	return requirements;
     }
 
 }
