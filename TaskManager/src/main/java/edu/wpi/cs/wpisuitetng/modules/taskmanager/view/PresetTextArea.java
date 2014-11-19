@@ -66,7 +66,7 @@ public class PresetTextArea extends JTextArea{
         this.commentTyped = false;
         this.startText = startText;
         this.setForeground(Color.LIGHT_GRAY);
-        this.setText(startText);
+        this.setText(this.startText);
     }
     
     /**

@@ -1,20 +1,15 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
-import javax.swing.JPanel;
-
-import net.miginfocom.swing.MigLayout;
-
-import javax.swing.JTextArea;
-
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
+import net.miginfocom.swing.MigLayout;
 /*constructs message view for comments and history of tasks
  * message: message within comment box
  * 
@@ -28,26 +23,34 @@ public class ActivityView extends JPanel {
     /**
      * Create the panel.
      */
-    private JPanel pastMessagePanel = new JPanel();
     private JTextArea pastActivityText = new JTextArea();
+    //private JTextArea pastActivityText = new JTextArea();
 
     /**
      * Constructor sets up panel and colors
      */
     public ActivityView() {
-        this.setLayout(new MigLayout("", "[grow]", "[grow]"));
-        
+        setLayout(new MigLayout("", "[grow]", "[grow]"));
+        this.add(pastActivityText, "cell 0 0, grow");
         pastActivityText.setEditable(false);
-        pastMessagePanel.setForeground(Color.WHITE);
-        pastMessagePanel.setBackground(Color.LIGHT_GRAY);
-        add(pastMessagePanel, "cell 0 0,grow");
-        pastMessagePanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
-        this.pastMessagePanel.add(pastActivityText, "cell 0 0, grow");
         pastActivityText.setForeground(Color.BLACK);
         pastActivityText.setBackground(Color.LIGHT_GRAY);
-        this.pastActivityText.setWrapStyleWord(true);
-        this.pastActivityText.setLineWrap(true);
-        this.pastActivityText.setMinimumSize(this.getMinimumSize());
+        pastActivityText.setWrapStyleWord(true);
+        pastActivityText.setLineWrap(true);
+    }
+    
+    /**
+     * Constructor sets up panel and colors
+     */
+    public ActivityView(String text) {
+        setLayout(new MigLayout("", "[grow]", "[grow]"));
+        this.add(pastActivityText, "cell 0 0, grow");
+        pastActivityText.setEditable(false);
+        pastActivityText.setForeground(Color.BLACK);
+        pastActivityText.setBackground(Color.LIGHT_GRAY);
+        pastActivityText.setWrapStyleWord(true);
+        pastActivityText.setLineWrap(true);
+        pastActivityText.setText(text);
     }
 
     /**
@@ -55,26 +58,10 @@ public class ActivityView extends JPanel {
      * @param message: message within MessageView
      */
     public void setMessage(String message){
-        this.pastActivityText.setText(message);
+        pastActivityText.setText(message);
     }
     
     public String getMessage(){
-        return this.pastActivityText.getText();
-    }
-
-    /**
-     * Makes X button appear when mouse is over message (not yet working)
-     * @param e: MouseEvent
-     */
-    public void mouseEntered(MouseEvent e) {
-        JButton deleteActivityButton = new JButton("X");
-        pastMessagePanel.add(deleteActivityButton, "cell 1 0");
-        deleteActivityButton.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-
+        return pastActivityText.getText();
     }
 }
