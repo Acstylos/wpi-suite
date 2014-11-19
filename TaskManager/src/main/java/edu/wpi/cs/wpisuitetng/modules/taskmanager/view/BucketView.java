@@ -98,6 +98,8 @@ public class BucketView extends JPanel
      * @param taskViews A list of TaskViews
      */
     public void setTaskViews(List<TaskView> taskViews) {
+        taskViewHolderPanel.removeAll();
+        
         this.taskViews = taskViews;
         for (TaskView task : taskViews) {
             taskViewHolderPanel.add(task, "dock north");
