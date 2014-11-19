@@ -27,6 +27,7 @@ public class TaskModel extends AbstractModel {
     private String title;
     private String description;
     private List<User> assignedTo;
+    private List <Integer> activityIds;
     private int estimatedEffort;
     private int actualEffort;
     private Date dueDate;
@@ -40,6 +41,7 @@ public class TaskModel extends AbstractModel {
         title = "";
         description = "Description Here";
         assignedTo = new ArrayList<User>();
+        activityIds= new ArrayList<Integer>();
         estimatedEffort = -1;
         actualEffort = -1;
     }
@@ -217,6 +219,7 @@ public class TaskModel extends AbstractModel {
     }
 
     /**
+     * get the estimated effort.
      * @return The estimated effort of this task
      */
     public int getEstimatedEffort() {
@@ -224,6 +227,7 @@ public class TaskModel extends AbstractModel {
     }
 
     /**
+     * set the estimated effort
      * @param estimatedEffort The estimated effort of this task to be set
      */
     public void setEstimatedEffort(int estimatedEffort) {
@@ -231,6 +235,7 @@ public class TaskModel extends AbstractModel {
     }
 
     /**
+     * get the actual effort
      * @return The actual effort of this task
      */
     public int getActualEffort() {
@@ -238,10 +243,32 @@ public class TaskModel extends AbstractModel {
     }
 
     /**
+     * set the actual effort
      * @param actualEffort The actual effort of this task to be set
      */
     public void setActualEffort(int actualEffort) {
         this.actualEffort = actualEffort;
     }
+    
+    /**
+     * return the list of activity IDS
+     * @return activityIds linked list of activity ids
+     */
+    public List<Integer> getActivityIds() {
+        return activityIds;
+    }
+    
+    /**
+     * set the activity list to the given list
+     * @param activityIds the list to be copied from
+     */
+    public void setActivityIds(List<Integer> activityIds) {
+        this.activityIds = activityIds;
+    }
+    
+    public void addActivityID(int id){
+        activityIds.add(id);
+    }
+    
 
 }
