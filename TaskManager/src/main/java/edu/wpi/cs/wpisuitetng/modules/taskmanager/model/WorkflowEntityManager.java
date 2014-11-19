@@ -20,6 +20,7 @@ import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 
 /**
  * This is the entity manager for {@link WorkflowModel}s in the Workflow Manager
@@ -139,16 +140,15 @@ public class WorkflowEntityManager implements EntityManager<WorkflowModel> {
     /** @inheritDoc */
     @Override
     public boolean deleteEntity(Session s, String id) throws WPISuiteException {
-        System.out.println("Delete Workflow ID: " + id);
-        // TODO Auto-generated method stub
-        return false;
+    	return (db.delete(getEntity(s, id)[0]) != null) ? true : false;
+        
     }
 
     /** @inheritDoc */
     @Override
     public void deleteAll(Session s) throws WPISuiteException {
         System.out.println("Delete All Workflows");
-        db.deleteAll(WorkflowModel.class);
+        db.deleteAll(new WorkflowModel());
         // TODO Auto-generated method stub
 
     }

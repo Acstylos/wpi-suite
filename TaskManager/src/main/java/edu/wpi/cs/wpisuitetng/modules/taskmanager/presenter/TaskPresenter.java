@@ -9,8 +9,10 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.ActivityModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ActivityView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
 import edu.wpi.cs.wpisuitetng.network.Network;
@@ -151,4 +153,9 @@ public class TaskPresenter {
     public BucketPresenter getBucket(){
     	return bucket;
     }
+    /**
+     * Adds The comments Box in a task.
+     * Similar to how bucket has addNewTaskToView ()
+     */
+    
 }

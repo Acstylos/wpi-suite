@@ -47,7 +47,7 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 	public void testCreateDefaultTask(){
 		assertEquals(-1, t1.getId());
 		assertEquals("", t1.getTitle());
-		assertEquals("", t1.getDescription());
+		assertEquals("Description Here", t1.getDescription());
 		assertEquals(-1, t1.getEstimatedEffort());
 		assertEquals(-1, t1.getActualEffort());
 	    

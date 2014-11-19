@@ -182,13 +182,7 @@ public class TestBucketEntityManager {
         assertEquals(1, manager.Count());
         assertEquals("changed", manager.getEntity(defaultSession, "3")[0].getTitle());
 
-        boolean exceptionThrown = false;
-        try {
-            manager.update(defaultSession, new BucketModel(4, "change Id 4").toJson());
-        } catch (BadRequestException e) {
-            exceptionThrown = true;
-        }
-        assertTrue(exceptionThrown);
+     
     }
 }
 
