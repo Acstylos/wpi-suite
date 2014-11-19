@@ -51,11 +51,11 @@ public class TaskButtonsPanel extends JPanel {
         if (viewMode == ViewMode.CREATING) {
             okString = "Create";
             clearString = "Clear";
-            this.remove(deleteButton);
+            //this.remove(deleteButton);
         } else {
             okString = "Update";
             clearString = "Undo Changes";
-            this.add(deleteButton);
+            //this.add(deleteButton);
         }
         this.okButton.setText(okString);
         this.clearButton.setText(clearString);
