@@ -25,23 +25,6 @@ public class ActivityPresenter {
     /**
      * Constructor for an activity presenter
      * 
-     * @param model
-     *            the model associated with the presenter
-     * 
-     * @param task
-     *            the task associated with the activity
-     */
-    public ActivityPresenter(ActivityModel model, TaskPresenter task) {
-        this.model = model;
-        this.view = new ActivityView();
-        this.parentTask = task;
-        registerCallbacks();
-        load();
-    }
-
-    /**
-     * Constructor for an activity presenter
-     * 
      * @param id
      *            the id of the specific activity made
      * @param task
@@ -51,15 +34,37 @@ public class ActivityPresenter {
         this.parentTask = task;
         this.model = new ActivityModel();
         this.model.setId(id);
-        this.view = new ActivityView();
+
+        this.view = new ActivityView(); // Waiting for new View
+
         registerCallbacks();
-        load();
+    }
+
+    /**
+     * Register callbacks with the local view.
+     */
+    private void registerCallbacks() {
+        view.addOnSaveListener((ActionEvent event) -> {
+            ActivityPresenter.this.saveView();
+        });
+    }
+
+    /**
+     * Create a new activity in the database. Initializes an async network
+     * request with an observer.
+     */
+    public void createInDatabase() {
+        Request request = Network.getInstance().makeRequest(
+                "taskmanager/activity", HttpMethod.PUT);
+        request.setBody(this.model.toJson());
+        request.addObserver(new ActivityObserver(this));
+        request.send();
     }
 
     /**
      * Updates the view with information from the model
      */
-    public void writeModelToView() {
+    public void updateView() {
         view.setActivity(model.getActivity());
         view.setUser(model.getUser());
         view.setDate(model.getDate());
@@ -69,46 +74,10 @@ public class ActivityPresenter {
     /**
      * Updates the model with the information from the view
      */
-    public void writeViewToModel() {
+    public void updateModel() {
         model.setActivity(view.getActivity());
         model.setDate(view.getDate());
         model.setUser(view.getUser());
-    }
-
-    /**
-     * Requests the server for a new bucket or the bucket corresponding to the
-     * current ID
-     */
-    public void load() {
-        HttpMethod method;
-        String id = "/" + model.getId();
-        if (model.getId() == 0) { // Put = create a new model
-            method = HttpMethod.PUT;
-            id = "";
-        } else {// Retrieve a model
-            method = HttpMethod.GET;
-        }
-
-        // Sends a request for the ActivityViews associated with the
-        // ActivityView
-        final Request request = Network.getInstance().makeRequest(
-                "taskmanager/activity" + id, method);
-        if (method == HttpMethod.PUT) {
-            request.setBody(model.toJson());
-        }
-        // request.addObserver(new ActivityObserver(this, method)); // add an
-        // observer to
-        // the response
-        request.send();
-    }
-
-    /**
-     * Register callbacks with the local view.
-     */
-    private void registerCallbacks() {
-        view.addOnAddSaveListener((ActionEvent event) -> {
-            ActivityPresenter.this.saveModel();
-        });
     }
 
     /**
@@ -117,17 +86,19 @@ public class ActivityPresenter {
      */
     public void saveActivity(int activityId) {
         this.model.setId(activityId);
-        saveModel();
+        saveView();
     }
 
     /**
      * Write the model to the network/database. Must be created already.
      */
-    private void saveModel() {
+    private void saveView() {
+        updateModel();
+
         Request request = Network.getInstance().makeRequest(
                 "taskmanager/activity", HttpMethod.POST); // Update.
         request.setBody(model.toJson());
-        request.addObserver(new ActivityObserver(this, HttpMethod.POST));
+        request.addObserver(new ActivityObserver(this));
         request.send();
     }
 

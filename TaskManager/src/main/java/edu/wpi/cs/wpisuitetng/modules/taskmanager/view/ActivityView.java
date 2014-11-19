@@ -72,7 +72,7 @@ public class ActivityView extends JPanel{
      
     }
  
-    public void addOnAddSaveListener(ActionListener listener){
+    public void addOnSaveListener(ActionListener listener){
         this.replyButton.addActionListener(listener);
     }
 
