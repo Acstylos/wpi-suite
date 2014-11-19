@@ -137,7 +137,12 @@ public class TaskPresenter {
         view.addDeleteOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // move to archive
+                int index = MainView.getInstance().indexOfTab(model.getTitle());
+                MainView.getInstance().remove(index);
+                MainView.getInstance().getWorkflowPresenter().archiveTask(model.getId(), bucket.getModel().getId());
+                MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
+                bucket.getView().getComponentAt(view.getLocation()).setVisible(false);
+                
             }
         });
     }
