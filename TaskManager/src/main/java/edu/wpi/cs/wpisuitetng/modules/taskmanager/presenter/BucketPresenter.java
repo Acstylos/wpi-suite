@@ -9,6 +9,8 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
@@ -30,6 +32,8 @@ public class BucketPresenter {
     private BucketView view;
 
     private BucketModel model;
+    
+    private List<TaskPresenter> tasks;
 
     private WorkflowPresenter workflow;
 
@@ -52,6 +56,7 @@ public class BucketPresenter {
      */
     public BucketPresenter(int bucketId, WorkflowPresenter workflow) {
         this.workflow = workflow;
+        this.tasks = new ArrayList<>();
         this.model = new BucketModel();
         this.model.setId(bucketId);
         this.view = new BucketView("Loading...");
@@ -112,33 +117,34 @@ public class BucketPresenter {
         }
 
         view.setTitle(model.getTitle());
-        ArrayList<Integer> bucket = model.getTaskIds();
-        for (int i : bucket) {
+        List<Integer> bucket = model.getTaskIds();
+        view.setTaskViews(new ArrayList<>());
+        for(int i: bucket){
             TaskPresenter taskPresenter = new TaskPresenter(i, this);
+            taskPresenter.updateFromDatabase();
             TaskView taskView = taskPresenter.getView();
             view.addTaskToView(taskView);
         }
         view.revalidate();
         view.repaint();
-        // Add taskviews to the BucketView
-        saveModel();
     }
 
     /**
-     * Register callbacks with the local view.
+     * Register callbacks with the local view. 
      */
     private void registerCallbacks() {
-        // buckets have no buttons, leave empty for now
+        view.addOnAddTaskListener((ActionEvent event) -> {
+            BucketPresenter.this.addNewTaskToView();
+        });
     }
 
     /**
      * construct a new task presenter and add the task view of this presenter to
      * the view of this bucket then refreshes the view
      */
-    public void addNewTaskToView() {
-        TaskModel task = new TaskModel(0, "New Task", "Description Here", 50,
-                new Date(114, 10, 12));
-        TaskPresenter taskPresenter = new TaskPresenter(task, this);
+    public void addNewTaskToView(){
+        TaskPresenter taskPresenter = new TaskPresenter(0, this);
+        taskPresenter.createInDatabase();
         TaskView taskView = taskPresenter.getView();
         view.addTaskToView(taskView);
         view.revalidate();
@@ -146,37 +152,31 @@ public class BucketPresenter {
     }
 
     /**
-     * save the task to the bucket
-     * 
-     * @param id
-     */
-    public void saveTask(int id) {
-        model.addId(id);
-        saveModel();
-    }
-
-    /**
-     * remove the task from the bucket
-     * 
-     * @param id
+     * remove a task ID from the list of taskIDs in the model
+     * Sends an async update to the database
+     * @param id  ID of the existing task
      */
     public void removeTask(int id) {
-        model.removeId(id);
-        saveModel();
+        model.removeTaskId(id);
+        updateInDatabase();
+        writeModelToView();
     }
-
+    
     /**
-     * remove all the tasks from the bucket
+     * Adds a task ID to the list of taskIDs in the model.
+     * Sends an async update to the database.
+     * @param id ID of the existing task.
      */
-    public void removeAllTasks() {
-        model.removeAll();
-        saveModel();
+    public void addTask(int id){
+        this.model.addTaskID(id);
+        updateInDatabase();
+        writeModelToView();
     }
 
     /**
      * Write the model to the network/database. Must be created already.
      */
-    private void saveModel() {
+    private void updateInDatabase() {
         Request request = Network.getInstance().makeRequest(
                 "taskmanager/bucket", HttpMethod.POST); // Update.
         request.setBody(model.toJson());

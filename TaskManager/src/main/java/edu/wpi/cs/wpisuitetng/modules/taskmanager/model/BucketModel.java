@@ -1,6 +1,7 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gson.Gson;
 
@@ -16,7 +17,7 @@ public class BucketModel extends AbstractModel {
 
     private int id;
     private String title;
-    private ArrayList<Integer> taskIds;
+    private List<Integer> taskIds;
 
     /**
      * Default constructor
@@ -33,8 +34,8 @@ public class BucketModel extends AbstractModel {
      */
     public BucketModel(int id, String title) {
         this.id = id;
-        this.title = title;
-        this.taskIds = new ArrayList<Integer>();
+        this.title=title;
+        this.taskIds = new ArrayList <Integer>();
     }
 
     /**
@@ -114,12 +115,11 @@ public class BucketModel extends AbstractModel {
     }
 
     /**
-     * add an task id to the list of taskIds
-     * 
-     * @param id
+     * Add a task to the model.
+     * @param id ID of the task you're adding.
      */
-    public void addId(int id) {
-        taskIds.add(id);
+    public void addTaskID(int id) {
+       taskIds.add(id);
     }
 
     /**
@@ -127,7 +127,7 @@ public class BucketModel extends AbstractModel {
      * 
      * @param id
      */
-    public void removeId(int id) {
+    public void removeTaskId(int id) {
         taskIds.remove(id);
     }
 
@@ -164,7 +164,7 @@ public class BucketModel extends AbstractModel {
     /**
      * @return The list of task IDs
      */
-    public ArrayList<Integer> getTaskIds() {
+    public List<Integer> getTaskIds() {
         return this.taskIds;
     }
 
@@ -179,4 +179,5 @@ public class BucketModel extends AbstractModel {
         this.title = toCopyFrom.title;
         this.taskIds = toCopyFrom.taskIds;
     }
+    
 }

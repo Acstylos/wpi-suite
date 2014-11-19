@@ -192,7 +192,7 @@ public class WorkflowPresenter {
         BucketPresenter toPresenter, fromPresenter;
         toPresenter = new BucketPresenter(toId, this);
         fromPresenter = new BucketPresenter(fromId, this);
-        toPresenter.saveTask(taskId);
+        toPresenter.addTask(taskId);
         fromPresenter.removeTask(taskId);
         writeModelToView();
     }
