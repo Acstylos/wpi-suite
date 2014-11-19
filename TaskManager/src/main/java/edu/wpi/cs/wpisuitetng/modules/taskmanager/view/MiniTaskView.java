@@ -9,6 +9,7 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
+import java.awt.event.MouseListener;
 import java.util.Date;
 
 import javax.swing.JLabel;
@@ -34,6 +35,10 @@ public class MiniTaskView extends JPanel {
         this.dueDate = dueDate;
         this.add(taskNameLabel, "dock west");
         this.taskNameLabel.setText(taskName);
+    }
+    
+    public void addOnClickOpenTabView(MouseListener listener){
+        this.addMouseListener(listener);
     }
     
     /**

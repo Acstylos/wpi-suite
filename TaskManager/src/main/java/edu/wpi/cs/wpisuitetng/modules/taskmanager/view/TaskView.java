@@ -10,6 +10,7 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Date;
@@ -22,6 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
@@ -36,6 +38,9 @@ import org.jdesktop.swingx.JXDatePicker;
  */
 public class TaskView extends JPanel {
     private static final long serialVersionUID = -997563229078386090L;
+    
+    private int index;
+    private ViewMode viewMode;
 
     private JComboBox<BucketView> statusComboBox = new JComboBox<BucketView>();
     private JLabel taskNameLabel = new JLabel("Task Name:");
@@ -54,7 +59,7 @@ public class TaskView extends JPanel {
     private JSpinner actualEffortSpinner = new JSpinner();
     private JSpinner estEffortSpinner = new JSpinner();
     private JSplitPane splitPane = new JSplitPane();
-    private PresetTextArea descriptionMessage = new PresetTextArea();
+    private JTextArea descriptionMessage = new JTextArea();
     private JTextField taskNameField = new JTextField();
     private JXDatePicker datePicker = new JXDatePicker();
 
@@ -87,7 +92,7 @@ public class TaskView extends JPanel {
         this.splitPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
         this.usersPanel.setLayout(new MigLayout("", "[]", "[]"));
 
-        this.buttonPanel = new TaskButtonsPanel(this, viewMode);
+        this.buttonPanel = new TaskButtonsPanel(viewMode);
         this.add(buttonPanel, "cell 0 1,grow");
         this.add(splitPanel, "cell 0 0,grow");
         this.splitPanel.add(splitPane, "cell 0 0,grow");
@@ -130,41 +135,36 @@ public class TaskView extends JPanel {
 
         this.descriptionMessage.setWrapStyleWord(true);
         this.descriptionMessage.setLineWrap(true);
-        this.descriptionMessage.setStartText("Description Here...");
         this.descriptionMessage.setText(description);
-        this.descriptionMessage.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                descriptionMessage.clicked();
-            }
-        });
+        this.viewMode = viewMode;
     }
 
     /**
-     * These do nothing yet. Need to integrate with presenter somehow.
-     */
-    /**
      * This should call something to save task to the model
      */
-    public void saveTask() {
+    public void addOkOnClickListener(ActionListener listener) {
+        this.buttonPanel.addOkOnClickListener(listener);
     }
 
     /**
      * This should call something to refresh the view with the model
      */
-    public void clearTask() {
+    public void addCancelOnClickListener(ActionListener listener) {
+        this.buttonPanel.addCancelOnClickListener(listener);
     }
 
     /**
      * This calls something to refresh, and closes the tab this view is open in
      */
-    public void cancelTask() {
+    public void addClearOnClickListener(ActionListener listener) {
+        this.buttonPanel.addClearOnClickListener(listener);
     }
 
     /**
      * This calls something to move the task to the archive
      */
-    public void deleteTask() {
+    public void addDeleteOnClickListener(ActionListener listener) {
+        this.buttonPanel.addDeleteOnClickListener(listener);
     }
 
     /**
@@ -240,5 +240,31 @@ public class TaskView extends JPanel {
      */
     public Date getDueDate() {
         return this.datePicker.getDate();
+    }
+    
+    /**
+     * @param index The index of the tab this view is in
+     */
+    public void setIndex(int index){
+        this.index = index;
+    }
+    
+    /**
+     * @return The index of this tab
+     */
+    public int getIndex(){
+        return this.index;
+    }
+    
+    /**
+     * @param viewMode Either Creating or editing based on what the user is doing
+     */
+    public void setViewMode(ViewMode viewMode){
+        this.viewMode = viewMode;
+        buttonPanel.validateButtons(viewMode);
+    }
+    
+    public ViewMode getViewMode(){
+        return this.viewMode;
     }
 }

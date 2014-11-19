@@ -37,11 +37,11 @@ public class TaskModel extends AbstractModel {
      */
     public TaskModel() {
         id = -1;
-        title = "";
-        description = "Description Here";
+        title = "New Task";
+        description = "";
         assignedTo = new ArrayList<User>();
-        estimatedEffort = -1;
-        actualEffort = -1;
+        estimatedEffort = 0;
+        actualEffort = 0;
     }
 
     /**

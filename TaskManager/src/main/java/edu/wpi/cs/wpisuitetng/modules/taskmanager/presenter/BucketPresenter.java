@@ -8,10 +8,13 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ViewMode;
@@ -31,6 +34,8 @@ public class BucketPresenter {
     private BucketView view;
 
     private BucketModel model;
+    
+    private List<TaskPresenter> tasks;
 
     /**
      * Constructor for a bucket presenter
@@ -39,6 +44,7 @@ public class BucketPresenter {
      *            The view associated with this presenter
      */
     public BucketPresenter(int bucketId) {
+        this.tasks = new ArrayList<>();
         this.model = new BucketModel();
         this.model.setId(bucketId);
         this.view = new BucketView("Loading...");
@@ -96,16 +102,16 @@ public class BucketPresenter {
         }
 
         view.setTitle(model.getTitle());
-        ArrayList<Integer> bucket = model.getBucket();
+        List<Integer> bucket = model.getBucket();
+        view.setTaskViews(new ArrayList<>());
         for (int i : bucket) {
             TaskPresenter taskPresenter = new TaskPresenter(i, this, ViewMode.EDITING);
+            taskPresenter.updateFromDatabase();
             MiniTaskView miniTaskView = taskPresenter.getMiniView();
             view.addTaskToView(miniTaskView);
         }
         view.revalidate();
         view.repaint();
-        // Add taskviews to the BucketView
-        saveModel();
     }
 
     /**
@@ -113,28 +119,36 @@ public class BucketPresenter {
      */
     private void registerCallbacks() {
     }
-
-    public void addNewTaskToView() {
-        TaskModel task = new TaskModel(0, "New Task", "Description Here", 50,
-                new Date(114, 10, 12));
-        TaskPresenter taskPresenter = new TaskPresenter(task, this, ViewMode.EDITING);
-        MiniTaskView miniTaskView = taskPresenter.getMiniView();
-        view.addTaskToView(miniTaskView);
-        view.revalidate();
-        view.repaint();
+    
+    /**
+     * Adds a new task to the bucket view, in the form of a miniTaskView
+     */
+    public void addNewTaskToView(){
+        TaskPresenter taskPresenter = new TaskPresenter(0, this, ViewMode.CREATING);
+        //taskPresenter.createInDatabase();
+        TaskModel taskModel = taskPresenter.getModel();
+        TaskView taskView = taskPresenter.getView();
+        MainView.getInstance().addTab(taskModel.getTitle(), taskView);
+        int tabCount = MainView.getInstance().getTabCount();
+        taskView.setIndex(tabCount-1);
+        MainView.getInstance().setSelectedIndex(tabCount-1);
     }
-
-    public void saveTask(int id) {
-        ArrayList<Integer> bucket = this.model.getBucket();
-        bucket.add(id);
-        this.model.setBucket(bucket);
-        saveModel();
+    
+    /**
+     * Adds a task ID to the list of taskIDs in the model.
+     * Sends an async update to the database.
+     * @param id ID of the existing task.
+     */
+    public void addTask(int id){
+        this.model.addTaskID(id);
+        updateInDatabase();
+        writeModelToView();
     }
 
     /**
      * Write the model to the network/database. Must be created already.
      */
-    private void saveModel() {
+    private void updateInDatabase() {
         Request request = Network.getInstance().makeRequest(
                 "taskmanager/bucket", HttpMethod.POST); // Update.
         request.setBody(model.toJson());
@@ -207,5 +221,13 @@ public class BucketPresenter {
     public void setModel(BucketModel model) {
         this.model = model;
         writeModelToView();
+    }
+
+    /**
+     * @param miniView simply add the miniTaskView to view
+     */
+    public void addMiniTaskView(MiniTaskView miniView) {
+        view.addTaskToView(miniView);
+
     }
 }

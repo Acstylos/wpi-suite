@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.JLabel;
@@ -25,7 +26,7 @@ public class BucketView extends JPanel
 {
 
     private static final long serialVersionUID = -5937582878085666950L;
-    private ArrayList<MiniTaskView> taskViews = new ArrayList<MiniTaskView>();
+    private List<MiniTaskView> taskViews = new ArrayList<MiniTaskView>();
     private String title;
     private JLabel titleLabel = new JLabel();
     private JPanel titlePanel = new JPanel();
@@ -54,10 +55,12 @@ public class BucketView extends JPanel
         this.titlePanel.setBorder(null);
         this.titlePanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
         this.titlePanel.add(titleLabel, "cell 0 0, alignx center, aligny center");
+        taskScrollPane.setBorder(null);
         
         
         // Need a scroll pane to allow us to scroll through all tasks in the bucketView. 
         this.add(taskScrollPane, "dock north");
+        taskViewHolderPanel.setBorder(null);
         this.taskViewHolderPanel.setBackground(Color.LIGHT_GRAY);
         this.taskViewHolderPanel.setLayout(new MigLayout("fill"));
         this.taskScrollPane.setViewportView(taskViewHolderPanel);    
@@ -66,7 +69,7 @@ public class BucketView extends JPanel
     /**
      * @return Returns a list of TaskViews
      */
-    public ArrayList<MiniTaskView> getTaskViews() {
+    public List<MiniTaskView> getTaskViews() {
         return this.taskViews;
     }
 
@@ -81,7 +84,9 @@ public class BucketView extends JPanel
      * TODO: DO WE NEED THIS?
      * @param taskViews A list of TaskViews
      */
-    public void setTaskViews(ArrayList<MiniTaskView> taskViews) {
+
+    public void setTaskViews(List<MiniTaskView> taskViews) {
+        taskViewHolderPanel.removeAll();
         this.taskViews = taskViews;
         for (MiniTaskView task : taskViews) {
             this.taskViewHolderPanel.add(task, "dock north");

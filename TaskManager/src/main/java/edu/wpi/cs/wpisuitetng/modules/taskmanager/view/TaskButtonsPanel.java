@@ -28,65 +28,53 @@ public class TaskButtonsPanel extends JPanel {
 
     private static final long serialVersionUID = -3971494855765228847L;
     private final JButton okButton = new JButton();
-    private final JButton cancelButton = new JButton("Cancel");
+    private final JButton cancelButton = new JButton("Close");
     private final JButton clearButton = new JButton();
     private final JButton deleteButton = new JButton("Archive");
-    private final String okString;
-    private final String clearString;
+    private String okString;
+    private String clearString;
+    private String cancelString; // going to use this later for actual cancel, instead of close
 
-    private TaskView parentPanel;
 
     /**
      * Create the panel.
      */
-    public TaskButtonsPanel(TaskView parentPanel, ViewMode viewMode) {
+    public TaskButtonsPanel(ViewMode viewMode) {
         this.setLayout(new MigLayout("", "[][][]", "[]"));
-        this.parentPanel = parentPanel;
         this.add(okButton);
         this.add(clearButton);
+        this.add(cancelButton);
+        validateButtons(viewMode);
+    }
+    
+    public void validateButtons(ViewMode viewMode){
         if (viewMode == ViewMode.CREATING) {
             okString = "Create";
             clearString = "Clear";
+            this.remove(deleteButton);
         } else {
             okString = "Update";
             clearString = "Undo Changes";
             this.add(deleteButton);
         }
-        this.add(cancelButton);
         this.okButton.setText(okString);
         this.clearButton.setText(clearString);
-        this.setupListeners();
     }
-
-    /**
-     * Sets up the listeners on this buttons in this panel 
-     */
-    private void setupListeners() {
-        okButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                parentPanel.saveTask();
-            }
-        });
-
-        clearButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                parentPanel.clearTask();
-            }
-
-        });
-
-        cancelButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                parentPanel.cancelTask();
-            }
-        });
-
-        deleteButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                parentPanel.deleteTask();
-            }
-        });
+    
+    public void addOkOnClickListener(ActionListener listener){
+        this.okButton.addActionListener(listener);
+    }
+    
+    public void addCancelOnClickListener(ActionListener listener){
+        this.cancelButton.addActionListener(listener);
+    }
+    
+    public void addClearOnClickListener(ActionListener listener){
+        this.clearButton.addActionListener(listener);
+    }
+    
+    public void addDeleteOnClickListener(ActionListener listener){
+        this.deleteButton.addActionListener(listener);
     }
 
     /**

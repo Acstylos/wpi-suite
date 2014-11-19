@@ -9,9 +9,14 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Date;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ViewMode;
@@ -31,50 +36,122 @@ public class TaskPresenter {
     private MiniTaskView miniView;
     /** Model for the task. */
     private TaskModel model;
-    
+    private ViewMode viewMode;
+
     private BucketPresenter bucket;
 
-    
-    
     /**
      * Constructs a TaskPresenter for the given model. Constructs the view
      * offscreen, available if you call getView().
      * 
-     * @param model model to copy
+     * @param id
+     *            ID of the bucket to create
      */
-    public TaskPresenter(TaskModel model, BucketPresenter bucket, ViewMode viewMode) {
-        this.model = model;
+    public TaskPresenter(int id, BucketPresenter bucket, ViewMode viewMode) {
         this.bucket = bucket;
-        this.view = new TaskView(model.getTitle(), model.getEstimatedEffort(),
-                model.getDescription(),  model.getDueDate(), viewMode);
-        this.miniView = new MiniTaskView(model.getTitle(), model.getDueDate());
-        registerCallbacks();
-        
-        Request request = Network.getInstance().makeRequest("taskmanager/task", HttpMethod.PUT);
-        request.setBody(this.model.toJson());
-        request.addObserver(new TaskObserver(this));
-        request.send();
-    }
-
-    /**
-     * Constructs a TaskPresenter for the given model. Constructs the view
-     * offscreen, available if you call getView().
-     * @param id ID of the bucket to create
-     */
-    public TaskPresenter(int id, BucketPresenter bucket, ViewMode viewMode){
-    	this.bucket = bucket;
+        this.viewMode = viewMode;
         this.model = new TaskModel();
         this.model.setId(id);
-        this.view = new TaskView("Loading...", 0, "", new Date(0, 0, 1), viewMode);
+        this.model.setTitle("New Task");
+        this.view = new TaskView(model.getTitle(), model.getEstimatedEffort(), model.getDescription(), model.getDueDate(),
+                viewMode);
         this.miniView = new MiniTaskView(model.getTitle(), model.getDueDate());
-        
-    	reloadView();
+        registerCallbacks();
     }
-    
+
     /**
      * Register callbacks with the local view.
      */
     private void registerCallbacks() {
+        // onclick listener to open new tabs when minitaskview is clicked
+        miniView.addOnClickOpenTabView(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                MainView.getInstance().addTab(model.getTitle(), view);
+                int tabCount = MainView.getInstance().getTabCount();
+                view.setIndex(tabCount-1);
+                MainView.getInstance().setSelectedIndex(tabCount - 1);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        });
+
+        view.addOkOnClickListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveView();
+                updateView(); // might be redudant
+                if(viewMode == ViewMode.CREATING){
+                    createInDatabase();
+                    bucket.addMiniTaskView(miniView);
+                    view.setViewMode(ViewMode.EDITING);
+                }
+                view.revalidate();
+                view.repaint();
+                miniView.revalidate();
+                miniView.repaint();
+                MainView.getInstance().setTitleAt(view.getIndex(), model.getTitle());
+            }
+        });
+
+        view.addCancelOnClickListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int index = MainView.getInstance().indexOfTab(model.getTitle());
+                MainView.getInstance().remove(index);
+                updateView();
+                view.revalidate();
+                view.repaint();
+                miniView.revalidate();
+                miniView.repaint();
+                MainView.getInstance().setSelectedIndex(0);
+            }
+        });
+
+        view.addClearOnClickListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateView();
+                view.revalidate();
+                view.repaint();
+                miniView.revalidate();
+                miniView.repaint();
+                MainView.getInstance().setTitleAt(view.getIndex(), model.getTitle());
+            }
+        });
+
+        view.addDeleteOnClickListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // move to archive
+            }
+        });
+    }
+
+    /**
+     * Create a new task in the database. Initializes an async network request
+     * with an observer.
+     */
+    public void createInDatabase() {
+        Request request = Network.getInstance().makeRequest("taskmanager/task",
+                HttpMethod.PUT);
+        request.setBody(this.model.toJson());
+        request.addObserver(new TaskObserver(this));
+        request.send();
     }
 
     /**
@@ -82,8 +159,9 @@ public class TaskPresenter {
      */
     private void saveView() {
         updateModel();
-        
-        Request request = Network.getInstance().makeRequest("taskmanager/task", HttpMethod.POST);
+
+        Request request = Network.getInstance().makeRequest("taskmanager/task",
+                HttpMethod.POST);
         request.setBody(this.model.toJson());
         request.addObserver(new TaskObserver(this));
         request.send();
@@ -92,12 +170,15 @@ public class TaskPresenter {
     /**
      * Have the presenter reload the view from the model.
      */
-    private void reloadView() {
-        Request request = Network.getInstance().makeRequest("taskmanager/task/" + this.model.getId(), HttpMethod.GET);
+    public void updateFromDatabase() {
+        Request request = Network.getInstance().makeRequest(
+                "taskmanager/task/" + this.model.getId(), HttpMethod.GET);
         request.addObserver(new TaskObserver(this));
         request.send();
+
+        System.out.println("Sending GET request: " + request);
     }
-    
+
     /**
      * Update the model with data from the view
      */
@@ -107,7 +188,7 @@ public class TaskPresenter {
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
     }
-    
+
     /**
      * Update the view with data from the model
      */
@@ -116,15 +197,21 @@ public class TaskPresenter {
         view.setEstimatedEffort(model.getEstimatedEffort());
         view.setDescriptionText(model.getDescription());
         view.setDueDate(model.getDueDate());
+        miniView.setTaskName(model.getTitle());
+        miniView.setDueDate(model.getDueDate());
     }
     
+    public void setTheViewViewMode(ViewMode viewMode){
+        view.setViewMode(viewMode);
+    }
+
     /**
      * Get the view for this Task.
      */
     public TaskView getView() {
         return view;
     }
-    
+
     /**
      * Get the miniView for this Task.
      */
@@ -140,17 +227,18 @@ public class TaskPresenter {
     public TaskModel getModel() {
         return model;
     }
-    
+
     /**
      * Set the model for this class.
      * 
-     * @param model This provider's model.
+     * @param model
+     *            This provider's model.
      */
     public void setModel(TaskModel model) {
         this.model = model;
     }
-    
-    public BucketPresenter getBucket(){
-    	return bucket;
+
+    public BucketPresenter getBucket() {
+        return bucket;
     }
 }

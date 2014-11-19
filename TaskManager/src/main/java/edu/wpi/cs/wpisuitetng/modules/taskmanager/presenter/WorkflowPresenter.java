@@ -8,6 +8,9 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
@@ -28,6 +31,8 @@ public class WorkflowPresenter {
     private WorkflowView view;
 
     private WorkflowModel model;
+    
+    private Map<Integer, BucketPresenter> bucketPresenters = new HashMap<>();
 
     /**
      * Constructor does nothing for now
@@ -83,6 +88,7 @@ public class WorkflowPresenter {
         for (int i : model.getBucketIds()) {
             BucketPresenter bucketPresenter = new BucketPresenter(i);
             bucketPresenter = new BucketPresenter(hardCodedId);
+            bucketPresenters.put(hardCodedId, bucketPresenter);
             hardCodedId++;
             
             newBuckets.add(bucketPresenter.getModel().getId());
@@ -157,5 +163,20 @@ public class WorkflowPresenter {
      */
     public WorkflowModel getModel() {
         return model;
+    }
+    
+    /**
+     * @return The list of BucketPresenters inside of the workflow.
+     */
+    public Map<Integer, BucketPresenter> getBucketPresenters() {
+        return bucketPresenters;
+    }
+    
+    /**
+     * @param id ID of bucket to return
+     * @return a bucket with the corresponding ID
+     */
+    public BucketPresenter getBucketPresenterById(int id){
+        return bucketPresenters.get(id);
     }
 }
