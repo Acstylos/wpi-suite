@@ -10,6 +10,8 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import java.awt.event.ActionEvent;
+
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.ActivityModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ActivityView;
 import edu.wpi.cs.wpisuitetng.network.Network;
@@ -21,6 +23,7 @@ public class ActivityPresenter {
     private ActivityView view;
     private ActivityModel model;
     private TaskPresenter parentTask;
+    private User user;
 
     /**
      * Constructor for an activity presenter
@@ -61,9 +64,8 @@ public class ActivityPresenter {
      */
     public void writeModelToView() {
         view.setActivity(model.getActivity());
-        view.setUser(model.getUser());
+        view.setUser(user);
         view.setDate(model.getDate());
-
     }
 
     /**
@@ -72,7 +74,9 @@ public class ActivityPresenter {
     public void writeViewToModel() {
         model.setActivity(view.getActivity());
         model.setDate(view.getDate());
-        model.setUser(view.getUser());
+        model.setId(view.getUser().getIdNum());
+        saveModel();
+        loadUser();
     }
 
     /**
@@ -96,9 +100,23 @@ public class ActivityPresenter {
         if (method == HttpMethod.PUT) {
             request.setBody(model.toJson());
         }
-        // request.addObserver(new ActivityObserver(this, method)); // add an
+        request.addObserver(new ActivityObserver(this, method)); // add an
         // observer to
         // the response
+        request.send();
+        
+        loadUser();
+    }
+    
+    /**
+     * Loads the user from the database with the userid associated wtih the activity
+     */
+    public void loadUser(){
+    	// Sends a request to the network for the user corresponding to the userId of the activity
+        final Request request = Network.getInstance().makeRequest(
+        		"coreuser" + model.getId(), HttpMethod.GET);
+        request.addObserver(new ActivityObserver(this, HttpMethod.GET));
+        //send the response to the server
         request.send();
     }
 
@@ -141,6 +159,18 @@ public class ActivityPresenter {
         if (models[0].getId() == 0)
             return;
         this.model = models[0];
+    }
+    
+    /**
+     * Handles the result of a GET request
+     * 
+     * @param models
+     *            The models sent from the network
+     */
+    public void responseGet(User[] models) {
+        if (models[0].getIdNum() == 0)
+            return;
+        this.user = models[0];
     }
 
     /**
