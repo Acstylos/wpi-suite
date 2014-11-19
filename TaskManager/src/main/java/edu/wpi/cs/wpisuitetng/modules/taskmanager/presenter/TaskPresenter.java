@@ -34,40 +34,27 @@ public class TaskPresenter {
     
     private BucketPresenter bucket;
 
-    
-    
-    /**
-     * Constructs a TaskPresenter for the given model. Constructs the view
-     * offscreen, available if you call getView().
-     * 
-     * @param model
-     *            model to copy
-     */
-    public TaskPresenter(TaskModel model, BucketPresenter bucket) {
-        this.model = model;
-        this.bucket = bucket;
-        view = new TaskView(model.getTitle(), model.getEstimatedEffort(),
-                model.getDescription(),  model.getDueDate());
-        registerCallbacks();
-        
-        Request request = Network.getInstance().makeRequest("taskmanager/task", HttpMethod.PUT);
-        request.setBody(this.model.toJson());
-        request.addObserver(new TaskObserver(this));
-        request.send();
-    }
-
-    
     /**
      * 
      * @param id
      */
     public TaskPresenter(int id, BucketPresenter bucket){
     	this.bucket = bucket;
-        this.model = new TaskModel();
+    	this.model = new TaskModel();
         this.model.setId(id);
-        this.view = new TaskView("Loading...", 0, "", new Date(0, 0, 1));
         
-    	reloadView();
+        /* If creating a new task, have user friendly defaults. */
+    	if (id == 0) {
+    	    this.model.setTitle("New Task");
+    	    this.model.setDescription("Description Here");
+    	} else {
+    	    this.model.setTitle("Loading...");
+    	    this.model.setDescription("");
+    	}
+
+        this.view = new TaskView(model.getTitle(), 0, model.getDescription(), new Date(0, 0, 1));
+        
+        registerCallbacks();
     }
     
     /**
@@ -78,8 +65,19 @@ public class TaskPresenter {
             TaskPresenter.this.saveView();
         });
         view.addOnReloadListener((ActionEvent event) -> {
-            TaskPresenter.this.reloadView();
+            TaskPresenter.this.updateFromDatabase();
         });
+    }
+    
+    /**
+     * Create a new task in the database. Initializes an async network
+     * request with an observer.
+     */
+    public void createInDatabase() {
+        Request request = Network.getInstance().makeRequest("taskmanager/task", HttpMethod.PUT);
+        request.setBody(this.model.toJson());
+        request.addObserver(new TaskObserver(this));
+        request.send();
     }
 
     /**
@@ -97,12 +95,14 @@ public class TaskPresenter {
     /**
      * Have the presenter reload the view from the model.
      */
-    private void reloadView() {
+    public void updateFromDatabase() {
         Request request = Network.getInstance().makeRequest("taskmanager/task/" + this.model.getId(), HttpMethod.GET);
         request.addObserver(new TaskObserver(this));
         request.send();
+        
+        System.out.println("Sending GET request: " + request);
     }
-    
+
     /**
      * Update the model with data from the view
      */
