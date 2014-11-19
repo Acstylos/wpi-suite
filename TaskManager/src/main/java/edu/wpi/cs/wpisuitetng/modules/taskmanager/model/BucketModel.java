@@ -9,6 +9,7 @@ import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 
 /**
  * Bucket is a list of serialized ID's of tasks
+ * 
  * @author TheFloorIsJava
  *
  */
@@ -21,16 +22,17 @@ public class BucketModel extends AbstractModel {
     /**
      * Default constructor
      */
-    public BucketModel(){
+    public BucketModel() {
         this(-1, "Title");
     }
 
     /**
      * Constructor for the bucket model
+     * 
      * @param id
      * @param title
      */
-    public BucketModel(int id, String title){
+    public BucketModel(int id, String title) {
         this.id = id;
         this.title=title;
         this.taskIds = new ArrayList <Integer>();
@@ -64,7 +66,9 @@ public class BucketModel extends AbstractModel {
 
     /**
      * Parses a JSON string to an object
-     * @param json The JSON string for the BucketModel
+     * 
+     * @param json
+     *            The JSON string for the BucketModel
      * @return The BucketModel parsed from the JSON string
      */
     public static BucketModel fromJson(String json) {
@@ -74,7 +78,9 @@ public class BucketModel extends AbstractModel {
 
     /**
      * Parses a JSON string to an array of objects
-     * @param json The JSON string for the array of BucketModels
+     * 
+     * @param json
+     *            The JSON string for the array of BucketModels
      * @return An array of BucketModels parsed from a Json array
      */
     public static BucketModel[] fromJsonArray(String json) {
@@ -84,6 +90,7 @@ public class BucketModel extends AbstractModel {
 
     /**
      * Will implement later
+     * 
      * @see edu.wpi.cs.wpisuitetng.modules.Model#identify(java.lang.Object)
      */
     @Override
@@ -95,54 +102,18 @@ public class BucketModel extends AbstractModel {
     /**
      * @return The ID of the bucket
      */
-    public int getId(){
+    public int getId() {
         return id;
     }
 
     /**
-     * @param ID The ID of the bucket to be set
+     * @param ID
+     *            The ID of the bucket to be set
      */
-    public void setId(int id){
+    public void setId(int id) {
         this.id = id;
     }
 
-    /**
-     * @return The title of the bucket
-     */
-    public String getTitle(){
-        return title;
-    }
-
-    /**
-     * @param title The title of the bucket to be set
-     */
-    public void setTitle(String title) {
-        this.title = title;
-    }
-    /**
-     * @param newBucket The list of task IDs to be set
-     */
-    public void setBucket(ArrayList <Integer> newBucket){
-        this.taskIds = newBucket;
-    }
-
-    /**
-     * @return The list of task IDs
-     */
-    public List<Integer> getBucket(){
-        return this.taskIds;
-    }
-
-    /**
-     * Copies all of the values from the given BucketModel to this Bucket
-     * excluding the Id.
-     * @param toCopyFrom the BucketModel to copy from.
-     */
-    public void copyFrom(BucketModel toCopyFrom) { 
-        this.title = toCopyFrom.title;
-        this.taskIds = toCopyFrom.taskIds;
-    }
-    
     /**
      * Add a task to the model.
      * @param id ID of the task you're adding.
@@ -150,4 +121,63 @@ public class BucketModel extends AbstractModel {
     public void addTaskID(int id) {
        taskIds.add(id);
     }
+
+    /**
+     * remove the task id from the list of taskIds
+     * 
+     * @param id
+     */
+    public void removeTaskId(int id) {
+        taskIds.remove(id);
+    }
+
+    /**
+     * remove all the task ids from the list of taskIds
+     */
+    public void removeAll() {
+        taskIds.clear();
+    }
+
+    /**
+     * @return The title of the bucket
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * @param title
+     *            The title of the bucket to be set
+     */
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    /**
+     * @param newTaskIds
+     *            The list of task IDs to be set
+     */
+    public void setTaskIds(ArrayList<Integer> newTaskIds) {
+        this.taskIds = newTaskIds;
+    }
+
+    /**
+     * @return The list of task IDs
+     */
+    public List<Integer> getTaskIds() {
+        return this.taskIds;
+    }
+
+    /**
+     * Copies all of the values from the given BucketModel to this Bucket
+     * excluding the Id.
+     * 
+     * @param toCopyFrom
+     *            the BucketModel to copy from.
+     */
+    public void copyFrom(BucketModel toCopyFrom) {
+        this.title = toCopyFrom.title;
+        this.taskIds = toCopyFrom.taskIds;
+    }
+    
 }

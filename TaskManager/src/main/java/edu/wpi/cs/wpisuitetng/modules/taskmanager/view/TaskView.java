@@ -11,8 +11,6 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.Date;
 
 import javax.swing.DefaultComboBoxModel;
@@ -27,6 +25,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.DocumentListener;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -166,6 +165,10 @@ public class TaskView extends JPanel {
     public void addDeleteOnClickListener(ActionListener listener) {
         this.buttonPanel.addDeleteOnClickListener(listener);
     }
+    
+    public void addDocumentListenerOnTaskName(DocumentListener listener){
+        this.taskNameField.getDocument().addDocumentListener(listener);
+    }
 
     /**
      * @param titleText
@@ -266,5 +269,17 @@ public class TaskView extends JPanel {
     
     public ViewMode getViewMode(){
         return this.viewMode;
+    }
+    
+    /**
+     * 
+     */
+    public void validateTaskNameField(){
+        if(taskNameField.getText().equals("")){
+            this.buttonPanel.setOkEnabledStatus(false);
+        } else {
+            this.buttonPanel.setOkEnabledStatus(true);
+        }
+        
     }
 }
