@@ -13,7 +13,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Date;
+
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
@@ -68,6 +70,7 @@ public class TaskPresenter {
             @Override
             public void mouseClicked(MouseEvent e) {
                 MainView.getInstance().addTab(model.getTitle(), view);
+                view.setViewMode(ViewMode.EDITING);
                 int tabCount = MainView.getInstance().getTabCount();
                 view.setIndex(tabCount-1);
                 MainView.getInstance().setSelectedIndex(tabCount - 1);
@@ -94,17 +97,20 @@ public class TaskPresenter {
             @Override
             public void actionPerformed(ActionEvent e) {
                 saveView();
-                updateView(); // might be redudant
+                updateView(); // might be redundant
+                MainView.getInstance().setTitleAt(view.getIndex(), model.getTitle());
                 if(viewMode == ViewMode.CREATING){
                     createInDatabase();
                     bucket.addMiniTaskView(miniView);
                     view.setViewMode(ViewMode.EDITING);
+                    int index = MainView.getInstance().indexOfTab(model.getTitle());
+                    MainView.getInstance().remove(index);
+                    MainView.getInstance().setSelectedIndex(0);
                 }
                 view.revalidate();
                 view.repaint();
                 miniView.revalidate();
                 miniView.repaint();
-                MainView.getInstance().setTitleAt(view.getIndex(), model.getTitle());
             }
         });
 
@@ -137,7 +143,29 @@ public class TaskPresenter {
         view.addDeleteOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // move to archive
+                int index = MainView.getInstance().indexOfTab(model.getTitle());
+                MainView.getInstance().remove(index);
+                MainView.getInstance().getWorkflowPresenter().archiveTask(model.getId(), bucket.getModel().getId());
+                MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
+                bucket.getView().getComponentAt(view.getLocation()).setVisible(false);
+                
+            }
+        });
+        
+        view.addDocumentListenerOnTaskName(new DocumentListener() {
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                view.validateTaskNameField();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                view.validateTaskNameField();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent arg0) {
+                view.validateTaskNameField();
             }
         });
     }
@@ -185,6 +213,7 @@ public class TaskPresenter {
     public void updateModel() {
         model.setTitle(view.getTaskNameField());
         model.setEstimatedEffort(view.getEstimatedEffort());
+        model.setActualEffort(view.getActualEffort());
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
     }
@@ -195,6 +224,7 @@ public class TaskPresenter {
     public void updateView() {
         view.setTaskNameField(model.getTitle());
         view.setEstimatedEffort(model.getEstimatedEffort());
+        view.setActualEffort(model.getActualEffort());
         view.setDescriptionText(model.getDescription());
         view.setDueDate(model.getDueDate());
         miniView.setTaskName(model.getTitle());

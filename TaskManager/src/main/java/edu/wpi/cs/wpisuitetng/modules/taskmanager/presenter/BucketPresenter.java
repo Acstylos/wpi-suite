@@ -7,9 +7,7 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.ArrayList;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
@@ -37,13 +35,27 @@ public class BucketPresenter {
     
     private List<TaskPresenter> tasks;
 
+    private WorkflowPresenter workflow;
+
+    /**
+     * Constructs a BucketPresenter for the given model.
+     * 
+     * @param model
+     * @param workflow
+     */
+    public BucketPresenter(BucketModel model, WorkflowPresenter workflow) {
+        this.model = model;
+        this.workflow = workflow;
+    }
+
     /**
      * Constructor for a bucket presenter
      * 
-     * @param view
-     *            The view associated with this presenter
+     * @param bucketId
+     * @param workflow
      */
-    public BucketPresenter(int bucketId) {
+    public BucketPresenter(int bucketId, WorkflowPresenter workflow) {
+        this.workflow = workflow;
         this.tasks = new ArrayList<>();
         this.model = new BucketModel();
         this.model.setId(bucketId);
@@ -96,13 +108,16 @@ public class BucketPresenter {
         case 4:
             name = "Completed";
             break;
+        case 5:
+            name = "Archive";
+            break;
         }
         if (name.length() > 1) {
             model.setTitle(name);
         }
 
         view.setTitle(model.getTitle());
-        List<Integer> bucket = model.getBucket();
+        List<Integer> bucket = model.getTaskIds();
         view.setTaskViews(new ArrayList<>());
         for (int i : bucket) {
             TaskPresenter taskPresenter = new TaskPresenter(i, this, ViewMode.EDITING);
@@ -132,6 +147,17 @@ public class BucketPresenter {
         int tabCount = MainView.getInstance().getTabCount();
         taskView.setIndex(tabCount-1);
         MainView.getInstance().setSelectedIndex(tabCount-1);
+    }
+
+    /**
+     * remove a task ID from the list of taskIDs in the model
+     * Sends an async update to the database
+     * @param id  ID of the existing task
+     */
+    public void removeTask(int id) {
+        model.removeTaskId(id);
+        updateInDatabase();
+        writeModelToView();
     }
     
     /**
