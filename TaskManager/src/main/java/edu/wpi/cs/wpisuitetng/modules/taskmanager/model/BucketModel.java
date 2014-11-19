@@ -1,6 +1,7 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gson.Gson;
 
@@ -15,7 +16,7 @@ public class BucketModel extends AbstractModel {
 
     private int id;
     private String title;
-    private ArrayList<Integer> bucket;
+    private List<Integer> taskIds;
 
     /**
      * Default constructor
@@ -32,7 +33,7 @@ public class BucketModel extends AbstractModel {
     public BucketModel(int id, String title){
         this.id = id;
         this.title=title;
-        this.bucket = new ArrayList <Integer>();
+        this.taskIds = new ArrayList <Integer>();
     }
 
     /**
@@ -122,14 +123,14 @@ public class BucketModel extends AbstractModel {
      * @param newBucket The list of task IDs to be set
      */
     public void setBucket(ArrayList <Integer> newBucket){
-        this.bucket = newBucket;
+        this.taskIds = newBucket;
     }
 
     /**
      * @return The list of task IDs
      */
-    public ArrayList<Integer> getBucket(){
-        return this.bucket;
+    public List<Integer> getBucket(){
+        return this.taskIds;
     }
 
     /**
@@ -139,6 +140,10 @@ public class BucketModel extends AbstractModel {
      */
     public void copyFrom(BucketModel toCopyFrom) { 
         this.title = toCopyFrom.title;
-        this.bucket = toCopyFrom.bucket;
+        this.taskIds = toCopyFrom.taskIds;
+    }
+
+    public void addTaskID(int id) {
+       taskIds.add(id);
     }
 }
