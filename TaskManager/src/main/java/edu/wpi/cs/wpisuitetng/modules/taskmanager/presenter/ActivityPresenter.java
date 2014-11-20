@@ -60,19 +60,18 @@ public class ActivityPresenter {
      * Updates the view with information from the model
      */
     public void writeModelToView() {
-        view.setActivity(model.getActivity());
-        view.setUser(model.getUser());
-        view.setDate(model.getDate());
-
+        //view.setActivity(model.getActivity());
+        //view.setUser(model.getUser());
+        //view.setDate(model.getDate());
     }
 
     /**
      * Updates the model with the information from the view
      */
     public void writeViewToModel() {
-        model.setActivity(view.getActivity());
-        model.setDate(view.getDate());
-        model.setUser(view.getUser());
+        //model.setActivity(view.getActivity());
+        //model.setDate(view.getDate());
+        //model.setUser(view.getUser());
     }
 
     /**
@@ -106,9 +105,7 @@ public class ActivityPresenter {
      * Register callbacks with the local view.
      */
     private void registerCallbacks() {
-        view.addOnAddSaveListener((ActionEvent event) -> {
-            ActivityPresenter.this.saveModel();
-        });
+        
     }
 
     /**
