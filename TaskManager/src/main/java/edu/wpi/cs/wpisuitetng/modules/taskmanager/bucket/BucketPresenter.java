@@ -4,18 +4,18 @@
  * 
  */
 
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager.bucket;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ViewMode;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.MainView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.ViewMode;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.task.MiniTaskView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.task.TaskModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.task.TaskPresenter;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.task.TaskView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.workflow.WorkflowPresenter;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;

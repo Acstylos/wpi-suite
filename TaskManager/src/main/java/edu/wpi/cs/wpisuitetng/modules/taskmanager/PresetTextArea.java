@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager;
 
 import java.awt.Color;
 import java.awt.Font;

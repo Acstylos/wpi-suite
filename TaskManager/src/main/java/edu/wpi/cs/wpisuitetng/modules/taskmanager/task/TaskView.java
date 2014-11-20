@@ -8,7 +8,7 @@
  *
  ******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager.task;
 
 import java.awt.event.ActionListener;
 import java.util.Date;
@@ -30,6 +30,10 @@ import javax.swing.event.DocumentListener;
 import net.miginfocom.swing.MigLayout;
 
 import org.jdesktop.swingx.JXDatePicker;
+
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.ViewMode;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.bucket.BucketView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.comment.CommentView;
 
 /**
  * A {@link javax.swing.JComponent} that renders the fields of a single task and

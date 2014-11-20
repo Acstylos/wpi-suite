@@ -1,10 +1,10 @@
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.bucket.BucketPresenter;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.task.TaskPresenter;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.event.ActionListener;

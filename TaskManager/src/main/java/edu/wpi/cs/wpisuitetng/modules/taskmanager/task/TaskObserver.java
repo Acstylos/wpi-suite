@@ -1,6 +1,5 @@
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager.task;
 
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 import edu.wpi.cs.wpisuitetng.network.models.IRequest;
 

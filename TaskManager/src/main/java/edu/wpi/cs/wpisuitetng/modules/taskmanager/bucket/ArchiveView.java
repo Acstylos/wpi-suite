@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager.bucket;
 
 import javax.swing.JPanel;
 

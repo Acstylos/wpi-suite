@@ -17,7 +17,8 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.MockData;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.iterations.Iteration;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.workflow.WorkflowEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.workflow.WorkflowModel;
 
 
 public class TestWorkflowModelEntityManager {

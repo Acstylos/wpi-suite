@@ -35,10 +35,10 @@ import edu.wpi.cs.wpisuitetng.modules.defecttracker.entitymanagers.DefectManager
 import edu.wpi.cs.wpisuitetng.modules.postboard.model.PostBoardEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.RequirementEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.iterations.IterationEntityManager;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.ActivityEntityManager;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketEntityManager;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskEntityManager;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.bucket.BucketEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.comment.ActivityEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.task.TaskEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.workflow.WorkflowEntityManager;
 
 /**
  * This singleton class responds to API requests directed at 

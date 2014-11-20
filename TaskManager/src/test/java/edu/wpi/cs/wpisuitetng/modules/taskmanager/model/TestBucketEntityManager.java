@@ -16,8 +16,8 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.MockData;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketEntityManager;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.bucket.BucketEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.bucket.BucketModel;
 
 
 public class TestBucketEntityManager {

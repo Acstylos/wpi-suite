@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager.bucket;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.bucket.BucketModel;
 
 /**
  * This is the entity manager for the Bucket

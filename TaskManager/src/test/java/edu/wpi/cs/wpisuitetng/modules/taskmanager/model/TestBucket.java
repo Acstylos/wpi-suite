@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.MockNetwork;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.bucket.BucketModel;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 

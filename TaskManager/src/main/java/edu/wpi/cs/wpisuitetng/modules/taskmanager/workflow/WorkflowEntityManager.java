@@ -7,7 +7,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  ******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager.workflow;
 
 import java.util.List;
 

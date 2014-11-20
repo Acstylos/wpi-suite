@@ -1,46 +1,46 @@
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager.workflow;
 
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 import edu.wpi.cs.wpisuitetng.network.models.IRequest;
 import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 
 /**
- * Observes the network response for buckets
+ * 
+ * 
  * @author TheFloorIsJava
  *
  */
-public class BucketObserver implements RequestObserver {
+public class WorkflowObserver implements RequestObserver {
 
-    private BucketPresenter presenter;
+    private WorkflowPresenter presenter;
     private HttpMethod method;
 
-    public BucketObserver(BucketPresenter presenter, HttpMethod method) {
+    public WorkflowObserver(WorkflowPresenter presenter, HttpMethod method) {
         this.presenter = presenter;
         this.method = method;
     }
 
     /**
-     * Parse the TaskViews from the response received by the network
+     * Parse the something from the response received by the network
      * 
      */
     @Override
     public void responseSuccess(IRequest iReq) {
+        System.err.println(iReq.getResponse().getBody() + method);
         // Store the response
         final ResponseModel response = iReq.getResponse();
 
-
+        // Parse the message
         if(method == HttpMethod.GET){
-
-            // Parse the message
-            final BucketModel[] models = BucketModel.fromJsonArray(response.getBody());
+        	final WorkflowModel[] models = WorkflowModel.fromJSONArray(response.getBody());
         	System.err.println(models[0].getTitle());
         	presenter.responseGet(models);
-        }else{
-            // Parse the message
-            final BucketModel model = BucketModel.fromJson(response.getBody());
-            switch (method) {
+        }
+        else{
+        	final WorkflowModel model = WorkflowModel.fromJson(response.getBody());
+        	System.err.println(model.getTitle());
+        	switch (method) {
         	case GET:
         		break;
         	case POST:
@@ -52,7 +52,7 @@ public class BucketObserver implements RequestObserver {
         	case DELETE:
         		presenter.responseDelete(model);
         		break;
-        }
+        	}
         }
     }
 
@@ -62,7 +62,7 @@ public class BucketObserver implements RequestObserver {
     @Override
     public void responseError(IRequest iReq) {
         System.err.println("The request to " + httpMethodToString(method)
-                + " a bucket failed.");
+                + " a workflow failed.");
     }
 
     /**
@@ -71,7 +71,15 @@ public class BucketObserver implements RequestObserver {
     @Override
     public void fail(IRequest iReq, Exception exception) {
         System.err.println("The request to " + httpMethodToString(method)
-                + " a bucket failed.");
+                + " a workflow failed.");
+
+    }
+
+    /**
+     * @return The presenter
+     */
+    public WorkflowPresenter getPresenter() {
+        return this.presenter;
     }
 
     private static String httpMethodToString(HttpMethod method_) {
@@ -91,12 +99,5 @@ public class BucketObserver implements RequestObserver {
             break;
         }
         return methodString;
-    }
-
-    /**
-     * @return The presenter
-     */
-    public BucketPresenter getPresenter() {
-        return this.presenter;
     }
 }

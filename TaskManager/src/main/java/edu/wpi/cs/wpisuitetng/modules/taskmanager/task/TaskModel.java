@@ -8,7 +8,7 @@
  *
  ******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager.task;
 
 import java.util.ArrayList;
 import java.util.Date;

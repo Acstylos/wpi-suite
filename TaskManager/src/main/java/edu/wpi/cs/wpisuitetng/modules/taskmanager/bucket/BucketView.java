@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager.bucket;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.task.MiniTaskView;
 import net.miginfocom.swing.MigLayout;
 
 /**

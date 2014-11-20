@@ -15,6 +15,8 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.MockData;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.comment.ActivityEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.comment.ActivityModel;
 
 public class TestActivityEntityManager {
 

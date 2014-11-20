@@ -7,11 +7,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  ******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager.comment;
 
 import java.awt.event.ActionEvent;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.ActivityModel;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ActivityView;
+
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.task.TaskPresenter;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;

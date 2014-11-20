@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager.bucket;
 
 import java.util.ArrayList;
 import java.util.List;

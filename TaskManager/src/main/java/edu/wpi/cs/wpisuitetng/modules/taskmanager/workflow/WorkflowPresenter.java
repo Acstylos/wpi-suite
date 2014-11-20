@@ -4,17 +4,16 @@
  * 
  */
 
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager.workflow;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowModel;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.WorkflowView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.MainView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.bucket.BucketPresenter;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.bucket.BucketView;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;

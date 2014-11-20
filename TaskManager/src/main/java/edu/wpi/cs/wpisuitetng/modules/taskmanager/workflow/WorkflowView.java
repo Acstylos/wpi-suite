@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager.workflow;
 
 import java.awt.Component;
 import java.util.ArrayList;
@@ -8,6 +8,7 @@ import javax.swing.Box;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.bucket.BucketView;
 import net.miginfocom.swing.MigLayout;
 
 

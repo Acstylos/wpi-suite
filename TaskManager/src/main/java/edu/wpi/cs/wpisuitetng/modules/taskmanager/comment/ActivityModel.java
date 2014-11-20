@@ -8,7 +8,7 @@
  *
  ******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager.comment;
 
 import java.util.Date;
 

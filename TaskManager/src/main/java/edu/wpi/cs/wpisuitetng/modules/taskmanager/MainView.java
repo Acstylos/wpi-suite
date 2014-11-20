@@ -7,7 +7,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager;
 
 import java.beans.PropertyChangeEvent;
 
@@ -16,7 +16,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import net.miginfocom.swing.MigLayout;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.bucket.ArchiveView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.workflow.WorkflowPresenter;
 
 /**
  * MainView is a scrollable window with a viewport that can view only
