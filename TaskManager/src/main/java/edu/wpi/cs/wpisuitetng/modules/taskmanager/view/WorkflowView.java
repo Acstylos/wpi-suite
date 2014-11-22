@@ -64,6 +64,7 @@ public class WorkflowView extends JPanel
      */
     public void setBucketViews(ArrayList<BucketView> buckets){
         this.bucketViews = buckets;
+        this.removeAll();
         for (BucketView bucket : bucketViews) {
             this.add(bucket, "dock west");
             Component spacerStrut = Box.createHorizontalStrut(5);

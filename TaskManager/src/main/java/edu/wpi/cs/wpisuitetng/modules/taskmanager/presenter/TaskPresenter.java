@@ -102,11 +102,13 @@ public class TaskPresenter {
                 saveView();
                 updateView(); // call for update miniview
                 MainView.getInstance().setTitleAt(view.getIndex(), model.getTitle());
+                MainView.getInstance().getWorkflowPresenter().moveTask(model.getId(), view.getStatus().getSelectedIndex()+1, bucket.getModel().getId());
                 if(viewMode == ViewMode.CREATING){
                     createInDatabase();
                     bucket.addMiniTaskView(miniView);
                     view.setViewMode(ViewMode.EDITING);
                     int index = MainView.getInstance().indexOfTab(model.getTitle());
+                   System.out.println("Tab index:" + index);
                     MainView.getInstance().remove(index);
                     MainView.getInstance().setSelectedIndex(0);
                 }
@@ -149,8 +151,9 @@ public class TaskPresenter {
                 int index = MainView.getInstance().indexOfTab(model.getTitle());
                 MainView.getInstance().remove(index);
                 MainView.getInstance().getWorkflowPresenter().archiveTask(model.getId(), bucket.getModel().getId());
-                MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
-                bucket.getView().getComponentAt(view.getLocation()).setVisible(false);
+                MainView.getInstance().setSelectedIndex(0);
+                // MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
+                // bucket.getView().getComponentAt(view.getLocation()).setVisible(false);
                 
             }
         });
@@ -171,6 +174,13 @@ public class TaskPresenter {
                 view.validateTaskNameField();
             }
         });
+        
+     /*   view.addChangeStatusListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               view.getStatus().getSelectedIndex()+1;
+            }
+        });
+     */
     }
 
     /**
