@@ -94,33 +94,36 @@ public class TaskPresenter {
         });
         
         /**
-         * 
+         * TODO: missing comment
          */
         view.addOkOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                saveView();
-                updateView(); // call for update miniview
-                MainView.getInstance().setTitleAt(view.getIndex(), model.getTitle());
-                if(viewMode == ViewMode.CREATING){
+            	int index = MainView.getInstance().indexOfComponent(view);
+            	if(viewMode == ViewMode.CREATING){
+            	    //CREATING MODE
                     createInDatabase();
-                    bucket.addMiniTaskView(miniView);
-                    view.setViewMode(ViewMode.EDITING);
-                    int index = MainView.getInstance().indexOfTab(model.getTitle());
+                    saveView();
+                    updateView();
+                    //bucket.addMiniTaskView(miniView);
                     MainView.getInstance().remove(index);
                     MainView.getInstance().setSelectedIndex(0);
-                }
-                view.revalidate();
-                view.repaint();
-                miniView.revalidate();
-                miniView.repaint();
+            	} 
+            	//EDITING MODE
+            	//TODO: make an archive mode
+            	else {
+            		saveView();
+            		updateView();
+            		MainView.getInstance().setTitleAt(index, model.getTitle());
+            		MainView.getInstance().getWorkflowPresenter().moveTask(model.getId(), view.getStatus().getSelectedIndex()+1, bucket.getModel().getId());
+            	}
             }
         });
 
         view.addCancelOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int index = MainView.getInstance().indexOfTab(model.getTitle());
+                int index = MainView.getInstance().indexOfComponent(view);
                 MainView.getInstance().remove(index);
                 updateView();
                 view.revalidate();
@@ -146,11 +149,12 @@ public class TaskPresenter {
         view.addDeleteOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int index = MainView.getInstance().indexOfTab(model.getTitle());
+                int index = MainView.getInstance().indexOfComponent(view);
                 MainView.getInstance().remove(index);
                 MainView.getInstance().getWorkflowPresenter().archiveTask(model.getId(), bucket.getModel().getId());
-                MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
-                bucket.getView().getComponentAt(view.getLocation()).setVisible(false);
+                MainView.getInstance().setSelectedIndex(0);
+                // MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
+                // bucket.getView().getComponentAt(view.getLocation()).setVisible(false);
                 
             }
         });
@@ -171,6 +175,13 @@ public class TaskPresenter {
                 view.validateTaskNameField();
             }
         });
+        
+     /*   view.addChangeStatusListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               view.getStatus().getSelectedIndex()+1;
+            }
+        });
+     */
     }
 
     /**
@@ -219,6 +230,8 @@ public class TaskPresenter {
         model.setActualEffort(view.getActualEffort());
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
+        model.setStatus(view.getStatus().getSelectedIndex()+1);
+        System.out.println(view.getStatus().getSelectedIndex()+1);
     }
 
     /**
@@ -230,6 +243,8 @@ public class TaskPresenter {
         view.setActualEffort(model.getActualEffort());
         view.setDescriptionText(model.getDescription());
         view.setDueDate(model.getDueDate());
+        view.setStatus(model.getStatus());
+        System.out.println("view index" + model.getStatus());
         miniView.setTaskName(model.getTitle());
         miniView.setDueDate(model.getDueDate());
     }

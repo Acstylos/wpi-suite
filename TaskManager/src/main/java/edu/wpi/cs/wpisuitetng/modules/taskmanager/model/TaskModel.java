@@ -30,6 +30,8 @@ public class TaskModel extends AbstractModel {
     private int estimatedEffort;
     private int actualEffort;
     private Date dueDate;
+    private int status;
+
 
     /**
      * Constructor for a default Task object
@@ -42,6 +44,7 @@ public class TaskModel extends AbstractModel {
         assignedTo = new ArrayList<User>();
         estimatedEffort = 0;
         actualEffort = 0;
+        status = 1;
     }
 
     /**
@@ -53,13 +56,14 @@ public class TaskModel extends AbstractModel {
      * @param dueDate The due date for the task
      */
     public TaskModel(int id, String title, String description,
-                     int estimatedEffort, Date dueDate) {
+                     int estimatedEffort, Date dueDate, int status) {
         this();
         this.id = id;
         this.title = title;
         this.description = description;
         this.estimatedEffort = estimatedEffort;
         this.dueDate = dueDate;
+        this.status = status;
     }
 
     /**
@@ -143,6 +147,7 @@ public class TaskModel extends AbstractModel {
         this.estimatedEffort = other.getEstimatedEffort();
         this.dueDate = other.getDueDate();
         this.actualEffort = other.getActualEffort();
+        this.status = other.getStatus();
     }
     
     /**
@@ -243,5 +248,21 @@ public class TaskModel extends AbstractModel {
     public void setActualEffort(int actualEffort) {
         this.actualEffort = actualEffort;
     }
+    
+    /**
+     * Get the status of the task
+     * @return The status of the task
+     */
+    public int getStatus() {
+        return status;
+    }
 
+    /**
+     * Set the status of the task
+     * @param status  The status of the task
+     */
+    public void setStatus(int status) {
+        this.status = status;
+    }
+    
 }
