@@ -1,3 +1,11 @@
+/*******************************************************************************
+ * Copyright (c) 2014 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.event.ActionEvent;
@@ -28,8 +36,6 @@ public class CommentView extends JTabbedPane {
     private JScrollPane historyScroll = new JScrollPane();
     private JScrollPane commentScroll = new JScrollPane();
     private JPanel postedCommentPanel = new JPanel();
-    private ActivityView testActivity = new ActivityView();
-    private ActivityView testActivity2 = new ActivityView();
     private JScrollPane editCommentScroll = new JScrollPane();
     private PresetTextArea commentText = new PresetTextArea("Comment here");
     private JButton postCommentButton = new JButton("Post");

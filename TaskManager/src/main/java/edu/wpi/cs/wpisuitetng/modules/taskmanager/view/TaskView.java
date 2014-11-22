@@ -53,7 +53,7 @@ public class TaskView extends JPanel {
     private JPanel detailsPanel = new JPanel();
     private JPanel infoPanel = new JPanel();
     private JPanel splitPanel = new JPanel();
-    private JPanel usersPanel = new JPanel();
+    private UserListView usersPanel = new UserListView();
     private JScrollPane scrollPane = new JScrollPane();
     private JSpinner actualEffortSpinner = new JSpinner();
     private JSpinner estEffortSpinner = new JSpinner();
@@ -89,7 +89,6 @@ public class TaskView extends JPanel {
                 "[][grow][grow]"));
         this.infoPanel.setLayout(new MigLayout("", "[][][grow]", "[][][][][]"));
         this.splitPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
-        this.usersPanel.setLayout(new MigLayout("", "[]", "[]"));
 
         this.buttonPanel = new TaskButtonsPanel(viewMode);
         this.add(buttonPanel, "cell 0 1,grow");
