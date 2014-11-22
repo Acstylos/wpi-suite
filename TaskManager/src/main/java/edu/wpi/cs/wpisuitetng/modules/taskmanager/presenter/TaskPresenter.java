@@ -76,7 +76,7 @@ public class TaskPresenter {
                 Icon taskIcon = null;
                 
                 try {
-                    taskIcon = new ImageIcon(ImageIO.read(view.getClass().getResourceAsStream("edit-task.png")));
+                    taskIcon = new ImageIcon(ImageIO.read(view.getClass().getResourceAsStream("task.png")));
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
