@@ -10,10 +10,14 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
+import java.awt.Image;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Date;
 
+import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,9 +29,11 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.UIManager;
 import javax.swing.event.DocumentListener;
 
 import net.miginfocom.swing.MigLayout;
+import net.miginfocom.swt.SwtComponentWrapper;
 
 import org.jdesktop.swingx.JXDatePicker;
 
@@ -61,6 +67,22 @@ public class TaskView extends JPanel {
     private JTextArea descriptionMessage = new JTextArea();
     private JTextField taskNameField = new JTextField();
     private JXDatePicker datePicker = new JXDatePicker();
+    
+    
+    static {
+        try {
+            /* Change the default icons for JXDatePicker. */
+            ImageIcon calendarIcon = new ImageIcon(ImageIO.read(TaskView.class.getResourceAsStream("calendar.png")));
+            ImageIcon jumpLeftIcon = new ImageIcon(ImageIO.read(TaskView.class.getResourceAsStream("arrow-left.png")));
+            ImageIcon jumpRightIcon = new ImageIcon(ImageIO.read(TaskView.class.getResourceAsStream("arrow-right.png")));
+
+            UIManager.put("JXDatePicker.arrowIcon", calendarIcon);
+            UIManager.put("JXMonthView.monthDownFileName", jumpLeftIcon);
+            UIManager.put("JXMonthView.monthUpFileName", jumpRightIcon);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Create a new TaskView with the specified default values.

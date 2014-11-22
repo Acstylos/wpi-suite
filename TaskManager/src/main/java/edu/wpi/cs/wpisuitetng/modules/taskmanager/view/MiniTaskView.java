@@ -10,12 +10,16 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.util.Date;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
+import javax.swing.border.EmptyBorder;
 
 /**
  * This is the TaskView shown inside of buckets to reduce the amount of clutter on screen
@@ -33,8 +37,15 @@ public class MiniTaskView extends JPanel {
         setLayout(new MigLayout("fill"));
         this.taskName = taskName;
         this.dueDate = dueDate;
+        taskNameLabel.setBorder(new EmptyBorder(8, 8, 8, 8));
         this.add(taskNameLabel, "dock west");
         this.taskNameLabel.setText(taskName);
+        
+        try {
+            this.taskNameLabel.setIcon(new ImageIcon(ImageIO.read(getClass().getResourceAsStream("task.png"))));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     public void addOnClickOpenTabView(MouseListener listener){

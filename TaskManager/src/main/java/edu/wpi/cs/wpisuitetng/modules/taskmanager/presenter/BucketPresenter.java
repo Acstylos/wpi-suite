@@ -6,8 +6,13 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
@@ -139,11 +144,20 @@ public class BucketPresenter {
      * Adds a new task to the bucket view, in the form of a miniTaskView
      */
     public void addNewTaskToView(){
+        
         TaskPresenter taskPresenter = new TaskPresenter(0, this, ViewMode.CREATING);
         //taskPresenter.createInDatabase();
         TaskModel taskModel = taskPresenter.getModel();
         TaskView taskView = taskPresenter.getView();
-        MainView.getInstance().addTab(taskModel.getTitle(), taskView);
+        
+        Icon taskIcon = null;
+        try {
+            taskIcon = new ImageIcon(ImageIO.read(taskView.getClass().getResourceAsStream("create-task.png")));
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        
+        MainView.getInstance().addTab(taskModel.getTitle(), taskIcon, taskView);
         int tabCount = MainView.getInstance().getTabCount();
         taskView.setIndex(tabCount-1);
         MainView.getInstance().setSelectedIndex(tabCount-1);

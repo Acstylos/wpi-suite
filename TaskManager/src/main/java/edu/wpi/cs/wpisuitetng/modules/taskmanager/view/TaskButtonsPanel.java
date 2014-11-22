@@ -10,7 +10,10 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -43,6 +46,16 @@ public class TaskButtonsPanel extends JPanel {
         this.add(clearButton);
         this.add(cancelButton);
         validateButtons(viewMode);
+        
+        try {
+            this.okButton.setIcon(new ImageIcon(ImageIO.read(getClass().getResourceAsStream("okay.png"))));
+            this.clearButton.setIcon(new ImageIcon(ImageIO.read(getClass().getResourceAsStream("clear.png"))));
+            this.cancelButton.setIcon(new ImageIcon(ImageIO.read(getClass().getResourceAsStream("cancel.png"))));
+            this.deleteButton.setIcon(new ImageIcon(ImageIO.read(getClass().getResourceAsStream("trash.png"))));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
     
     public void validateButtons(ViewMode viewMode){

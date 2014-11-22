@@ -4,7 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
@@ -40,8 +44,20 @@ public class CommentView extends JTabbedPane {
      */
     public CommentView() {
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-        this.addTab("Comments", null, commentPanel, null);
-        this.addTab("History", null, historyPanel, null);
+        
+        Icon commentsIcon = null, historyIcon = null, commentIcon = null, clearIcon = null;
+        
+        try {
+            commentsIcon = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("comments.png")));
+            historyIcon = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("history.png")));
+            commentIcon = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("comment.png")));
+            clearIcon = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("clear.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        this.addTab("Comments", commentsIcon, commentPanel, null);
+        this.addTab("History", historyIcon, historyPanel, null);
 
         // Set layouts
         this.commentPanel.setLayout(new MigLayout("", "[grow]", "[grow][50px:n][min]"));
@@ -65,7 +81,9 @@ public class CommentView extends JTabbedPane {
         this.editCommentScroll.setViewportView(commentText);
         this.historyScroll.setViewportView(postedHistoryPanel);
         this.postCommentButton.setEnabled(false);
+        this.postCommentButton.setIcon(commentIcon);
         this.clearCommentButton.setEnabled(false);
+        this.clearCommentButton.setIcon(clearIcon);
         this.setupListeners();
     }
     
