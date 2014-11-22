@@ -7,7 +7,9 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
@@ -33,7 +35,7 @@ public class BucketPresenter {
 
     private BucketModel model;
     
-    private List<TaskPresenter> tasks;
+    private Map<Integer, TaskPresenter> taskMap;
 
     private WorkflowPresenter workflow;
 
@@ -56,8 +58,8 @@ public class BucketPresenter {
      */
     public BucketPresenter(int bucketId, WorkflowPresenter workflow) {
         this.workflow = workflow;
-        this.tasks = new ArrayList<>();
         this.model = new BucketModel();
+        this.taskMap = new HashMap();
         this.model.setId(bucketId);
         this.view = new BucketView("Loading...");
         registerCallbacks();
@@ -119,10 +121,14 @@ public class BucketPresenter {
         view.setTitle(model.getTitle());
         List<Integer> bucket = model.getTaskIds();
         view.setTaskViews(new ArrayList<>());
+        view.setTaskViews(new ArrayList<MiniTaskView>());
+        System.out.println(model.getTitle() + ": " + bucket.toString());
         for (int i : bucket) {
-            TaskPresenter taskPresenter = new TaskPresenter(i, this, ViewMode.EDITING);
-            taskPresenter.updateFromDatabase();
-            MiniTaskView miniTaskView = taskPresenter.getMiniView();
+            if(!taskMap.containsKey(i)){
+                taskMap.put(i, new TaskPresenter(i, this, ViewMode.EDITING));
+            }
+            taskMap.get(i).updateFromDatabase();
+            MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
             view.addTaskToView(miniTaskView);
         }
         view.revalidate();

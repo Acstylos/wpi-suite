@@ -35,7 +35,6 @@ public class BucketObserver implements RequestObserver {
 
             // Parse the message
             final BucketModel[] models = BucketModel.fromJsonArray(response.getBody());
-        	System.err.println(models[0].getTitle());
         	presenter.responseGet(models);
         }else{
             // Parse the message
