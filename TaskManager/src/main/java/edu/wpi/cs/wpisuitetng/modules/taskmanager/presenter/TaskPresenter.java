@@ -92,12 +92,15 @@ public class TaskPresenter {
             public void mouseExited(MouseEvent e) {
             }
         });
-
+        
+        /**
+         * 
+         */
         view.addOkOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 saveView();
-                updateView(); // might be redundant
+                updateView(); // call for update miniview
                 MainView.getInstance().setTitleAt(view.getIndex(), model.getTitle());
                 if(viewMode == ViewMode.CREATING){
                     createInDatabase();

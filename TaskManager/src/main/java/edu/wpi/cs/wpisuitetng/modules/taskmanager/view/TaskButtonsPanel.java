@@ -31,7 +31,8 @@ public class TaskButtonsPanel extends JPanel {
     private final JButton deleteButton = new JButton("Archive");
     private String okString;
     private String clearString;
-    private String cancelString; // going to use this later for actual cancel, instead of close
+    private String cancelString; 
+    private String deleteString;// going to use this later for actual cancel, instead of close
 
 
     /**
@@ -40,8 +41,12 @@ public class TaskButtonsPanel extends JPanel {
     public TaskButtonsPanel(ViewMode viewMode) {
         this.setLayout(new MigLayout("", "[][][]", "[]"));
         this.add(okButton);
-        this.add(clearButton);
-        this.add(cancelButton);
+        if(viewMode != ViewMode.ARCHIVING)
+            this.add(clearButton);
+        if(viewMode != ViewMode.ARCHIVING)
+            this.add(cancelButton);
+        if(viewMode != ViewMode.CREATING)
+            this.add(deleteButton);
         validateButtons(viewMode);
     }
     
@@ -50,13 +55,17 @@ public class TaskButtonsPanel extends JPanel {
             okString = "Create";
             clearString = "Clear";
             //this.remove(deleteButton);
-        } else {
+        } else if (viewMode == ViewMode.EDITING){
             okString = "Update";
             clearString = "Undo Changes";
             //this.add(deleteButton);
+        } else if (viewMode == ViewMode.ARCHIVING){
+            okString = "Restore";
+            deleteString = "Delete";
         }
         this.okButton.setText(okString);
         this.clearButton.setText(clearString);
+        this.deleteButton.setText(deleteString);
     }
     
     public void addOkOnClickListener(ActionListener listener){
