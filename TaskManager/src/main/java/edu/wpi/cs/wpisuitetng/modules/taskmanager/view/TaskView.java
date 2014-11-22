@@ -166,10 +166,18 @@ public class TaskView extends JPanel {
         this.buttonPanel.addDeleteOnClickListener(listener);
     }
     
+    //TODO: missing comment
     public void addDocumentListenerOnTaskName(DocumentListener listener){
         this.taskNameField.getDocument().addDocumentListener(listener);
     }
-
+    
+    /**
+     * This calls something to move the tasks to specified status
+     */
+    public void addChangeStatusListener(ActionListener listener) {
+        this.statusComboBox.addActionListener(listener);
+    }
+    
     /**
      * @param titleText
      *            The new title of the task
@@ -272,7 +280,23 @@ public class TaskView extends JPanel {
     }
     
     /**
-     * 
+     * @return the statusComboBox
+     */
+    public JComboBox<BucketView> getStatus(){
+        return this.statusComboBox;
+    }
+    
+    /**
+     * set the status view for the ComboBox
+     * @param status  the status of the task
+     */
+    public void setStatus(int status) {
+        System.out.println("setStatus:" + status);
+        statusComboBox.setSelectedIndex(status-1);
+    }
+    
+    /**
+     * TODO: missing comment
      */
     public void validateTaskNameField(){
         if(taskNameField.getText().equals("")){

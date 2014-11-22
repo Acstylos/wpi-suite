@@ -8,7 +8,6 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowModel;
@@ -29,9 +28,7 @@ import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 public class WorkflowPresenter {
 
     private WorkflowView view;
-
     private WorkflowModel model;
-    
     private Map<Integer, BucketPresenter> bucketPresenters = new HashMap<>();
 
     /**
@@ -99,7 +96,6 @@ public class WorkflowPresenter {
             hardCodedId++;
 
             newBuckets.add(bucketPresenter.getModel().getId());
-            System.out.println(bucketPresenter.getModel().getId());
             if(bucketPresenter.getModel().getId() == 5){
                 archiveBucketPresenter = bucketPresenter;
             } else {
@@ -210,12 +206,8 @@ public class WorkflowPresenter {
      *            The id of the bucket task moved from
      */
     public void moveTask(int taskId, int toId, int fromId) {
-        BucketPresenter toPresenter, fromPresenter;
-        toPresenter = new BucketPresenter(toId, this);
-        fromPresenter = new BucketPresenter(fromId, this);
-        toPresenter.addTask(taskId);
-        fromPresenter.removeTask(taskId);
-        writeModelToView();
+        bucketPresenters.get(toId).addTask(taskId);
+        bucketPresenters.get(fromId).removeTask(taskId);
     }
 
     /**

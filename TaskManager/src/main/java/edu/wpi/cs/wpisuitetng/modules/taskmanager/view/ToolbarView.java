@@ -27,11 +27,18 @@ public class ToolbarView extends JPanel
         setLayout(new MigLayout("fill"));
         
         JButton createNewTaskButton = new JButton("Create New Task");
+        
+        /**
+         * Adds a new TaskView Tab into the MainView
+         */
         createNewTaskButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // get instance of the New-Bucket Presenter to add new tasks into
-                BucketPresenter newBucketPresenter = MainView.getInstance().getWorkflowPresenter().getBucketPresenterById(1);
-                newBucketPresenter.addNewTaskToView();
+                TaskPresenter taskPresenter = new TaskPresenter(0, MainView.getInstance().getWorkflowPresenter().getBucketPresenterById(1), ViewMode.CREATING);
+            	MainView.getInstance().addTab(taskPresenter.getModel().getTitle(), taskPresenter.getView());
+                int tabCount = MainView.getInstance().getTabCount();
+                taskPresenter.getView().setIndex(tabCount-1);
+                MainView.getInstance().setSelectedIndex(tabCount-1);
             }
         });
         add(createNewTaskButton, "dock west");
