@@ -99,28 +99,27 @@ public class TaskPresenter {
         view.addOkOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                saveView();
-                updateView(); // call for update miniview
-                MainView.getInstance().setTitleAt(view.getIndex(), model.getTitle());
-                if(viewMode == ViewMode.CREATING){
+            	int index = MainView.getInstance().indexOfComponent(view);
+            	if(viewMode == ViewMode.CREATING){
                     createInDatabase();
-                    bucket.addMiniTaskView(miniView);
-                    view.setViewMode(ViewMode.EDITING);
-                    int index = MainView.getInstance().indexOfTab(model.getTitle());
+                    saveView();
+                    updateView();
+                    //bucket.addMiniTaskView(miniView);
                     MainView.getInstance().remove(index);
                     MainView.getInstance().setSelectedIndex(0);
-                }
-                view.revalidate();
-                view.repaint();
-                miniView.revalidate();
-                miniView.repaint();
+            	} else {
+            		saveView();
+            		updateView();
+            		MainView.getInstance().setTitleAt(index, model.getTitle());
+            		MainView.getInstance().getWorkflowPresenter().moveTask(model.getId(), view.getStatus().getSelectedIndex()+1, bucket.getModel().getId());
+            	}
             }
         });
 
         view.addCancelOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int index = MainView.getInstance().indexOfTab(model.getTitle());
+                int index = MainView.getInstance().indexOfComponent(view);
                 MainView.getInstance().remove(index);
                 updateView();
                 view.revalidate();
@@ -146,11 +145,12 @@ public class TaskPresenter {
         view.addDeleteOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int index = MainView.getInstance().indexOfTab(model.getTitle());
+                int index = MainView.getInstance().indexOfComponent(view);
                 MainView.getInstance().remove(index);
                 MainView.getInstance().getWorkflowPresenter().archiveTask(model.getId(), bucket.getModel().getId());
-                MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
-                bucket.getView().getComponentAt(view.getLocation()).setVisible(false);
+                MainView.getInstance().setSelectedIndex(0);
+                // MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
+                // bucket.getView().getComponentAt(view.getLocation()).setVisible(false);
                 
             }
         });
@@ -171,6 +171,13 @@ public class TaskPresenter {
                 view.validateTaskNameField();
             }
         });
+        
+     /*   view.addChangeStatusListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               view.getStatus().getSelectedIndex()+1;
+            }
+        });
+     */
     }
 
     /**
