@@ -14,9 +14,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
@@ -149,23 +146,6 @@ public class TaskPresenter {
                 MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
                 bucket.getView().getComponentAt(view.getLocation()).setVisible(false);
                 
-            }
-        });
-        
-        view.addDocumentListenerOnTaskName(new DocumentListener() {
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                view.validateTaskNameField();
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                view.validateTaskNameField();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent arg0) {
-                view.validateTaskNameField();
             }
         });
     }
