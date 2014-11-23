@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_ca1132ae",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/TaskButtonsPanel.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1002787
+      },
+      "writtenOn": "2014-11-23T01:56:51Z",
+      "side": 1,
+      "message": "Why do you have this check twice?",
+      "revId": "6c6089eb5813a033a66fee7c214d8d82550040f0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
