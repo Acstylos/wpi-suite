@@ -122,7 +122,10 @@ public class User extends AbstractModel {
         return json;
 
     }
-
+public static User[] fromJsonArray(String json){
+    final Gson parser = new Gson();
+    return parser.fromJson(json,User[].class);
+}
     /* Built-in overrides/overloads */
 
     /**
