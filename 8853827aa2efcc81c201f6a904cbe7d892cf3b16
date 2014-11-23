@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_ddabbe87",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1002788
+      },
+      "writtenOn": "2014-11-23T23:54:39Z",
+      "side": 1,
+      "message": "get rid of these",
+      "revId": "8853827aa2efcc81c201f6a904cbe7d892cf3b16",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_bdb07af5",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1002788
+      },
+      "writtenOn": "2014-11-23T23:54:39Z",
+      "side": 1,
+      "message": "get rid of commented out lines",
+      "revId": "8853827aa2efcc81c201f6a904cbe7d892cf3b16",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_1d954640",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/WorkflowPresenter.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1002788
+      },
+      "writtenOn": "2014-11-23T23:54:39Z",
+      "side": 1,
+      "message": "get rid of",
+      "revId": "8853827aa2efcc81c201f6a904cbe7d892cf3b16",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_fd916253",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/TaskButtonsPanel.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1002788
+      },
+      "writtenOn": "2014-11-23T23:54:39Z",
+      "side": 1,
+      "message": "get rid",
+      "revId": "8853827aa2efcc81c201f6a904cbe7d892cf3b16",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_5d9fce5f",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/ToolbarView.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1002788
+      },
+      "writtenOn": "2014-11-23T23:54:39Z",
+      "side": 1,
+      "message": "no tabs",
+      "revId": "8853827aa2efcc81c201f6a904cbe7d892cf3b16",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
