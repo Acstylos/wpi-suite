@@ -1,10 +1,12 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
-import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
-
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.Box;
+import javax.swing.JPanel;
+import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -20,8 +22,8 @@ public class WorkflowView extends JPanel
 {
 
     private static final long serialVersionUID = -5937582878085666950L;
-    private String title;
-    private List<BucketView> bucketViews;
+    private String title; // TODO: Get rid of title, we dont need it.
+    private ArrayList<BucketView> bucketViews = new ArrayList<BucketView>();
 
 
     /**
@@ -32,22 +34,27 @@ public class WorkflowView extends JPanel
         /* Buckets will be created left to right, never on top 
          * of each other.
          */
-        setBorder(new TitledBorder(null, title, TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        setLayout(new MigLayout("fill"));
+        this.setLayout(new MigLayout("fill"));
+        Component topSpacerStrut = Box.createVerticalStrut(5);
+        Component bottomSpacerStrut = Box.createVerticalStrut(5);
+        Component leftSpacerStrut = Box.createHorizontalStrut(5);
+        this.add(topSpacerStrut, "dock north");
+        this.add(bottomSpacerStrut, "dock south");
+        this.add(leftSpacerStrut, "dock west");
     }
 
     /**
      * @return A list of BucketViews corresponding to the buckets in the workflow process.
      */
     public List<BucketView> getBucketViews() {
-        return bucketViews;
+        return this.bucketViews;
     }
 
     /**
      * @return A string defining how a bucket will be titled.
      */
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     /**
@@ -55,10 +62,12 @@ public class WorkflowView extends JPanel
      * to collide and sit next to what was added before it. 
      * @param buckets List of buckets corresponding to the buckets in the workflow process.
      */
-    public void setBucketViews(List<BucketView> buckets){
+    public void setBucketViews(ArrayList<BucketView> buckets){
         this.bucketViews = buckets;
         for (BucketView bucket : bucketViews) {
-            add(bucket, "dock west");
+            this.add(bucket, "dock west");
+            Component spacerStrut = Box.createHorizontalStrut(5);
+            this.add(spacerStrut, "dock west");
         }
         
     }
@@ -68,7 +77,7 @@ public class WorkflowView extends JPanel
      */
     public void setTitle(String title){
         this.title = title;
-        setBorder(new TitledBorder(null, title, TitledBorder.LEADING,
+        this.setBorder(new TitledBorder(null, title, TitledBorder.LEADING,
                 TitledBorder.TOP, null, null));
     }
 

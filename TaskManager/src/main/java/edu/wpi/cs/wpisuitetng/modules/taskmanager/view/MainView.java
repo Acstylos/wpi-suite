@@ -1,41 +1,85 @@
+/*******************************************************************************
+ * Copyright (c) 2014 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
+import java.beans.PropertyChangeEvent;
 
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.WorkflowView;
+import net.miginfocom.swing.MigLayout;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
 
 /**
- * MainView is a scrollable window with a viewport that can
- * view only WorkflowViews. Eventually it will support viewing
- * of multiple types of JPanels.
- * 
- * @author Thefloorisjava
+ * MainView is a scrollable window with a viewport that can view only
+ * WorkflowViews.
  */
-public class MainView extends JScrollPane 
-{
+public class MainView extends JTabbedPane {
     private static final long serialVersionUID = -346061317795260862L;
-    private WorkflowView workflowView;
+    private JScrollPane workflowScrollPane = new JScrollPane();
+    private JScrollPane archiveScrollPane = new JScrollPane();
+    private WorkflowPresenter workflowPresenter = new WorkflowPresenter(0);
+    private static final MainView mainView = new MainView();
+    private ArchiveView archivePanel = new ArchiveView();
+    
 
-    /**
-     * Constructor for the scrollable main view.  
-     */
-    public MainView(){ // Needs field WorkflowModel 
-        workflowView = new WorkflowView("New Workflow");
-        setViewportView(workflowView); // Make sure the panel can be scrolled upon
+    private MainView() {
+        this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        this.addTab("Workflow", workflowScrollPane);
+        //this.addTab("Archive", archiveScrollPane);
+        this.archiveScrollPane.setViewportView(archivePanel);
+
+        this.setWorkflowPresenter(workflowPresenter);
+
+        /* As soon as this is added to a container, load the workflow */
+        addPropertyChangeListener("ancestor", (PropertyChangeEvent evt) -> {
+            this.workflowPresenter.load();
+        });
+    }
+
+    public static MainView getInstance() {
+        return mainView;
     }
 
     /**
-     * @return the WorkflowView being displayed
+     * Constructor for the scrollable main view.
      */
-    public WorkflowView getWorkflowView() {
-        return this.workflowView;
+    private MainView(WorkflowPresenter workflowPresenter) {
+        this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        this.addTab("Workflow", workflowScrollPane);
+        this.setWorkflowPresenter(workflowPresenter);
+
+        /* As soon as this is added to a container, load the workflow */
+        addPropertyChangeListener("ancestor", (PropertyChangeEvent evt) -> {
+            this.workflowPresenter.load();
+        });
     }
 
     /**
-     * @param workflowView The WorkflowView to be displayed
+     * @return the WorkflowPresenter being displayed
      */
-    public void setWorkflowView(WorkflowView workflowView){
-        this.workflowView = workflowView;
+    public WorkflowPresenter getWorkflowPresenter() {
+        return this.workflowPresenter;
+    }
+
+    /**
+     * @param workflowView
+     *            The WorkflowView to be displayed
+     */
+    public void setWorkflowPresenter(WorkflowPresenter workflowPresenter) {
+        this.workflowPresenter = workflowPresenter;
+        this.workflowScrollPane.setViewportView(workflowPresenter.getView());
+    }
+    
+    public ArchiveView getArchive(){
+        return this.archivePanel;
     }
 }
