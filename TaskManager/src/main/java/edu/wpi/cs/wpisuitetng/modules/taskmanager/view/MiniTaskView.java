@@ -24,19 +24,25 @@ public class MiniTaskView extends JPanel {
     
     private Date dueDate;
     private String taskName;
+    private String fullName;
     JLabel taskNameLabel = new JLabel();
 
     /**
      * Create the panel.
      */
-    public MiniTaskView(String taskName, Date dueDate) {
+    public MiniTaskView(String taskName, Date dueDate, String fullName) {
         setLayout(new MigLayout("fill"));
         this.taskName = taskName;
         this.dueDate = dueDate;
+        this.fullName = fullName;
+        taskNameLabel.setToolTipText(this.fullName);
         this.add(taskNameLabel, "dock west");
         this.taskNameLabel.setText(taskName);
     }
     
+    /**
+     * @param listener adds tab with TaskView on click
+     */
     public void addOnClickOpenTabView(MouseListener listener){
         this.addMouseListener(listener);
     }
@@ -64,9 +70,25 @@ public class MiniTaskView extends JPanel {
     /**
      * @param taskName the title to set
      */
-    public void setTaskName(String taskName) {
+    public void setTaskName(String taskName, String fullName) {
         this.taskName = taskName;
         this.taskNameLabel.setText(taskName);
+        this.taskNameLabel.setToolTipText(fullName);
     }
+    
+    /**
+     * @return fullName of task
+     */
+    public String getFullName() {
+        return fullName;
+    }
+
+    /**
+     * @param fullName the task name to set
+     */
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
 
 }
