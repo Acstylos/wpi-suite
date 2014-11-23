@@ -21,7 +21,7 @@ import net.miginfocom.swing.MigLayout;
  * This is the TaskView shown inside of buckets to reduce the amount of clutter on screen
  */
 public class MiniTaskView extends JPanel {
-    
+
     private Date dueDate;
     private String taskName;
     JLabel taskNameLabel = new JLabel();
@@ -36,11 +36,11 @@ public class MiniTaskView extends JPanel {
         this.add(taskNameLabel, "dock west");
         this.taskNameLabel.setText(taskName);
     }
-    
+
     public void addOnClickOpenTabView(MouseListener listener){
         this.addMouseListener(listener);
     }
-    
+
     /**
      * @return the dueDate of the task
      */

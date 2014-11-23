@@ -13,10 +13,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
@@ -39,6 +43,9 @@ public class TaskPresenter {
     /** Model for the task. */
     private TaskModel model;
     private ViewMode viewMode;
+    private List<Integer> allUserList = new ArrayList<>();
+
+
 
     private BucketPresenter bucket;
 
@@ -58,7 +65,11 @@ public class TaskPresenter {
         this.view = new TaskView(model.getTitle(), model.getEstimatedEffort(), model.getDescription(), model.getDueDate(),
                 viewMode);
         this.miniView = new MiniTaskView(model.getTitle(), model.getDueDate());
+        final Request request = Network.getInstance().makeRequest("core/user", HttpMethod.GET);
+        request.addObserver(new UsersObserver(this));
+        request.send();
         registerCallbacks();
+
     }
 
     /**
@@ -148,10 +159,10 @@ public class TaskPresenter {
                 MainView.getInstance().getWorkflowPresenter().archiveTask(model.getId(), bucket.getModel().getId());
                 MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
                 bucket.getView().getComponentAt(view.getLocation()).setVisible(false);
-                
+
             }
         });
-        
+
         view.addDocumentListenerOnTaskName(new DocumentListener() {
             @Override
             public void removeUpdate(DocumentEvent e) {
@@ -194,7 +205,19 @@ public class TaskPresenter {
         request.addObserver(new TaskObserver(this));
         request.send();
     }
+    /**
+     * 
+     * @param users the array of users to be added to the list of users.
+     */
+    public void addUsersToAllUserList(User[] users){
 
+        for(User user: users){
+
+            this.allUserList.add(user.getIdNum());
+
+        }
+        System.out.println(allUserList);
+    }
     /**
      * Have the presenter reload the view from the model.
      */
@@ -230,7 +253,7 @@ public class TaskPresenter {
         miniView.setTaskName(model.getTitle());
         miniView.setDueDate(model.getDueDate());
     }
-    
+
     public void setTheViewViewMode(ViewMode viewMode){
         view.setViewMode(viewMode);
     }

@@ -122,7 +122,15 @@ public class User extends AbstractModel {
         return json;
 
     }
-
+    /**
+     * 
+     * @param json A string that represents the json object to parse.
+     * @return the user[] retrieved from the json object
+     */
+    public static User[] fromJsonToArray(String json){
+        final Gson parser = new Gson();
+        return parser.fromJson(json,User[].class);
+    }
     /* Built-in overrides/overloads */
 
     /**
