@@ -36,15 +36,8 @@ public class MainView extends JTabbedPane {
     private ArchiveView archivePanel = new ArchiveView();
 
     private MainView() {
-        Icon workflowIcon = null;
-        try {
-            workflowIcon = new ImageIcon(ImageIO.read(this.getClass().getResourceAsStream("workflow.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-        this.addTab("Workflow", workflowIcon, workflowScrollPane);
+        this.addTab("Workflow", Icons.WORKFLOW, workflowScrollPane);
         this.archiveScrollPane.setViewportView(archivePanel);
 
         this.setWorkflowPresenter(workflowPresenter);

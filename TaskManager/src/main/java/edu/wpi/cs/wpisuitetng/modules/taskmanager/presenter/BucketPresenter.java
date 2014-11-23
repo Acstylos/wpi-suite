@@ -17,6 +17,7 @@ import javax.swing.ImageIcon;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
@@ -150,14 +151,7 @@ public class BucketPresenter {
         TaskModel taskModel = taskPresenter.getModel();
         TaskView taskView = taskPresenter.getView();
         
-        Icon taskIcon = null;
-        try {
-            taskIcon = new ImageIcon(ImageIO.read(taskView.getClass().getResourceAsStream("create-task.png")));
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        
-        MainView.getInstance().addTab(taskModel.getTitle(), taskIcon, taskView);
+        MainView.getInstance().addTab(taskModel.getTitle(), Icons.TASK, taskView);
         int tabCount = MainView.getInstance().getTabCount();
         taskView.setIndex(tabCount-1);
         MainView.getInstance().setSelectedIndex(tabCount-1);

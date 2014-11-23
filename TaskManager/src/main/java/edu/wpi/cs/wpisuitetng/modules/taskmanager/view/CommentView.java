@@ -45,19 +45,8 @@ public class CommentView extends JTabbedPane {
     public CommentView() {
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         
-        Icon commentsIcon = null, historyIcon = null, commentIcon = null, clearIcon = null;
-        
-        try {
-            commentsIcon = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("comments.png")));
-            historyIcon = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("history.png")));
-            commentIcon = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("comment.png")));
-            clearIcon = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("clear.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-        this.addTab("Comments", commentsIcon, commentPanel, null);
-        this.addTab("History", historyIcon, historyPanel, null);
+        this.addTab("Comments", Icons.COMMENTS, commentPanel, null);
+        this.addTab("History", Icons.HISTORY, historyPanel, null);
 
         // Set layouts
         this.commentPanel.setLayout(new MigLayout("", "[grow]", "[grow][50px:n][min]"));
@@ -81,9 +70,9 @@ public class CommentView extends JTabbedPane {
         this.editCommentScroll.setViewportView(commentText);
         this.historyScroll.setViewportView(postedHistoryPanel);
         this.postCommentButton.setEnabled(false);
-        this.postCommentButton.setIcon(commentIcon);
+        this.postCommentButton.setIcon(Icons.COMMENT);
         this.clearCommentButton.setEnabled(false);
-        this.clearCommentButton.setIcon(clearIcon);
+        this.clearCommentButton.setIcon(Icons.CLEAR);
         this.setupListeners();
     }
     

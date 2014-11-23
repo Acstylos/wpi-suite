@@ -22,6 +22,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
@@ -73,15 +74,7 @@ public class TaskPresenter {
         miniView.addOnClickOpenTabView(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Icon taskIcon = null;
-                
-                try {
-                    taskIcon = new ImageIcon(ImageIO.read(view.getClass().getResourceAsStream("task.png")));
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                
-                MainView.getInstance().addTab(model.getTitle(), taskIcon, view);
+                MainView.getInstance().addTab(model.getTitle(), Icons.TASK, view);
                 view.setViewMode(ViewMode.EDITING);
                 int tabCount = MainView.getInstance().getTabCount();
                 view.setIndex(tabCount-1);

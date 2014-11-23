@@ -40,12 +40,7 @@ public class MiniTaskView extends JPanel {
         taskNameLabel.setBorder(new EmptyBorder(8, 8, 8, 8));
         this.add(taskNameLabel, "dock west");
         this.taskNameLabel.setText(taskName);
-        
-        try {
-            this.taskNameLabel.setIcon(new ImageIcon(ImageIO.read(getClass().getResourceAsStream("task.png"))));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.taskNameLabel.setIcon(Icons.TASK);
     }
     
     public void addOnClickOpenTabView(MouseListener listener){

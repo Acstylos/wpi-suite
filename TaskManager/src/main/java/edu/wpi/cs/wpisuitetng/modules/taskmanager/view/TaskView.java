@@ -70,18 +70,10 @@ public class TaskView extends JPanel {
     
     
     static {
-        try {
-            /* Change the default icons for JXDatePicker. */
-            ImageIcon calendarIcon = new ImageIcon(ImageIO.read(TaskView.class.getResourceAsStream("calendar.png")));
-            ImageIcon jumpLeftIcon = new ImageIcon(ImageIO.read(TaskView.class.getResourceAsStream("arrow-left.png")));
-            ImageIcon jumpRightIcon = new ImageIcon(ImageIO.read(TaskView.class.getResourceAsStream("arrow-right.png")));
-
-            UIManager.put("JXDatePicker.arrowIcon", calendarIcon);
-            UIManager.put("JXMonthView.monthDownFileName", jumpLeftIcon);
-            UIManager.put("JXMonthView.monthUpFileName", jumpRightIcon);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        /* Change the default icons for JXDatePicker. */
+        UIManager.put("JXDatePicker.arrowIcon", Icons.CALENDAR);
+        UIManager.put("JXMonthView.monthDownFileName", Icons.LEFT_ARROW);
+        UIManager.put("JXMonthView.monthUpFileName", Icons.RIGHT_ARROW);
     }
 
     /**
