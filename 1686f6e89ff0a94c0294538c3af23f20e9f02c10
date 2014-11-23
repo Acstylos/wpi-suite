@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_0a233a06",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/model/TaskModel.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-11-23T02:02:17Z",
+      "side": 1,
+      "message": "Don\u0027t do this.",
+      "revId": "1686f6e89ff0a94c0294538c3af23f20e9f02c10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_6a2006f8",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/model/TaskModel.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-11-23T02:02:17Z",
+      "side": 1,
+      "message": "Or this.",
+      "revId": "1686f6e89ff0a94c0294538c3af23f20e9f02c10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_4a1d42bd",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/model/TaskModel.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-11-23T02:02:17Z",
+      "side": 1,
+      "message": "Why did you rearrange these methods?  This makes commit noise and makes more merge conflicts later on.",
+      "revId": "1686f6e89ff0a94c0294538c3af23f20e9f02c10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_aa794efe",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-11-23T02:02:17Z",
+      "side": 1,
+      "message": "Remove your printlns before you commit",
+      "revId": "1686f6e89ff0a94c0294538c3af23f20e9f02c10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_8a7e0ae3",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-11-23T02:02:17Z",
+      "side": 1,
+      "message": "Spaces for indentation",
+      "revId": "1686f6e89ff0a94c0294538c3af23f20e9f02c10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_ea8356ca",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/UserPresenter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-11-23T02:02:17Z",
+      "side": 1,
+      "message": "What is this class for?",
+      "revId": "1686f6e89ff0a94c0294538c3af23f20e9f02c10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_ca8812ea",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/UsersObserver.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-11-23T02:02:17Z",
+      "side": 1,
+      "message": "Don\u0027t print things about cheese",
+      "revId": "1686f6e89ff0a94c0294538c3af23f20e9f02c10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
