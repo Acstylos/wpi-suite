@@ -25,6 +25,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public class TaskModel extends AbstractModel {
     private int id;
     private String title;
+    private String shortTitle;
     private String description;
     private List<User> assignedTo;
     private int estimatedEffort;
@@ -38,6 +39,7 @@ public class TaskModel extends AbstractModel {
     public TaskModel() {
         id = -1;
         title = "New Task";
+        shortTitle = this.shortTitle(this.title);
         description = "";
         assignedTo = new ArrayList<User>();
         estimatedEffort = 0;
@@ -57,6 +59,7 @@ public class TaskModel extends AbstractModel {
         this();
         this.id = id;
         this.title = title;
+        this.shortTitle = this.shortTitle(this.title);
         this.description = description;
         this.estimatedEffort = estimatedEffort;
         this.dueDate = dueDate;
@@ -88,6 +91,7 @@ public class TaskModel extends AbstractModel {
      */
     public void setTitle(String title) {
         this.title = title;
+        setShortTitle(this.shortTitle(title));
     }
 
     /**
@@ -203,6 +207,25 @@ public class TaskModel extends AbstractModel {
     }
     
     /**
+     * Takes the title of a task and reduces the number of characters
+     * @param title: string to be modified
+     * @return String representing shortened title
+     */
+    public String shortTitle(String title){
+        int maxLength=10;
+        if (title.length() <= maxLength){
+ //           System.out.print(title);
+            return title;
+        }
+        else{
+            title=title.substring(0, maxLength);
+            title=title.concat("...");
+            System.out.print(title);
+            return title;
+        }
+    }
+    
+    /**
      * Will implement later
      */
     public void save() {
@@ -244,4 +267,15 @@ public class TaskModel extends AbstractModel {
         this.actualEffort = actualEffort;
     }
 
+    
+    /**
+     * @return shortTitle shortened title for tabs and MiniTaskView
+     */
+    public String getShortTitle(){
+        return this.shortTitle;
+    }
+    
+    public void setShortTitle(String shortTitle){
+        this.shortTitle = shortTitle;
+    }
 }

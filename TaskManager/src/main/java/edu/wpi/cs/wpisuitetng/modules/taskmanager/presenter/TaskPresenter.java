@@ -57,7 +57,7 @@ public class TaskPresenter {
         this.model.setTitle("New Task");
         this.view = new TaskView(model.getTitle(), model.getEstimatedEffort(), model.getDescription(), model.getDueDate(),
                 viewMode);
-        this.miniView = new MiniTaskView(model.getTitle(), model.getDueDate());
+        this.miniView = new MiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
         registerCallbacks();
     }
 
@@ -69,11 +69,13 @@ public class TaskPresenter {
         miniView.addOnClickOpenTabView(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                MainView.getInstance().addTab(model.getTitle(), view);
+                MainView.getInstance().addTab(model.getShortTitle(), view);//this line chooses tab title
                 view.setViewMode(ViewMode.EDITING);
                 int tabCount = MainView.getInstance().getTabCount();
                 view.setIndex(tabCount-1);
                 MainView.getInstance().setSelectedIndex(tabCount - 1);
+                MainView.getInstance().setToolTipTextAt(tabCount - 1, model.getTitle());
+
             }
 
             @Override
@@ -98,12 +100,12 @@ public class TaskPresenter {
             public void actionPerformed(ActionEvent e) {
                 saveView();
                 updateView(); // might be redundant
-                MainView.getInstance().setTitleAt(view.getIndex(), model.getTitle());
+                MainView.getInstance().setTitleAt(view.getIndex(), model.getShortTitle());
                 if(viewMode == ViewMode.CREATING){
                     createInDatabase();
                     bucket.addMiniTaskView(miniView);
                     view.setViewMode(ViewMode.EDITING);
-                    int index = MainView.getInstance().indexOfTab(model.getTitle());
+                    int index = MainView.getInstance().indexOfTab(model.getShortTitle());
                     MainView.getInstance().remove(index);
                     MainView.getInstance().setSelectedIndex(0);
                 }
@@ -117,7 +119,7 @@ public class TaskPresenter {
         view.addCancelOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int index = MainView.getInstance().indexOfTab(model.getTitle());
+                int index = MainView.getInstance().indexOfTab(model.getShortTitle());
                 MainView.getInstance().remove(index);
                 updateView();
                 view.revalidate();
@@ -136,14 +138,14 @@ public class TaskPresenter {
                 view.repaint();
                 miniView.revalidate();
                 miniView.repaint();
-                MainView.getInstance().setTitleAt(view.getIndex(), model.getTitle());
+                MainView.getInstance().setTitleAt(view.getIndex(), model.getTitle());//?
             }
         });
 
         view.addDeleteOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int index = MainView.getInstance().indexOfTab(model.getTitle());
+                int index = MainView.getInstance().indexOfTab(model.getShortTitle());
                 MainView.getInstance().remove(index);
                 MainView.getInstance().getWorkflowPresenter().archiveTask(model.getId(), bucket.getModel().getId());
                 MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
@@ -227,8 +229,9 @@ public class TaskPresenter {
         view.setActualEffort(model.getActualEffort());
         view.setDescriptionText(model.getDescription());
         view.setDueDate(model.getDueDate());
-        miniView.setTaskName(model.getTitle());
+        miniView.setTaskName(model.getShortTitle(), model.getTitle());
         miniView.setDueDate(model.getDueDate());
+        miniView.setToolTipText(model.getTitle());
     }
     
     public void setTheViewViewMode(ViewMode viewMode){
