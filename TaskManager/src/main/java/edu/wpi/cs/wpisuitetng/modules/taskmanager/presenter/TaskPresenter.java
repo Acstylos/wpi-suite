@@ -13,10 +13,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
@@ -39,6 +43,7 @@ public class TaskPresenter {
     /** Model for the task. */
     private TaskModel model;
     private ViewMode viewMode;
+    private List<Integer> allUserList = new ArrayList<>();
 
     private BucketPresenter bucket;
 
@@ -55,10 +60,15 @@ public class TaskPresenter {
         this.model = new TaskModel();
         this.model.setId(id);
         this.model.setTitle("New Task");
-        this.view = new TaskView(model.getTitle(), model.getEstimatedEffort(), model.getDescription(), model.getDueDate(),
-                viewMode);
+        this.view = new TaskView(model.getTitle(), model.getEstimatedEffort(),
+                model.getDescription(), model.getDueDate(), viewMode);
         this.miniView = new MiniTaskView(model.getTitle(), model.getDueDate());
+        final Request request = Network.getInstance().makeRequest("core/user",
+                HttpMethod.GET);
+        request.addObserver(new UsersObserver(this));
+        request.send();
         registerCallbacks();
+
     }
 
     /**
@@ -72,7 +82,7 @@ public class TaskPresenter {
                 MainView.getInstance().addTab(model.getTitle(), view);
                 view.setViewMode(ViewMode.EDITING);
                 int tabCount = MainView.getInstance().getTabCount();
-                view.setIndex(tabCount-1);
+                view.setIndex(tabCount - 1);
                 MainView.getInstance().setSelectedIndex(tabCount - 1);
             }
 
@@ -98,12 +108,14 @@ public class TaskPresenter {
             public void actionPerformed(ActionEvent e) {
                 saveView();
                 updateView(); // might be redundant
-                MainView.getInstance().setTitleAt(view.getIndex(), model.getTitle());
-                if(viewMode == ViewMode.CREATING){
+                MainView.getInstance().setTitleAt(view.getIndex(),
+                        model.getTitle());
+                if (viewMode == ViewMode.CREATING) {
                     createInDatabase();
                     bucket.addMiniTaskView(miniView);
                     view.setViewMode(ViewMode.EDITING);
-                    int index = MainView.getInstance().indexOfTab(model.getTitle());
+                    int index = MainView.getInstance().indexOfTab(
+                            model.getTitle());
                     MainView.getInstance().remove(index);
                     MainView.getInstance().setSelectedIndex(0);
                 }
@@ -136,7 +148,8 @@ public class TaskPresenter {
                 view.repaint();
                 miniView.revalidate();
                 miniView.repaint();
-                MainView.getInstance().setTitleAt(view.getIndex(), model.getTitle());
+                MainView.getInstance().setTitleAt(view.getIndex(),
+                        model.getTitle());
             }
         });
 
@@ -145,13 +158,16 @@ public class TaskPresenter {
             public void actionPerformed(ActionEvent e) {
                 int index = MainView.getInstance().indexOfTab(model.getTitle());
                 MainView.getInstance().remove(index);
-                MainView.getInstance().getWorkflowPresenter().archiveTask(model.getId(), bucket.getModel().getId());
-                MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
-                bucket.getView().getComponentAt(view.getLocation()).setVisible(false);
-                
+                MainView.getInstance().getWorkflowPresenter()
+                        .archiveTask(model.getId(), bucket.getModel().getId());
+                MainView.getInstance().getArchive().getArchiveBucket()
+                        .addTaskToView(miniView);
+                bucket.getView().getComponentAt(view.getLocation())
+                        .setVisible(false);
+
             }
         });
-        
+
         view.addDocumentListenerOnTaskName(new DocumentListener() {
             @Override
             public void removeUpdate(DocumentEvent e) {
@@ -195,6 +211,16 @@ public class TaskPresenter {
         request.send();
     }
 
+    public void addUsersToAllUserList(User[] users) {
+
+        for (User user : users) {
+
+            this.allUserList.add(user.getIdNum());
+
+        }
+        System.out.println(allUserList);
+    }
+
     /**
      * Have the presenter reload the view from the model.
      */
@@ -230,8 +256,8 @@ public class TaskPresenter {
         miniView.setTaskName(model.getTitle());
         miniView.setDueDate(model.getDueDate());
     }
-    
-    public void setTheViewViewMode(ViewMode viewMode){
+
+    public void setTheViewViewMode(ViewMode viewMode) {
         view.setViewMode(viewMode);
     }
 

@@ -20,26 +20,34 @@ import com.google.gson.annotations.Expose;
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 
 /**
- * The Data Model representation of a User.
- * Implements database interaction and serializing.
+ * The Data Model representation of a User. Implements database interaction and
+ * serializing.
  * 
  * @author mdelladonna, twack, bgaffey
  */
 
 public class User extends AbstractModel {
-    @Expose private int idNum;
-    @Expose private String username;
-    @Expose private String name;
-    @Expose private Role role;
+    @Expose
+    private int idNum;
+    @Expose
+    private String username;
+    @Expose
+    private String name;
+    @Expose
+    private Role role;
 
-    transient private String password; // excluded from serialization, still stored.
+    transient private String password; // excluded from serialization, still
+                                       // stored.
 
     /**
      * The primary constructor for a User
      * 
-     * @param name User's full name
-     * @param username User's username (nickname)
-     * @param idNum User's ID number
+     * @param name
+     *            User's full name
+     * @param username
+     *            User's username (nickname)
+     * @param idNum
+     *            User's ID number
      */
     public User(String name, String username, String password, int idNum) {
         this.name = name;
@@ -50,10 +58,11 @@ public class User extends AbstractModel {
     }
 
     /**
-     * Performs password checking logic. Fails if password field is null, which happens
-     * when User is deserialized so as to protect the password.
+     * Performs password checking logic. Fails if password field is null, which
+     * happens when User is deserialized so as to protect the password.
      * 
-     * @param pass the password String to compare
+     * @param pass
+     *            the password String to compare
      * @return True if the password matches, False otherwise.
      */
     public boolean matchPassword(String pass) {
@@ -96,7 +105,8 @@ public class User extends AbstractModel {
     public String toJson() {
         String json;
 
-        Gson gson = new GsonBuilder().registerTypeAdapter(User.class, new UserSerializer()).create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(User.class,
+                new UserSerializer()).create();
 
         json = gson.toJson(this, User.class);
 
@@ -104,10 +114,10 @@ public class User extends AbstractModel {
     }
 
     /**
-     * Static method offering comma-delimited JSON
-     * serializing of User lists
+     * Static method offering comma-delimited JSON serializing of User lists
      * 
-     * @param u an array of Users
+     * @param u
+     *            an array of Users
      * @return the serialized array of Users
      */
     public static String toJSON(User[] u) {
@@ -123,11 +133,22 @@ public class User extends AbstractModel {
 
     }
 
+    /**
+     * 
+     * @param json
+     *            A string that represents the json object to parse.
+     * @return the user[] retrieved from the json object
+     */
+    public static User[] fromJsonToArray(String json) {
+        final Gson parser = new Gson();
+        return parser.fromJson(json, User[].class);
+    }
+
     /* Built-in overrides/overloads */
 
     /**
-     * Override of toString() to return a JSON string for now.
-     * May override in the future.
+     * Override of toString() to return a JSON string for now. May override in
+     * the future.
      */
     public String toString() {
         return this.toJson();
@@ -183,6 +204,7 @@ public class User extends AbstractModel {
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -190,14 +212,18 @@ public class User extends AbstractModel {
         final int prime = 31;
         int result = 1;
         result = prime * result + this.idNum;
-        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-        result = prime * result + ((this.role == null) ? 0 : this.role.hashCode());
-        result = prime * result + ((this.username == null) ? 0 : this.username.hashCode());
+        result = prime * result
+                + ((this.name == null) ? 0 : this.name.hashCode());
+        result = prime * result
+                + ((this.role == null) ? 0 : this.role.hashCode());
+        result = prime * result
+                + ((this.username == null) ? 0 : this.username.hashCode());
         return result;
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -255,7 +281,7 @@ public class User extends AbstractModel {
     }
 
     public void setProject(Project aProject) {
-        //Users are not currently Associated with projects directly 
+        // Users are not currently Associated with projects directly
     }
 
 }
