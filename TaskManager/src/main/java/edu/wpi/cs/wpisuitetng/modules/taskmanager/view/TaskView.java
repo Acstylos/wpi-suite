@@ -10,14 +10,14 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
+import java.awt.Image;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentListener;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.InputMethodListener;
 import java.text.ParseException;
 import java.util.Date;
 
+import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -30,10 +30,12 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import net.miginfocom.swing.MigLayout;
+import net.miginfocom.swt.SwtComponentWrapper;
 
 import org.jdesktop.swingx.JXDatePicker;
 
@@ -74,7 +76,14 @@ public class TaskView extends JPanel {
     private JXDatePicker datePicker = new JXDatePicker();
     private LineBorder validBorder = new LineBorder(Color.GRAY, 1);
     private LineBorder invalidBorder = new LineBorder(Color.RED, 1);
-    
+
+    static {
+        /* Change the default icons for JXDatePicker. */
+        UIManager.put("JXDatePicker.arrowIcon", Icons.CALENDAR);
+        UIManager.put("JXMonthView.monthDownFileName", Icons.LEFT_ARROW);
+        UIManager.put("JXMonthView.monthUpFileName", Icons.RIGHT_ARROW);
+    }
+
     /**
      * Create a new TaskView with the specified default values.
      *
@@ -120,7 +129,6 @@ public class TaskView extends JPanel {
 
         // Format the infoPanel layout with components
         this.infoPanel.add(taskNameLabel, "cell 0 0");
-        taskNameField.setBackground(Color.WHITE);
         this.infoPanel.add(taskNameField, "cell 1 0 2 1, grow");
         this.taskNameField.setText(title);
         this.infoPanel.add(dateLabel, "cell 0 1");
@@ -209,7 +217,7 @@ public class TaskView extends JPanel {
     public void addDeleteOnClickListener(ActionListener listener) {
         this.buttonPanel.addDeleteOnClickListener(listener);
     }
-
+    
     /**
      * @param titleText
      *            The new title of the task

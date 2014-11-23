@@ -10,10 +10,15 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.beans.PropertyChangeEvent;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.imageio.ImageIO;
 
 import net.miginfocom.swing.MigLayout;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
@@ -29,12 +34,10 @@ public class MainView extends JTabbedPane {
     private WorkflowPresenter workflowPresenter = new WorkflowPresenter(0);
     private static final MainView mainView = new MainView();
     private ArchiveView archivePanel = new ArchiveView();
-    
 
     private MainView() {
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-        this.addTab("Workflow", workflowScrollPane);
-        //this.addTab("Archive", archiveScrollPane);
+        this.addTab("Workflow", Icons.WORKFLOW, workflowScrollPane);
         this.archiveScrollPane.setViewportView(archivePanel);
 
         this.setWorkflowPresenter(workflowPresenter);
@@ -53,14 +56,8 @@ public class MainView extends JTabbedPane {
      * Constructor for the scrollable main view.
      */
     private MainView(WorkflowPresenter workflowPresenter) {
-        this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-        this.addTab("Workflow", workflowScrollPane);
+        this();
         this.setWorkflowPresenter(workflowPresenter);
-
-        /* As soon as this is added to a container, load the workflow */
-        addPropertyChangeListener("ancestor", (PropertyChangeEvent evt) -> {
-            this.workflowPresenter.load();
-        });
     }
 
     /**
