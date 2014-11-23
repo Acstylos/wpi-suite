@@ -42,11 +42,11 @@ public class User extends AbstractModel {
      * @param idNum User's ID number
      */
     public User(String name, String username, String password, int idNum) {
-        this.name = name;
-        this.username = username;
-        this.password = password;
-        this.idNum = idNum;
-        this.role = Role.USER;
+	this.name = name;
+	this.username = username;
+	this.password = password;
+	this.idNum = idNum;
+	this.role = Role.USER;
     }
 
     /**
@@ -57,7 +57,7 @@ public class User extends AbstractModel {
      * @return True if the password matches, False otherwise.
      */
     public boolean matchPassword(String pass) {
-        return (this.password == null) ? false : password.equals(pass);
+	return (this.password == null) ? false : password.equals(pass);
     }
 
     /**
@@ -66,24 +66,24 @@ public class User extends AbstractModel {
      * @param pass
      */
     public void setPassword(String pass) {
-        this.password = pass;
+	this.password = pass;
     }
 
     public String getPassword() {
-        return this.password;
+	return this.password;
     }
 
     /* Accessors */
     public String getName() {
-        return name;
+	return name;
     }
 
     public int getIdNum() {
-        return idNum;
+	return idNum;
     }
 
     public String getUsername() {
-        return username;
+	return username;
     }
 
     /* Serializing */
@@ -94,13 +94,13 @@ public class User extends AbstractModel {
      * @return the JSON representation of this User
      */
     public String toJson() {
-        String json;
+	String json;
 
-        Gson gson = new GsonBuilder().registerTypeAdapter(User.class, new UserSerializer()).create();
+	Gson gson = new GsonBuilder().registerTypeAdapter(User.class, new UserSerializer()).create();
 
-        json = gson.toJson(this, User.class);
+	json = gson.toJson(this, User.class);
 
-        return json;
+	return json;
     }
 
     /**
@@ -111,18 +111,26 @@ public class User extends AbstractModel {
      * @return the serialized array of Users
      */
     public static String toJSON(User[] u) {
-        String json = "[";
+	String json = "[";
 
-        for (User a : u) {
-            json += a.toJson() + ", ";
-        }
+	for (User a : u) {
+	    json += a.toJson() + ", ";
+	}
 
-        json += "]";
+	json += "]";
 
-        return json;
+	return json;
 
     }
-
+    /**
+     * 
+     * @param json A string that represents the json object to parse.
+     * @return the user[] retrieved from the json object
+     */
+    public static User[] fromJsonToArray(String json){
+	final Gson parser = new Gson();
+	return parser.fromJson(json,User[].class);
+    }
     /* Built-in overrides/overloads */
 
     /**
@@ -130,55 +138,55 @@ public class User extends AbstractModel {
      * May override in the future.
      */
     public String toString() {
-        return this.toJson();
+	return this.toJson();
     }
 
     @Override
     public Boolean identify(Object o) {
-        Boolean b = false;
+	Boolean b = false;
 
-        if (o instanceof User)
-            if (((User) o).username.equalsIgnoreCase(this.username))
-                b = true;
+	if (o instanceof User)
+	    if (((User) o).username.equalsIgnoreCase(this.username))
+		b = true;
 
-        if (o instanceof String)
-            if (((String) o).equalsIgnoreCase(this.username))
-                b = true;
-        return b;
+	if (o instanceof String)
+	    if (((String) o).equalsIgnoreCase(this.username))
+		b = true;
+	return b;
     }
 
     public User setName(String newName) {
-        this.name = newName;
-        return this;
+	this.name = newName;
+	return this;
     }
 
     public User setUserName(String newUserName) {
-        this.username = newUserName;
-        return this;
+	this.username = newUserName;
+	return this;
     }
 
     public User setIdNum(int newidNum) {
-        this.idNum = newidNum;
-        return this;
+	this.idNum = newidNum;
+	return this;
     }
 
     public Role getRole() {
-        return this.role;
+	return this.role;
     }
 
     public void setRole(Role r) {
-        this.role = r;
+	this.role = r;
     }
 
     public static User fromJSON(String json) {
-        // build the custom serializer/deserializer
-        Gson gson;
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(User.class, new UserDeserializer());
+	// build the custom serializer/deserializer
+	Gson gson;
+	GsonBuilder builder = new GsonBuilder();
+	builder.registerTypeAdapter(User.class, new UserDeserializer());
 
-        gson = builder.create();
+	gson = builder.create();
 
-        return gson.fromJson(json, User.class);
+	return gson.fromJson(json, User.class);
     }
 
     /*
@@ -187,13 +195,13 @@ public class User extends AbstractModel {
      */
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + this.idNum;
-        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-        result = prime * result + ((this.role == null) ? 0 : this.role.hashCode());
-        result = prime * result + ((this.username == null) ? 0 : this.username.hashCode());
-        return result;
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + this.idNum;
+	result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+	result = prime * result + ((this.role == null) ? 0 : this.role.hashCode());
+	result = prime * result + ((this.username == null) ? 0 : this.username.hashCode());
+	return result;
     }
 
     /*
@@ -202,37 +210,37 @@ public class User extends AbstractModel {
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        User other = (User) obj;
-        if (this.idNum != other.idNum) {
-            return false;
-        }
-        if (this.name == null) {
-            if (other.name != null) {
-                return false;
-            }
-        } else if (!this.name.equals(other.name)) {
-            return false;
-        }
-        if (this.role != other.role) {
-            return false;
-        }
-        if (this.username == null) {
-            if (other.username != null) {
-                return false;
-            }
-        } else if (!this.username.equals(other.username)) {
-            return false;
-        }
-        return true;
+	if (this == obj) {
+	    return true;
+	}
+	if (obj == null) {
+	    return false;
+	}
+	if (getClass() != obj.getClass()) {
+	    return false;
+	}
+	User other = (User) obj;
+	if (this.idNum != other.idNum) {
+	    return false;
+	}
+	if (this.name == null) {
+	    if (other.name != null) {
+		return false;
+	    }
+	} else if (!this.name.equals(other.name)) {
+	    return false;
+	}
+	if (this.role != other.role) {
+	    return false;
+	}
+	if (this.username == null) {
+	    if (other.username != null) {
+		return false;
+	    }
+	} else if (!this.username.equals(other.username)) {
+	    return false;
+	}
+	return true;
     }
 
     /*
@@ -241,21 +249,21 @@ public class User extends AbstractModel {
 
     /* database interaction */
     public void save() {
-        return;
+	return;
     }
 
     public void delete() {
-        return;
+	return;
     }
 
     @Override
     public Project getProject() {
-        // TODO Auto-generated method stub
-        return null;
+	// TODO Auto-generated method stub
+	return null;
     }
 
     public void setProject(Project aProject) {
-        //Users are not currently Associated with projects directly 
+	//Users are not currently Associated with projects directly 
     }
 
 }

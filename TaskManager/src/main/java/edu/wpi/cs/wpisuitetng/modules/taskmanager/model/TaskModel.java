@@ -12,7 +12,9 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.Gson;
 
@@ -26,7 +28,8 @@ public class TaskModel extends AbstractModel {
     private int id;
     private String title;
     private String description;
-    private List<User> assignedTo;
+    private List<Integer>assignedTo;
+
     private int estimatedEffort;
     private int actualEffort;
     private Date dueDate;
@@ -39,7 +42,7 @@ public class TaskModel extends AbstractModel {
         id = -1;
         title = "New Task";
         description = "";
-        assignedTo = new ArrayList<User>();
+        assignedTo = new ArrayList();
         estimatedEffort = 0;
         actualEffort = 0;
     }
@@ -107,15 +110,21 @@ public class TaskModel extends AbstractModel {
     /**
      * @return The list of users assigned to this task
      */
-    public List<User> getAssignedTo() {
-        return assignedTo;
+    public List<Integer> getAssignedTo() {
+        return this.assignedTo;
     }
 
     /**
      * @param user Adds a user to the list of assigned users
      */
     public void setAssignedTo(User user) {
-        this.assignedTo.add(user);
+        this.assignedTo.add(user.getIdNum());
+    }
+    /**
+     * @param user The user to be removed from the list of assigned users
+     */
+    public void removeAssignedTo(User user){
+	this.assignedTo.remove(user.getIdNum());
     }
 
     /**
@@ -143,6 +152,7 @@ public class TaskModel extends AbstractModel {
         this.estimatedEffort = other.getEstimatedEffort();
         this.dueDate = other.getDueDate();
         this.actualEffort = other.getActualEffort();
+
     }
     
     /**
@@ -215,7 +225,7 @@ public class TaskModel extends AbstractModel {
     public void delete() {
         // TODO Auto-generated method stub
     }
-
+    
     /**
      * @return The estimated effort of this task
      */
@@ -243,5 +253,6 @@ public class TaskModel extends AbstractModel {
     public void setActualEffort(int actualEffort) {
         this.actualEffort = actualEffort;
     }
+
 
 }
