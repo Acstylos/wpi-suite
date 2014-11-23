@@ -15,6 +15,9 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
+import javax.swing.JLabel;
+import java.awt.Color;
+import javax.swing.ImageIcon;
 
 /**
  * This Panel is placed at the bottom of the TaskView.
@@ -32,16 +35,22 @@ public class TaskButtonsPanel extends JPanel {
     private String okString;
     private String clearString;
     private String cancelString; // going to use this later for actual cancel, instead of close
+    private final JLabel errorLabel = new JLabel("New label");
 
 
     /**
      * Create the panel.
      */
     public TaskButtonsPanel(ViewMode viewMode) {
-        this.setLayout(new MigLayout("", "[][][]", "[]"));
-        this.add(okButton);
-        this.add(clearButton);
-        this.add(cancelButton);
+        this.setLayout(new MigLayout("", "[][][][]", "[]"));
+        this.add(okButton, "cell 0 0");
+        this.add(clearButton, "cell 1 0");
+        this.add(cancelButton, "cell 2 0");
+        errorLabel.setIcon(new ImageIcon(TaskButtonsPanel.class.getResource("/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/error.png")));
+        errorLabel.setBackground(Color.WHITE);
+        errorLabel.setForeground(Color.RED);
+        
+        add(errorLabel, "cell 3 0");
         validateButtons(viewMode);
     }
     
@@ -73,6 +82,25 @@ public class TaskButtonsPanel extends JPanel {
     
     public void addDeleteOnClickListener(ActionListener listener){
         this.deleteButton.addActionListener(listener);
+    }
+    
+    /**
+     * Set an error to display next to the buttons, to provide feedback about
+     * why one or more of them is disabled.
+     */
+    public void setError(String error) {
+        this.errorLabel.setText(error);
+        this.errorLabel.setVisible(true);
+        this.errorLabel.repaint();
+    }
+    
+    /**
+     * Hide the error label.
+     * @see #setError(String)
+     */
+    public void clearError() {
+        this.errorLabel.setVisible(false);
+        this.errorLabel.repaint();
     }
 
     /**

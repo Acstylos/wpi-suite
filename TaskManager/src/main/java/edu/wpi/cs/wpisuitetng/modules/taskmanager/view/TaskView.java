@@ -11,6 +11,10 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentListener;
+import java.awt.event.InputMethodEvent;
+import java.awt.event.InputMethodListener;
+import java.text.ParseException;
 import java.util.Date;
 
 import javax.swing.DefaultComboBoxModel;
@@ -25,11 +29,17 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import net.miginfocom.swing.MigLayout;
 
 import org.jdesktop.swingx.JXDatePicker;
+
+import java.awt.Color;
+
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.LineBorder;
 
 /**
  * A {@link javax.swing.JComponent} that renders the fields of a single task and
@@ -61,7 +71,9 @@ public class TaskView extends JPanel {
     private JTextArea descriptionMessage = new JTextArea();
     private JTextField taskNameField = new JTextField();
     private JXDatePicker datePicker = new JXDatePicker();
-
+    private LineBorder validBorder = new LineBorder(Color.GRAY, 1);
+    private LineBorder invalidBorder = new LineBorder(Color.RED, 1);
+    
     /**
      * Create a new TaskView with the specified default values.
      *
@@ -107,6 +119,7 @@ public class TaskView extends JPanel {
 
         // Format the infoPanel layout with components
         this.infoPanel.add(taskNameLabel, "cell 0 0");
+        taskNameField.setBackground(Color.WHITE);
         this.infoPanel.add(taskNameField, "cell 1 0 2 1, grow");
         this.taskNameField.setText(title);
         this.infoPanel.add(dateLabel, "cell 0 1");
@@ -136,6 +149,34 @@ public class TaskView extends JPanel {
         this.descriptionMessage.setLineWrap(true);
         this.descriptionMessage.setText(description);
         this.viewMode = viewMode;
+        
+        
+        DocumentListener validateListener = new DocumentListener() {
+            /** {@inheritDoc} */
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                validateFields();
+            }
+
+            /** {@inheritDoc} */
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                validateFields();
+            }
+
+            /** {@inheritDoc} */
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                validateFields();
+            }
+        };
+        
+        /* Re-validate all of the input fields every time the task title 
+         * or description is changed by the user.
+         */
+        this.taskNameField.getDocument().addDocumentListener(validateListener);
+        this.descriptionMessage.getDocument().addDocumentListener(validateListener);
+        this.datePicker.getEditor().getDocument().addDocumentListener(validateListener);
     }
 
     /**
@@ -165,10 +206,6 @@ public class TaskView extends JPanel {
     public void addDeleteOnClickListener(ActionListener listener) {
         this.buttonPanel.addDeleteOnClickListener(listener);
     }
-    
-    public void addDocumentListenerOnTaskName(DocumentListener listener){
-        this.taskNameField.getDocument().addDocumentListener(listener);
-    }
 
     /**
      * @param titleText
@@ -176,6 +213,7 @@ public class TaskView extends JPanel {
      */
     public void setTaskNameField(String titleText) {
         this.taskNameField.setText(titleText);
+        validateFields();
     }
 
     /**
@@ -191,6 +229,7 @@ public class TaskView extends JPanel {
      */
     public void setActualEffort(int actualEffort) {
         this.actualEffortSpinner.setValue(actualEffort);
+        validateFields();
     }
 
     /**
@@ -206,6 +245,7 @@ public class TaskView extends JPanel {
      */
     public void setEstimatedEffort(int estimatedEffort) {
         this.estEffortSpinner.setValue(estimatedEffort);
+        validateFields();
     }
 
     /**
@@ -221,6 +261,7 @@ public class TaskView extends JPanel {
      */
     public void setDescriptionText(String descriptionText) {
         this.descriptionMessage.setText(descriptionText);
+        validateFields();
     }
 
     /**
@@ -236,6 +277,7 @@ public class TaskView extends JPanel {
      */
     public void setDueDate(Date dueDate) {
         this.datePicker.setDate(dueDate);
+        validateFields();
     }
 
     /**
@@ -272,14 +314,56 @@ public class TaskView extends JPanel {
     }
     
     /**
-     * 
+     * Check that all fields are valid and update the user interface to
+     * provide feedback on what isn't valid.
      */
-    public void validateTaskNameField(){
-        if(taskNameField.getText().equals("")){
-            this.buttonPanel.setOkEnabledStatus(false);
-        } else {
+    public void validateFields() {
+        /* The title and description both have to contain something besides
+         * leading and trailing whitespace, and the due date must be parseable.
+         */
+        final boolean isTitleInvalid = this.taskNameField.getText().trim().isEmpty();
+        
+        final boolean isDescriptionInvalid = this.descriptionMessage.getText().trim().isEmpty();
+        
+        boolean isDateInvalid = this.datePicker.getDate() == null;
+        try {
+            this.datePicker.commitEdit();
+        } catch (ParseException e) {
+            isDateInvalid = true;
+        } catch (Exception e) {}
+        
+        final boolean isValid = !isTitleInvalid && !isDescriptionInvalid && !isDateInvalid;
+        
+        if (isValid) {
+            /* If everything's valid, get rid of any error message and
+             * enabled the OK button.
+             */
+            this.buttonPanel.clearError();
             this.buttonPanel.setOkEnabledStatus(true);
+        } else {
+            /* Otherwise, disable saving the task and set an error message.
+             */
+            this.buttonPanel.setOkEnabledStatus(false);
+            this.buttonPanel.setError("The highlighted fields are required");
         }
         
+        /* Set an red border on input fields that aren't valid */
+        if (isTitleInvalid) {
+            this.taskNameField.setBorder(invalidBorder);
+        } else {
+            this.taskNameField.setBorder(validBorder);
+        }
+        
+        if (isDescriptionInvalid) {
+            this.descriptionMessage.setBorder(invalidBorder);
+        } else {
+            this.descriptionMessage.setBorder(validBorder);
+        }
+        
+        if (isDateInvalid) {
+            this.datePicker.setBorder(invalidBorder);
+        } else {
+            this.datePicker.setBorder(validBorder);
+        } 
     }
 }
