@@ -10,6 +10,7 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.Date;
 
 import javax.swing.JLabel;
@@ -25,6 +26,9 @@ public class MiniTaskView extends JPanel {
     private Date dueDate;
     private String taskName;
     private String fullName;
+    private boolean draggable;
+    
+
     JLabel taskNameLabel = new JLabel();
 
     /**
@@ -38,13 +42,17 @@ public class MiniTaskView extends JPanel {
         taskNameLabel.setToolTipText(this.fullName);
         this.add(taskNameLabel, "dock west");
         this.taskNameLabel.setText(taskName);
+        this.draggable = false;
+        
     }
     
     /**
      * @param listener adds tab with TaskView on click
+     * @param motionListener adds motionListener for miniTaskView
      */
-    public void addOnClickOpenTabView(MouseListener listener){
+    public void addOnClickOpenTabView(MouseListener listener, MouseMotionListener motionListener){
         this.addMouseListener(listener);
+        this.addMouseMotionListener( motionListener);
     }
     
     /**
@@ -90,5 +98,18 @@ public class MiniTaskView extends JPanel {
         this.fullName = fullName;
     }
 
+    /**
+     * @return draggable
+     */
+    public boolean getDraggable() {
+        return draggable;
+    }
+
+    /**
+     * @param draggable: boolean indicating if object can be dragged
+     */
+    public void setDraggable(boolean draggable) {
+        this.draggable = draggable;
+    }
 
 }
