@@ -1,5 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -16,6 +17,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+
+import org.jdesktop.swingx.JXTextArea;
+
+import com.lowagie.text.Font;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -35,7 +40,7 @@ public class CommentView extends JTabbedPane {
     private ActivityView testActivity = new ActivityView();
     private ActivityView testActivity2 = new ActivityView();
     private JScrollPane editCommentScroll = new JScrollPane();
-    private PresetTextArea commentText = new PresetTextArea("Comment here");
+    private JXTextArea commentText = new JXTextArea(" Add a comment…", Color.GRAY);
     private JButton postCommentButton = new JButton("Post");
     private JButton clearCommentButton = new JButton("Clear");
 
@@ -44,12 +49,13 @@ public class CommentView extends JTabbedPane {
      */
     public CommentView() {
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-        
+
         this.addTab("Comments", Icons.COMMENTS, commentPanel, null);
         this.addTab("History", Icons.HISTORY, historyPanel, null);
 
         // Set layouts
-        this.commentPanel.setLayout(new MigLayout("", "[grow]", "[grow][50px:n][min]"));
+        this.commentPanel.setLayout(new MigLayout("", "[grow]",
+                "[grow][50px:n][min]"));
         this.historyPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
         this.postedCommentPanel.setLayout(new MigLayout("fill"));
         this.postedHistoryPanel.setLayout(new MigLayout("fill"));
@@ -59,12 +65,12 @@ public class CommentView extends JTabbedPane {
         this.commentPanel.add(editCommentScroll, "cell 0 1,grow");
         this.commentPanel.add(postCommentButton, "cell 0 2,alignx left,growy");
         this.commentPanel.add(clearCommentButton, "cell 0 2,alignx left,growy");
-        this.commentText.setStartText("Comment here");
         this.commentText.setWrapStyleWord(true);
         this.commentText.setLineWrap(true);
-        
-        this.historyPanel.add(historyScroll, "cell 0 0,grow");        
-        
+        this.commentText.setPromptFontStyle(Font.ITALIC);
+
+        this.historyPanel.add(historyScroll, "cell 0 0,grow");
+
         // Set scrollpane viewports
         this.commentScroll.setViewportView(postedCommentPanel);
         this.editCommentScroll.setViewportView(commentText);
@@ -75,20 +81,22 @@ public class CommentView extends JTabbedPane {
         this.clearCommentButton.setIcon(Icons.CLEAR);
         this.setupListeners();
     }
-    
-    private void validateButtons(boolean commentTyped){
-        if(!commentTyped){
-            this.postCommentButton.setEnabled(false);
-            this.clearCommentButton.setEnabled(false);
-        } else if(this.commentText.getText().equals("")){
-            this.postCommentButton.setEnabled(false);
-            this.clearCommentButton.setEnabled(false);
-        } else {
-            this.postCommentButton.setEnabled(true);
-            this.clearCommentButton.setEnabled(true);
-        }
+
+    /**
+     * Enable or disable the options to clear and post a comment based on
+     * weather or not there is a comment entered.
+     */
+    private void validateFields() {
+        /*
+         * To submit a comment, the user must enter at least one non-whitespace
+         * character into the text area.
+         */
+        boolean isCommentEntered = !this.commentText.getText().trim().isEmpty();
+
+        this.postCommentButton.setEnabled(isCommentEntered);
+        this.clearCommentButton.setEnabled(isCommentEntered);
     }
-    
+
     /**
      * Sets up the button listeners so that buttons can do things.
      */
@@ -98,49 +106,39 @@ public class CommentView extends JTabbedPane {
             public void actionPerformed(ActionEvent e) {
                 ActivityView newComment = new ActivityView(commentText.getText());
                 postedCommentPanel.add(newComment, "dock south");
-                commentText.resetText();
+                commentText.setText("");
                 JScrollBar vertical = commentScroll.getVerticalScrollBar();
                 JScrollBar horizontal = commentScroll.getHorizontalScrollBar();
                 postedCommentPanel.revalidate();
                 postedCommentPanel.repaint();
                 vertical.setValue(vertical.getMinimum());
                 horizontal.setValue(horizontal.getMinimum());
-                validateButtons(commentText.isCommentTyped());
+                validateFields();
             }
-        });
-
-        // when clicked, the screen will clear if the original text is inside
-        this.commentText.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                commentText.clicked();
-            }
-            
         });
 
         // Clear button (resets comment)
         this.clearCommentButton.addActionListener((ActionEvent e) -> {
-            commentText.resetText();
-            validateButtons(commentText.isCommentTyped());
+            commentText.setText("");
+            validateFields();
         });
         
+        /* Re-validate the input every time it gets edited */
         this.commentText.getDocument().addDocumentListener(new DocumentListener() {
-
             @Override
             public void removeUpdate(DocumentEvent e) {
-                validateButtons(commentText.isCommentTyped());
+                validateFields();
             }
-
+            
             @Override
             public void insertUpdate(DocumentEvent e) {
-                validateButtons(commentText.isCommentTyped());
+                validateFields();
             }
-
+            
             @Override
-            public void changedUpdate(DocumentEvent arg0) {
-                validateButtons(commentText.isCommentTyped());
+            public void changedUpdate(DocumentEvent e) {
+                validateFields();
             }
         });
     }
-
 }

@@ -38,6 +38,10 @@ import net.miginfocom.swing.MigLayout;
 import net.miginfocom.swt.SwtComponentWrapper;
 
 import org.jdesktop.swingx.JXDatePicker;
+import org.jdesktop.swingx.JXTextArea;
+import org.jdesktop.swingx.JXTextField;
+
+import com.lowagie.text.Font;
 
 import java.awt.Color;
 
@@ -71,8 +75,8 @@ public class TaskView extends JPanel {
     private JSpinner actualEffortSpinner = new JSpinner();
     private JSpinner estEffortSpinner = new JSpinner();
     private JSplitPane splitPane = new JSplitPane();
-    private JTextArea descriptionMessage = new JTextArea();
-    private JTextField taskNameField = new JTextField();
+    private JXTextArea descriptionMessage = new JXTextArea(" Enter a description…", Color.GRAY);
+    private JXTextField taskNameField = new JXTextField(" Enter a name…", Color.GRAY);
     private JXDatePicker datePicker = new JXDatePicker();
     private LineBorder validBorder = new LineBorder(Color.GRAY, 1);
     private LineBorder invalidBorder = new LineBorder(Color.RED, 1);
@@ -131,6 +135,7 @@ public class TaskView extends JPanel {
         this.infoPanel.add(taskNameLabel, "cell 0 0");
         this.infoPanel.add(taskNameField, "cell 1 0 2 1, grow");
         this.taskNameField.setText(title);
+        this.taskNameField.setPromptFontStyle(Font.ITALIC);
         this.infoPanel.add(dateLabel, "cell 0 1");
         this.infoPanel.add(datePicker, "cell 1 1, grow");
         this.datePicker.setDate(dueDate);
@@ -157,6 +162,7 @@ public class TaskView extends JPanel {
         this.descriptionMessage.setWrapStyleWord(true);
         this.descriptionMessage.setLineWrap(true);
         this.descriptionMessage.setText(description);
+        this.descriptionMessage.setPromptFontStyle(Font.ITALIC);
         this.viewMode = viewMode;
         
         
