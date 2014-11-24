@@ -56,8 +56,7 @@ public class TaskPresenter {
         this.model = new TaskModel();
         this.model.setId(id);
         this.model.setTitle("New Task");
-        this.view = new TaskView(model.getTitle(), model.getEstimatedEffort(), model.getDescription(), model.getDueDate(),
-                viewMode);
+        this.view = new TaskView(model, viewMode);
         this.miniView = new MiniTaskView(model.getTitle(), model.getDueDate());
         registerCallbacks();
     }
@@ -206,11 +205,7 @@ public class TaskPresenter {
      * Update the view with data from the model
      */
     public void updateView() {
-        view.setTaskNameField(model.getTitle());
-        view.setEstimatedEffort(model.getEstimatedEffort());
-        view.setActualEffort(model.getActualEffort());
-        view.setDescriptionText(model.getDescription());
-        view.setDueDate(model.getDueDate());
+        view.setModel(model);
         miniView.setTaskName(model.getTitle());
         miniView.setDueDate(model.getDueDate());
     }

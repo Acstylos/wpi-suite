@@ -10,14 +10,11 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
-import java.awt.Image;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.Date;
 
-import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -31,18 +28,20 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import net.miginfocom.swing.MigLayout;
-import net.miginfocom.swt.SwtComponentWrapper;
 
 import org.jdesktop.swingx.JXDatePicker;
 
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
+
 import java.awt.Color;
 
-import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
+import java.awt.Font;
 
 /**
  * A {@link javax.swing.JComponent} that renders the fields of a single task and
@@ -74,34 +73,30 @@ public class TaskView extends JPanel {
     private JTextArea descriptionMessage = new JTextArea();
     private JTextField taskNameField = new JTextField();
     private JXDatePicker datePicker = new JXDatePicker();
-    private LineBorder validBorder = new LineBorder(Color.GRAY, 1);
-    private LineBorder invalidBorder = new LineBorder(Color.RED, 1);
+    private TaskModel model = new TaskModel();
 
+    private final static LineBorder validBorder = new LineBorder(Color.GRAY, 1);
+    private final static LineBorder invalidBorder = new LineBorder(Color.RED, 1);
+    private final static Color modifiedColor = Color.BLACK;
+    private final static Color unmodifiedColor = Color.GRAY;
+    
     static {
         /* Change the default icons for JXDatePicker. */
         UIManager.put("JXDatePicker.arrowIcon", Icons.CALENDAR);
         UIManager.put("JXMonthView.monthDownFileName", Icons.LEFT_ARROW);
         UIManager.put("JXMonthView.monthUpFileName", Icons.RIGHT_ARROW);
     }
-
+    
     /**
      * Create a new TaskView with the specified default values.
      *
-     * @param title
-     *            The initial task title that will be displayed
-     * @param estimatedEffort
-     *            The initial estimated effort that will be displayed
-     * @param description
-     *            The initial in-depth description that will be displayed
-     * @param dueDate
-     *            The initial due date that will be displayed
+     * @param model The initial data that will be displayed
      * @see #setTaskNameField(String)
      * @see #setEstimatedEffort(int)
      * @see #setDescriptionText(String)
      * @see #setDueDate(Date)
      */
-    public TaskView(String title, int estimatedEffort, String description,
-            Date dueDate, ViewMode viewMode) {
+    public TaskView(TaskModel model, ViewMode viewMode) {
         this.setBorder(null);
         // Set layouts for all panels
         this.setLayout(new MigLayout("", "[grow]", "[grow][min]"));
@@ -130,10 +125,9 @@ public class TaskView extends JPanel {
         // Format the infoPanel layout with components
         this.infoPanel.add(taskNameLabel, "cell 0 0");
         this.infoPanel.add(taskNameField, "cell 1 0 2 1, grow");
-        this.taskNameField.setText(title);
         this.infoPanel.add(dateLabel, "cell 0 1");
         this.infoPanel.add(datePicker, "cell 1 1, grow");
-        this.datePicker.setDate(dueDate);
+        statusLabel.setForeground(unmodifiedColor);
         this.infoPanel.add(statusLabel, "cell 0 2");
         this.infoPanel.add(statusComboBox, "cell 1 2");
         // TODO: Integrate this ComboBox with changing tasks between BucketViews
@@ -146,7 +140,6 @@ public class TaskView extends JPanel {
         this.infoPanel.add(estEffortLabel, "cell 0 4");
         this.infoPanel.add(estEffortSpinner, "cell 1 4");
         this.estEffortSpinner.setModel(new SpinnerNumberModel(0, 0, 99999, 1));
-        this.estEffortSpinner.setValue(estimatedEffort);
 
         // Format the descriptionPanel layout with components
         this.descriptionPanel.add(scrollPane, "cell 0 0,grow");
@@ -156,7 +149,6 @@ public class TaskView extends JPanel {
 
         this.descriptionMessage.setWrapStyleWord(true);
         this.descriptionMessage.setLineWrap(true);
-        this.descriptionMessage.setText(description);
         this.viewMode = viewMode;
         
         
@@ -180,14 +172,20 @@ public class TaskView extends JPanel {
             }
         };
         
-        /* Re-validate all of the input fields every time the task title 
-         * or description is changed by the user.
+        ChangeListener changeListener = (ChangeEvent) -> {
+            validateFields();
+        };
+        
+        /* Re-validate all of the input fields every time any field is changed
+         * by the user.
          */
         this.taskNameField.getDocument().addDocumentListener(validateListener);
-        this.descriptionMessage.getDocument().addDocumentListener(validateListener);
+        this.actualEffortSpinner.addChangeListener(changeListener);
+        this.estEffortSpinner.addChangeListener(changeListener);
         this.datePicker.getEditor().getDocument().addDocumentListener(validateListener);
+        this.descriptionMessage.getDocument().addDocumentListener(validateListener);
         
-        validateFields();
+        setModel(model);
     }
 
     /**
@@ -217,13 +215,18 @@ public class TaskView extends JPanel {
     public void addDeleteOnClickListener(ActionListener listener) {
         this.buttonPanel.addDeleteOnClickListener(listener);
     }
-    
+
     /**
-     * @param titleText
-     *            The new title of the task
+     * Set all of the fields in the view from the data in the model
+     * @param model the {@link TaskModel} to copy into the view
      */
-    public void setTaskNameField(String titleText) {
-        this.taskNameField.setText(titleText);
+    public void setModel(TaskModel model) {
+        this.model = model;
+        this.taskNameField.setText(model.getTitle());
+        this.actualEffortSpinner.setValue(model.getActualEffort());
+        this.estEffortSpinner.setValue(model.getEstimatedEffort());
+        this.descriptionMessage.setText(model.getDescription());
+        this.datePicker.setDate(model.getDueDate());
         validateFields();
     }
 
@@ -235,28 +238,10 @@ public class TaskView extends JPanel {
     }
 
     /**
-     * @param actualEffort
-     *            The new actual effort of the task, in arbitrary work units.
-     */
-    public void setActualEffort(int actualEffort) {
-        this.actualEffortSpinner.setValue(actualEffort);
-        validateFields();
-    }
-
-    /**
      * @return The estimated effort of the task, in arbitrary work units.
      */
     public int getActualEffort() {
         return (int) this.actualEffortSpinner.getValue();
-    }
-
-    /**
-     * @param estimatedEffort
-     *            The new estimated effort of the task, in arbitrary work units.
-     */
-    public void setEstimatedEffort(int estimatedEffort) {
-        this.estEffortSpinner.setValue(estimatedEffort);
-        validateFields();
     }
 
     /**
@@ -267,28 +252,10 @@ public class TaskView extends JPanel {
     }
 
     /**
-     * @param descriptionText
-     *            The new task description
-     */
-    public void setDescriptionText(String descriptionText) {
-        this.descriptionMessage.setText(descriptionText);
-        validateFields();
-    }
-
-    /**
      * @return The task description
      */
     public String getDescriptionText() {
         return this.descriptionMessage.getText();
-    }
-
-    /**
-     * @param dueDate
-     *            The new due date of the task
-     */
-    public void setDueDate(Date dueDate) {
-        this.datePicker.setDate(dueDate);
-        validateFields();
     }
 
     /**
@@ -328,7 +295,7 @@ public class TaskView extends JPanel {
      * Check that all fields are valid and update the user interface to
      * provide feedback on what isn't valid.
      */
-    public void validateFields() {
+    private void validateFields() {
         JFormattedTextField dateEditor = this.datePicker.getEditor();
         
         /* The title and description both have to contain something besides
@@ -338,7 +305,6 @@ public class TaskView extends JPanel {
         boolean isTitleInvalid = this.taskNameField.getText().trim().isEmpty();
         boolean isDescriptionInvalid = this.descriptionMessage.getText().trim().isEmpty();
         boolean isDateInvalid = dateEditor.getText().trim().isEmpty();
-        
         
         /* Try to parse the text in the datefield.  If unsucessful, mark the
          * date field as invalid.
@@ -350,16 +316,11 @@ public class TaskView extends JPanel {
         }
         
         final boolean isValid = !isTitleInvalid && !isDescriptionInvalid && !isDateInvalid;
+        
+        /* Set an error message if at least one field doesn't have a valid value. */
         if (isValid) {
-            /* If everything's valid, get rid of any error message and
-             * enabled the OK button.
-             */
             this.buttonPanel.clearError();
-            this.buttonPanel.setOkEnabledStatus(true);
         } else {
-            /* Otherwise, disable saving the task and set an error message.
-             */
-            this.buttonPanel.setOkEnabledStatus(false);
             this.buttonPanel.setError("The highlighted fields are required");
         }
         
@@ -380,6 +341,62 @@ public class TaskView extends JPanel {
             this.datePicker.setBorder(invalidBorder);
         } else {
             this.datePicker.setBorder(validBorder);
-        } 
+        }
+
+        boolean isModified = false;
+        
+        /* Set the color of each label based on weather or not its value was
+         * changed by the user. */
+        if (this.getTaskNameField().equals(this.model.getTitle())) {
+            this.taskNameLabel.setForeground(unmodifiedColor);
+        } else {
+            this.taskNameLabel.setForeground(modifiedColor);
+            isModified = true;
+        }
+
+        if (this.getActualEffort() == this.model.getActualEffort()) {
+            this.actualEffortLabel.setForeground(unmodifiedColor);
+        } else {
+            this.actualEffortLabel.setForeground(modifiedColor);
+            isModified = true;
+        }
+
+        if (this.getEstimatedEffort() == this.model.getEstimatedEffort()) {
+            this.estEffortLabel.setForeground(unmodifiedColor);
+        } else {
+            this.estEffortLabel.setForeground(modifiedColor);
+            isModified = true;
+        }
+
+        if (this.getDescriptionText().equals(this.model.getDescription())) {
+        } else {
+            isModified = true;
+        }
+        
+        /* The date value might be null */
+        boolean datesAreEqual;
+        if (this.getDueDate() == null && this.model.getDueDate() == null) {
+            datesAreEqual = true;
+        } else if(this.getDueDate() == null || this.model.getDueDate() == null) {
+            datesAreEqual = false;
+        } else {
+            datesAreEqual = this.getDueDate().equals(this.model.getDueDate());
+        }
+
+        if (datesAreEqual) {
+            this.dateLabel.setForeground(unmodifiedColor);
+        } else {
+            this.dateLabel.setForeground(modifiedColor);
+            isModified = true;
+        }
+        
+        
+        /* Allow the user to save the task if something is modified and
+         * everything is still valid.
+         */
+        this.buttonPanel.setOkEnabledStatus(isValid && isModified);
+        
+        /* Allow the user to reset the fields if something is modified. */
+        this.buttonPanel.setClearEnabledStatus(isModified);
     }
 }
