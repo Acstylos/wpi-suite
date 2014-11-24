@@ -12,6 +12,7 @@ import java.util.List;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
@@ -32,7 +33,7 @@ public class BucketPresenter {
     private BucketView view;
 
     private BucketModel model;
-    
+
     private List<TaskPresenter> tasks;
 
     private WorkflowPresenter workflow;
@@ -85,8 +86,8 @@ public class BucketPresenter {
             request.setBody(model.toJson());
         }
         request.addObserver(new BucketObserver(this, method)); // add an
-                                                               // observer to
-                                                               // the response
+        // observer to
+        // the response
         request.send();
     }
 
@@ -134,16 +135,17 @@ public class BucketPresenter {
      */
     private void registerCallbacks() {
     }
-    
+
     /**
      * Adds a new task to the bucket view, in the form of a miniTaskView
      */
     public void addNewTaskToView(){
+
         TaskPresenter taskPresenter = new TaskPresenter(0, this, ViewMode.CREATING);
         //taskPresenter.createInDatabase();
         TaskModel taskModel = taskPresenter.getModel();
         TaskView taskView = taskPresenter.getView();
-        MainView.getInstance().addTab(taskModel.getShortTitle(), taskView);
+        MainView.getInstance().addTab(taskModel.getShortTitle(), Icons.TASK, taskView);
         int tabCount = MainView.getInstance().getTabCount();
         taskView.setIndex(tabCount-1);
         MainView.getInstance().setSelectedIndex(tabCount-1);
@@ -159,7 +161,7 @@ public class BucketPresenter {
         updateInDatabase();
         writeModelToView();
     }
-    
+
     /**
      * Adds a task ID to the list of taskIDs in the model.
      * Sends an async update to the database.

@@ -14,10 +14,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
@@ -70,6 +68,7 @@ public class TaskPresenter {
             @Override
             public void mouseClicked(MouseEvent e) {
                 MainView.getInstance().addTab(model.getShortTitle(), view);//this line chooses tab title
+                MainView.getInstance().addTab(model.getShortTitle(), Icons.TASK, view);
                 view.setViewMode(ViewMode.EDITING);
                 int tabCount = MainView.getInstance().getTabCount();
                 view.setIndex(tabCount-1);
@@ -150,24 +149,7 @@ public class TaskPresenter {
                 MainView.getInstance().getWorkflowPresenter().archiveTask(model.getId(), bucket.getModel().getId());
                 MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
                 bucket.getView().getComponentAt(view.getLocation()).setVisible(false);
-                
-            }
-        });
-        
-        view.addDocumentListenerOnTaskName(new DocumentListener() {
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                view.validateTaskNameField();
-            }
 
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                view.validateTaskNameField();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent arg0) {
-                view.validateTaskNameField();
             }
         });
     }
@@ -233,7 +215,7 @@ public class TaskPresenter {
         miniView.setDueDate(model.getDueDate());
         miniView.setToolTipText(model.getTitle());
     }
-    
+
     /**
      * Sets current viewMode
      * @param viewMode viewMode to be set
