@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_fd78422d",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/model/TaskModel.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1002787
+      },
+      "writtenOn": "2014-11-24T00:33:06Z",
+      "side": 1,
+      "message": "Move all these back to the bottom, like they were before. Tom said it before, it causes merge noise.",
+      "revId": "a12421ab1562a4cfc43ce99f443e5515ee2ebe8a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
