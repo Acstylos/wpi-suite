@@ -9,6 +9,7 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -26,6 +27,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+
+import org.jdesktop.swingx.JXTextArea;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.ActivityPresenter;
 import net.miginfocom.swing.MigLayout;
@@ -46,7 +49,7 @@ public class CommentView extends JTabbedPane {
     private ActivityView testActivity = new ActivityView();
     private ActivityView testActivity2 = new ActivityView();
     private JScrollPane editCommentScroll = new JScrollPane();
-    private PresetTextArea commentText = new PresetTextArea("Comment here");
+    private JXTextArea commentText = new JXTextArea("Write a comment...", Color.GRAY);
     private JButton postCommentButton = new JButton("Post");
     private JButton clearCommentButton = new JButton("Clear");
     
@@ -72,7 +75,6 @@ public class CommentView extends JTabbedPane {
         this.commentPanel.add(editCommentScroll, "cell 0 1,grow");
         this.commentPanel.add(postCommentButton, "cell 0 2,alignx left,growy");
         this.commentPanel.add(clearCommentButton, "cell 0 2,alignx left,growy");
-        this.commentText.setStartText("Comment here");
         this.commentText.setWrapStyleWord(true);
         this.commentText.setLineWrap(true);
         
@@ -89,11 +91,12 @@ public class CommentView extends JTabbedPane {
         this.setupListeners();
     }
     
-    private void validateButtons(boolean commentTyped){
-        if(!commentTyped){
-            this.postCommentButton.setEnabled(false);
-            this.clearCommentButton.setEnabled(false);
-        } else if(this.commentText.getText().equals("")){
+    /**
+     * Enable or disable the post and reset buttons depending of if there's
+     * something entered in the comment box.
+     */
+    private void validateFields() {
+        if (commentText.getText().trim().isEmpty()) {
             this.postCommentButton.setEnabled(false);
             this.clearCommentButton.setEnabled(false);
         } else {
@@ -111,50 +114,41 @@ public class CommentView extends JTabbedPane {
      */
     public void postActivity(ActivityView newComment) {
         postedCommentPanel.add(newComment, "dock south");
-        commentText.resetText();
+        commentText.setText("");
         JScrollBar vertical = commentScroll.getVerticalScrollBar();
         JScrollBar horizontal = commentScroll.getHorizontalScrollBar();
         postedCommentPanel.revalidate();
         postedCommentPanel.repaint();
         vertical.setValue(vertical.getMinimum());
         horizontal.setValue(horizontal.getMinimum());
-        validateButtons(commentText.isCommentTyped());
+        validateFields();
     }
     
     /**
      * Sets up the button listeners so that buttons can do things.
      */
     private void setupListeners() {
-        // when clicked, the screen will clear if the original text is inside
-        this.commentText.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                commentText.clicked();
-            }
-            
-        });
-
         // Clear button (resets comment)
-        this.clearCommentButton.addActionListener((ActionEvent e) -> {
-            commentText.resetText();
-            validateButtons(commentText.isCommentTyped());
+        this.clearCommentButton.addActionListener((ActionEvent) -> {
+            commentText.setText("");
+            validateFields();
         });
         
         this.commentText.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                validateButtons(commentText.isCommentTyped());
+                validateFields();
             }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
-                validateButtons(commentText.isCommentTyped());
+                validateFields();
             }
 
             @Override
             public void changedUpdate(DocumentEvent arg0) {
-                validateButtons(commentText.isCommentTyped());
+                validateFields();
             }
         });
     }
@@ -169,7 +163,7 @@ public class CommentView extends JTabbedPane {
     /**
      * @return the commentText
      */
-    public PresetTextArea getCommentText() {
+    public JXTextArea getCommentText() {
         return this.commentText;
     }
 
