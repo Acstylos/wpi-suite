@@ -9,35 +9,23 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
-import java.awt.event.ActionEvent;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.ActivityModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ActivityView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.CommentView;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
+/**
+ * This class creates an ActivityView and manages the comments/history.
+ *
+ */
 public class ActivityPresenter {
 
+    private CommentView commentView;
     private ActivityView view;
     private ActivityModel model;
     private TaskPresenter parentTask;
-
-    /**
-     * Constructor for an activity presenter
-     * 
-     * @param model
-     *            the model associated with the presenter
-     * 
-     * @param task
-     *            the task associated with the activity
-     */
-    public ActivityPresenter(ActivityModel model, TaskPresenter task) {
-        this.model = model;
-        this.view = new ActivityView();
-        this.parentTask = task;
-        registerCallbacks();
-        load();
-    }
 
     /**
      * Constructor for an activity presenter
@@ -48,83 +36,96 @@ public class ActivityPresenter {
      *            the task associated with the activity
      */
     public ActivityPresenter(int id, TaskPresenter task) {
+        this(task, "");
+        this.model.setId(id);
+    }
+
+    /**
+     * Constructs an Activity Presenter for the a task and string
+     * 
+     * @param task
+     *            the task presenter associated with this activityPresenter
+     * @param activity
+     *            the comment string that was posted
+     */
+    public ActivityPresenter(TaskPresenter task, String activity) {
         this.parentTask = task;
         this.model = new ActivityModel();
-        this.model.setId(id);
+        this.commentView = task.getView().getCommentView();
+        this.model.setActivity(activity);
+        this.view = new ActivityView(this.model.getActivity());
+    }
+
+    /**
+     * Create an Activity Presenter and a model with the given Text
+     * 
+     * @param text
+     *            the typed comment
+     */
+    public ActivityPresenter(String text) {
+        this.model = new ActivityModel();
         this.view = new ActivityView();
-        registerCallbacks();
-        load();
+        this.model.setActivity(text);
+
+    }
+
+    /**
+     * Create a new activity in the database. Initializes an async network
+     * request with an observer.
+     */
+    public void createInDatabase() {
+        Request request = Network.getInstance().makeRequest(
+                "taskmanager/activity", HttpMethod.PUT);
+        request.setBody(this.model.toJson());
+        request.addObserver(new ActivityObserver(this));
+        request.send();
     }
 
     /**
      * Updates the view with information from the model
      */
-    public void writeModelToView() {
-        //view.setActivity(model.getActivity());
-        //view.setUser(model.getUser());
-        //view.setDate(model.getDate());
+    public void updateView() {
+        view.setActivity(model.getActivity());
+        commentView.postActivity(view);
+        commentView.revalidate();
+        commentView.repaint();
+
+        // view.setUser(model.getUser());
+        // view.setDate(model.getDate());
+
     }
 
     /**
      * Updates the model with the information from the view
      */
-    public void writeViewToModel() {
-        //model.setActivity(view.getActivity());
-        //model.setDate(view.getDate());
-        //model.setUser(view.getUser());
+    public void updateModel() {
+        model.setActivity(view.getActivity());
+        // model.setDate(view.getDate());
+        // model.setUser(view.getUser());
     }
 
     /**
-     * Requests the server for a new bucket or the bucket corresponding to the
-     * current ID
+     * loads the array of Activity Models from the Database
+     * 
      */
     public void load() {
-        HttpMethod method;
-        String id = "/" + model.getId();
-        if (model.getId() == 0) { // Put = create a new model
-            method = HttpMethod.PUT;
-            id = "";
-        } else {// Retrieve a model
-            method = HttpMethod.GET;
-        }
-
-        // Sends a request for the ActivityViews associated with the
-        // ActivityView
         final Request request = Network.getInstance().makeRequest(
-                "taskmanager/activity" + id, method);
-        if (method == HttpMethod.PUT) {
-            request.setBody(model.toJson());
-        }
-        // request.addObserver(new ActivityObserver(this, method)); // add an
-        // observer to
-        // the response
+                "taskmanager/activity/" + model.getId(), HttpMethod.GET);
+        request.addObserver(new ActivityObserver(this));
+
         request.send();
-    }
-
-    /**
-     * Register callbacks with the local view.
-     */
-    private void registerCallbacks() {
-        
-    }
-
-    /**
-     * 
-     * @param activityId
-     */
-    public void saveActivity(int activityId) {
-        this.model.setId(activityId);
-        saveModel();
     }
 
     /**
      * Write the model to the network/database. Must be created already.
      */
-    private void saveModel() {
+    private void updateToDataBase() {
+        updateModel();
+
         Request request = Network.getInstance().makeRequest(
                 "taskmanager/activity", HttpMethod.POST); // Update.
         request.setBody(model.toJson());
-        request.addObserver(new ActivityObserver(this, HttpMethod.POST));
+        request.addObserver(new ActivityObserver(this));
         request.send();
     }
 

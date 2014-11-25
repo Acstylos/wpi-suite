@@ -399,4 +399,13 @@ public class TaskView extends JPanel {
         /* Allow the user to reset the fields if something is modified. */
         this.buttonPanel.setClearEnabledStatus(isModified);
     }
+    
+    /**
+     * 
+     * @return the commentPanel of this Task View. Contains the Comment User used wants to post
+     * Casted to a commentView because cannot .getText() of a JPanel
+     */
+    public CommentView getCommentView(){
+        return (CommentView)this.commentPanel;
+    }
 }

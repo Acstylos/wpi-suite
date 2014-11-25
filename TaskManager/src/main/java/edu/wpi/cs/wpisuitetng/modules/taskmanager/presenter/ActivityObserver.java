@@ -12,33 +12,16 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.ActivityModel;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
-import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 import edu.wpi.cs.wpisuitetng.network.models.IRequest;
-import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 
 /**
- * Observes the activity network response for activities
- * 
- * @author TheFloorIsJava
+ * Observers the result of network requests for activities
  *
+ * @author TheFloorIsJava
  */
 public class ActivityObserver implements RequestObserver {
 
-    private ActivityPresenter presenter;
-    private HttpMethod method;
-
-    /**
-     * Constructor for ActivityObserver.
-     * 
-     * @param presenter
-     *            ActivityPresenter
-     * @param method
-     *            HttpMethod
-     */
-    public ActivityObserver(ActivityPresenter presenter, HttpMethod method) {
-        this.presenter = presenter;
-        this.method = method;
-    }
+    ActivityPresenter presenter;
 
     /**
      * Constructor for ActivityObserver.
@@ -55,37 +38,41 @@ public class ActivityObserver implements RequestObserver {
      *
      * @param iReq
      *            IRequest
-     * 
      * @see edu.wpi.cs.wpisuitetng.network.RequestObserver#responseSuccess(IRequest)
      */
     public void responseSuccess(IRequest iReq) {
-        // Store the response
-        final ResponseModel response = iReq.getResponse();
+        /**
+         * Take the appropriate action based on what the method of the request
+         * was.
+         */
 
-        if (method == HttpMethod.GET) {
+        String json = iReq.getResponse().getBody();
+        ActivityModel model = new ActivityModel();
+        switch (iReq.getHttpMethod()) {
+        case GET:
+            model = ActivityModel.fromJsonArray(json)[0];
+            this.presenter.setModel(model);
+            this.presenter.updateView();
+            this.presenter.getTask().updateCommentView();
+            break;
+        case PUT:
+            model = ActivityModel.fromJson(json);
+            /*
+             * Set the new model and update the view to reflect the new data.
+             * GET and PUT requests both respond with a modified task - GET
+             * returns the task stored in the database and PUT returns the same
+             * task but with a new ID assigned.
+             */
+            this.presenter.setModel(model);
+            this.presenter.updateView();
+            this.presenter.getTask().saveActivityId(model.getId());
 
-            // Parse the message
-            final ActivityModel[] models = ActivityModel.fromJsonArray(response
-                    .getBody());
-            System.err.println(models[0].getActivity());
-            presenter.responseGet(models);
-        } else {
-            // Parse the message
-            final ActivityModel model = ActivityModel.fromJson(response
-                    .getBody());
-            switch (method) {
-            case GET:
-                break;
-            case POST:
-                presenter.responsePost(model);
-                break;
-            case PUT:
-                presenter.responsePut(model);
-                break;
-            case DELETE:
-                presenter.responseDelete(model);
-                break;
-            }
+            break;
+        case POST:
+            break;
+
+        case DELETE:
+            break;
         }
     }
 
@@ -96,8 +83,7 @@ public class ActivityObserver implements RequestObserver {
      * @see edu.wpi.cs.wpisuitetng.network.RequestObserver#responseError(edu.wpi.cs.wpisuitetng.network.models.IRequest)
      */
     public void responseError(IRequest iReq) {
-        System.err.println("The request to " + httpMethodToString(method)
-                + " an activity failed.");
+        System.err.println(iReq.getResponse());
     }
 
     /**
@@ -106,47 +92,11 @@ public class ActivityObserver implements RequestObserver {
      *
      * @param iReq
      * @param exception
-     * 
      * @see edu.wpi.cs.wpisuitetng.network.RequestObserver#fail(IRequest,
      *      Exception)
      */
     public void fail(IRequest iReq, Exception exception) {
-        System.err.println("The request to " + httpMethodToString(method)
-                + " an activity failed.");
-    }
-
-    /**
-     * Method httpMethodToString.
-     * 
-     * @param method_
-     *            HttpMethod
-     * 
-     * @return String
-     */
-    private static String httpMethodToString(HttpMethod method_) {
-        String methodString = "";
-        switch (method_) {
-        case GET:
-            methodString = "fetch";
-            break;
-        case POST:
-            methodString = "update";
-            break;
-        case PUT:
-            methodString = "create";
-            break;
-        case DELETE:
-            methodString = "delete";
-            break;
-        }
-        return methodString;
-    }
-
-    /**
-     * 
-     * @return The presenter
-     */
-    public ActivityPresenter getPresenter() {
-        return this.presenter;
+        System.err.println("Activity request failed");
+        exception.printStackTrace();
     }
 }

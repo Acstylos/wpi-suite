@@ -27,6 +27,7 @@ public class TaskModel extends AbstractModel {
     private String title;
     private String description;
     private List<User> assignedTo;
+    private List <Integer> activityIds; 
     private int estimatedEffort;
     private int actualEffort;
     private Date dueDate;
@@ -40,6 +41,7 @@ public class TaskModel extends AbstractModel {
         title = "New Task";
         description = "";
         assignedTo = new ArrayList<User>();
+        activityIds= new ArrayList<Integer>();
         estimatedEffort = 0;
         actualEffort = 0;
     }
@@ -143,6 +145,7 @@ public class TaskModel extends AbstractModel {
         this.estimatedEffort = other.getEstimatedEffort();
         this.dueDate = other.getDueDate();
         this.actualEffort = other.getActualEffort();
+        this.activityIds=other.getActivityIds(); 
     }
     
     /**
@@ -244,4 +247,23 @@ public class TaskModel extends AbstractModel {
         this.actualEffort = actualEffort;
     }
 
+    /**
+     * return the list of activity IDS
+     * @return activityIds linked list of activity ids
+     */
+    public List<Integer> getActivityIds() {
+        return activityIds;
+    }
+    
+    /**
+     * set the activity list to the given list
+     * @param activityIds the list to be copied from
+     */
+    public void setActivityIds(List<Integer> activityIds) {
+        this.activityIds = activityIds;
+    }
+    
+    public void addActivityID(int id){
+        activityIds.add(id);
+    }
 }
