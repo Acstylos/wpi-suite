@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_f6c05f7e",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/WorkflowView.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1002787
+      },
+      "writtenOn": "2014-11-25T17:49:17Z",
+      "side": 1,
+      "message": "Why do we need to remove buckets and then add them all over? I don\u0027t understand the reasoning. This also gets rid of some of the static spacer struts that aren\u0027t handled by this function, but in the constructor instead.",
+      "revId": "5d50ce291e3e9caff112ed8320db079f29ea85fb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
