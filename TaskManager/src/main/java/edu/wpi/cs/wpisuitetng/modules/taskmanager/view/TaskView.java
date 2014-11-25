@@ -35,13 +35,14 @@ import javax.swing.event.DocumentListener;
 import net.miginfocom.swing.MigLayout;
 
 import org.jdesktop.swingx.JXDatePicker;
+import org.jdesktop.swingx.JXTextArea;
+import org.jdesktop.swingx.JXTextField;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 
 import java.awt.Color;
 
 import javax.swing.border.LineBorder;
-import java.awt.Font;
 
 /**
  * A {@link javax.swing.JComponent} that renders the fields of a single task and
@@ -70,8 +71,8 @@ public class TaskView extends JPanel {
     private JSpinner actualEffortSpinner = new JSpinner();
     private JSpinner estEffortSpinner = new JSpinner();
     private JSplitPane splitPane = new JSplitPane();
-    private JTextArea descriptionMessage = new JTextArea();
-    private JTextField taskNameField = new JTextField();
+    private JXTextArea descriptionMessage = new JXTextArea("Write a description...", Color.GRAY);
+    private JXTextField taskNameField = new JXTextField("Write a title...", Color.GRAY);
     private JXDatePicker datePicker = new JXDatePicker();
     private TaskModel model = new TaskModel();
 
