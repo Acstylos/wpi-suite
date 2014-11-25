@@ -13,6 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -42,11 +44,11 @@ public class TaskPresenter {
     private ViewMode viewMode;
 
     private BucketPresenter bucket;
+    private List<ActivityPresenter> activityPresenters; 
 
     /**
      * Constructs a TaskPresenter for the given model. Constructs the view
      * offscreen, available if you call getView().
-     * 
      * @param id
      *            ID of the bucket to create
      */
@@ -58,6 +60,7 @@ public class TaskPresenter {
         this.model.setTitle("New Task");
         this.view = new TaskView(model, viewMode);
         this.miniView = new MiniTaskView(model.getTitle(), model.getDueDate());
+        this.activityPresenters = new ArrayList<ActivityPresenter>(); 
         registerCallbacks();
     }
 
@@ -151,8 +154,39 @@ public class TaskPresenter {
 
             }
         });
+        
+        view.getCommentView().addOnPostListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                addActivity();
+            }
+
+        });
     }
 
+    /**
+     * Creates a new activity in the Database by using the text provided in the
+     * comment box
+     */
+    public void addActivity() {
+        ActivityPresenter activityPresenter = new ActivityPresenter(this, view
+                .getCommentView().getCommentText().getText());
+        view.getCommentView().postActivity(activityPresenter.getView());
+        activityPresenter.createInDatabase();
+        activityPresenters.add(activityPresenter);
+    }
+
+    /**
+     * saves an activity in the model with the given ID from the DataBase
+     * @param id
+     *            database given ID
+     */
+    public void saveActivityId(int id) {
+        model.addActivityID(id);
+        saveView();
+    }
+    
     /**
      * Create a new task in the database. Initializes an async network request
      * with an observer.
@@ -208,6 +242,20 @@ public class TaskPresenter {
         view.setModel(model);
         miniView.setTaskName(model.getTitle());
         miniView.setDueDate(model.getDueDate());
+        updateCommentView();
+    }
+    
+    /**
+     * takes the current comment view, clears the posts, and puts each comment,
+     * one by one back on to the current view.
+     */
+    public void updateCommentView() {
+        view.getCommentView().clearPosts();
+        for (ActivityPresenter p : activityPresenters) {
+            view.getCommentView().postActivity(p.getView());
+        }
+        view.getCommentView().revalidate();
+        view.getCommentView().repaint();
     }
     
     public void setTheViewViewMode(ViewMode viewMode){
@@ -230,7 +278,6 @@ public class TaskPresenter {
 
     /**
      * Get the model for this class.
-     * 
      * @return This provider's model.
      */
     public TaskModel getModel() {
@@ -239,12 +286,17 @@ public class TaskPresenter {
 
     /**
      * Set the model for this class.
-     * 
      * @param model
      *            This provider's model.
      */
     public void setModel(TaskModel model) {
         this.model = model;
+        activityPresenters = new ArrayList<ActivityPresenter>();
+        for (int i : model.getActivityIds()) {
+            ActivityPresenter p = new ActivityPresenter(i, this);
+            p.load();
+            activityPresenters.add(p);
+        }
     }
 
     public BucketPresenter getBucket() {

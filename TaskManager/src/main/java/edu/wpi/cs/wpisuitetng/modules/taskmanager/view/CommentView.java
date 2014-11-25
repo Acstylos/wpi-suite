@@ -1,10 +1,20 @@
+/*******************************************************************************
+ * Copyright (c) 2014 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
@@ -17,6 +27,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.ActivityPresenter;
 import net.miginfocom.swing.MigLayout;
 
 /*
@@ -38,6 +49,8 @@ public class CommentView extends JTabbedPane {
     private PresetTextArea commentText = new PresetTextArea("Comment here");
     private JButton postCommentButton = new JButton("Post");
     private JButton clearCommentButton = new JButton("Clear");
+    
+    private List<ActivityPresenter> activityPresenters = new ArrayList<ActivityPresenter>(); 
 
     /**
      * Constructor sets up Comments and History
@@ -90,25 +103,28 @@ public class CommentView extends JTabbedPane {
     }
     
     /**
+     * Posts the new activity to the view
+     * 
+     * @param newComment
+     *            the activity to be posted, either auto generated or manually
+     *            added
+     */
+    public void postActivity(ActivityView newComment) {
+        postedCommentPanel.add(newComment, "dock south");
+        commentText.resetText();
+        JScrollBar vertical = commentScroll.getVerticalScrollBar();
+        JScrollBar horizontal = commentScroll.getHorizontalScrollBar();
+        postedCommentPanel.revalidate();
+        postedCommentPanel.repaint();
+        vertical.setValue(vertical.getMinimum());
+        horizontal.setValue(horizontal.getMinimum());
+        validateButtons(commentText.isCommentTyped());
+    }
+    
+    /**
      * Sets up the button listeners so that buttons can do things.
      */
     private void setupListeners() {
-        // Post button
-        this.postCommentButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                ActivityView newComment = new ActivityView(commentText.getText());
-                postedCommentPanel.add(newComment, "dock south");
-                commentText.resetText();
-                JScrollBar vertical = commentScroll.getVerticalScrollBar();
-                JScrollBar horizontal = commentScroll.getHorizontalScrollBar();
-                postedCommentPanel.revalidate();
-                postedCommentPanel.repaint();
-                vertical.setValue(vertical.getMinimum());
-                horizontal.setValue(horizontal.getMinimum());
-                validateButtons(commentText.isCommentTyped());
-            }
-        });
-
         // when clicked, the screen will clear if the original text is inside
         this.commentText.addFocusListener(new FocusAdapter() {
             @Override
@@ -141,6 +157,27 @@ public class CommentView extends JTabbedPane {
                 validateButtons(commentText.isCommentTyped());
             }
         });
+    }
+    
+    /**
+     * @param listener
+     */
+    public void addOnPostListener(ActionListener listener) {
+        this.postCommentButton.addActionListener(listener);
+    }
+
+    /**
+     * @return the commentText
+     */
+    public PresetTextArea getCommentText() {
+        return this.commentText;
+    }
+
+    /**
+     * Clears the posts in the view
+     */
+    public void clearPosts() {
+        postedCommentPanel.removeAll();
     }
 
 }
