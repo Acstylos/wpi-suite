@@ -27,6 +27,7 @@ public class TaskModel extends AbstractModel {
     private String title;
     private String description;
     private List<User> assignedTo;
+    private List<Integer> activityIds;
     private int estimatedEffort;
     private int actualEffort;
     private Date dueDate;
@@ -40,6 +41,7 @@ public class TaskModel extends AbstractModel {
         title = "New Task";
         description = "";
         assignedTo = new ArrayList<User>();
+        activityIds = new ArrayList<Integer>();
         estimatedEffort = 0;
         actualEffort = 0;
     }
@@ -47,13 +49,18 @@ public class TaskModel extends AbstractModel {
     /**
      * Constructor for a task with specific properties. Other properties are the
      * same as the default constructor
-     * @param id The unique id of the task
-     * @param title The title of the task
-     * @param description The description of the task
-     * @param dueDate The due date for the task
+     * 
+     * @param id
+     *            The unique id of the task
+     * @param title
+     *            The title of the task
+     * @param description
+     *            The description of the task
+     * @param dueDate
+     *            The due date for the task
      */
     public TaskModel(int id, String title, String description,
-                     int estimatedEffort, Date dueDate) {
+            int estimatedEffort, Date dueDate) {
         this();
         this.id = id;
         this.title = title;
@@ -70,7 +77,8 @@ public class TaskModel extends AbstractModel {
     }
 
     /**
-     * @param id The task ID to be set
+     * @param id
+     *            The task ID to be set
      */
     public void setId(int id) {
         this.id = id;
@@ -84,7 +92,8 @@ public class TaskModel extends AbstractModel {
     }
 
     /**
-     * @param title The task title to be set
+     * @param title
+     *            The task title to be set
      */
     public void setTitle(String title) {
         this.title = title;
@@ -98,7 +107,8 @@ public class TaskModel extends AbstractModel {
     }
 
     /**
-     * @param description The description of this task to be set
+     * @param description
+     *            The description of this task to be set
      */
     public void setDescription(String description) {
         this.description = description;
@@ -112,7 +122,8 @@ public class TaskModel extends AbstractModel {
     }
 
     /**
-     * @param user Adds a user to the list of assigned users
+     * @param user
+     *            Adds a user to the list of assigned users
      */
     public void setAssignedTo(User user) {
         this.assignedTo.add(user);
@@ -126,7 +137,8 @@ public class TaskModel extends AbstractModel {
     }
 
     /**
-     * @param dueDate The due date of the task to be set.
+     * @param dueDate
+     *            The due date of the task to be set.
      */
     public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
@@ -134,7 +146,9 @@ public class TaskModel extends AbstractModel {
 
     /**
      * Copy all of the fields from another TaskModel
-     * @param other The TaskModel to be copied
+     * 
+     * @param other
+     *            The TaskModel to be copied
      */
     public void copyFrom(TaskModel other) {
         this.title = other.getTitle();
@@ -143,10 +157,12 @@ public class TaskModel extends AbstractModel {
         this.estimatedEffort = other.getEstimatedEffort();
         this.dueDate = other.getDueDate();
         this.actualEffort = other.getActualEffort();
+        this.activityIds = other.getActivityIds();
     }
-    
+
     /**
      * Converts this task object to a JSON string
+     * 
      * @return A string in JSON representing this Task
      */
     public String toJson() {
@@ -158,7 +174,9 @@ public class TaskModel extends AbstractModel {
 
     /**
      * Converts the given list of tasks to a JSON string
-     * @param tlist A list of Tasks
+     * 
+     * @param tlist
+     *            A list of Tasks
      * @return A string in JSON representing the list of tasks
      */
     public static String toJson(TaskModel[] tlist) {
@@ -170,25 +188,28 @@ public class TaskModel extends AbstractModel {
 
     /**
      * Convert the given JSON string to a TaskModel instance
+     * 
      * @return The JSON string representing the object
      */
     public static TaskModel fromJson(String json) {
         final Gson parser = new Gson();
         return parser.fromJson(json, TaskModel.class);
     }
-    
+
     /**
-     * Convert the given JSON string with a JSON array of tasks
-     * into an array of tasks
+     * Convert the given JSON string with a JSON array of tasks into an array of
+     * tasks
+     * 
      * @return TaskModel array
      */
     public static TaskModel[] fromJsonArray(String json) {
         final Gson parser = new Gson();
         return parser.fromJson(json, TaskModel[].class);
     }
-    
+
     /**
      * NEEDS A COMMENT
+     * 
      * @see edu.wpi.cs.wpisuitetng.modules.Model#identify(java.lang.Object)
      */
     public Boolean identify(Object o) {
@@ -201,7 +222,7 @@ public class TaskModel extends AbstractModel {
         }
         return returnValue;
     }
-    
+
     /**
      * Will implement later
      */
@@ -224,7 +245,8 @@ public class TaskModel extends AbstractModel {
     }
 
     /**
-     * @param estimatedEffort The estimated effort of this task to be set
+     * @param estimatedEffort
+     *            The estimated effort of this task to be set
      */
     public void setEstimatedEffort(int estimatedEffort) {
         this.estimatedEffort = estimatedEffort;
@@ -238,10 +260,39 @@ public class TaskModel extends AbstractModel {
     }
 
     /**
-     * @param actualEffort The actual effort of this task to be set
+     * @param actualEffort
+     *            The actual effort of this task to be set
      */
     public void setActualEffort(int actualEffort) {
         this.actualEffort = actualEffort;
     }
 
+    /**
+     * return the list of activity ids
+     * 
+     * @return activityIds linked list of activity ids
+     */
+    public List<Integer> getActivityIds() {
+        return activityIds;
+    }
+
+    /**
+     * set the activity list to the given list
+     * 
+     * @param activityIds
+     *            the list to be copied from
+     */
+    public void setActivityIds(List<Integer> activityIds) {
+        this.activityIds = activityIds;
+    }
+
+    /**
+     * Adds an activity id to the list to keep track of activities
+     * 
+     * @param id
+     *            the activity id
+     */
+    public void addActivityID(int id) {
+        activityIds.add(id);
+    }
 }

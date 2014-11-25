@@ -49,7 +49,7 @@ import java.awt.Font;
  */
 public class TaskView extends JPanel {
     private static final long serialVersionUID = -997563229078386090L;
-    
+
     private int index;
     private ViewMode viewMode;
 
@@ -79,18 +79,19 @@ public class TaskView extends JPanel {
     private final static LineBorder invalidBorder = new LineBorder(Color.RED, 1);
     private final static Color modifiedColor = Color.BLACK;
     private final static Color unmodifiedColor = Color.GRAY;
-    
+
     static {
         /* Change the default icons for JXDatePicker. */
         UIManager.put("JXDatePicker.arrowIcon", Icons.CALENDAR);
         UIManager.put("JXMonthView.monthDownFileName", Icons.LEFT_ARROW);
         UIManager.put("JXMonthView.monthUpFileName", Icons.RIGHT_ARROW);
     }
-    
+
     /**
      * Create a new TaskView with the specified default values.
      *
-     * @param model The initial data that will be displayed
+     * @param model
+     *            The initial data that will be displayed
      * @see #setTaskNameField(String)
      * @see #setEstimatedEffort(int)
      * @see #setDescriptionText(String)
@@ -150,8 +151,7 @@ public class TaskView extends JPanel {
         this.descriptionMessage.setWrapStyleWord(true);
         this.descriptionMessage.setLineWrap(true);
         this.viewMode = viewMode;
-        
-        
+
         DocumentListener validateListener = new DocumentListener() {
             /** {@inheritDoc} */
             @Override
@@ -171,20 +171,23 @@ public class TaskView extends JPanel {
                 validateFields();
             }
         };
-        
+
         ChangeListener changeListener = (ChangeEvent) -> {
             validateFields();
         };
-        
-        /* Re-validate all of the input fields every time any field is changed
+
+        /*
+         * Re-validate all of the input fields every time any field is changed
          * by the user.
          */
         this.taskNameField.getDocument().addDocumentListener(validateListener);
         this.actualEffortSpinner.addChangeListener(changeListener);
         this.estEffortSpinner.addChangeListener(changeListener);
-        this.datePicker.getEditor().getDocument().addDocumentListener(validateListener);
-        this.descriptionMessage.getDocument().addDocumentListener(validateListener);
-        
+        this.datePicker.getEditor().getDocument()
+                .addDocumentListener(validateListener);
+        this.descriptionMessage.getDocument().addDocumentListener(
+                validateListener);
+
         setModel(model);
     }
 
@@ -218,7 +221,9 @@ public class TaskView extends JPanel {
 
     /**
      * Set all of the fields in the view from the data in the model
-     * @param model the {@link TaskModel} to copy into the view
+     * 
+     * @param model
+     *            the {@link TaskModel} to copy into the view
      */
     public void setModel(TaskModel model) {
         this.model = model;
@@ -264,79 +269,88 @@ public class TaskView extends JPanel {
     public Date getDueDate() {
         return this.datePicker.getDate();
     }
-    
+
     /**
-     * @param index The index of the tab this view is in
+     * @param index
+     *            The index of the tab this view is in
      */
-    public void setIndex(int index){
+    public void setIndex(int index) {
         this.index = index;
     }
-    
+
     /**
      * @return The index of this tab
      */
-    public int getIndex(){
+    public int getIndex() {
         return this.index;
     }
-    
+
     /**
-     * @param viewMode Either Creating or editing based on what the user is doing
+     * @param viewMode
+     *            Either Creating or editing based on what the user is doing
      */
-    public void setViewMode(ViewMode viewMode){
+    public void setViewMode(ViewMode viewMode) {
         this.viewMode = viewMode;
         buttonPanel.validateButtons(viewMode);
     }
-    
-    public ViewMode getViewMode(){
+
+    public ViewMode getViewMode() {
         return this.viewMode;
     }
-    
+
     /**
-     * Check that all fields are valid and update the user interface to
-     * provide feedback on what isn't valid.
+     * Check that all fields are valid and update the user interface to provide
+     * feedback on what isn't valid.
      */
     private void validateFields() {
         JFormattedTextField dateEditor = this.datePicker.getEditor();
-        
-        /* The title and description both have to contain something besides
+
+        /*
+         * The title and description both have to contain something besides
          * leading and trailing whitespace, and the due date must be a valid
          * date.
          */
         boolean isTitleInvalid = this.taskNameField.getText().trim().isEmpty();
-        boolean isDescriptionInvalid = this.descriptionMessage.getText().trim().isEmpty();
+        boolean isDescriptionInvalid = this.descriptionMessage.getText().trim()
+                .isEmpty();
         boolean isDateInvalid = dateEditor.getText().trim().isEmpty();
-        
-        /* Try to parse the text in the datefield.  If unsucessful, mark the
-         * date field as invalid.
+
+        /*
+         * Try to parse the text in the datefield. If unsucessful, mark the date
+         * field as invalid.
          */
         try {
             dateEditor.getFormatter().stringToValue(dateEditor.getText());
         } catch (ParseException e) {
             isDateInvalid = true;
         }
-        
-        final boolean isValid = !isTitleInvalid && !isDescriptionInvalid && !isDateInvalid;
-        
-        /* Set an error message if at least one field doesn't have a valid value. */
+
+        final boolean isValid = !isTitleInvalid && !isDescriptionInvalid
+                && !isDateInvalid;
+
+        /*
+         * Set an error message if at least one field doesn't have a valid
+         * value.
+         */
         if (isValid) {
             this.buttonPanel.clearError();
         } else {
             this.buttonPanel.setError("The highlighted fields are required");
         }
-        
+
         /* Set an red border on input fields that aren't valid */
         if (isTitleInvalid) {
             this.taskNameField.setBorder(invalidBorder);
         } else {
             this.taskNameField.setBorder(validBorder);
         }
-        
+
         if (isDescriptionInvalid) {
             this.descriptionMessage.setBorder(invalidBorder);
         } else {
             this.descriptionMessage.setBorder(validBorder);
         }
-        
+
         if (isDateInvalid) {
             this.datePicker.setBorder(invalidBorder);
         } else {
@@ -344,9 +358,11 @@ public class TaskView extends JPanel {
         }
 
         boolean isModified = false;
-        
-        /* Set the color of each label based on weather or not its value was
-         * changed by the user. */
+
+        /*
+         * Set the color of each label based on weather or not its value was
+         * changed by the user.
+         */
         if (this.getTaskNameField().equals(this.model.getTitle())) {
             this.taskNameLabel.setForeground(unmodifiedColor);
         } else {
@@ -372,12 +388,12 @@ public class TaskView extends JPanel {
         } else {
             isModified = true;
         }
-        
+
         /* The date value might be null */
         boolean datesAreEqual;
         if (this.getDueDate() == null && this.model.getDueDate() == null) {
             datesAreEqual = true;
-        } else if(this.getDueDate() == null || this.model.getDueDate() == null) {
+        } else if (this.getDueDate() == null || this.model.getDueDate() == null) {
             datesAreEqual = false;
         } else {
             datesAreEqual = this.getDueDate().equals(this.model.getDueDate());
@@ -389,14 +405,23 @@ public class TaskView extends JPanel {
             this.dateLabel.setForeground(modifiedColor);
             isModified = true;
         }
-        
-        
-        /* Allow the user to save the task if something is modified and
+
+        /*
+         * Allow the user to save the task if something is modified and
          * everything is still valid.
          */
         this.buttonPanel.setOkEnabledStatus(isValid && isModified);
-        
+
         /* Allow the user to reset the fields if something is modified. */
         this.buttonPanel.setClearEnabledStatus(isModified);
+    }
+
+    /**
+     * @return the commentPanel of this Task View. Contains the Comment User
+     *         used wants to post Casted to a commentView because cannot
+     *         .getText() of a JPanel
+     */
+    public CommentView getCommentView() {
+        return (CommentView) this.commentPanel;
     }
 }
