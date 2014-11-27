@@ -13,7 +13,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.swing.event.DocumentEvent;
@@ -44,11 +47,12 @@ public class TaskPresenter {
     private ViewMode viewMode;
 
     private BucketPresenter bucket;
-    private List<ActivityPresenter> activityPresenters; 
+    private List<ActivityPresenter> activityPresenters;
 
     /**
      * Constructs a TaskPresenter for the given model. Constructs the view
      * offscreen, available if you call getView().
+     * 
      * @param id
      *            ID of the bucket to create
      */
@@ -60,7 +64,7 @@ public class TaskPresenter {
         this.model.setTitle("New Task");
         this.view = new TaskView(model, viewMode);
         this.miniView = new MiniTaskView(model.getTitle(), model.getDueDate());
-        this.activityPresenters = new ArrayList<ActivityPresenter>(); 
+        this.activityPresenters = new ArrayList<ActivityPresenter>();
         registerCallbacks();
     }
 
@@ -72,10 +76,11 @@ public class TaskPresenter {
         miniView.addOnClickOpenTabView(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                MainView.getInstance().addTab(model.getTitle(), Icons.TASK, view);
+                MainView.getInstance().addTab(model.getTitle(), Icons.TASK,
+                        view);
                 view.setViewMode(ViewMode.EDITING);
                 int tabCount = MainView.getInstance().getTabCount();
-                view.setIndex(tabCount-1);
+                view.setIndex(tabCount - 1);
                 MainView.getInstance().setSelectedIndex(tabCount - 1);
             }
 
@@ -101,15 +106,19 @@ public class TaskPresenter {
             public void actionPerformed(ActionEvent e) {
                 saveView();
                 updateView(); // might be redundant
-                MainView.getInstance().setTitleAt(view.getIndex(), model.getTitle());
-                if(viewMode == ViewMode.CREATING){
+                MainView.getInstance().setTitleAt(view.getIndex(),
+                        model.getTitle());
+                if (viewMode == ViewMode.CREATING) {
+                    addHistory("Create");
                     createInDatabase();
                     bucket.addMiniTaskView(miniView);
                     view.setViewMode(ViewMode.EDITING);
-                    int index = MainView.getInstance().indexOfTab(model.getTitle());
+                    int index = MainView.getInstance().indexOfTab(
+                            model.getTitle());
                     MainView.getInstance().remove(index);
                     MainView.getInstance().setSelectedIndex(0);
-                }
+                } else
+                    addHistory("Update");
                 view.revalidate();
                 view.repaint();
                 miniView.revalidate();
@@ -139,7 +148,9 @@ public class TaskPresenter {
                 view.repaint();
                 miniView.revalidate();
                 miniView.repaint();
-                MainView.getInstance().setTitleAt(view.getIndex(), model.getTitle());
+                MainView.getInstance().setTitleAt(view.getIndex(),
+                        model.getTitle());
+                addHistory("Clear");
             }
         });
 
@@ -148,13 +159,16 @@ public class TaskPresenter {
             public void actionPerformed(ActionEvent e) {
                 int index = MainView.getInstance().indexOfTab(model.getTitle());
                 MainView.getInstance().remove(index);
-                MainView.getInstance().getWorkflowPresenter().archiveTask(model.getId(), bucket.getModel().getId());
-                MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
-                bucket.getView().getComponentAt(view.getLocation()).setVisible(false);
+                MainView.getInstance().getWorkflowPresenter()
+                        .archiveTask(model.getId(), bucket.getModel().getId());
+                MainView.getInstance().getArchive().getArchiveBucket()
+                        .addTaskToView(miniView);
+                bucket.getView().getComponentAt(view.getLocation())
+                        .setVisible(false);
 
             }
         });
-        
+
         view.getCommentView().addOnPostListener(new ActionListener() {
 
             @Override
@@ -178,7 +192,50 @@ public class TaskPresenter {
     }
 
     /**
+     * Automatically generates a comment based on what the user has done.
+     * 
+     * @param type
+     *            the type of action that generated the activity
+     */
+    public void addHistory(String type) {
+        String activity = "";
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+        Calendar cal = Calendar.getInstance();
+        switch (type) {
+        case "Clear":
+            activity = "[USER] has reverted changes on "
+                    + dateFormat.format(cal.getTime());
+            break;
+        case "Create":
+            activity = "[USER] has created a task on "
+                    + dateFormat.format(cal.getTime());
+            break;
+        case "Update":
+            activity = "[USER] has updated a task on "
+                    + dateFormat.format(cal.getTime());
+            break;
+        case "Move":
+            activity = "[USER] has moved a task from x to y on "
+                    + dateFormat.format(cal.getTime());
+            break;
+        case "Remove":
+            activity = "[USER] has removed a task on "
+                    + dateFormat.format(cal.getTime());
+            break;
+        default:
+            break;
+        }
+
+        ActivityPresenter activityPresenter = new ActivityPresenter(this,
+                activity, true);
+        view.getCommentView().postHistory(activityPresenter.getView());
+        activityPresenter.createInDatabase();
+        activityPresenters.add(activityPresenter);
+    }
+
+    /**
      * saves an activity in the model with the given ID from the DataBase
+     * 
      * @param id
      *            database given ID
      */
@@ -186,7 +243,7 @@ public class TaskPresenter {
         model.addActivityID(id);
         saveView();
     }
-    
+
     /**
      * Create a new task in the database. Initializes an async network request
      * with an observer.
@@ -244,7 +301,7 @@ public class TaskPresenter {
         miniView.setDueDate(model.getDueDate());
         updateCommentView();
     }
-    
+
     /**
      * takes the current comment view, clears the posts, and puts each comment,
      * one by one back on to the current view.
@@ -252,13 +309,16 @@ public class TaskPresenter {
     public void updateCommentView() {
         view.getCommentView().clearPosts();
         for (ActivityPresenter p : activityPresenters) {
-            view.getCommentView().postActivity(p.getView());
+            if (p.getModel().getIsAutogen())
+                view.getCommentView().postHistory(p.getView());
+            else
+                view.getCommentView().postActivity(p.getView());
         }
         view.getCommentView().revalidate();
         view.getCommentView().repaint();
     }
-    
-    public void setTheViewViewMode(ViewMode viewMode){
+
+    public void setTheViewViewMode(ViewMode viewMode) {
         view.setViewMode(viewMode);
     }
 
@@ -278,6 +338,7 @@ public class TaskPresenter {
 
     /**
      * Get the model for this class.
+     * 
      * @return This provider's model.
      */
     public TaskModel getModel() {
@@ -286,6 +347,7 @@ public class TaskPresenter {
 
     /**
      * Set the model for this class.
+     * 
      * @param model
      *            This provider's model.
      */

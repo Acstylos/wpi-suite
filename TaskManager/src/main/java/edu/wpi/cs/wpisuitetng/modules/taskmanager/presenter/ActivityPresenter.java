@@ -50,6 +50,16 @@ public class ActivityPresenter {
         this.model = new ActivityModel();
         this.commentView = task.getView().getCommentView();
         this.model.setActivity(activity);
+        this.model.setIsAutogen(false);
+        this.view = new ActivityView(this.model.    getActivity());
+    }
+    
+    public ActivityPresenter(TaskPresenter task, String activity, boolean isAutogen) {
+        this.parentTask = task;
+        this.model = new ActivityModel();
+        this.commentView = task.getView().getCommentView();
+        this.model.setActivity(activity);
+        this.model.setIsAutogen(true);
         this.view = new ActivityView(this.model.getActivity());
     }
 
@@ -82,7 +92,10 @@ public class ActivityPresenter {
      */
     public void updateView() {
         view.setActivity(model.getActivity());
-        commentView.postActivity(view);
+        if(model.getIsAutogen())
+            commentView.postHistory(view);
+        else
+            commentView.postActivity(view);
         commentView.revalidate();
         commentView.repaint();
 
@@ -108,19 +121,6 @@ public class ActivityPresenter {
                 "taskmanager/activity/" + model.getId(), HttpMethod.GET);
         request.addObserver(new ActivityObserver(this));
 
-        request.send();
-    }
-
-    /**
-     * Write the model to the network/database. Must be created already.
-     */
-    private void updateToDataBase() {
-        updateModel();
-
-        Request request = Network.getInstance().makeRequest(
-                "taskmanager/activity", HttpMethod.POST); // Update.
-        request.setBody(model.toJson());
-        request.addObserver(new ActivityObserver(this));
         request.send();
     }
 

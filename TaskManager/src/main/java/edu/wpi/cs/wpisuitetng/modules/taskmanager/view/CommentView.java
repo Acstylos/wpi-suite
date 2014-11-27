@@ -125,6 +125,22 @@ public class CommentView extends JTabbedPane {
     }
     
     /**
+     * Posts the new activity to the history panel view
+     * 
+     * @param newComment
+     *            the activity to be posted, auto generated
+     */
+    public void postHistory(ActivityView newComment) {
+        postedHistoryPanel.add(newComment, "dock south");
+        JScrollBar vertical = historyScroll.getVerticalScrollBar();
+        JScrollBar horizontal = historyScroll.getHorizontalScrollBar();
+        postedHistoryPanel.revalidate();
+        postedHistoryPanel.repaint();
+        vertical.setValue(vertical.getMinimum());
+        horizontal.setValue(horizontal.getMinimum());
+    }
+    
+    /**
      * Sets up the button listeners so that buttons can do things.
      */
     private void setupListeners() {
