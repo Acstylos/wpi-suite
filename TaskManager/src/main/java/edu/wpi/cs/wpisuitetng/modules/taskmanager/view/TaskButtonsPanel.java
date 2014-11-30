@@ -39,6 +39,10 @@ public class TaskButtonsPanel extends JPanel {
      * Create the panel.
      */
     public TaskButtonsPanel(ViewMode viewMode) {
+        validateButtons(viewMode);
+    }
+    
+    public void validateButtons(ViewMode viewMode){
         this.setLayout(new MigLayout("", "[][][][]", "[]"));
         this.add(okButton);
         if(viewMode != ViewMode.ARCHIVING)
@@ -47,10 +51,6 @@ public class TaskButtonsPanel extends JPanel {
             this.add(cancelButton);
         if(viewMode != ViewMode.CREATING)
             this.add(deleteButton);
-        validateButtons(viewMode);
-    }
-    
-    public void validateButtons(ViewMode viewMode){
         if (viewMode == ViewMode.CREATING) {
             okString = "Create";
             clearString = "Clear";
