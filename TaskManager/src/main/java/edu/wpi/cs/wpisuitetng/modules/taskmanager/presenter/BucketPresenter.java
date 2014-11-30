@@ -140,10 +140,12 @@ public class BucketPresenter {
      * Sends an async update to the database
      * @param id  ID of the existing task
      */
-    public void removeTask(int id) {
-        model.removeTaskId(id);
+    public void removeTask(int rmid) {
+    	System.out.println("Removed task: " + rmid);
+        model.removeTaskId(rmid);
+        System.out.println("New Task Id List: " + model.getTaskIds());
+        taskMap.remove(rmid);
         updateInDatabase();
-        writeModelToView();
     }
     
     /**
@@ -151,10 +153,12 @@ public class BucketPresenter {
      * Sends an async update to the database.
      * @param id ID of the existing task.
      */
-    public void addTask(int id){
+    public void addTask(int id, TaskPresenter taskPresenter){
+    	System.out.println("Added task: " + id);
         model.addTaskID(id);
+        System.out.println("New Task Id List: " + model.getTaskIds());
+        taskMap.put(id, taskPresenter);
         updateInDatabase();
-        writeModelToView();
     }
 
     /**
@@ -188,7 +192,8 @@ public class BucketPresenter {
      *            The model sent from the network
      */
     public void responsePost(BucketModel model) {
-
+    	writeModelToView();
+    	System.out.println("Posted");
     }
 
     /**
@@ -241,4 +246,13 @@ public class BucketPresenter {
     public void addMiniTaskView(MiniTaskView miniView) {
         view.addTaskToView(miniView);
     }
+    
+    /**
+     * 
+     * @param id Id of the TaskPresenter mapped in his bucketPresenter's task HashMap
+     * @return The TaskPresenter associated with the id given
+     */
+	public TaskPresenter getTask(int id) {
+		return taskMap.get(id);
+	}
 }

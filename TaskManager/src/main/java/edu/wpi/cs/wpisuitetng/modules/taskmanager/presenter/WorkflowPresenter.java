@@ -206,8 +206,9 @@ public class WorkflowPresenter {
      *            The id of the bucket task moved from
      */
     public void moveTask(int taskId, int toId, int fromId) {
-        bucketPresenters.get(toId).addTask(taskId);
+        bucketPresenters.get(toId).addTask(taskId, bucketPresenters.get(fromId).getTask(taskId));
         bucketPresenters.get(fromId).removeTask(taskId);
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAA");
     }
 
     /**
@@ -221,4 +222,13 @@ public class WorkflowPresenter {
     public void archiveTask(int taskId, int bucketId) {
         moveTask(taskId, 5, bucketId);
     }
+
+    /**
+     * get the bucket id from the hashmap
+     * @param id
+     * @return 
+     */
+	public BucketPresenter getBucket(int id) {
+		return bucketPresenters.get(id);
+	}
 }

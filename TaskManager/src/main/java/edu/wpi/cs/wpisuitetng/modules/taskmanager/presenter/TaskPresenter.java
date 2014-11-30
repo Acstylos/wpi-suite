@@ -71,6 +71,7 @@ public class TaskPresenter {
             public void mouseClicked(MouseEvent e) {
                 MainView.getInstance().addTab(model.getTitle(), view);
                 view.setViewMode(ViewMode.EDITING);
+                viewMode = view.getViewMode();
                 int tabCount = MainView.getInstance().getTabCount();
                 view.setIndex(tabCount-1);
                 MainView.getInstance().setSelectedIndex(tabCount - 1);
@@ -100,22 +101,27 @@ public class TaskPresenter {
             @Override
             public void actionPerformed(ActionEvent e) {
             	int index = MainView.getInstance().indexOfComponent(view);
+            	System.out.println("Viewmode: " + viewMode);
             	if(viewMode == ViewMode.CREATING){
             	    //CREATING MODE
-            	    saveView();
+            		updateModel();
+            		createInDatabase();
             	    //updateModel();
-                    createInDatabase();
+                    view.setViewMode(ViewMode.EDITING);
                     MainView.getInstance().remove(index);
                     MainView.getInstance().setSelectedIndex(0);
-                    MainView.getInstance().getWorkflowPresenter().moveTask(model.getId(), view.getStatus().getSelectedIndex()+1, bucket.getModel().getId());
+            		System.out.println("Successfully created task!");
             	}
             	//EDITING MODE
             	//TODO: make an archive mode
             	else {
+            		MainView.getInstance().getWorkflowPresenter().moveTask(model.getId(), view.getStatus().getSelectedIndex() + 1, bucket.getModel().getId());
+            		bucket.writeModelToView();
             		saveView();
             		updateView();
             		MainView.getInstance().setTitleAt(index, model.getTitle());
-            		MainView.getInstance().getWorkflowPresenter().moveTask(model.getId(), view.getStatus().getSelectedIndex()+1, bucket.getModel().getId());
+            		bucket.writeModelToView();
+            		System.out.println("Successfully edited task!");
             	}
             }
         });
@@ -152,6 +158,7 @@ public class TaskPresenter {
                 int index = MainView.getInstance().indexOfComponent(view);
                 MainView.getInstance().remove(index);
                 MainView.getInstance().getWorkflowPresenter().archiveTask(model.getId(), bucket.getModel().getId());
+                bucket.writeModelToView();
                 MainView.getInstance().setSelectedIndex(0);
             }
         });
@@ -184,6 +191,7 @@ public class TaskPresenter {
                 HttpMethod.PUT);
         request.setBody(this.model.toJson());
         request.addObserver(new TaskObserver(this));
+        System.out.println("Attempting to make new task");
         request.send();
     }
 
@@ -222,6 +230,7 @@ public class TaskPresenter {
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
         model.setStatus(view.getStatus().getSelectedIndex()+1);
+        this.bucket = MainView.getInstance().getWorkflowPresenter().getBucket(view.getStatus().getSelectedIndex()+1);
     }
 
     /**
@@ -234,7 +243,6 @@ public class TaskPresenter {
         view.setDescriptionText(model.getDescription());
         view.setDueDate(model.getDueDate());
         view.setStatus(model.getStatus());
-        System.out.println("view index" + model.getStatus());
         miniView.setTaskName(model.getTitle());
         miniView.setDueDate(model.getDueDate());
     }
