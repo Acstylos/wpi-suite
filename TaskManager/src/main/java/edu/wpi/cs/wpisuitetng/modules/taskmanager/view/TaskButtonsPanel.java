@@ -37,8 +37,19 @@ public class TaskButtonsPanel extends JPanel {
 
     /**
      * Create the panel.
+     * @param viewMode 
+     *        the currently enabled view
      */
     public TaskButtonsPanel(ViewMode viewMode) {
+        validateButtons(viewMode);
+    }
+    
+    /**
+     * Assign a viewMode and ensure that all buttons are labeled correctly
+     * @param viewMode 
+     *            the currently enabled viewMode
+     */
+    public void validateButtons(ViewMode viewMode){
         this.setLayout(new MigLayout("", "[][][][]", "[]"));
         this.add(okButton);
         if(viewMode != ViewMode.ARCHIVING)
@@ -47,10 +58,6 @@ public class TaskButtonsPanel extends JPanel {
             this.add(cancelButton);
         if(viewMode != ViewMode.CREATING)
             this.add(deleteButton);
-        validateButtons(viewMode);
-    }
-    
-    public void validateButtons(ViewMode viewMode){
         if (viewMode == ViewMode.CREATING) {
             okString = "Create";
             clearString = "Clear";
@@ -67,18 +74,38 @@ public class TaskButtonsPanel extends JPanel {
         this.deleteButton.setText(deleteString);
     }
     
+    /**
+     * Add the listener for the ok Button
+     * @param listener
+     *   The action that calls the listener
+     */
     public void addOkOnClickListener(ActionListener listener){
         this.okButton.addActionListener(listener);
     }
     
+    /** 
+     * Add the listener for the cancel Button
+     * @param listener 
+     *        The action that calls the listener
+     */
     public void addCancelOnClickListener(ActionListener listener){
         this.cancelButton.addActionListener(listener);
     }
     
+    /**
+     * Add the listener for the clear button
+     * @param listener
+     *        The action that calls the listener
+     */
     public void addClearOnClickListener(ActionListener listener){
         this.clearButton.addActionListener(listener);
     }
     
+    /**
+     * Add the listener for the delete button
+     * @param listener
+     *   The action that calls the listener
+     */
     public void addDeleteOnClickListener(ActionListener listener){
         this.deleteButton.addActionListener(listener);
     }

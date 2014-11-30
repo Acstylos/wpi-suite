@@ -29,7 +29,7 @@ import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 public class BucketPresenter {
 
     private BucketView view;
-    private BucketModel model;    
+    private BucketModel model;
     private Map<Integer, TaskPresenter> taskMap;
     private WorkflowPresenter workflow;
 
@@ -116,9 +116,8 @@ public class BucketPresenter {
         List<Integer> taskIds = model.getTaskIds();
         view.setTaskViews(new ArrayList<>());
         view.setTaskViews(new ArrayList<MiniTaskView>());
-        System.out.println(model.getTitle() + ": " + taskIds.toString());
         for (int i : taskIds) {
-            if(!taskMap.containsKey(i)){
+            if (!taskMap.containsKey(i)) {
                 taskMap.put(i, new TaskPresenter(i, this, ViewMode.EDITING));
             }
             taskMap.get(i).updateFromDatabase();
@@ -136,25 +135,31 @@ public class BucketPresenter {
     }
 
     /**
-     * remove a task ID from the list of taskIDs in the model
-     * Sends an async update to the database
-     * @param id  ID of the existing task
+     * remove a task ID from the list of taskIDs in the model Sends an async
+     * update to the database
+     * 
+     * @param id
+     *            ID of the existing task
      */
-    public void removeTask(int id) {
-        model.removeTaskId(id);
+    public void removeTask(int rmid) {
+        model.removeTaskId(rmid);
+        taskMap.remove(rmid);
         updateInDatabase();
-        writeModelToView();
     }
-    
+
     /**
-     * Adds a task ID to the list of taskIDs in the model.
-     * Sends an async update to the database.
-     * @param id ID of the existing task.
+     * Adds a task ID to the list of taskIDs in the bucket model. Sends an async update
+     * to the database.
+     * 
+     * @param id
+     *            ID of the existing task.
+     * @param taskPresenter 
+     *            taskPresenter associated with the task
      */
-    public void addTask(int id){
+    public void addTask(int id, TaskPresenter taskPresenter) {
         model.addTaskID(id);
+        taskMap.put(id, taskPresenter);
         updateInDatabase();
-        writeModelToView();
     }
 
     /**
@@ -188,7 +193,7 @@ public class BucketPresenter {
      *            The model sent from the network
      */
     public void responsePost(BucketModel model) {
-
+        writeModelToView();
     }
 
     /**
@@ -236,9 +241,22 @@ public class BucketPresenter {
     }
 
     /**
-     * @param miniView simply add the miniTaskView to view
+     * Add the miniTaskView to view
+     * @param miniView
+     *           The miniView associated with the task being added
      */
     public void addMiniTaskView(MiniTaskView miniView) {
         view.addTaskToView(miniView);
+    }
+
+    /**
+     * 
+     * @param id
+     *            Id of the TaskPresenter mapped in his bucketPresenter's task
+     *            HashMap
+     * @return The TaskPresenter associated with the id given
+     */
+    public TaskPresenter getTask(int id) {
+        return taskMap.get(id);
     }
 }

@@ -37,6 +37,10 @@ public class MiniTaskView extends JPanel {
         this.taskNameLabel.setText(taskName);
     }
     
+    /**
+     * Add the listener for changing tabs
+     * @param listener  the event that will trigger the action
+     */     
     public void addOnClickOpenTabView(MouseListener listener){
         this.addMouseListener(listener);
     }
