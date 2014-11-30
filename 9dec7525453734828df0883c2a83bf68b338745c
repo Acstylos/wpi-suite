@@ -22,6 +22,142 @@
       "revId": "9dec7525453734828df0883c2a83bf68b338745c",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_7d5f270f",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/BucketPresenter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-11-30T15:36:17Z",
+      "side": 1,
+      "message": "Is this really a description of the parameter or is it a description of the function?",
+      "revId": "9dec7525453734828df0883c2a83bf68b338745c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_dd9bb3c7",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-11-30T15:36:17Z",
+      "side": 1,
+      "message": "Add a comment",
+      "revId": "9dec7525453734828df0883c2a83bf68b338745c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_bda06ff5",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-11-30T15:36:17Z",
+      "side": 1,
+      "message": "Does this code need to be commented out or can it be deleted?",
+      "revId": "9dec7525453734828df0883c2a83bf68b338745c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_1da6db10",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-11-30T15:36:17Z",
+      "side": 1,
+      "message": "Comment needed for the function",
+      "revId": "9dec7525453734828df0883c2a83bf68b338745c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_5dafc3e3",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-11-30T15:36:17Z",
+      "side": 1,
+      "message": "needs comment",
+      "revId": "9dec7525453734828df0883c2a83bf68b338745c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_dd829351",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/TaskButtonsPanel.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-11-30T15:36:17Z",
+      "side": 1,
+      "message": "missing @param",
+      "revId": "9dec7525453734828df0883c2a83bf68b338745c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_7db6073f",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/TaskButtonsPanel.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-11-30T15:36:17Z",
+      "side": 1,
+      "message": "Comment required",
+      "revId": "9dec7525453734828df0883c2a83bf68b338745c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_bd87cf60",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/TaskButtonsPanel.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-11-30T15:36:17Z",
+      "side": 1,
+      "message": "Comment required",
+      "revId": "9dec7525453734828df0883c2a83bf68b338745c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
