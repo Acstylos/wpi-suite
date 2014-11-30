@@ -1,5 +1,7 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -9,6 +11,7 @@ import net.miginfocom.swing.MigLayout;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -24,9 +27,11 @@ public class ToolbarView extends JPanel
      * @param visible boolean
      */
     public ToolbarView() {
-        setLayout(new MigLayout("fill"));
+        setLayout(new MigLayout("", "[fill]", "[grow]"));
         
-        JButton createNewTaskButton = new JButton("Create New Task");
+        JButton createNewTaskButton = new JButton("<html>Create<br/>Task</html>");
+        createNewTaskButton.setIcon(Icons.CREATE_TASK_LARGE);
+        
         
         /**
          * Adds a new TaskView Tab into the MainView
@@ -41,7 +46,7 @@ public class ToolbarView extends JPanel
                 MainView.getInstance().setSelectedIndex(tabCount-1);
             }
         });
-        add(createNewTaskButton, "dock west");
+        add(createNewTaskButton, "cell 0 0");
     }
     
 }

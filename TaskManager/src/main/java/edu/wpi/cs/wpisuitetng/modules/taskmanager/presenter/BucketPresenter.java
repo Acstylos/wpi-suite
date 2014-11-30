@@ -6,14 +6,23 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ViewMode;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
@@ -132,6 +141,22 @@ public class BucketPresenter {
      * Register callbacks with the local view.
      */
     private void registerCallbacks() {
+    }
+    
+    /**
+     * Adds a new task to the bucket view, in the form of a miniTaskView
+     */
+    public void addNewTaskToView(){
+        
+        TaskPresenter taskPresenter = new TaskPresenter(0, this, ViewMode.CREATING);
+        //taskPresenter.createInDatabase();
+        TaskModel taskModel = taskPresenter.getModel();
+        TaskView taskView = taskPresenter.getView();
+        
+        MainView.getInstance().addTab(taskModel.getTitle(), Icons.TASK, taskView);
+        int tabCount = MainView.getInstance().getTabCount();
+        taskView.setIndex(tabCount-1);
+        MainView.getInstance().setSelectedIndex(tabCount-1);
     }
 
     /**
