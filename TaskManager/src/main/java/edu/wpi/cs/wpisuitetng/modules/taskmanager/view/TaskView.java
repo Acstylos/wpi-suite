@@ -53,7 +53,7 @@ public class TaskView extends JPanel {
     private JPanel detailsPanel = new JPanel();
     private JPanel infoPanel = new JPanel();
     private JPanel splitPanel = new JPanel();
-    private UserListView usersPanel = new UserListView();
+    private UserListsView usersPanel = new UserListsView();
     private JScrollPane scrollPane = new JScrollPane();
     private JSpinner actualEffortSpinner = new JSpinner();
     private JSpinner estEffortSpinner = new JSpinner();
@@ -266,6 +266,9 @@ public class TaskView extends JPanel {
         buttonPanel.validateButtons(viewMode);
     }
     
+    /**
+     * @return The view mode of the task
+     */
     public ViewMode getViewMode(){
         return this.viewMode;
     }
@@ -280,5 +283,12 @@ public class TaskView extends JPanel {
             this.buttonPanel.setOkEnabledStatus(true);
         }
         
+    }
+    
+    /**
+     * @return returns the panel that users are on
+     */
+    public UserListsView getUserListPanel() {
+        return this.usersPanel;
     }
 }

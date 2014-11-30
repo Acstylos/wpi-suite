@@ -11,11 +11,10 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -76,7 +75,7 @@ public class TaskPresenter {
      */
     private void registerCallbacks() {
         // onclick listener to open new tabs when minitaskview is clicked
-        miniView.addOnClickOpenTabView(new MouseListener() {
+        miniView.addOnClickOpenTabView(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 MainView.getInstance().addTab(model.getTitle(), view);
@@ -84,22 +83,6 @@ public class TaskPresenter {
                 int tabCount = MainView.getInstance().getTabCount();
                 view.setIndex(tabCount - 1);
                 MainView.getInstance().setSelectedIndex(tabCount - 1);
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
             }
         });
 
@@ -211,12 +194,13 @@ public class TaskPresenter {
         request.send();
     }
 
+    /**
+     * @param users User array of all users in the database
+     */
     public void addUsersToAllUserList(User[] users) {
-
         for (User user : users) {
-
             this.allUserList.add(user.getIdNum());
-
+            this.view.getUserListPanel().addUserToList(user.getName(), true);
         }
         System.out.println(allUserList);
     }

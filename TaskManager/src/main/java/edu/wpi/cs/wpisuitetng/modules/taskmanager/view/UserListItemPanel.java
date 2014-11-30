@@ -1,83 +1,73 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 
 import net.miginfocom.swing.MigLayout;
-
-import javax.swing.JLabel;
-
+import javax.swing.border.EmptyBorder;
 import java.awt.Color;
-import java.awt.Point;
-
+import javax.swing.border.MatteBorder;
 import javax.swing.UIManager;
-import javax.swing.border.BevelBorder;
 
 public class UserListItemPanel extends JPanel {
 
     private static final long serialVersionUID = 4251094749415084075L;
-    
+
     private JLabel userNameLabel = new JLabel();
-    private JButton deleteButton = new JButton("Click me");
-    
+    private JButton listChangeButton = new JButton("X");
 
     /**
-     * Create the panel.
+     * @param userName The users name
+     * @param assigned True if assigned to task, false if not
      */
-    public UserListItemPanel(String userName) {
-        setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+    public UserListItemPanel(String userName, boolean assigned) {
+        setBackground(Color.LIGHT_GRAY);
+        setBorder(new MatteBorder(2, 2, 2, 2, (Color) new Color(240, 240, 240)));
         this.setLayout(new MigLayout("fill"));
         this.userNameLabel.setText(userName);
-        this.add(deleteButton, "dock east");
-        this.deleteButton.setVisible(false);
+        this.listChangeButton.setBorder(null);
+        this.listChangeButton.setFocusPainted(false);
+        this.add(listChangeButton, "dock east");
         
+        if(assigned) {
+            this.listChangeButton.setText("x");
+        } else {
+            this.listChangeButton.setText("+");
+        }
         
-        add(userNameLabel, "dock west");
-        setCallbacks();
+        this.add(userNameLabel, "dock west");
     }
-    
-    public void setUserNameLabel(String name){
+
+    /**
+     * @param name Name of the User
+     */
+    public void setUserNameLabel(String name) {
         this.userNameLabel.setText(name);
     }
-    
-    public String getUserNameLabel(){
+
+    /**
+     * @return The Name of the User
+     */
+    public String getUserNameLabel() {
         return this.userNameLabel.getText();
     }
-    
-    public void setCallbacks(){
-        this.addMouseListener(new MouseListener(){
-            public void mouseClicked(MouseEvent e) {
-                // TODO Auto-generated method stub
-                
-            }
-            public void mousePressed(MouseEvent e) {
-                // TODO Auto-generated method stub
-                
-            }
-            public void mouseReleased(MouseEvent e) {
-                // TODO Auto-generated method stub
-                
-            }
-            public void mouseEntered(MouseEvent e) {
-                deleteButton.setVisible(true);
-                revalidate();
-                repaint();
-            }
 
-            @Override
-            public void mouseExited(MouseEvent e) {
-            	System.out.println("Exit Triggered");
-                if(getMousePosition() == null){
-                	deleteButton.setVisible(false);
-                	revalidate();
-                	repaint();
-                }
-            }
-            
-        });
+    /**
+     * Sets the panel to be assigned type, so that button 
+     * shows "+" instead of "x".
+     */
+    public void setAsAssignedUser() {
+        this.listChangeButton.setText("+");
+    }
+    
+    /**
+     * Sets the panel to be unassigned type, so that button 
+     * shows "x" instead of "+".
+     */
+    public void setAsUnassignedUser() {
+        this.listChangeButton.setText("x");
     }
 
 }
