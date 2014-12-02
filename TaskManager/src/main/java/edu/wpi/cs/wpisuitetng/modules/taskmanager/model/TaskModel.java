@@ -25,6 +25,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public class TaskModel extends AbstractModel {
     private int id;
     private String title;
+    private String shortTitle;
     private String description;
     private List<User> assignedTo;
     private List<Integer> activityIds;
@@ -41,6 +42,7 @@ public class TaskModel extends AbstractModel {
     public TaskModel() {
         id = -1;
         title = "New Task";
+        shortTitle = this.shortenString(this.title);
         description = "";
         assignedTo = new ArrayList<User>();
         activityIds = new ArrayList<Integer>();
@@ -61,12 +63,15 @@ public class TaskModel extends AbstractModel {
      *            The description of the task
      * @param dueDate
      *            The due date for the task
+     * @param status
+     *             the bucket the task belongs in
      */
     public TaskModel(int id, String title, String description,
                      int estimatedEffort, Date dueDate, int status) {
         this();
         this.id = id;
         this.title = title;
+        this.shortTitle = this.shortenString(this.title);
         this.description = description;
         this.estimatedEffort = estimatedEffort;
         this.dueDate = dueDate;
@@ -101,6 +106,7 @@ public class TaskModel extends AbstractModel {
      */
     public void setTitle(String title) {
         this.title = title;
+        this.shortTitle=this.shortenString(title);
     }
 
     /**
@@ -213,8 +219,10 @@ public class TaskModel extends AbstractModel {
     }
 
     /**
-     * NEEDS A COMMENT
+     * Checks if a given object is a TaskModel object
      * 
+     * @param o Object to check
+     * @return true if TaskModel, otherwise false
      * @see edu.wpi.cs.wpisuitetng.modules.Model#identify(java.lang.Object)
      */
     public Boolean identify(Object o) {
@@ -228,6 +236,23 @@ public class TaskModel extends AbstractModel {
         return returnValue;
     }
 
+    /**
+     * Takes the title of a task and reduces the number of characters
+     * @param title: string to be modified
+     * @return String representing shortened title
+     */
+    private String shortenString(String title){
+        int maxLength=12;
+        if (title.length() <= maxLength){
+            return title;
+        }
+        else{
+            title=title.substring(0, maxLength);
+            title=title.concat("...");
+            return title;
+        }
+    }
+    
     /**
      * Will implement later
      */
@@ -296,6 +321,13 @@ public class TaskModel extends AbstractModel {
     public List<Integer> getActivityIds() {
         return activityIds;
     }
+    
+    /**
+     * @return shortTitle shortened title for tabs and MiniTaskView
+     */
+    public String getShortTitle(){
+        return this.shortTitle;
+    }
 
     /**
      * set the activity list to the given list
@@ -316,4 +348,5 @@ public class TaskModel extends AbstractModel {
     public void addActivityID(int id) {
         activityIds.add(id);
     }
+
 }

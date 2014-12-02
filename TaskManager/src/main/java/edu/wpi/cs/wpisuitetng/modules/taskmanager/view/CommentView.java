@@ -154,7 +154,8 @@ public class CommentView extends JTabbedPane {
     }
     
     /**
-     * @param listener
+     * Adds ActionListener to post comment button
+     * @param listener triggers post
      */
     public void addOnPostListener(ActionListener listener) {
         this.postCommentButton.addActionListener(listener);
