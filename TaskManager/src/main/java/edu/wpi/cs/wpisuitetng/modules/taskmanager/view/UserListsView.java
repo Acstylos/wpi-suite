@@ -57,7 +57,7 @@ public class UserListsView extends JPanel {
      * if unassigned
      */
     public void addUserToList(User user, boolean assigned) {
-        UserListItemPanel userItem = new UserListItemPanel(presenter, user, assigned);
+        UserListItem userItem = new UserListItem(presenter, user, assigned);
         userItem.addChangeListButtonListener(assigned);
         if(assigned) {
             userItem.setAsAssignedUser();

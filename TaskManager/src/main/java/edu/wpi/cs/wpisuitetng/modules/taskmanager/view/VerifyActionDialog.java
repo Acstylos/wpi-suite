@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
+import java.awt.Component;
 
 /**
  * General, all-purpose dialog that can be used.
@@ -27,39 +28,30 @@ public class VerifyActionDialog extends JDialog {
     private JButton cancelButton = new JButton("Cancel");
 
     /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        try {
-            VerifyActionDialog dialog = new VerifyActionDialog();
-            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-            dialog.setVisible(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Create the dialog.
      */
     public VerifyActionDialog() {
-        setBounds(100, 100, 450, 300);
+        setBounds(100, 100, 450, 150);
+        setResizable(false);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
         {
+            commentLabel.setIcon(Icons.ERROR_LARGE);
             contentPanel.add(commentLabel, "cell 0 0,alignx center,aligny center");
         }
         {
             buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
             getContentPane().add(buttonPane, BorderLayout.SOUTH);
             {
+                okButton.setIcon(Icons.OK);
                 okButton.setActionCommand("Yes");
                 buttonPane.add(okButton);
                 getRootPane().setDefaultButton(okButton);
             }
             {
+                cancelButton.setIcon(Icons.CANCEL);
                 cancelButton.setActionCommand("Cancel");
                 buttonPane.add(cancelButton);
             }
