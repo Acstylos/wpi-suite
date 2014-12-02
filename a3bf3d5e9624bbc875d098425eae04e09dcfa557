@@ -2,6 +2,57 @@
   "comments": [
     {
       "key": {
+        "uuid": "fafc7978_437400cf",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/model/TaskModel.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1002799
+      },
+      "writtenOn": "2014-12-02T02:58:11Z",
+      "side": 1,
+      "message": "maybe want the same format as \"addUserToAssignedTo\"\nso id rec change to \"removeUserFromAssignedTo\"",
+      "revId": "a3bf3d5e9624bbc875d098425eae04e09dcfa557",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_837ee8ac",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1002799
+      },
+      "writtenOn": "2014-12-02T02:58:11Z",
+      "side": 1,
+      "message": "you instantiate now, but you also do it in taskPresenter constructor.\nI would remove this \u003d new ArrayList\u003c\u003e();",
+      "revId": "a3bf3d5e9624bbc875d098425eae04e09dcfa557",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_23457c70",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1002799
+      },
+      "writtenOn": "2014-12-02T02:58:11Z",
+      "side": 1,
+      "message": "same formatting consistency, should be named similar to addUserToAssignedList",
+      "revId": "a3bf3d5e9624bbc875d098425eae04e09dcfa557",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fafc7978_e34a5482",
         "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/UserListsView.java",
         "patchSetId": 1
