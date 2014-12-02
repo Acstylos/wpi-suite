@@ -43,7 +43,7 @@ public class TaskPresenter {
     private TaskModel model;
     private ViewMode viewMode;
     private User[] allUserArray = {};
-    private List<User> assignedUserList;
+    private List<Integer> assignedUserList;
     /** Dialog variables for use */
     private VerifyActionDialog cancelDialog = new VerifyActionDialog();
     private VerifyActionDialog undoDialog = new VerifyActionDialog();
@@ -71,7 +71,7 @@ public class TaskPresenter {
         this.model = new TaskModel();
         this.model.setId(id);
         this.model.setTitle("New Task");
-        assignedUserList = new ArrayList<User>(model.getAssignedTo());
+        assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         this.view = new TaskView(model, viewMode, this);
         this.miniView = new MiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
         final Request request = Network.getInstance().makeRequest("core/user",
@@ -295,7 +295,7 @@ public class TaskPresenter {
     public void addUsersToView() {
         this.view.getUserListPanel().removeAllUsers();
         for(User user: allUserArray) {
-            if(assignedUserList.contains(user)) {
+            if(assignedUserList.contains(user.getIdNum())) {
                 this.view.getUserListPanel().addUserToList(user, true);
             } else {
                 this.view.getUserListPanel().addUserToList(user, false);
@@ -338,7 +338,7 @@ public class TaskPresenter {
         miniView.setDueDate(model.getDueDate());
         miniView.setToolTipText(model.getTitle());
         updateCommentView();
-        assignedUserList = new ArrayList<User>(model.getAssignedTo());
+        assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         addUsersToView();
     }
     
@@ -416,7 +416,7 @@ public class TaskPresenter {
      * @param user User to remove from assignedTo
      */
     public void removeUserFromAssignedTo(User user) {
-        this.assignedUserList.remove(user);
+        this.assignedUserList.remove((Object)user.getIdNum());
     }
 
     /**
@@ -424,6 +424,6 @@ public class TaskPresenter {
      * @param user User to add to assignedTo 
      */
     public void addUserToAssignedTo(User user) {
-        this.assignedUserList.add(user);
+        this.assignedUserList.add(user.getIdNum());
     }
 }

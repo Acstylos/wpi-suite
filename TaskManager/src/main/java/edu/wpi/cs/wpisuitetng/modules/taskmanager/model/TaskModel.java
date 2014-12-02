@@ -27,7 +27,7 @@ public class TaskModel extends AbstractModel {
     private String title;
     private String shortTitle;
     private String description;
-    private List<User> assignedTo;
+    private List<Integer> assignedTo;
     private List<Integer> activityIds;
     private int estimatedEffort;
     private int actualEffort;
@@ -44,7 +44,7 @@ public class TaskModel extends AbstractModel {
         title = "New Task";
         shortTitle = this.shortenString(this.title);
         description = "";
-        assignedTo = new ArrayList<User>();
+        assignedTo = new ArrayList<Integer>();
         activityIds = new ArrayList<Integer>();
         estimatedEffort = 0;
         actualEffort = 0;
@@ -129,14 +129,14 @@ public class TaskModel extends AbstractModel {
     /**
      * @param userList The list of users assigned to this task
      */
-    public void setAssignedTo(List<User> userList) {
-        this.assignedTo = new ArrayList<User>(userList);
+    public void setAssignedTo(List<Integer> userList) {
+        this.assignedTo = new ArrayList<Integer>(userList);
     }
 
     /**
      * @return The list of users assigned to this task
      */
-    public List<User> getAssignedTo() {
+    public List<Integer> getAssignedTo() {
         return this.assignedTo;
     }
 
@@ -145,7 +145,7 @@ public class TaskModel extends AbstractModel {
      *            Adds a user to the list of assigned users
      */
     public void addUserToAssignedTo(User user) {
-        this.assignedTo.add(user);
+        this.assignedTo.add(user.getIdNum());
     }
 
     /**
@@ -153,7 +153,7 @@ public class TaskModel extends AbstractModel {
      *            The user to be removed from the list of assigned users
      */
     public void removeUserFromAssignedTo(User user) {
-        this.assignedTo.remove(user);
+        this.assignedTo.remove((Object)user.getIdNum());
     }
 
     /**
@@ -181,7 +181,7 @@ public class TaskModel extends AbstractModel {
         this.title = other.getTitle();
         this.description = other.getDescription();
         // Make sure we shallow-copy the array list, instead of pass references to it.
-        this.assignedTo = new ArrayList<User>(other.getAssignedTo());
+        this.assignedTo = new ArrayList<Integer>(other.getAssignedTo());
         this.estimatedEffort = other.getEstimatedEffort();
         this.dueDate = other.getDueDate();
         this.actualEffort = other.getActualEffort();
