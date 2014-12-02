@@ -52,6 +52,7 @@ public class MiniTaskView extends JPanel {
      */     
     public void addOnClickOpenTabView(MouseListener listener){
         this.addMouseListener(listener);
+        this.taskNameLabel.addMouseListener(listener);
     }
     
     /**
