@@ -75,6 +75,7 @@ public class CommentView extends JTabbedPane {
         this.commentPanel.add(editCommentScroll, "cell 0 1,grow");
         this.commentPanel.add(postCommentButton, "cell 0 2,alignx left,growy");
         this.commentPanel.add(clearCommentButton, "cell 0 2,alignx left,growy");
+        this.commentText.setStartText("Comment here");
         this.commentText.setWrapStyleWord(true);
         this.commentText.setLineWrap(true);
         
@@ -113,22 +114,23 @@ public class CommentView extends JTabbedPane {
      *            added
      */
     public void postActivity(ActivityView newComment) {
-        postedCommentPanel.add(newComment, "dock south");
+                postedCommentPanel.add(newComment, "dock south");
         commentText.setText("");
-        JScrollBar vertical = commentScroll.getVerticalScrollBar();
-        JScrollBar horizontal = commentScroll.getHorizontalScrollBar();
-        postedCommentPanel.revalidate();
-        postedCommentPanel.repaint();
-        vertical.setValue(vertical.getMinimum());
-        horizontal.setValue(horizontal.getMinimum());
+                JScrollBar vertical = commentScroll.getVerticalScrollBar();
+                JScrollBar horizontal = commentScroll.getHorizontalScrollBar();
+                postedCommentPanel.revalidate();
+                postedCommentPanel.repaint();
+                vertical.setValue(vertical.getMinimum());
+                horizontal.setValue(horizontal.getMinimum());
         validateFields();
-    }
-    
+            }
+        });
+
     /**
      * Sets up the button listeners so that buttons can do things.
      */
     private void setupListeners() {
-        // Clear button (resets comment)
+        // when clicked, the screen will clear if the original text is inside
         this.clearCommentButton.addActionListener((ActionEvent) -> {
             commentText.setText("");
             validateFields();
