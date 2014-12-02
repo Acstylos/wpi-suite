@@ -183,7 +183,9 @@ public class BucketPresenter {
      */
     public void addTask(int id, TaskPresenter taskPresenter) {
         model.addTaskID(id);
-        taskMap.put(id, taskPresenter);
+        if (!taskMap.containsKey(id)) {
+        	taskMap.put(id, taskPresenter);
+        }
         updateInDatabase();
     }
 

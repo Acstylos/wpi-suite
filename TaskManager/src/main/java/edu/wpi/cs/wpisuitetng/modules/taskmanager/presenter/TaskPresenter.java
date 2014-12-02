@@ -114,8 +114,10 @@ public class TaskPresenter {
                     MainView.getInstance().setSelectedIndex(0);
             	}
             	else {
-            		MainView.getInstance().getWorkflowPresenter().moveTask(model.getId(), view.getStatus().getSelectedIndex() + 1, bucket.getModel().getId());
-            		bucket.writeModelToView();
+            		if (view.getStatus().getSelectedIndex() + 1 != bucket.getModel().getId()) {
+            			MainView.getInstance().getWorkflowPresenter().moveTask(model.getId(), view.getStatus().getSelectedIndex() + 1, bucket.getModel().getId());
+            			bucket.writeModelToView();
+            		}
             		saveView();
             		updateView();
             		MainView.getInstance().setTitleAt(index, model.getTitle());
