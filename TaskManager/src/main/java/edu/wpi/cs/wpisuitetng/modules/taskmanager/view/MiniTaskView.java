@@ -10,12 +10,16 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.util.Date;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
+import javax.swing.border.EmptyBorder;
 
 /**
  * This is the TaskView shown inside of buckets to reduce the amount of clutter on screen
@@ -24,19 +28,28 @@ public class MiniTaskView extends JPanel {
     
     private Date dueDate;
     private String taskName;
+    private String fullName;
     JLabel taskNameLabel = new JLabel();
 
     /**
      * Create the panel.
      */
-    public MiniTaskView(String taskName, Date dueDate) {
+    public MiniTaskView(String taskName, Date dueDate, String fullName) {
         setLayout(new MigLayout("fill"));
         this.taskName = taskName;
         this.dueDate = dueDate;
+        this.fullName = fullName;
+        taskNameLabel.setToolTipText(this.fullName);
+        taskNameLabel.setBorder(new EmptyBorder(8, 8, 8, 8));
         this.add(taskNameLabel, "dock west");
-        this.taskNameLabel.setText(taskName);
+        this.taskNameLabel.setText(fullName);
+        this.taskNameLabel.setIcon(Icons.TASK);
     }
     
+    /**
+     * Add the listener for changing tabs
+     * @param listener  the event that will trigger the action
+     */     
     public void addOnClickOpenTabView(MouseListener listener){
         this.addMouseListener(listener);
     }
@@ -64,9 +77,25 @@ public class MiniTaskView extends JPanel {
     /**
      * @param taskName the title to set
      */
-    public void setTaskName(String taskName) {
+    public void setTaskName(String taskName, String fullName) {
         this.taskName = taskName;
-        this.taskNameLabel.setText(taskName);
+        this.taskNameLabel.setText(fullName);
+        this.taskNameLabel.setToolTipText(fullName);
     }
+    
+    /**
+     * @return fullName of task
+     */
+    public String getFullName() {
+        return fullName;
+    }
+
+    /**
+     * @param fullName the task name to set
+     */
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
 
 }
