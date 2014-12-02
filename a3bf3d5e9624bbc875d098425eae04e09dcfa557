@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_e34a5482",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/UserListsView.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-02T02:54:29Z",
+      "side": 1,
+      "message": "Comment on method needs to be updated for parameter user",
+      "revId": "a3bf3d5e9624bbc875d098425eae04e09dcfa557",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
