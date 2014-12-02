@@ -25,12 +25,15 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public class TaskModel extends AbstractModel {
     private int id;
     private String title;
+    private String shortTitle;
     private String description;
     private List<User> assignedTo;
-
+    private List<Integer> activityIds;
     private int estimatedEffort;
     private int actualEffort;
     private Date dueDate;
+    private int status;
+
 
     /**
      * Constructor for a default Task object
@@ -39,10 +42,13 @@ public class TaskModel extends AbstractModel {
     public TaskModel() {
         id = -1;
         title = "New Task";
+        shortTitle = this.shortenString(this.title);
         description = "";
         assignedTo = new ArrayList<User>();
+        activityIds = new ArrayList<Integer>();
         estimatedEffort = 0;
         actualEffort = 0;
+        status = 1;
     }
 
     /**
@@ -55,17 +61,23 @@ public class TaskModel extends AbstractModel {
      *            The title of the task
      * @param description
      *            The description of the task
+     * @param estimatedEffort
+     *            The estimated effort of a task
      * @param dueDate
      *            The due date for the task
+     * @param status
+     *             the bucket the task belongs in
      */
     public TaskModel(int id, String title, String description,
-            int estimatedEffort, Date dueDate) {
+                     int estimatedEffort, Date dueDate, int status) {
         this();
         this.id = id;
         this.title = title;
+        this.shortTitle = this.shortenString(this.title);
         this.description = description;
         this.estimatedEffort = estimatedEffort;
         this.dueDate = dueDate;
+        this.status = status;
     }
 
     /**
@@ -96,6 +108,7 @@ public class TaskModel extends AbstractModel {
      */
     public void setTitle(String title) {
         this.title = title;
+        this.shortTitle=this.shortenString(title);
     }
 
     /**
@@ -167,11 +180,13 @@ public class TaskModel extends AbstractModel {
     public void copyFrom(TaskModel other) {
         this.title = other.getTitle();
         this.description = other.getDescription();
-        this.assignedTo = other.getAssignedTo();
+        // Make sure we shallow-copy the array list, instead of pass references to it.
+        this.assignedTo = new ArrayList<User>(other.getAssignedTo());
         this.estimatedEffort = other.getEstimatedEffort();
         this.dueDate = other.getDueDate();
         this.actualEffort = other.getActualEffort();
-
+        this.status = other.getStatus();
+        this.activityIds = other.getActivityIds();
     }
 
     /**
@@ -222,8 +237,10 @@ public class TaskModel extends AbstractModel {
     }
 
     /**
-     * NEEDS A COMMENT
+     * Checks if a given object is a TaskModel object
      * 
+     * @param o Object to check
+     * @return true if TaskModel, otherwise false
      * @see edu.wpi.cs.wpisuitetng.modules.Model#identify(java.lang.Object)
      */
     public Boolean identify(Object o) {
@@ -237,6 +254,23 @@ public class TaskModel extends AbstractModel {
         return returnValue;
     }
 
+    /**
+     * Takes the title of a task and reduces the number of characters
+     * @param title: string to be modified
+     * @return String representing shortened title
+     */
+    private String shortenString(String title){
+        int maxLength=12;
+        if (title.length() <= maxLength){
+            return title;
+        }
+        else{
+            title=title.substring(0, maxLength);
+            title=title.concat("...");
+            return title;
+        }
+    }
+    
     /**
      * Will implement later
      */
@@ -279,6 +313,58 @@ public class TaskModel extends AbstractModel {
      */
     public void setActualEffort(int actualEffort) {
         this.actualEffort = actualEffort;
+    }
+    
+    /**
+     * Get the status of the task
+     * @return The status of the task
+     */
+    public int getStatus() {
+        return status;
+    }
+
+    /**
+     * Set the status of the task
+     * @param status  The status of the task
+     */
+    public void setStatus(int status) {
+        this.status = status;
+    }
+    
+    /**
+     * return the list of activity ids
+     * 
+     * @return activityIds linked list of activity ids
+     */
+    public List<Integer> getActivityIds() {
+        return activityIds;
+    }
+    
+    /**
+     * @return shortTitle shortened title for tabs and MiniTaskView
+     */
+    public String getShortTitle(){
+        return this.shortTitle;
+    }
+
+    /**
+     * set the activity list to the given list
+     * 
+     * @param activityIds
+     *            the list to be copied from
+     */
+    public void setActivityIds(List<Integer> activityIds) {
+        this.activityIds = activityIds;
+    }
+
+    /**
+     * Adds an activity id to the list to keep track of activities
+     * 
+     * @param id
+     *            the activity id
+     */
+    public void addActivityID(int id) {
+        activityIds.add(id);
     }
 
 }
