@@ -169,6 +169,7 @@ public class BucketPresenter {
     public void removeTask(int rmid) {
         model.removeTaskId(rmid);
         taskMap.remove(rmid);
+        System.out.println("taskMap after remove: "+taskMap);
         updateInDatabase();
     }
 
@@ -183,7 +184,10 @@ public class BucketPresenter {
      */
     public void addTask(int id, TaskPresenter taskPresenter) {
         model.addTaskID(id);
-        taskMap.put(id, taskPresenter);
+        if (!taskMap.containsKey(id)) {
+        	taskMap.put(id, taskPresenter);
+        }
+        System.out.println("taskMap after add: "+taskMap);
         updateInDatabase();
     }
 
