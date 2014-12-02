@@ -31,6 +31,8 @@ import net.miginfocom.swing.MigLayout;
 
 import org.jdesktop.swingx.JXDatePicker;
 
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
+
 /**
  * A {@link javax.swing.JComponent} that renders the fields of a single task and
  * provides the minimum amount of logic for basic user interaction.
@@ -53,7 +55,7 @@ public class TaskView extends JPanel {
     private JPanel detailsPanel = new JPanel();
     private JPanel infoPanel = new JPanel();
     private JPanel splitPanel = new JPanel();
-    private UserListsView usersPanel = new UserListsView();
+    private UserListsView usersPanel;
     private JScrollPane scrollPane = new JScrollPane();
     private JSpinner actualEffortSpinner = new JSpinner();
     private JSpinner estEffortSpinner = new JSpinner();
@@ -61,6 +63,7 @@ public class TaskView extends JPanel {
     private JTextArea descriptionMessage = new JTextArea();
     private JTextField taskNameField = new JTextField();
     private JXDatePicker datePicker = new JXDatePicker();
+    private TaskPresenter presenter;
 
     /**
      * Create a new TaskView with the specified default values.
@@ -79,8 +82,10 @@ public class TaskView extends JPanel {
      * @see #setDueDate(Date)
      */
     public TaskView(String title, int estimatedEffort, String description,
-            Date dueDate, ViewMode viewMode) {
+            Date dueDate, ViewMode viewMode, TaskPresenter presenter) {
         this.setBorder(null);
+        this.presenter = presenter;
+        this.usersPanel = new UserListsView(presenter);
         // Set layouts for all panels
         this.setLayout(new MigLayout("", "[grow]", "[grow][min]"));
 

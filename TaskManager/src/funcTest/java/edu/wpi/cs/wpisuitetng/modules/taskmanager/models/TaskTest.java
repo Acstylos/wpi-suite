@@ -38,8 +38,8 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 		t3.setId(2000);
 		t3.setTitle("TaskThree");
 		t3.setDescription("This is task three");	
-		t3.setAssignedTo(Keenan);
-		t3.setAssignedTo(Yihao);
+		t3.addUserToAssignedTo(Keenan);
+		t3.addUserToAssignedTo(Yihao);
 		t3.setEstimatedEffort(150);
 		
 	}

@@ -12,9 +12,7 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.google.gson.Gson;
 
@@ -28,7 +26,7 @@ public class TaskModel extends AbstractModel {
     private int id;
     private String title;
     private String description;
-    private List<Integer> assignedTo;
+    private List<User> assignedTo;
 
     private int estimatedEffort;
     private int actualEffort;
@@ -42,7 +40,7 @@ public class TaskModel extends AbstractModel {
         id = -1;
         title = "New Task";
         description = "";
-        assignedTo = new ArrayList();
+        assignedTo = new ArrayList<User>();
         estimatedEffort = 0;
         actualEffort = 0;
     }
@@ -114,11 +112,18 @@ public class TaskModel extends AbstractModel {
     public void setDescription(String description) {
         this.description = description;
     }
+    
+    /**
+     * @param userList The list of users assigned to this task
+     */
+    public void setAssignedTo(List<User> userList) {
+        this.assignedTo = userList;
+    }
 
     /**
      * @return The list of users assigned to this task
      */
-    public List<Integer> getAssignedTo() {
+    public List<User> getAssignedTo() {
         return this.assignedTo;
     }
 
@@ -126,16 +131,16 @@ public class TaskModel extends AbstractModel {
      * @param user
      *            Adds a user to the list of assigned users
      */
-    public void setAssignedTo(User user) {
-        this.assignedTo.add(user.getIdNum());
+    public void addUserToAssignedTo(User user) {
+        this.assignedTo.add(user);
     }
 
     /**
      * @param user
      *            The user to be removed from the list of assigned users
      */
-    public void removeAssignedTo(User user) {
-        this.assignedTo.remove(user.getIdNum());
+    public void removeUserFromAssignedTo(User user) {
+        this.assignedTo.remove(user);
     }
 
     /**

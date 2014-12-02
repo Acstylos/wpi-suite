@@ -42,7 +42,8 @@ public class TaskPresenter {
     /** Model for the task. */
     private TaskModel model;
     private ViewMode viewMode;
-    private List<Integer> allUserList = new ArrayList<>();
+    private User[] allUserArray = {};
+    private List<User> assignedUserList;
 
     private BucketPresenter bucket;
 
@@ -59,8 +60,9 @@ public class TaskPresenter {
         this.model = new TaskModel();
         this.model.setId(id);
         this.model.setTitle("New Task");
+        assignedUserList = new ArrayList<User>(model.getAssignedTo());
         this.view = new TaskView(model.getTitle(), model.getEstimatedEffort(),
-                model.getDescription(), model.getDueDate(), viewMode);
+                model.getDescription(), model.getDueDate(), viewMode, this);
         this.miniView = new MiniTaskView(model.getTitle(), model.getDueDate());
         final Request request = Network.getInstance().makeRequest("core/user",
                 HttpMethod.GET);
@@ -198,9 +200,22 @@ public class TaskPresenter {
      * @param users User array of all users in the database
      */
     public void addUsersToAllUserList(User[] users) {
-        for (User user : users) {
-            this.allUserList.add(user.getIdNum());
-            this.view.getUserListPanel().addUserToList(user.getName(), true);
+        this.allUserArray = users;
+    }
+    
+    /**
+     * Takes the allUsers array, and checks users with assigned users list
+     * all assigned users get added to the assigned view, and all others
+     * get added to unassigned view
+     */
+    public void addUsersToView() {
+        this.view.getUserListPanel().removeAllUsers();
+        for(User user: allUserArray) {
+            if(assignedUserList.contains(user)) {
+                this.view.getUserListPanel().addUserToList(user, true);
+            } else {
+                this.view.getUserListPanel().addUserToList(user, false);
+            }
         }
     }
 
@@ -225,6 +240,7 @@ public class TaskPresenter {
         model.setActualEffort(view.getActualEffort());
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
+        model.setAssignedTo(assignedUserList);
     }
 
     /**
@@ -238,6 +254,8 @@ public class TaskPresenter {
         view.setDueDate(model.getDueDate());
         miniView.setTaskName(model.getTitle());
         miniView.setDueDate(model.getDueDate());
+        assignedUserList = new ArrayList<User>(model.getAssignedTo());
+        addUsersToView();
     }
 
     public void setTheViewViewMode(ViewMode viewMode) {
@@ -277,7 +295,26 @@ public class TaskPresenter {
         this.model = model;
     }
 
+    /**
+     * @return the bucket presenter that holds this task
+     */
     public BucketPresenter getBucket() {
         return bucket;
+    }
+
+    /**
+     * Removes a user from the assignedTo list
+     * @param user User to remove from assignedTo
+     */
+    public void removeUserFromAssignedTo(User user) {
+        this.assignedUserList.remove(user);
+    }
+
+    /**
+     * Add a user from the assignedTo list
+     * @param user User to add to assignedTo 
+     */
+    public void addUserToAssignedTo(User user) {
+        this.assignedUserList.add(user);
     }
 }
