@@ -326,7 +326,7 @@ public class TaskModel extends AbstractModel {
      * @return shortTitle shortened title for tabs and MiniTaskView
      */
     public String getShortTitle(){
-        return this.shortTitle;
+        return this.shortenString(this.title);
     }
 
     /**

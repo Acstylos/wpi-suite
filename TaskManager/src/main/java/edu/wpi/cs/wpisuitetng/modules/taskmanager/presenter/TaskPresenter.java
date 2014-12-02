@@ -122,7 +122,7 @@ public class TaskPresenter {
             		}
             		saveView();
             		updateView();
-            		MainView.getInstance().setTitleAt(index, model.getTitle());
+            		MainView.getInstance().setTitleAt(index, model.getShortTitle());
             		bucket.writeModelToView();
             	}
             }
