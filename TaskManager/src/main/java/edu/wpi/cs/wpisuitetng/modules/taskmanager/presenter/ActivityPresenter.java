@@ -12,6 +12,7 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.ActivityModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ActivityView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.CommentView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.updater.Updater;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
@@ -36,6 +37,8 @@ public class ActivityPresenter {
     public ActivityPresenter(int id, TaskPresenter task) {
         this(task, "");
         this.model.setId(id);
+        this.model.setTaskId(task.getModel().getId());
+        this.parentTask = task;
     }
 
     /**
@@ -50,7 +53,9 @@ public class ActivityPresenter {
         this.model = new ActivityModel();
         this.commentView = task.getView().getCommentView();
         this.model.setActivity(activity);
+        this.model.setTaskId(task.getModel().getId());
         this.view = new ActivityView(this.model.getActivity());
+        load();
     }
 
     /**
@@ -107,7 +112,6 @@ public class ActivityPresenter {
         final Request request = Network.getInstance().makeRequest(
                 "taskmanager/activity/" + model.getId(), HttpMethod.GET);
         request.addObserver(new ActivityObserver(this));
-
         request.send();
     }
 
@@ -130,9 +134,11 @@ public class ActivityPresenter {
      *            The models sent from the network
      */
     public void responseGet(ActivityModel[] models) {
+        System.out.println("Response'd.");
         if (models[0].getId() == 0)
             return;
         this.model = models[0];
+        Updater.getInstance().registerActivity(this);
     }
 
     /**

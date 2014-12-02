@@ -33,7 +33,7 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 		testList.add(Yihao);
 		testDate = new Date(114, 11, 18);
 		t1 = new TaskModel();
-		t2 = new TaskModel(1928, "TaskTwo","This is task two", 400, testDate, 1);
+		t2 = new TaskModel(1, 1928, "TaskTwo","This is task two", 400, testDate, 1);
 		t3 = new TaskModel();
 		t3.setId(2000);
 		t3.setTitle("TaskThree");

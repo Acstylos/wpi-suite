@@ -21,6 +21,7 @@ import javax.swing.event.DocumentListener;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.updater.Updater;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
@@ -58,6 +59,7 @@ public class TaskPresenter {
         this.model = new TaskModel();
         this.model.setId(id);
         this.model.setTitle("New Task");
+        this.model.setBucketId(bucket.getModel().getId());
         this.view = new TaskView(model, viewMode);
         this.miniView = new MiniTaskView(model.getTitle(), model.getDueDate());
         this.activityPresenters = new ArrayList<ActivityPresenter>(); 
@@ -238,6 +240,7 @@ public class TaskPresenter {
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
         model.setStatus(view.getStatus().getSelectedIndex()+1);
+        model.setBucketId(view.getStatus().getSelectedIndex()+1);
         this.bucket = MainView.getInstance().getWorkflowPresenter().getBucket(view.getStatus().getSelectedIndex()+1);
     }
 
@@ -308,6 +311,7 @@ public class TaskPresenter {
             p.load();
             activityPresenters.add(p);
         }
+        Updater.getInstance().registerTask(this);
     }
 
     /** 
