@@ -14,5 +14,6 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
  */
 public enum ViewMode {
     EDITING,
-    CREATING;
+    CREATING,
+    ARCHIVING;
 }

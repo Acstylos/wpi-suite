@@ -10,13 +10,16 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.io.IOException;
 import java.util.Date;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
+import javax.swing.border.EmptyBorder;
 
 /**
  * This is the TaskView shown inside of buckets to reduce the amount of clutter on screen
@@ -26,9 +29,6 @@ public class MiniTaskView extends JPanel {
     private Date dueDate;
     private String taskName;
     private String fullName;
-    private boolean draggable;
-    
-
     JLabel taskNameLabel = new JLabel();
 
     /**
@@ -40,19 +40,18 @@ public class MiniTaskView extends JPanel {
         this.dueDate = dueDate;
         this.fullName = fullName;
         taskNameLabel.setToolTipText(this.fullName);
+        taskNameLabel.setBorder(new EmptyBorder(8, 8, 8, 8));
         this.add(taskNameLabel, "dock west");
-        this.taskNameLabel.setText(taskName);
-        this.draggable = false;
-        
+        this.taskNameLabel.setText(fullName);
+        this.taskNameLabel.setIcon(Icons.TASK);
     }
     
     /**
-     * @param listener adds tab with TaskView on click
-     * @param motionListener adds motionListener for miniTaskView
-     */
-    public void addOnClickOpenTabView(MouseListener listener, MouseMotionListener motionListener){
+     * Add the listener for changing tabs
+     * @param listener  the event that will trigger the action
+     */     
+    public void addOnClickOpenTabView(MouseListener listener){
         this.addMouseListener(listener);
-        this.addMouseMotionListener( motionListener);
     }
     
     /**
@@ -80,7 +79,7 @@ public class MiniTaskView extends JPanel {
      */
     public void setTaskName(String taskName, String fullName) {
         this.taskName = taskName;
-        this.taskNameLabel.setText(taskName);
+        this.taskNameLabel.setText(fullName);
         this.taskNameLabel.setToolTipText(fullName);
     }
     
@@ -98,18 +97,5 @@ public class MiniTaskView extends JPanel {
         this.fullName = fullName;
     }
 
-    /**
-     * @return draggable
-     */
-    public boolean getDraggable() {
-        return draggable;
-    }
-
-    /**
-     * @param draggable: boolean indicating if object can be dragged
-     */
-    public void setDraggable(boolean draggable) {
-        this.draggable = draggable;
-    }
 
 }

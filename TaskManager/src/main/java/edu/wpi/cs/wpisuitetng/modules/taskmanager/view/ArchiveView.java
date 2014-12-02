@@ -16,10 +16,17 @@ public class ArchiveView extends JPanel {
         add(archiveBucket, "cell 0 0, grow");
     }
     
+    /**
+     * @return the archive bucket
+     */
     public BucketView getArchiveBucket() {
         return archiveBucket;
     }
     
+    /**
+     * Set the archive bucket within the view
+     * @param archiveBucket
+     */
     public void setArchiveBucket(BucketView archiveBucket) {
         this.archiveBucket = archiveBucket;
     }
