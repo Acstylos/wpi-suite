@@ -49,23 +49,25 @@ public class CommentView extends JTabbedPane {
     private ActivityView testActivity = new ActivityView();
     private ActivityView testActivity2 = new ActivityView();
     private JScrollPane editCommentScroll = new JScrollPane();
-    private JXTextArea commentText = new JXTextArea("Write a comment...", Color.GRAY);
+    private JXTextArea commentText = new JXTextArea("Write a comment...",
+            Color.GRAY);
     private JButton postCommentButton = new JButton("Post");
     private JButton clearCommentButton = new JButton("Clear");
-    
-    private List<ActivityPresenter> activityPresenters = new ArrayList<ActivityPresenter>(); 
+
+    private List<ActivityPresenter> activityPresenters = new ArrayList<ActivityPresenter>();
 
     /**
      * Constructor sets up Comments and History
      */
     public CommentView() {
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-        
+
         this.addTab("Comments", Icons.COMMENTS, commentPanel, null);
         this.addTab("History", Icons.HISTORY, historyPanel, null);
 
         // Set layouts
-        this.commentPanel.setLayout(new MigLayout("", "[grow]", "[grow][50px:n][min]"));
+        this.commentPanel.setLayout(new MigLayout("", "[grow]",
+                "[grow][50px:n][min]"));
         this.historyPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
         this.postedCommentPanel.setLayout(new MigLayout("fill"));
         this.postedHistoryPanel.setLayout(new MigLayout("fill"));
@@ -77,9 +79,9 @@ public class CommentView extends JTabbedPane {
         this.commentPanel.add(clearCommentButton, "cell 0 2,alignx left,growy");
         this.commentText.setWrapStyleWord(true);
         this.commentText.setLineWrap(true);
-        
-        this.historyPanel.add(historyScroll, "cell 0 0,grow");        
-        
+
+        this.historyPanel.add(historyScroll, "cell 0 0,grow");
+
         // Set scrollpane viewports
         this.commentScroll.setViewportView(postedCommentPanel);
         this.editCommentScroll.setViewportView(commentText);
@@ -90,7 +92,7 @@ public class CommentView extends JTabbedPane {
         this.clearCommentButton.setIcon(Icons.CLEAR);
         this.setupListeners();
     }
-    
+
     /**
      * Enable or disable the post and reset buttons depending of if there's
      * something entered in the comment box.
@@ -104,7 +106,7 @@ public class CommentView extends JTabbedPane {
             this.clearCommentButton.setEnabled(true);
         }
     }
-    
+
     /**
      * Posts the new activity to the view
      * 
@@ -123,7 +125,23 @@ public class CommentView extends JTabbedPane {
         horizontal.setValue(horizontal.getMinimum());
         validateFields();
     }
-    
+
+    /**
+     * Posts the new activity to the history panel view
+     * 
+     * @param newComment
+     *            the activity to be posted, auto generated
+     */
+    public void postHistory(ActivityView newComment) {
+        postedHistoryPanel.add(newComment, "dock south");
+        JScrollBar vertical = historyScroll.getVerticalScrollBar();
+        JScrollBar horizontal = historyScroll.getHorizontalScrollBar();
+        postedHistoryPanel.revalidate();
+        postedHistoryPanel.repaint();
+        vertical.setValue(vertical.getMinimum());
+        horizontal.setValue(horizontal.getMinimum());
+    }
+
     /**
      * Sets up the button listeners so that buttons can do things.
      */
@@ -133,26 +151,27 @@ public class CommentView extends JTabbedPane {
             commentText.setText("");
             validateFields();
         });
-        
-        this.commentText.getDocument().addDocumentListener(new DocumentListener() {
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                validateFields();
-            }
+        this.commentText.getDocument().addDocumentListener(
+                new DocumentListener() {
 
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                validateFields();
-            }
+                    @Override
+                    public void removeUpdate(DocumentEvent e) {
+                        validateFields();
+                    }
 
-            @Override
-            public void changedUpdate(DocumentEvent arg0) {
-                validateFields();
-            }
-        });
+                    @Override
+                    public void insertUpdate(DocumentEvent e) {
+                        validateFields();
+                    }
+
+                    @Override
+                    public void changedUpdate(DocumentEvent arg0) {
+                        validateFields();
+                    }
+                });
     }
-    
+
     /**
      * @param listener
      */
@@ -172,6 +191,7 @@ public class CommentView extends JTabbedPane {
      */
     public void clearPosts() {
         postedCommentPanel.removeAll();
+        postedHistoryPanel.removeAll();
     }
 
 }
