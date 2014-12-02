@@ -45,6 +45,7 @@ public class TaskObserver implements RequestObserver {
             this.presenter.updateView();
             break;
         case PUT:
+        	System.out.println("Successfully saved new tasks!");
             model = TaskModel.fromJson(json);
             /*
              * Set the new model and update the view to reflect the new data.
@@ -59,7 +60,7 @@ public class TaskObserver implements RequestObserver {
              * Update the list of tasks in the bucket now that we know that it
              * is in the database and we have the ID.
              */
-            this.presenter.getBucket().addTask(model.getId());
+            this.presenter.getBucket().addTask(model.getId(), this.presenter);
 
             break;
 
