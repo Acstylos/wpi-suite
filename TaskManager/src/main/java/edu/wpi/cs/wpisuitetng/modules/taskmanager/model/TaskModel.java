@@ -321,7 +321,6 @@ public class TaskModel extends AbstractModel {
     public List<Integer> getActivityIds() {
         return activityIds;
     }
-
     
     /**
      * @return shortTitle shortened title for tabs and MiniTaskView
