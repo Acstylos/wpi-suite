@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ ******************************************************************************/
+
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import javax.swing.JLabel;
@@ -52,10 +62,15 @@ public class UserListsView extends JPanel {
         if(assigned) {
             userItem.setAsAssignedUser();
             this.assignedUsersPanel.add(userItem, "dock north");
+            this.unassignedUsersPanel.remove(userItem);
         } else {
             userItem.setAsUnassignedUser();
             this.unassignedUsersPanel.add(userItem, "dock north");
+            this.assignedUsersPanel.remove(userItem);
         }
+        
+        this.invalidate();
+        this.repaint();
     }
     
     /**
