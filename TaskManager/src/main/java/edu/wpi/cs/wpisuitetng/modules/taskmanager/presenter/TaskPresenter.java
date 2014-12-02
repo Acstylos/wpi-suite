@@ -9,6 +9,7 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -60,6 +61,7 @@ public class TaskPresenter {
         this.model.setTitle("New Task");
         this.view = new TaskView(model, viewMode);
         this.miniView = new MiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
+        this.miniView.setMaximumSize(new Dimension(bucket.getView().getWidth()-12, bucket.getView().getHeight()));//prevent horizontal scroll
         this.activityPresenters = new ArrayList<ActivityPresenter>(); 
         registerCallbacks();
     }
