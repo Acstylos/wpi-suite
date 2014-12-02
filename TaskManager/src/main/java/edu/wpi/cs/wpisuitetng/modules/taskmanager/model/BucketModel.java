@@ -125,10 +125,13 @@ public class BucketModel extends AbstractModel {
     /**
      * remove the task id from the list of taskIds
      * 
-     * @param id
+     * @param rmid ID of task to be removed
      */
-    public void removeTaskId(int id) {
-        taskIds.remove(id);
+    public void removeTaskId(Integer rmid) {
+    	for(int i = 0; i < taskIds.size(); i++){
+    		if(taskIds.get(i) == rmid)
+    			taskIds.remove(i);
+    	}
     }
 
     /**
