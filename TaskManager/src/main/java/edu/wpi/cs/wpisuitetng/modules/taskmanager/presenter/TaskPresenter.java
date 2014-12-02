@@ -16,11 +16,9 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
@@ -46,11 +44,11 @@ public class TaskPresenter {
     private List<User> assignedUserList;
 
     private BucketPresenter bucket;
+    private List<ActivityPresenter> activityPresenters; 
 
     /**
      * Constructs a TaskPresenter for the given model. Constructs the view
      * offscreen, available if you call getView().
-     * 
      * @param id
      *            ID of the bucket to create
      */
@@ -61,13 +59,14 @@ public class TaskPresenter {
         this.model.setId(id);
         this.model.setTitle("New Task");
         assignedUserList = new ArrayList<User>(model.getAssignedTo());
-        this.view = new TaskView(model.getTitle(), model.getEstimatedEffort(),
-                model.getDescription(), model.getDueDate(), viewMode, this);
-        this.miniView = new MiniTaskView(model.getTitle(), model.getDueDate());
+        this.view = new TaskView(model, viewMode, this);
+        this.miniView = new MiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
         final Request request = Network.getInstance().makeRequest("core/user",
                 HttpMethod.GET);
         request.addObserver(new UsersObserver(this));
         request.send();
+
+        this.activityPresenters = new ArrayList<ActivityPresenter>(); 
         registerCallbacks();
 
     }
@@ -80,41 +79,48 @@ public class TaskPresenter {
         miniView.addOnClickOpenTabView(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                MainView.getInstance().addTab(model.getTitle(), view);
+                MainView.getInstance().addTab(model.getShortTitle(), Icons.TASK, view);//this line chooses tab title
                 view.setViewMode(ViewMode.EDITING);
+                viewMode = view.getViewMode();
                 int tabCount = MainView.getInstance().getTabCount();
                 view.setIndex(tabCount - 1);
                 MainView.getInstance().setSelectedIndex(tabCount - 1);
+                MainView.getInstance().setToolTipTextAt(tabCount - 1, model.getTitle());
+
             }
         });
-
+        
+        /**
+         * Open the task tab when a task is clicked
+         * @param ActionListener
+         */
         view.addOkOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                saveView();
-                updateView(); // might be redundant
-                MainView.getInstance().setTitleAt(view.getIndex(),
-                        model.getTitle());
-                if (viewMode == ViewMode.CREATING) {
-                    createInDatabase();
-                    bucket.addMiniTaskView(miniView);
+            	int index = MainView.getInstance().indexOfComponent(view);
+            	if(viewMode == ViewMode.CREATING){
+            	    //CREATING MODE
+            		updateModel();
+            		createInDatabase();
                     view.setViewMode(ViewMode.EDITING);
-                    int index = MainView.getInstance().indexOfTab(
-                            model.getTitle());
                     MainView.getInstance().remove(index);
                     MainView.getInstance().setSelectedIndex(0);
-                }
-                view.revalidate();
-                view.repaint();
-                miniView.revalidate();
-                miniView.repaint();
+            	}
+            	else {
+            		MainView.getInstance().getWorkflowPresenter().moveTask(model.getId(), view.getStatus().getSelectedIndex() + 1, bucket.getModel().getId());
+            		bucket.writeModelToView();
+            		saveView();
+            		updateView();
+            		MainView.getInstance().setTitleAt(index, model.getTitle());
+            		bucket.writeModelToView();
+            	}
             }
         });
 
         view.addCancelOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int index = MainView.getInstance().indexOfTab(model.getTitle());
+                int index = MainView.getInstance().indexOfComponent(view);
                 MainView.getInstance().remove(index);
                 updateView();
                 view.revalidate();
@@ -141,36 +147,44 @@ public class TaskPresenter {
         view.addDeleteOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int index = MainView.getInstance().indexOfTab(model.getTitle());
+                int index = MainView.getInstance().indexOfComponent(view);
                 MainView.getInstance().remove(index);
-                MainView.getInstance().getWorkflowPresenter()
-                        .archiveTask(model.getId(), bucket.getModel().getId());
-                MainView.getInstance().getArchive().getArchiveBucket()
-                        .addTaskToView(miniView);
-                bucket.getView().getComponentAt(view.getLocation())
-                        .setVisible(false);
-
+                MainView.getInstance().getWorkflowPresenter().archiveTask(model.getId(), bucket.getModel().getId());
+                MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
             }
         });
-
-        view.addDocumentListenerOnTaskName(new DocumentListener() {
+        
+        view.getCommentView().addOnPostListener(new ActionListener() {
             @Override
-            public void removeUpdate(DocumentEvent e) {
-                view.validateTaskNameField();
+            public void actionPerformed(ActionEvent arg0) {
+                addActivity();
             }
 
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                view.validateTaskNameField();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent arg0) {
-                view.validateTaskNameField();
-            }
         });
     }
 
+    /**
+     * Creates a new activity in the Database by using the text provided in the
+     * comment box
+     */
+    public void addActivity() {
+        ActivityPresenter activityPresenter = new ActivityPresenter(this, view
+                .getCommentView().getCommentText().getText());
+        view.getCommentView().postActivity(activityPresenter.getView());
+        activityPresenter.createInDatabase();
+        activityPresenters.add(activityPresenter);
+    }
+
+    /**
+     * saves an activity in the model with the given ID from the DataBase
+     * @param id
+     *            database given ID
+     */
+    public void saveActivityId(int id) {
+        model.addActivityID(id);
+        saveView();
+    }
+    
     /**
      * Create a new task in the database. Initializes an async network request
      * with an observer.
@@ -228,7 +242,6 @@ public class TaskPresenter {
         request.addObserver(new TaskObserver(this));
         request.send();
 
-        System.out.println("Sending GET request: " + request);
     }
 
     /**
@@ -241,29 +254,49 @@ public class TaskPresenter {
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
         model.setAssignedTo(assignedUserList);
+        model.setStatus(view.getStatus().getSelectedIndex()+1);
+        this.bucket = MainView.getInstance().getWorkflowPresenter().getBucket(view.getStatus().getSelectedIndex()+1);
     }
 
     /**
      * Update the view with data from the model
      */
     public void updateView() {
-        view.setTaskNameField(model.getTitle());
-        view.setEstimatedEffort(model.getEstimatedEffort());
-        view.setActualEffort(model.getActualEffort());
-        view.setDescriptionText(model.getDescription());
-        view.setDueDate(model.getDueDate());
-        miniView.setTaskName(model.getTitle());
+        view.setStatus(model.getStatus());
+        view.setModel(model);
+        miniView.setTaskName(model.getShortTitle(), model.getTitle());
         miniView.setDueDate(model.getDueDate());
+        miniView.setToolTipText(model.getTitle());
+        updateCommentView();
         assignedUserList = new ArrayList<User>(model.getAssignedTo());
         addUsersToView();
     }
+    
+    /**
+     * takes the current comment view, clears the posts, and puts each comment,
+     * one by one back on to the current view.
+     */
+    public void updateCommentView() {
+        view.getCommentView().clearPosts();
+        for (ActivityPresenter p : activityPresenters) {
+            view.getCommentView().postActivity(p.getView());
+        }
+        view.getCommentView().revalidate();
+        view.getCommentView().repaint();
+    }
+    
+    /**
+     * Change the view
+     * @param viewMode the viewMode to be switched to 
 
-    public void setTheViewViewMode(ViewMode viewMode) {
+     */
+    public void setTheViewViewMode(ViewMode viewMode){
         view.setViewMode(viewMode);
     }
 
     /**
      * Get the view for this Task.
+     * @return the TaskView for the current TaskPresenter
      */
     public TaskView getView() {
         return view;
@@ -271,6 +304,7 @@ public class TaskPresenter {
 
     /**
      * Get the miniView for this Task.
+     * @return miniView for Task
      */
     public MiniTaskView getMiniView() {
         return miniView;
@@ -278,7 +312,6 @@ public class TaskPresenter {
 
     /**
      * Get the model for this class.
-     * 
      * @return This provider's model.
      */
     public TaskModel getModel() {
@@ -287,16 +320,22 @@ public class TaskPresenter {
 
     /**
      * Set the model for this class.
-     * 
      * @param model
      *            This provider's model.
      */
     public void setModel(TaskModel model) {
         this.model = model;
+        activityPresenters = new ArrayList<ActivityPresenter>();
+        for (int i : model.getActivityIds()) {
+            ActivityPresenter p = new ActivityPresenter(i, this);
+            p.load();
+            activityPresenters.add(p);
+        }
     }
 
-    /**
-     * @return the bucket presenter that holds this task
+    /** 
+     * 
+     * @return the bucket the task is contained within
      */
     public BucketPresenter getBucket() {
         return bucket;
