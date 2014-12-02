@@ -13,7 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -40,8 +39,7 @@ public class TaskPresenter {
     /** Model for the task. */
     private TaskModel model;
     private ViewMode viewMode;
-    private int dX;
-    private int dY;
+
     private BucketPresenter bucket;
 
     /**
@@ -60,10 +58,7 @@ public class TaskPresenter {
         this.view = new TaskView(model.getTitle(), model.getEstimatedEffort(), model.getDescription(), model.getDueDate(),
                 viewMode);
         this.miniView = new MiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
-        this.dX = 0;
-        this.dY = 0;
         registerCallbacks();
-
     }
 
     /**
@@ -85,11 +80,6 @@ public class TaskPresenter {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                if (miniView.contains(e.getPoint())) {
-                    dX = e.getLocationOnScreen().x - miniView.getX();
-                    dY = e.getLocationOnScreen().y - miniView.getY();
-                    miniView.setDraggable(true);
-                }
             }
 
             @Override
@@ -103,19 +93,6 @@ public class TaskPresenter {
             @Override
             public void mouseExited(MouseEvent e) {
             }
-        }, new MouseMotionListener(){
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                if (miniView.getDraggable()) {
-                    miniView.setLocation(e.getLocationOnScreen().x - dX, e.getLocationOnScreen().y - dY);
-                    dX = e.getLocationOnScreen().x - miniView.getX();
-                    dY = e.getLocationOnScreen().y - miniView.getY();
-                }
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent e) {
-            } 
         });
 
         view.addOkOnClickListener(new ActionListener() {
@@ -173,10 +150,10 @@ public class TaskPresenter {
                 MainView.getInstance().getWorkflowPresenter().archiveTask(model.getId(), bucket.getModel().getId());
                 MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
                 bucket.getView().getComponentAt(view.getLocation()).setVisible(false);
-
+                
             }
         });
-
+        
         view.addDocumentListenerOnTaskName(new DocumentListener() {
             @Override
             public void removeUpdate(DocumentEvent e) {
@@ -256,7 +233,7 @@ public class TaskPresenter {
         miniView.setDueDate(model.getDueDate());
         miniView.setToolTipText(model.getTitle());
     }
-
+    
     /**
      * Sets current viewMode
      * @param viewMode viewMode to be set
