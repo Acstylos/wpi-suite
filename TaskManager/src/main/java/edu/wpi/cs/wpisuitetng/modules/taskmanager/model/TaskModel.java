@@ -117,7 +117,7 @@ public class TaskModel extends AbstractModel {
      * @param userList The list of users assigned to this task
      */
     public void setAssignedTo(List<User> userList) {
-        this.assignedTo = userList;
+        this.assignedTo = new ArrayList<User>(userList);
     }
 
     /**
