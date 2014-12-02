@@ -13,12 +13,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
@@ -41,14 +45,16 @@ public class TaskPresenter {
     private MiniTaskView miniView;
     /** Model for the task. */
     private TaskModel model;
+    private TaskModel beforeModel = new TaskModel();
     private ViewMode viewMode;
 
     private BucketPresenter bucket;
-    private List<ActivityPresenter> activityPresenters; 
+    private List<ActivityPresenter> activityPresenters;
 
     /**
      * Constructs a TaskPresenter for the given model. Constructs the view
      * offscreen, available if you call getView().
+     * 
      * @param id
      *            ID of the bucket to create
      */
@@ -60,7 +66,7 @@ public class TaskPresenter {
         this.model.setTitle("New Task");
         this.view = new TaskView(model, viewMode);
         this.miniView = new MiniTaskView(model.getTitle(), model.getDueDate());
-        this.activityPresenters = new ArrayList<ActivityPresenter>(); 
+        this.activityPresenters = new ArrayList<ActivityPresenter>();
         registerCallbacks();
     }
 
@@ -72,11 +78,12 @@ public class TaskPresenter {
         miniView.addOnClickOpenTabView(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                MainView.getInstance().addTab(model.getTitle(), Icons.TASK, view);
+                MainView.getInstance().addTab(model.getTitle(), Icons.TASK,
+                        view);
                 view.setViewMode(ViewMode.EDITING);
                 viewMode = view.getViewMode();
                 int tabCount = MainView.getInstance().getTabCount();
-                view.setIndex(tabCount-1);
+                view.setIndex(tabCount - 1);
                 MainView.getInstance().setSelectedIndex(tabCount - 1);
             }
 
@@ -96,31 +103,38 @@ public class TaskPresenter {
             public void mouseExited(MouseEvent e) {
             }
         });
-        
+
         /**
          * Open the task tab when a task is clicked
+         * 
          * @param ActionListener
          */
         view.addOkOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	int index = MainView.getInstance().indexOfComponent(view);
-            	if(viewMode == ViewMode.CREATING){
-            	    //CREATING MODE
-            		updateModel();
-            		createInDatabase();
+                int index = MainView.getInstance().indexOfComponent(view);
+                if (viewMode == ViewMode.CREATING) {
+                    // CREATING MODE
+                    addHistory("Create");
+                    updateModel();
+                    createInDatabase();
                     view.setViewMode(ViewMode.EDITING);
                     MainView.getInstance().remove(index);
                     MainView.getInstance().setSelectedIndex(0);
-            	}
-            	else {
-            		MainView.getInstance().getWorkflowPresenter().moveTask(model.getId(), view.getStatus().getSelectedIndex() + 1, bucket.getModel().getId());
-            		bucket.writeModelToView();
-            		saveView();
-            		updateView();
-            		MainView.getInstance().setTitleAt(index, model.getTitle());
-            		bucket.writeModelToView();
-            	}
+                } else {
+                    updateBeforeModel();
+                    MainView.getInstance()
+                            .getWorkflowPresenter()
+                            .moveTask(model.getId(),
+                                    view.getStatus().getSelectedIndex() + 1,
+                                    bucket.getModel().getId());
+                    bucket.writeModelToView();
+                    saveView();
+                    updateView();
+                    MainView.getInstance().setTitleAt(index, model.getTitle());
+                    bucket.writeModelToView();
+                    addHistory(beforeModel, model);
+                }
             }
         });
 
@@ -146,7 +160,8 @@ public class TaskPresenter {
                 view.repaint();
                 miniView.revalidate();
                 miniView.repaint();
-                MainView.getInstance().setTitleAt(view.getIndex(), model.getTitle());
+                MainView.getInstance().setTitleAt(view.getIndex(),
+                        model.getTitle());
             }
         });
 
@@ -155,11 +170,13 @@ public class TaskPresenter {
             public void actionPerformed(ActionEvent e) {
                 int index = MainView.getInstance().indexOfComponent(view);
                 MainView.getInstance().remove(index);
-                MainView.getInstance().getWorkflowPresenter().archiveTask(model.getId(), bucket.getModel().getId());
-                MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
+                MainView.getInstance().getWorkflowPresenter()
+                        .archiveTask(model.getId(), bucket.getModel().getId());
+                MainView.getInstance().getArchive().getArchiveBucket()
+                        .addTaskToView(miniView);
             }
         });
-        
+
         view.getCommentView().addOnPostListener(new ActionListener() {
 
             @Override
@@ -169,6 +186,18 @@ public class TaskPresenter {
 
         });
     }
+    
+    /**
+     * Updates another model with the fields before it gets updated
+     */
+    public void updateBeforeModel() {
+        beforeModel.setTitle(model.getTitle());
+        beforeModel.setDescription(model.getDescription());
+        beforeModel.setEstimatedEffort(model.getEstimatedEffort());
+        beforeModel.setActualEffort(model.getActualEffort());
+        beforeModel.setDueDate(model.getDueDate());
+        beforeModel.setStatus(model.getStatus());
+    }
 
     /**
      * Creates a new activity in the Database by using the text provided in the
@@ -176,14 +205,74 @@ public class TaskPresenter {
      */
     public void addActivity() {
         ActivityPresenter activityPresenter = new ActivityPresenter(this, view
-                .getCommentView().getCommentText().getText());
+                .getCommentView().getCommentText().getText(), false);
         view.getCommentView().postActivity(activityPresenter.getView());
+        activityPresenter.createInDatabase();
+        activityPresenters.add(activityPresenter);
+    }
+    
+    /**
+     * Automatically generates a comment based on what the user has changed in
+     * the task. The "Update" button being clicked.
+     * 
+     * @param before
+     *            The task model fields before it was updated
+     * @param after
+     *            The task model fields after it is updated
+     */
+    public void addHistory(TaskModel before, TaskModel after) {
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+        Calendar cal = Calendar.getInstance();
+        String user = ConfigManager.getConfig().getUserName();
+        String activity = user + " has updated tasks on "
+                + dateFormat.format(cal.getTime()) + ":\n";
+
+        activity += before.compareTo(after);
+        ActivityPresenter activityPresenter = new ActivityPresenter(this,
+                activity, true);
+        view.getCommentView().postHistory(activityPresenter.getView());
+        activityPresenter.createInDatabase();
+        activityPresenters.add(activityPresenter);
+    }
+
+    /**
+     * Automatically generates a comment based on what the user has done.
+     * 
+     * @param type
+     *            the type of action that generated the activity
+     */
+    public void addHistory(String type) {
+        String activity = "";
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+        Calendar cal = Calendar.getInstance();
+        String user = ConfigManager.getConfig().getUserName();
+        switch (type) {
+        case "Create":
+            activity = user + " has created a task on "
+                    + dateFormat.format(cal.getTime());
+            break;
+        case "Move":
+            activity = user + " has moved a task from x to y on "
+                    + dateFormat.format(cal.getTime());
+            break;
+        case "Archive":
+            activity = user + " has archived a task on "
+                    + dateFormat.format(cal.getTime());
+            break;
+        default:
+            break;
+        }
+
+        ActivityPresenter activityPresenter = new ActivityPresenter(this,
+                activity, true);
+        view.getCommentView().postHistory(activityPresenter.getView());
         activityPresenter.createInDatabase();
         activityPresenters.add(activityPresenter);
     }
 
     /**
      * saves an activity in the model with the given ID from the DataBase
+     * 
      * @param id
      *            database given ID
      */
@@ -191,7 +280,7 @@ public class TaskPresenter {
         model.addActivityID(id);
         saveView();
     }
-    
+
     /**
      * Create a new task in the database. Initializes an async network request
      * with an observer.
@@ -237,8 +326,9 @@ public class TaskPresenter {
         model.setActualEffort(view.getActualEffort());
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
-        model.setStatus(view.getStatus().getSelectedIndex()+1);
-        this.bucket = MainView.getInstance().getWorkflowPresenter().getBucket(view.getStatus().getSelectedIndex()+1);
+        model.setStatus(view.getStatus().getSelectedIndex() + 1);
+        this.bucket = MainView.getInstance().getWorkflowPresenter()
+                .getBucket(view.getStatus().getSelectedIndex() + 1);
     }
 
     /**
@@ -251,7 +341,7 @@ public class TaskPresenter {
         miniView.setDueDate(model.getDueDate());
         updateCommentView();
     }
-    
+
     /**
      * takes the current comment view, clears the posts, and puts each comment,
      * one by one back on to the current view.
@@ -259,17 +349,22 @@ public class TaskPresenter {
     public void updateCommentView() {
         view.getCommentView().clearPosts();
         for (ActivityPresenter p : activityPresenters) {
-            view.getCommentView().postActivity(p.getView());
+            if (p.getModel().getIsAutogen())
+                view.getCommentView().postHistory(p.getView());
+            else
+                view.getCommentView().postActivity(p.getView());
         }
         view.getCommentView().revalidate();
         view.getCommentView().repaint();
     }
-    
+
     /**
      * Change the view
-     * @param viewMode the viewMode to be switched to 
+     * 
+     * @param viewMode
+     *            the viewMode to be switched to
      */
-    public void setTheViewViewMode(ViewMode viewMode){
+    public void setTheViewViewMode(ViewMode viewMode) {
         view.setViewMode(viewMode);
     }
 
@@ -289,6 +384,7 @@ public class TaskPresenter {
 
     /**
      * Get the model for this class.
+     * 
      * @return This provider's model.
      */
     public TaskModel getModel() {
@@ -297,6 +393,7 @@ public class TaskPresenter {
 
     /**
      * Set the model for this class.
+     * 
      * @param model
      *            This provider's model.
      */
@@ -310,7 +407,7 @@ public class TaskPresenter {
         }
     }
 
-    /** 
+    /**
      * 
      * @return the bucket the task is contained within
      */

@@ -114,11 +114,11 @@ public class TestActivityEntityManager {
         testUser = new User("joe", "joe", "1234", 2);
         testUser.setRole(Role.ADMIN);
         manager.save(defaultSession, new ActivityModel(2, testUser, "comment1",
-                new Date(4, 12, 2014)));
+                new Date(4, 12, 2014), false));
         manager.save(defaultSession, new ActivityModel(3, testUser, "comment2",
-                new Date()));
+                new Date(), false));
         manager.save(defaultSession, new ActivityModel(4, testUser, "comment3",
-                new Date()));
+                new Date(), false));
         ActivityModel actvList[] = manager.getEntity(defaultSession, "4");
 
         assertEquals(1, actvList.length);
@@ -148,11 +148,11 @@ public class TestActivityEntityManager {
         testUser = new User("joe", "joe", "1234", 2);
         testUser.setRole(Role.ADMIN);
         manager.save(defaultSession, new ActivityModel(3, testUser, "test 3",
-                new Date()));
+                new Date(), false));
         manager.save(defaultSession, new ActivityModel(4, testUser, "test 4",
-                new Date()));
+                new Date(), false));
         manager.save(defaultSession, new ActivityModel(5, testUser, "test 5",
-                new Date()));
+                new Date(), false));
         try {
             manager.getEntity(defaultSession, "6");
         } catch (NotFoundException e) {
@@ -167,11 +167,11 @@ public class TestActivityEntityManager {
      * @throws WPISuiteException
      *             if not valid request
      */
-    @Test  
+    @Test
     public void testDeleteEntity() throws WPISuiteException {
         manager.save(defaultSession, new ActivityModel(3, new User(
                 "willisthebest", "willisthebest", "101", 3), "test 3",
-                new Date()));
+                new Date(), false));
         assertEquals(1, manager.Count());
         assertTrue(manager.deleteEntity(defaultSession, "3"));
         assertEquals(0, manager.Count());
@@ -183,17 +183,18 @@ public class TestActivityEntityManager {
         }
         assertTrue(exceptionThrown);
     }
+
     /**
      * Test updating an Activity
      * 
      * @throws WPISuiteException
      *             if not valid request
      */
-    @Test 
+    @Test
     public void testUpdatingAnActivity() throws WPISuiteException {
         manager.save(defaultSession, new ActivityModel(3, new User(
                 "willisthebest", "willisthebest", "101", 3), "test 3",
-                new Date()));
+                new Date(), false));
         assertEquals(1, manager.Count());
         assertEquals(3, manager.getEntity(defaultSession, "3")[0].getId());
 
@@ -201,28 +202,28 @@ public class TestActivityEntityManager {
                 manager.getEntity(defaultSession, "3")[0].getActivity());
 
         manager.update(defaultSession, new ActivityModel(3, new User("Iagree",
-                "Iagree", "10", 4), "i like it", new Date()).toJson());
+                "Iagree", "10", 4), "i like it", new Date(), false).toJson());
 
         assertEquals(1, manager.Count());
         assertEquals("i like it",
                 manager.getEntity(defaultSession, "3")[0].getActivity());
     }
-    
+
     /**
      * 
      * @throws WPISuiteException
      */
-    @Test (expected=WPISuiteException.class)
+    @Test(expected = WPISuiteException.class)
     public void testUpdatingAnActivityException() throws WPISuiteException {
         boolean exceptionThrown = false;
-            try {
-                manager.update(defaultSession, new ActivityModel(3, new User(
-                        "asdf", "asdf", "11", 5), "change Id 5", new Date())
-                        .toJson());
-            } catch (BadRequestException e) {
-                exceptionThrown = true;
-            }
-            assertTrue(exceptionThrown);
+        try {
+            manager.update(defaultSession, new ActivityModel(3, new User(
+                    "asdf", "asdf", "11", 5), "change Id 5", new Date(), false)
+                    .toJson());
+        } catch (BadRequestException e) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
     }
 
 }
