@@ -222,6 +222,7 @@ public class TaskView extends JPanel {
     
     /**
      * This calls something to move the tasks to specified status
+     * @param listener The listener to be added to the ComboBox
      */
     public void addChangeStatusListener(ActionListener listener) {
         this.statusComboBox.addActionListener(listener);

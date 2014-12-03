@@ -251,12 +251,12 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
 
     /**
      * Method advancedPut.
-     *
-     * @param arg0
+     * 
+     * @param s
      *            Session
-     * @param arg1
+     * @param args
      *            String[]
-     * @param arg2
+     * @param content
      *            String
      * @return String
      * @throws NotImplementedException
@@ -271,12 +271,12 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
 
     /**
      * Method advancedPost.
-     *
-     * @param arg0
+     * 
+     * @param s
      *            Session
-     * @param arg1
+     * @param string
      *            String
-     * @param arg2
+     * @param content
      *            String
      * @return String
      * @throws NotImplementedException

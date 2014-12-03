@@ -78,14 +78,14 @@ public class ActivityView extends JPanel {
     }
 
     /**
-     * @param activity
+     * @param activity set to this text
      */
     public void setActivity(String activity) {
         this.pastActivityText.setText(activity);
     }
 
     /**
-     * @param user
+     * @param user set to this user
      */
     public void setUser(User user) {
         // TODO Auto-generated method stub
@@ -93,7 +93,7 @@ public class ActivityView extends JPanel {
     }
 
     /**
-     * @param date
+     * @param date set to this date
      */
     public void setDate(Date date) {
         // TODO Auto-generated method stub

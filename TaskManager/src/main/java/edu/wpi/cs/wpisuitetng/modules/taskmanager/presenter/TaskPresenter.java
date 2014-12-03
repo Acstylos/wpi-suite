@@ -9,6 +9,7 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -61,7 +62,8 @@ public class TaskPresenter {
         this.model.setTitle("New Task");
         this.model.setBucketId(bucket.getModel().getId());
         this.view = new TaskView(model, viewMode);
-        this.miniView = new MiniTaskView(model.getTitle(), model.getDueDate());
+        this.miniView = new MiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
+        this.miniView.setMaximumSize(new Dimension(bucket.getView().getWidth()-12, bucket.getView().getHeight()));//prevent horizontal scroll
         this.activityPresenters = new ArrayList<ActivityPresenter>(); 
         registerCallbacks();
     }
@@ -74,12 +76,14 @@ public class TaskPresenter {
         miniView.addOnClickOpenTabView(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                MainView.getInstance().addTab(model.getTitle(), Icons.TASK, view);
+                MainView.getInstance().addTab(model.getShortTitle(), Icons.TASK, view);//this line chooses tab title
                 view.setViewMode(ViewMode.EDITING);
                 viewMode = view.getViewMode();
                 int tabCount = MainView.getInstance().getTabCount();
                 view.setIndex(tabCount-1);
                 MainView.getInstance().setSelectedIndex(tabCount - 1);
+                MainView.getInstance().setToolTipTextAt(tabCount - 1, model.getTitle());
+
             }
 
             @Override
@@ -116,11 +120,13 @@ public class TaskPresenter {
                     MainView.getInstance().setSelectedIndex(0);
             	}
             	else {
-            		MainView.getInstance().getWorkflowPresenter().moveTask(model.getId(), view.getStatus().getSelectedIndex() + 1, bucket.getModel().getId());
-            		bucket.writeModelToView();
+            		if (view.getStatus().getSelectedIndex() + 1 != bucket.getModel().getId()) {
+            			MainView.getInstance().getWorkflowPresenter().moveTask(model.getId(), view.getStatus().getSelectedIndex() + 1, bucket.getModel().getId());
+            			bucket.writeModelToView();
+            		}
             		saveView();
             		updateView();
-            		MainView.getInstance().setTitleAt(index, model.getTitle());
+            		MainView.getInstance().setTitleAt(index, model.getShortTitle());
             		bucket.writeModelToView();
             	}
             }
@@ -250,8 +256,9 @@ public class TaskPresenter {
     public void updateView() {
         view.setStatus(model.getStatus());
         view.setModel(model);
-        miniView.setTaskName(model.getTitle());
+        miniView.setTaskName(model.getShortTitle(), model.getTitle());
         miniView.setDueDate(model.getDueDate());
+        miniView.setToolTipText(model.getTitle());
         updateCommentView();
     }
     
@@ -271,6 +278,7 @@ public class TaskPresenter {
     /**
      * Change the view
      * @param viewMode the viewMode to be switched to 
+
      */
     public void setTheViewViewMode(ViewMode viewMode){
         view.setViewMode(viewMode);
@@ -278,6 +286,7 @@ public class TaskPresenter {
 
     /**
      * Get the view for this Task.
+     * @return the TaskView for the current TaskPresenter
      */
     public TaskView getView() {
         return view;
@@ -285,6 +294,7 @@ public class TaskPresenter {
 
     /**
      * Get the miniView for this Task.
+     * @return miniView for Task
      */
     public MiniTaskView getMiniView() {
         return miniView;
