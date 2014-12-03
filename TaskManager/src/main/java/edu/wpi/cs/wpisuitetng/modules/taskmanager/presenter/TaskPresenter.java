@@ -120,8 +120,8 @@ public class TaskPresenter {
                     MainView.getInstance().setSelectedIndex(0);
             	}
             	else {
-            		if (view.getStatus().getSelectedIndex() + 1 != bucket.getModel().getId()) {
-            			MainView.getInstance().getWorkflowPresenter().moveTask(model.getId(), view.getStatus().getSelectedIndex() + 1, bucket.getModel().getId());
+            		if (view.getStatus() != bucket.getModel().getId()) {
+            			MainView.getInstance().getWorkflowPresenter().moveTask(model.getId(), view.getStatus(), bucket.getModel().getId());
             			bucket.writeModelToView();
             		}
             		saveView();
@@ -245,8 +245,8 @@ public class TaskPresenter {
         model.setActualEffort(view.getActualEffort());
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
-        model.setStatus(view.getStatus().getSelectedIndex()+1);
-        this.bucket = MainView.getInstance().getWorkflowPresenter().getBucket(view.getStatus().getSelectedIndex()+1);
+        model.setStatus(view.getStatus());
+        this.bucket = MainView.getInstance().getWorkflowPresenter().getBucket(view.getStatus());
     }
 
     /**
