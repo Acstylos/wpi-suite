@@ -66,13 +66,11 @@ public class TaskPresenter {
         this.model.setId(id);
         this.model.setTitle("New Task");
         this.view = new TaskView(model, viewMode);
-        this.miniView = new MiniTaskView(model.getShortTitle(),
-                model.getDueDate(), model.getTitle());
-        this.miniView
-                .setMaximumSize(new Dimension(bucket.getView().getWidth() - 12,
-                        bucket.getView().getHeight()));// prevent horizontal
-                                                       // scroll
-        this.activityPresenters = new ArrayList<ActivityPresenter>();
+        this.miniView = new MiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
+        Dimension maxView = new Dimension(bucket.getView().getWidth()-32, bucket.getView().getHeight());
+        this.miniView.setMaximumSize(maxView);//prevent horizontal scroll
+        this.miniView.getTaskNameLabel().setMaximumSize(maxView);
+        this.activityPresenters = new ArrayList<ActivityPresenter>(); 
         registerCallbacks();
     }
 

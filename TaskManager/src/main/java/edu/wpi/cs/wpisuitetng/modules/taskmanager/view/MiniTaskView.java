@@ -32,6 +32,13 @@ public class MiniTaskView extends JPanel {
     JLabel taskNameLabel = new JLabel();
 
     /**
+     * @return Label of taskName
+     */
+    public JLabel getTaskNameLabel() {
+        return taskNameLabel;
+    }
+
+    /**
      * Create the panel.
      */
     public MiniTaskView(String taskName, Date dueDate, String fullName) {
