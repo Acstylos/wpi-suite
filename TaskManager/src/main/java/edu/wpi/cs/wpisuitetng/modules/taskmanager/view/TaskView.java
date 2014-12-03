@@ -11,6 +11,8 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -23,8 +25,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
@@ -176,6 +176,10 @@ public class TaskView extends JPanel {
         ChangeListener changeListener = (ChangeEvent) -> {
             validateFields();
         };
+        
+        ItemListener itemListener = (ItemListener) -> {
+            validateFields();
+        };
 
         /*
          * Re-validate all of the input fields every time any field is changed
@@ -188,7 +192,8 @@ public class TaskView extends JPanel {
                 .addDocumentListener(validateListener);
         this.descriptionMessage.getDocument().addDocumentListener(
                 validateListener);
-
+        this.statusComboBox.addItemListener(itemListener);
+        
         setModel(model);
     }
 
@@ -308,10 +313,10 @@ public class TaskView extends JPanel {
     }
 
     /**
-     * @return the statusComboBox
+     * @return The ID of the selected status
      */
-    public JComboBox<BucketView> getStatus(){
-        return this.statusComboBox;
+    public int getStatus() {
+        return this.statusComboBox.getSelectedIndex() + 1;
     }
     
     /**
@@ -413,7 +418,14 @@ public class TaskView extends JPanel {
         } else {
             isModified = true;
         }
-
+        
+        if (this.getStatus() == this.model.getStatus()) {
+            this.statusLabel.setForeground(unmodifiedColor);
+        } else {
+            this.statusLabel.setForeground(modifiedColor);
+            isModified = true;
+        }
+        
         /* The date value might be null */
         boolean datesAreEqual;
         if (this.getDueDate() == null && this.model.getDueDate() == null) {

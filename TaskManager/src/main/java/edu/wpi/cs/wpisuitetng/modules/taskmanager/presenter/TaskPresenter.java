@@ -131,14 +131,14 @@ public class TaskPresenter {
 
                 else {
                     updateBeforeModel();
-                    if (view.getStatus().getSelectedIndex() + 1 != bucket
+                    if (view.getStatus() != bucket
                             .getModel().getId()) { // if we are switching
                                                    // buckets
                         MainView.getInstance()
                                 .getWorkflowPresenter()
                                 .moveTask(
                                         model.getId(),
-                                        view.getStatus().getSelectedIndex() + 1,
+                                        view.getStatus(),
                                         bucket.getModel().getId());
                         bucket.writeModelToView();
                         saveView();
@@ -153,6 +153,7 @@ public class TaskPresenter {
                         addHistory(beforeModel, model);
                     }
                 }
+
             }
         });
 
@@ -344,9 +345,8 @@ public class TaskPresenter {
         model.setActualEffort(view.getActualEffort());
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
-        model.setStatus(view.getStatus().getSelectedIndex() + 1);
-        this.bucket = MainView.getInstance().getWorkflowPresenter()
-                .getBucket(view.getStatus().getSelectedIndex() + 1);
+        model.setStatus(view.getStatus());
+        this.bucket = MainView.getInstance().getWorkflowPresenter().getBucket(view.getStatus());
     }
 
     /**
