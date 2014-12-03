@@ -66,11 +66,13 @@ public class TaskPresenter {
         this.model.setId(id);
         this.model.setTitle("New Task");
         this.view = new TaskView(model, viewMode);
-        this.miniView = new MiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
-        Dimension maxView = new Dimension(bucket.getView().getWidth()-32, bucket.getView().getHeight());
-        this.miniView.setMaximumSize(maxView);//prevent horizontal scroll
+        this.miniView = new MiniTaskView(model.getShortTitle(),
+                model.getDueDate(), model.getTitle());
+        Dimension maxView = new Dimension(bucket.getView().getWidth() - 32,
+                bucket.getView().getHeight());
+        this.miniView.setMaximumSize(maxView);// prevent horizontal scroll
         this.miniView.getTaskNameLabel().setMaximumSize(maxView);
-        this.activityPresenters = new ArrayList<ActivityPresenter>(); 
+        this.activityPresenters = new ArrayList<ActivityPresenter>();
         registerCallbacks();
     }
 
@@ -131,14 +133,14 @@ public class TaskPresenter {
 
                 else {
                     updateBeforeModel();
-                    if (view.getStatus() != bucket
-                            .getModel().getId()) { // if we are switching
-                                                   // buckets
+                    if (view.getStatus() != bucket.getModel().getId()) { // if
+                                                                         // we
+                                                                         // are
+                                                                         // switching
+                                                                         // buckets
                         MainView.getInstance()
                                 .getWorkflowPresenter()
-                                .moveTask(
-                                        model.getId(),
-                                        view.getStatus(),
+                                .moveTask(model.getId(), view.getStatus(),
                                         bucket.getModel().getId());
                         bucket.writeModelToView();
                         saveView();
@@ -223,8 +225,15 @@ public class TaskPresenter {
      * comment box
      */
     public void addActivity() {
-        ActivityPresenter activityPresenter = new ActivityPresenter(this, view
-                .getCommentView().getCommentText().getText(), false);
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+        Calendar cal = Calendar.getInstance();
+        String userInformation = ConfigManager.getConfig().getUserName() + " ["
+                + dateFormat.format(cal.getTime()) + "]: ";
+        ActivityPresenter activityPresenter = new ActivityPresenter(this,
+                userInformation
+                        + view.getCommentView().getCommentText().getText(),
+                false);
+
         view.getCommentView().postActivity(activityPresenter.getView());
         activityPresenter.createInDatabase();
         activityPresenters.add(activityPresenter);
@@ -346,7 +355,8 @@ public class TaskPresenter {
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
         model.setStatus(view.getStatus());
-        this.bucket = MainView.getInstance().getWorkflowPresenter().getBucket(view.getStatus());
+        this.bucket = MainView.getInstance().getWorkflowPresenter()
+                .getBucket(view.getStatus());
     }
 
     /**
