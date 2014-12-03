@@ -28,6 +28,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -103,6 +105,13 @@ public class TaskView extends JPanel {
         this.usersPanel = new UserListsView(presenter);
         // Set layouts for all panels
         this.setLayout(new MigLayout("", "[grow]", "[grow][min]"));
+
+        /* Remove the default borders on the date picker and the description
+         * box, so the red error outline looks consistant for all of the
+         * fields.
+         */
+        this.datePicker.getEditor().setBorder(new EmptyBorder(1, 1, 1, 1));
+        this.scrollPane.setBorder(new EmptyBorder(1, 1, 1, 1));
 
         this.descriptionPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
         this.detailsPanel.setLayout(new MigLayout("", "[grow]",
