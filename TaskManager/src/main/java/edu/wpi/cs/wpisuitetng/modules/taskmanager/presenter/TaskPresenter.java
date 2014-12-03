@@ -149,6 +149,7 @@ public class TaskPresenter {
                         updateView();
                         MainView.getInstance().setTitleAt(index,
                                 model.getShortTitle());
+                        MainView.getInstance().setToolTipTextAt(index, model.getTitle());
                         addHistory(beforeModel, model);
                         refreshCommentView();
                     } else { // not switching buckets
@@ -156,6 +157,7 @@ public class TaskPresenter {
                         updateView();
                         MainView.getInstance().setTitleAt(index,
                                 model.getShortTitle());
+                        MainView.getInstance().setToolTipTextAt(index, model.getTitle());
                         addHistory(beforeModel, model);
                     }
                 }
@@ -234,7 +236,7 @@ public class TaskPresenter {
             @Override
             public void actionPerformed(ActionEvent e) {
                 deleteDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-                deleteDialog.setCommentLabelText("Are you sure you want to archive this task?");
+                deleteDialog.setCommentLabelText("Are you sure you want to delete this task?");
                 deleteDialog.addConfirmButtonListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {

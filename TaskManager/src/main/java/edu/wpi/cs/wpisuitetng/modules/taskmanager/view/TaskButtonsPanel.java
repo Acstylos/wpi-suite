@@ -34,7 +34,7 @@ public class TaskButtonsPanel extends JPanel {
     private final JButton okButton = new JButton();
     private final JButton cancelButton = new JButton("Close");
     private final JButton clearButton = new JButton();
-    private final JButton deleteButton = new JButton("Archive");
+    private final JButton deleteButton = new JButton("Delete");
     private String okString;
     private String clearString; 
     private String deleteString;// going to use this later for actual cancel, instead of close
@@ -85,7 +85,7 @@ public class TaskButtonsPanel extends JPanel {
             okString = "Update";
             clearString = "Undo Changes";
             cancelString = "Close";
-            deleteString = "Archive";
+            deleteString = "Delete";
             this.okButton.setVisible(true);
             this.clearButton.setVisible(true);
             this.cancelButton.setVisible(true);
