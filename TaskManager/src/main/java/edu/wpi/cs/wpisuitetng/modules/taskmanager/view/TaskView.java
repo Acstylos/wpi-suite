@@ -12,6 +12,7 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -175,6 +176,10 @@ public class TaskView extends JPanel {
         ChangeListener changeListener = (ChangeEvent) -> {
             validateFields();
         };
+        
+        ItemListener itemListener = (ItemListener) -> {
+            validateFields();
+        };
 
         /*
          * Re-validate all of the input fields every time any field is changed
@@ -187,7 +192,8 @@ public class TaskView extends JPanel {
                 .addDocumentListener(validateListener);
         this.descriptionMessage.getDocument().addDocumentListener(
                 validateListener);
-
+        this.statusComboBox.addItemListener(itemListener);
+        
         setModel(model);
     }
 
@@ -310,10 +316,10 @@ public class TaskView extends JPanel {
     }
 
     /**
-     * @return the statusComboBox
+     * @return The ID of the selected status
      */
-    public JComboBox<BucketView> getStatus(){
-        return this.statusComboBox;
+    public int getStatus() {
+        return this.statusComboBox.getSelectedIndex() + 1;
     }
     
     /**
@@ -421,6 +427,13 @@ public class TaskView extends JPanel {
             isModified = true;
         }
 
+        if (this.getStatus() == this.model.getStatus()) {
+            this.statusLabel.setForeground(unmodifiedColor);
+        } else {
+            this.statusLabel.setForeground(modifiedColor);
+            isModified = true;
+        }
+        
         /* The date value might be null */
         boolean datesAreEqual;
         if (this.getDueDate() == null && this.model.getDueDate() == null) {

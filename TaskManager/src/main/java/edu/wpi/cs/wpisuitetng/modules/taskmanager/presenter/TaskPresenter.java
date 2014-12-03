@@ -15,9 +15,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
@@ -42,6 +46,7 @@ public class TaskPresenter {
     private MiniTaskView miniView;
     /** Model for the task. */
     private TaskModel model;
+    private TaskModel beforeModel = new TaskModel();
     private ViewMode viewMode;
     private User[] allUserArray = {};
     private List<Integer> assignedUserList;
@@ -55,11 +60,12 @@ public class TaskPresenter {
     private boolean allowCancelDialog = false;
 
     private BucketPresenter bucket;
-    private List<ActivityPresenter> activityPresenters; 
+    private List<ActivityPresenter> activityPresenters;
 
     /**
      * Constructs a TaskPresenter for the given model. Constructs the view
      * offscreen, available if you call getView().
+     * 
      * @param id
      *            ID of the bucket to create
      * @param bucket
@@ -80,7 +86,9 @@ public class TaskPresenter {
                 HttpMethod.GET);
         request.addObserver(new UsersObserver(this));
         request.send();
-        this.miniView.setMaximumSize(new Dimension(bucket.getView().getWidth()-12, bucket.getView().getHeight()));//prevent horizontal scroll
+        Dimension maxView = new Dimension(bucket.getView().getWidth()-32, bucket.getView().getHeight());
+        this.miniView.setMaximumSize(maxView);//prevent horizontal scroll
+        this.miniView.getTaskNameLabel().setMaximumSize(maxView);
         this.activityPresenters = new ArrayList<ActivityPresenter>(); 
         registerCallbacks();
 
@@ -94,43 +102,64 @@ public class TaskPresenter {
         miniView.addOnClickOpenTabView(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                MainView.getInstance().addTab(model.getShortTitle(), Icons.TASK, view);//this line chooses tab title
+                MainView.getInstance().addTab(model.getShortTitle(),
+                        Icons.TASK, view);// this line chooses tab title
                 view.setViewMode(ViewMode.EDITING);
                 viewMode = view.getViewMode();
                 int tabCount = MainView.getInstance().getTabCount();
                 view.setIndex(tabCount - 1);
                 MainView.getInstance().setSelectedIndex(tabCount - 1);
-                MainView.getInstance().setToolTipTextAt(tabCount - 1, model.getTitle());
+                MainView.getInstance().setToolTipTextAt(tabCount - 1,
+                        model.getTitle());
 
             }
         });
-        
+
         /**
          * Open the task tab when a task is clicked
+         * 
          * @param ActionListener
          */
         view.addOkOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	int index = MainView.getInstance().indexOfComponent(view);
-            	if(viewMode == ViewMode.CREATING){
-            	    //CREATING MODE
-            		updateModel();
-            		createInDatabase();
+                int index = MainView.getInstance().indexOfComponent(view);
+                if (viewMode == ViewMode.CREATING) {
+                    // CREATING MODE
+                    updateModel();
+                    createInDatabase(); // is calling "PUT" in task observer
                     view.setViewMode(ViewMode.EDITING);
                     MainView.getInstance().remove(index);
                     MainView.getInstance().setSelectedIndex(0);
-            	}
-            	else {
-            		if (view.getStatus().getSelectedIndex() + 1 != bucket.getModel().getId()) {
-            			MainView.getInstance().getWorkflowPresenter().moveTask(model.getId(), view.getStatus().getSelectedIndex() + 1, bucket.getModel().getId());
-            			bucket.writeModelToView();
-            		}
-            		saveView();
-            		updateView();
-            		MainView.getInstance().setTitleAt(index, model.getShortTitle());
-            		bucket.writeModelToView();
-            	}
+                }
+
+                else {
+                    updateBeforeModel();
+                    if (view.getStatus() != bucket
+                            .getModel().getId()) { // if we are switching
+                                                   // buckets
+                        MainView.getInstance()
+                                .getWorkflowPresenter()
+                                .moveTask(
+                                        model.getId(),
+                                        view.getStatus(),
+                                        bucket.getModel().getId());
+                        bucket.writeModelToView();
+                        saveView();
+                        updateView();
+                        MainView.getInstance().setTitleAt(index,
+                                model.getShortTitle());
+                        addHistory(beforeModel, model);
+                        refreshCommentView();
+                    } else { // not switching buckets
+                        saveView();
+                        updateView();
+                        MainView.getInstance().setTitleAt(index,
+                                model.getShortTitle());
+                        addHistory(beforeModel, model);
+                    }
+                }
+
             }
         });
 
@@ -196,7 +225,7 @@ public class TaskPresenter {
                     miniView.revalidate();
                     miniView.repaint();
                     MainView.getInstance().setTitleAt(view.getIndex(),
-                            model.getTitle());
+                            model.getShortTitle());
                 }
             }
         });
@@ -229,7 +258,7 @@ public class TaskPresenter {
                 }
             }
         });
-        
+
         view.getCommentView().addOnPostListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
@@ -240,19 +269,91 @@ public class TaskPresenter {
     }
 
     /**
+     * Updates another model with the fields before it gets updated
+     */
+    public void updateBeforeModel() {
+        beforeModel.setTitle(model.getTitle());
+        beforeModel.setDescription(model.getDescription());
+        beforeModel.setEstimatedEffort(model.getEstimatedEffort());
+        beforeModel.setActualEffort(model.getActualEffort());
+        beforeModel.setDueDate(model.getDueDate());
+        beforeModel.setStatus(model.getStatus());
+    }
+
+    /**
      * Creates a new activity in the Database by using the text provided in the
      * comment box
      */
     public void addActivity() {
         ActivityPresenter activityPresenter = new ActivityPresenter(this, view
-                .getCommentView().getCommentText().getText());
+                .getCommentView().getCommentText().getText(), false);
         view.getCommentView().postActivity(activityPresenter.getView());
         activityPresenter.createInDatabase();
         activityPresenters.add(activityPresenter);
     }
 
     /**
+     * Automatically generates a comment based on what the user has changed in
+     * the task. The "Update" button being clicked.
+     * 
+     * @param before
+     *            The task model fields before it was updated
+     * @param after
+     *            The task model fields after it is updated
+     */
+    public void addHistory(TaskModel before, TaskModel after) {
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+        Calendar cal = Calendar.getInstance();
+        String user = ConfigManager.getConfig().getUserName();
+        String activity = user + " has updated tasks on "
+                + dateFormat.format(cal.getTime()) + ":\n";
+
+        activity += before.compareTo(after);
+        ActivityPresenter activityPresenter = new ActivityPresenter(this,
+                activity, true);
+        view.getCommentView().postHistory(activityPresenter.getView());
+        activityPresenter.createInDatabase();
+        activityPresenters.add(activityPresenter);
+    }
+
+    /**
+     * Automatically generates a comment based on what the user has done.
+     * 
+     * @param type
+     *            the type of action that generated the activity
+     */
+    public void addHistory(String type) {
+        String activity = "";
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+        Calendar cal = Calendar.getInstance();
+        String user = ConfigManager.getConfig().getUserName();
+        switch (type) {
+        case "Create":
+            activity = user + " has created a task on "
+                    + dateFormat.format(cal.getTime());
+            break;
+        case "Move":
+            activity = user + " has moved a task from x to y on "
+                    + dateFormat.format(cal.getTime());
+            break;
+        case "Archive":
+            activity = user + " has archived a task on "
+                    + dateFormat.format(cal.getTime());
+            break;
+        default:
+            break;
+        }
+
+        ActivityPresenter activityPresenter = new ActivityPresenter(this,
+                activity, true);
+        view.getCommentView().postHistory(activityPresenter.getView());
+        activityPresenter.createInDatabase();
+        activityPresenters.add(activityPresenter);
+    }
+
+    /**
      * saves an activity in the model with the given ID from the DataBase
+     * 
      * @param id
      *            database given ID
      */
@@ -260,7 +361,7 @@ public class TaskPresenter {
         model.addActivityID(id);
         saveView();
     }
-    
+
     /**
      * Create a new task in the database. Initializes an async network request
      * with an observer.
@@ -330,8 +431,8 @@ public class TaskPresenter {
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
         model.setAssignedTo(assignedUserList);
-        model.setStatus(view.getStatus().getSelectedIndex()+1);
-        this.bucket = MainView.getInstance().getWorkflowPresenter().getBucket(view.getStatus().getSelectedIndex()+1);
+        model.setStatus(view.getStatus());
+        this.bucket = MainView.getInstance().getWorkflowPresenter().getBucket(view.getStatus());
     }
 
     /**
@@ -347,7 +448,7 @@ public class TaskPresenter {
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         addUsersToView();
     }
-    
+
     /**
      * takes the current comment view, clears the posts, and puts each comment,
      * one by one back on to the current view.
@@ -355,23 +456,32 @@ public class TaskPresenter {
     public void updateCommentView() {
         view.getCommentView().clearPosts();
         for (ActivityPresenter p : activityPresenters) {
-            view.getCommentView().postActivity(p.getView());
+            if (p.getModel().getIsAutogen())
+                view.getCommentView().postHistory(p.getView());
+            else
+                view.getCommentView().postActivity(p.getView());
         }
+
+    }
+
+    public void refreshCommentView() {
         view.getCommentView().revalidate();
         view.getCommentView().repaint();
     }
-    
+
     /**
      * Change the view
-     * @param viewMode the viewMode to be switched to 
-
+     * 
+     * @param viewMode
+     *            the viewMode to be switched to
      */
-    public void setTheViewViewMode(ViewMode viewMode){
+    public void setTheViewViewMode(ViewMode viewMode) {
         view.setViewMode(viewMode);
     }
 
     /**
      * Get the view for this Task.
+     * 
      * @return the TaskView for the current TaskPresenter
      */
     public TaskView getView() {
@@ -380,6 +490,7 @@ public class TaskPresenter {
 
     /**
      * Get the miniView for this Task.
+     * 
      * @return miniView for Task
      */
     public MiniTaskView getMiniView() {
@@ -388,6 +499,7 @@ public class TaskPresenter {
 
     /**
      * Get the model for this class.
+     * 
      * @return This provider's model.
      */
     public TaskModel getModel() {
@@ -396,6 +508,7 @@ public class TaskPresenter {
 
     /**
      * Set the model for this class.
+     * 
      * @param model
      *            This provider's model.
      */
@@ -409,7 +522,7 @@ public class TaskPresenter {
         }
     }
 
-    /** 
+    /**
      * 
      * @return the bucket the task is contained within
      */
@@ -438,7 +551,7 @@ public class TaskPresenter {
      * @return A shallow copy of the temporary assigned users list, not the model's user list
      */
     public List<Integer> getAssignedUserList() {
-        return new ArrayList<Integer>(this.assignedUserList);
+        return this.assignedUserList;
     }
     
     /**

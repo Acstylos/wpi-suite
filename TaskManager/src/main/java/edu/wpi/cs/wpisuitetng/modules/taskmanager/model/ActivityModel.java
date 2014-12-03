@@ -24,18 +24,20 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public class ActivityModel extends AbstractModel {
 
     private int id;
-    private User user;
+    private int userId;
     private Date date;
     private String activity;
+    private boolean isAutogen;
 
     /**
      * Default constructor for a default ActivityModel
      */
     public ActivityModel() {
         this.id = -1;
-        this.user = new User("", "", "", -1);
+        this.userId = -1;
         this.activity = "";
         this.date = new Date();
+        this.isAutogen = false;
 
     }
 
@@ -49,14 +51,32 @@ public class ActivityModel extends AbstractModel {
      *            the user that added the activity
      * @param activity
      *            either auto-generated or manually added comments
+     * @param isAutogen
+     *            either auto-generated or manually added
      */
-    public ActivityModel(int id, User user, String activity, Date date) {
+    public ActivityModel(int id, User user, String activity, Date date,
+            boolean isAutogen) {
         this.id = id;
-        this.user = user;
+        this.userId = user.getIdNum();
         this.activity = activity;
         this.date = date;
+        this.isAutogen = isAutogen;
     }
 
+    /**
+     * @return true or false if this is an auto-generated comment
+     */
+    public boolean getIsAutogen() {
+        return isAutogen;
+    }
+
+    /**
+     * @param isAutogen true or false if auto-generated comment
+     */
+    public void setIsAutogen(boolean isAutogen) {
+        this.isAutogen = isAutogen;
+    }
+    
     /**
      * @return the date of the activity
      */
@@ -91,8 +111,8 @@ public class ActivityModel extends AbstractModel {
     /**
      * @return the user
      */
-    public User getUser() {
-        return user;
+    public int getUser() {
+        return userId;
     }
 
     /**
@@ -100,7 +120,7 @@ public class ActivityModel extends AbstractModel {
      *            the user to be set
      */
     public void setUser(User user) {
-        this.user = user;
+        this.userId = user.getIdNum();
 
     }
 
@@ -128,7 +148,8 @@ public class ActivityModel extends AbstractModel {
     public void copyFrom(ActivityModel other) {
         this.activity = other.getActivity();
         this.id = other.getId();
-        this.user = other.getUser();
+        this.userId = other.getUser();
+        this.isAutogen = other.getIsAutogen(); 
     }
 
     /**
@@ -148,7 +169,7 @@ public class ActivityModel extends AbstractModel {
      * 
      * @param alist
      *            A list of activities
-
+     * 
      * @return A string in JSON representing the list of activities
      */
     public static String toJson(ActivityModel[] alist) {
