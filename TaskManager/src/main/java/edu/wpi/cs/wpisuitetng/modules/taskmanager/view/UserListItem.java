@@ -22,7 +22,6 @@ public class UserListItem extends JButton {
      * @param assigned True if assigned to task, false if not
      */
     public UserListItem(TaskPresenter presenter, User user, boolean assigned) {
-        this.setLayout(new MigLayout("fill"));
         this.setText(user.getName());
         this.user = user;
         this.presenter = presenter;

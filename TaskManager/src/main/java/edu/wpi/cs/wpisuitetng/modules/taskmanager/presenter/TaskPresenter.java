@@ -52,6 +52,7 @@ public class TaskPresenter {
     private boolean cancelDialogConfirmed = false;
     private boolean undoDialogConfirmed = false;
     private boolean deleteDialogConfirmed = false;
+    private boolean allowCancelDialog = false;
 
     private BucketPresenter bucket;
     private List<ActivityPresenter> activityPresenters; 
@@ -152,7 +153,9 @@ public class TaskPresenter {
                         cancelDialog.setVisible(false);
                     }
                 });
-                cancelDialog.setVisible(true);
+                if (allowCancelDialog) {
+                    cancelDialog.setVisible(true);
+                }
                 if(cancelDialogConfirmed) {
                     int index = MainView.getInstance().indexOfComponent(view);
                     MainView.getInstance().remove(index);
@@ -428,5 +431,21 @@ public class TaskPresenter {
      */
     public void addUserToAssignedTo(User user) {
         this.assignedUserList.add(user.getIdNum());
+        this.view.validateFields();
+    }
+    
+    /**
+     * @return A shallow copy of the temporary assigned users list, not the model's user list
+     */
+    public List<Integer> getAssignedUserList() {
+        return new ArrayList<Integer>(this.assignedUserList);
+    }
+    
+    /**
+     * @param enable Whether or not to enable the cancel dialog
+     */
+    public void setAllowCancelDialogEnabled(boolean enable) {
+        this.allowCancelDialog = enable;
+        this.cancelDialogConfirmed = !enable; // if the dialog is enabled, the confirmation of the dialog box is opposite
     }
 }

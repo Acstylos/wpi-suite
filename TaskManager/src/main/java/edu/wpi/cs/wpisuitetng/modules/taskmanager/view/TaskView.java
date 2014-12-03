@@ -329,7 +329,7 @@ public class TaskView extends JPanel {
      * Check that all fields are valid and update the user interface to provide
      * feedback on what isn't valid.
      */
-    private void validateFields() {
+    public void validateFields() {
         JFormattedTextField dateEditor = this.datePicker.getEditor();
 
         /*
@@ -415,6 +415,11 @@ public class TaskView extends JPanel {
         } else {
             isModified = true;
         }
+        
+        if (this.presenter.getAssignedUserList().equals(this.model.getAssignedTo())) {
+        } else {
+            isModified = true;
+        }
 
         /* The date value might be null */
         boolean datesAreEqual;
@@ -441,6 +446,9 @@ public class TaskView extends JPanel {
 
         /* Allow the user to reset the fields if something is modified. */
         this.buttonPanel.setClearEnabledStatus(isModified);
+        
+        /* Don't show cancel dialog if something hasn't been modified. */
+        this.presenter.setAllowCancelDialogEnabled(isModified);
     }
 
     /**
@@ -456,6 +464,7 @@ public class TaskView extends JPanel {
      * @return returns the panel that users are on
      */
     public UserListsView getUserListPanel() {
+        this.validateFields();
         return this.usersPanel;
     }
 }
