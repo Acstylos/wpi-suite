@@ -135,6 +135,7 @@ public class TaskButtonsPanel extends JPanel {
     /**
      * Set an error to display next to the buttons, to provide feedback about
      * why one or more of them is disabled.
+     * @param error String representing error
      */
     public void setError(String error) {
         this.errorLabel.setText(error);

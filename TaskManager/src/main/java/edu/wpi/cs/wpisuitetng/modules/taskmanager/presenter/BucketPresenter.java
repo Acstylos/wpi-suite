@@ -152,8 +152,7 @@ public class BucketPresenter {
         //taskPresenter.createInDatabase();
         TaskModel taskModel = taskPresenter.getModel();
         TaskView taskView = taskPresenter.getView();
-        
-        MainView.getInstance().addTab(taskModel.getTitle(), Icons.TASK, taskView);
+        MainView.getInstance().addTab(taskModel.getShortTitle(), Icons.TASK, taskView);
         int tabCount = MainView.getInstance().getTabCount();
         taskView.setIndex(tabCount-1);
         MainView.getInstance().setSelectedIndex(tabCount-1);
@@ -163,8 +162,8 @@ public class BucketPresenter {
      * remove a task ID from the list of taskIDs in the model Sends an async
      * update to the database
      * 
-     * @param id
-     *            ID of the existing task
+     * @param rmid
+     *            ID of the existing task to be removed
      */
     public void removeTask(int rmid) {
         model.removeTaskId(rmid);
@@ -183,7 +182,9 @@ public class BucketPresenter {
      */
     public void addTask(int id, TaskPresenter taskPresenter) {
         model.addTaskID(id);
-        taskMap.put(id, taskPresenter);
+        if (!taskMap.containsKey(id)) {
+        	taskMap.put(id, taskPresenter);
+        }
         updateInDatabase();
     }
 
