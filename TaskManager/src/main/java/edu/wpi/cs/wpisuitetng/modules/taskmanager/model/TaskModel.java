@@ -10,6 +10,8 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +35,6 @@ public class TaskModel extends AbstractModel {
     private int actualEffort;
     private Date dueDate;
     private int status;
-
 
     /**
      * Constructor for a default Task object
@@ -67,7 +68,7 @@ public class TaskModel extends AbstractModel {
      *             the bucket the task belongs in
      */
     public TaskModel(int id, String title, String description,
-                     int estimatedEffort, Date dueDate, int status) {
+            int estimatedEffort, Date dueDate, int status) {
         this();
         this.id = id;
         this.title = title;
@@ -78,6 +79,58 @@ public class TaskModel extends AbstractModel {
         this.status = status;
     }
 
+    /**
+     * Compares the task models before and after it is updated and makes a
+     * string that contains all the user changes
+     * 
+     * @param that
+     *            the task model after it was updated.
+     * @return summary the message which shows what has changed.
+     */
+    public String compareTo(TaskModel that) {
+        boolean flag = false;
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        String summary = "";
+        if (this.title.compareTo(that.title) != 0) {
+            summary = "Title was changed from " + this.title + " to "
+                    + that.title;
+            flag = true;
+        }
+        if (this.actualEffort != that.actualEffort) {
+            if (flag)
+                summary += "\n";
+            summary += "Actual Effort was changed from " + this.actualEffort
+                    + " to " + that.actualEffort;
+            flag = true;
+        } else if (!flag)
+            flag = false;
+        if (this.estimatedEffort != that.estimatedEffort) {
+            if (flag)
+                summary += "\n";
+            summary += "Estimated Effort was changed from "
+                    + this.estimatedEffort + " to " + that.estimatedEffort;
+            flag = true;
+        } else if (!flag)
+            flag = false;
+        if (this.dueDate.compareTo(that.dueDate) != 0) {
+            if (flag)
+                summary += "\n";
+            summary += "Due Date was changed from "
+                    + dateFormat.format(this.dueDate) + " to "
+                    + dateFormat.format(that.dueDate);
+            flag = true;
+        } else if (!flag)
+            flag = false;
+        if (this.description.compareTo(that.description) != 0) {
+            if (flag)
+                summary += "\n";
+            summary += "Description was changed.";
+        }
+        return summary;
+
+        // will implement "assigned to" changes and "status" from int to enum
+    }
+    
     /**
      * @return The ID of the task. Returns -1 by default
      */
@@ -296,9 +349,10 @@ public class TaskModel extends AbstractModel {
     public void setActualEffort(int actualEffort) {
         this.actualEffort = actualEffort;
     }
-    
+
     /**
      * Get the status of the task
+     * 
      * @return The status of the task
      */
     public int getStatus() {
@@ -307,12 +361,14 @@ public class TaskModel extends AbstractModel {
 
     /**
      * Set the status of the task
-     * @param status  The status of the task
+     * 
+     * @param status
+     *            The status of the task
      */
     public void setStatus(int status) {
         this.status = status;
     }
-    
+
     /**
      * return the list of activity ids
      * 

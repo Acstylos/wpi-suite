@@ -40,7 +40,7 @@ public class ToolbarView extends JPanel
             public void actionPerformed(ActionEvent e) {
                 // get instance of the New-Bucket Presenter to add new tasks into
                 TaskPresenter taskPresenter = new TaskPresenter(0, MainView.getInstance().getWorkflowPresenter().getBucketPresenterById(1), ViewMode.CREATING);
-            	MainView.getInstance().addTab(taskPresenter.getModel().getTitle(), taskPresenter.getView());
+                MainView.getInstance().addTab(taskPresenter.getModel().getTitle(), Icons.CREATE_TASK, taskPresenter.getView());
                 int tabCount = MainView.getInstance().getTabCount();
                 taskPresenter.getView().setIndex(tabCount-1);
                 MainView.getInstance().setSelectedIndex(tabCount-1);

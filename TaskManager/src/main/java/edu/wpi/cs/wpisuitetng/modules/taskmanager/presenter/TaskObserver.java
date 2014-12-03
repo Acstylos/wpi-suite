@@ -44,8 +44,9 @@ public class TaskObserver implements RequestObserver {
             this.presenter.setModel(model);
             this.presenter.updateView();
             break;
+
         case PUT:
-        	System.out.println("Successfully saved new tasks!");
+            System.out.println("Successfully saved new tasks!");
             model = TaskModel.fromJson(json);
             /*
              * Set the new model and update the view to reflect the new data.
@@ -53,6 +54,8 @@ public class TaskObserver implements RequestObserver {
              * returns the task stored in the database and PUT returns the same
              * task but with a new ID assigned.
              */
+            this.presenter.addHistory("Create");
+
             this.presenter.setModel(model);
             this.presenter.updateView();
 

@@ -27,6 +27,7 @@ public class ActivityModel extends AbstractModel {
     private User user;
     private Date date;
     private String activity;
+    private boolean isAutogen;
 
     /**
      * Default constructor for a default ActivityModel
@@ -36,6 +37,7 @@ public class ActivityModel extends AbstractModel {
         this.user = new User("", "", "", -1);
         this.activity = "";
         this.date = new Date();
+        this.isAutogen = false;
 
     }
 
@@ -49,14 +51,32 @@ public class ActivityModel extends AbstractModel {
      *            the user that added the activity
      * @param activity
      *            either auto-generated or manually added comments
+     * @param isAutogen
+     *            either auto-generated or manually added
      */
-    public ActivityModel(int id, User user, String activity, Date date) {
+    public ActivityModel(int id, User user, String activity, Date date,
+            boolean isAutogen) {
         this.id = id;
         this.user = user;
         this.activity = activity;
         this.date = date;
+        this.isAutogen = isAutogen;
     }
 
+    /**
+     * @return true or false if this is an auto-generated comment
+     */
+    public boolean getIsAutogen() {
+        return isAutogen;
+    }
+
+    /**
+     * @param isAutogen true or false if auto-generated comment
+     */
+    public void setIsAutogen(boolean isAutogen) {
+        this.isAutogen = isAutogen;
+    }
+    
     /**
      * @return the date of the activity
      */
@@ -129,6 +149,7 @@ public class ActivityModel extends AbstractModel {
         this.activity = other.getActivity();
         this.id = other.getId();
         this.user = other.getUser();
+        this.isAutogen = other.getIsAutogen(); 
     }
 
     /**
@@ -148,7 +169,7 @@ public class ActivityModel extends AbstractModel {
      * 
      * @param alist
      *            A list of activities
-
+     * 
      * @return A string in JSON representing the list of activities
      */
     public static String toJson(ActivityModel[] alist) {

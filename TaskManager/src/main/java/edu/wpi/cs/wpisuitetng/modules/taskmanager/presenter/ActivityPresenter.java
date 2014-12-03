@@ -27,34 +27,48 @@ public class ActivityPresenter {
     private TaskPresenter parentTask;
 
     /**
+     * Default constructor
+     */
+    public ActivityPresenter() {
+    }
+
+    /**
      * Constructor for an activity presenter
+     * 
      * @param id
      *            the id of the specific activity made
      * @param task
      *            the task associated with the activity
      */
     public ActivityPresenter(int id, TaskPresenter task) {
-        this(task, "");
+        this(task, "", false);
         this.model.setId(id);
     }
 
     /**
-     * Constructs an Activity Presenter for the a task and string
+     * Constructs an Activity Presenter with a task, string and boolean
+     * 
      * @param task
      *            the task presenter associated with this activityPresenter
      * @param activity
-     *            the comment string that was posted
+     *            the comment string being used
+     * @param isAutogen
+     *            true or false to determine if this is auto or manually
+     *            generated
      */
-    public ActivityPresenter(TaskPresenter task, String activity) {
+    public ActivityPresenter(TaskPresenter task, String activity,
+            boolean isAutogen) {
         this.parentTask = task;
         this.model = new ActivityModel();
         this.commentView = task.getView().getCommentView();
         this.model.setActivity(activity);
+        this.model.setIsAutogen(isAutogen);
         this.view = new ActivityView(this.model.getActivity());
     }
 
     /**
      * Create an Activity Presenter and a model with the given Text
+     * 
      * @param text
      *            the typed comment
      */
@@ -82,7 +96,10 @@ public class ActivityPresenter {
      */
     public void updateView() {
         view.setActivity(model.getActivity());
-        commentView.postActivity(view);
+        if (model.getIsAutogen())
+            commentView.postHistory(view);
+        else
+            commentView.postActivity(view);
         commentView.revalidate();
         commentView.repaint();
 
@@ -126,6 +143,7 @@ public class ActivityPresenter {
 
     /**
      * Handles the result of a GET request
+     * 
      * @param models
      *            The models sent from the network
      */
@@ -137,6 +155,7 @@ public class ActivityPresenter {
 
     /**
      * Handles the result of a POST request
+     * 
      * @param model
      *            The model sent from the network
      */
@@ -146,6 +165,7 @@ public class ActivityPresenter {
 
     /**
      * Handles the result of a PUT request
+     * 
      * @param model
      *            The model sent from the network
      */
@@ -155,6 +175,7 @@ public class ActivityPresenter {
 
     /**
      * Handles the result of a DELETE request
+     * 
      * @param model
      *            The model sent from the network
      */
