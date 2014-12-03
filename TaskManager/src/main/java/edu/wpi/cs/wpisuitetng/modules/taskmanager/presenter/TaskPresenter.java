@@ -10,6 +10,7 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -78,7 +79,7 @@ public class TaskPresenter {
                 HttpMethod.GET);
         request.addObserver(new UsersObserver(this));
         request.send();
-
+        this.miniView.setMaximumSize(new Dimension(bucket.getView().getWidth()-12, bucket.getView().getHeight()));//prevent horizontal scroll
         this.activityPresenters = new ArrayList<ActivityPresenter>(); 
         registerCallbacks();
 
@@ -120,11 +121,13 @@ public class TaskPresenter {
                     MainView.getInstance().setSelectedIndex(0);
             	}
             	else {
-            		MainView.getInstance().getWorkflowPresenter().moveTask(model.getId(), view.getStatus().getSelectedIndex() + 1, bucket.getModel().getId());
-            		bucket.writeModelToView();
+            		if (view.getStatus().getSelectedIndex() + 1 != bucket.getModel().getId()) {
+            			MainView.getInstance().getWorkflowPresenter().moveTask(model.getId(), view.getStatus().getSelectedIndex() + 1, bucket.getModel().getId());
+            			bucket.writeModelToView();
+            		}
             		saveView();
             		updateView();
-            		MainView.getInstance().setTitleAt(index, model.getTitle());
+            		MainView.getInstance().setTitleAt(index, model.getShortTitle());
             		bucket.writeModelToView();
             	}
             }
