@@ -9,26 +9,26 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.VerifyActionDialog;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ViewMode;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
@@ -48,6 +48,16 @@ public class TaskPresenter {
     private TaskModel model;
     private TaskModel beforeModel = new TaskModel();
     private ViewMode viewMode;
+    private User[] allUserArray = {};
+    private List<Integer> assignedUserList;
+    /** Dialog variables for use */
+    private VerifyActionDialog cancelDialog = new VerifyActionDialog();
+    private VerifyActionDialog undoDialog = new VerifyActionDialog();
+    private VerifyActionDialog deleteDialog = new VerifyActionDialog();
+    private boolean cancelDialogConfirmed = false;
+    private boolean undoDialogConfirmed = false;
+    private boolean deleteDialogConfirmed = false;
+    private boolean allowCancelDialog = false;
 
     private BucketPresenter bucket;
     private List<ActivityPresenter> activityPresenters;
@@ -58,6 +68,10 @@ public class TaskPresenter {
      * 
      * @param id
      *            ID of the bucket to create
+     * @param bucket
+     *            The BucketPresenter this TaskPresenter is a part of.
+     * @param viewMode
+     *            The ViewMode of the task, that will be displayed.
      */
     public TaskPresenter(int id, BucketPresenter bucket, ViewMode viewMode) {
         this.bucket = bucket;
@@ -65,15 +79,19 @@ public class TaskPresenter {
         this.model = new TaskModel();
         this.model.setId(id);
         this.model.setTitle("New Task");
-        this.view = new TaskView(model, viewMode);
-        this.miniView = new MiniTaskView(model.getShortTitle(),
-                model.getDueDate(), model.getTitle());
-        Dimension maxView = new Dimension(bucket.getView().getWidth() - 32,
-                bucket.getView().getHeight());
-        this.miniView.setMaximumSize(maxView);// prevent horizontal scroll
+        assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
+        this.view = new TaskView(model, viewMode, this);
+        this.miniView = new MiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
+        final Request request = Network.getInstance().makeRequest("core/user",
+                HttpMethod.GET);
+        request.addObserver(new UsersObserver(this));
+        request.send();
+        Dimension maxView = new Dimension(bucket.getView().getWidth()-32, bucket.getView().getHeight());
+        this.miniView.setMaximumSize(maxView);//prevent horizontal scroll
         this.miniView.getTaskNameLabel().setMaximumSize(maxView);
         this.activityPresenters = new ArrayList<ActivityPresenter>();
         registerCallbacks();
+
     }
 
     /**
@@ -81,7 +99,7 @@ public class TaskPresenter {
      */
     private void registerCallbacks() {
         // onclick listener to open new tabs when minitaskview is clicked
-        miniView.addOnClickOpenTabView(new MouseListener() {
+        miniView.addOnClickOpenTabView(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 MainView.getInstance().addTab(model.getShortTitle(),
@@ -94,22 +112,6 @@ public class TaskPresenter {
                 MainView.getInstance().setToolTipTextAt(tabCount - 1,
                         model.getTitle());
 
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
             }
         });
 
@@ -147,11 +149,15 @@ public class TaskPresenter {
                         updateView();
                         MainView.getInstance().setTitleAt(index,
                                 model.getShortTitle());
+                        MainView.getInstance().setToolTipTextAt(index, model.getTitle());
                         addHistory(beforeModel, model);
                         refreshCommentView();
                     } else { // not switching buckets
                         saveView();
                         updateView();
+                        MainView.getInstance().setTitleAt(index,
+                                model.getShortTitle());
+                        MainView.getInstance().setToolTipTextAt(index, model.getTitle());
                         addHistory(beforeModel, model);
                     }
                 }
@@ -162,44 +168,100 @@ public class TaskPresenter {
         view.addCancelOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int index = MainView.getInstance().indexOfComponent(view);
-                MainView.getInstance().remove(index);
-                updateView();
-                view.revalidate();
-                view.repaint();
-                miniView.revalidate();
-                miniView.repaint();
-                MainView.getInstance().setSelectedIndex(0);
+                cancelDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+                cancelDialog.setCommentLabelText("Are you sure you want to close the tab?");
+                cancelDialog.addConfirmButtonListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        cancelDialogConfirmed = true;
+                        cancelDialog.setVisible(false);
+                    }
+                });
+                cancelDialog.addCancelButtonListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        cancelDialogConfirmed = false;
+                        cancelDialog.setVisible(false);
+                    }
+                });
+                if (allowCancelDialog) {
+                    cancelDialog.setVisible(true);
+                }
+                if(cancelDialogConfirmed) {
+                    int index = MainView.getInstance().indexOfComponent(view);
+                    MainView.getInstance().remove(index);
+                    updateView();
+                    view.revalidate();
+                    view.repaint();
+                    miniView.revalidate();
+                    miniView.repaint();
+                    MainView.getInstance().setSelectedIndex(0);
+                }
             }
         });
 
         view.addClearOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                updateView();
-                view.revalidate();
-                view.repaint();
-                miniView.revalidate();
-                miniView.repaint();
-                MainView.getInstance().setTitleAt(view.getIndex(),
-                        model.getTitle());
+                undoDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+                undoDialog.setCommentLabelText("Are you sure you want to undo your changes?");
+                undoDialog.addConfirmButtonListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        undoDialogConfirmed = true;
+                        undoDialog.setVisible(false);
+                    }
+                });
+                undoDialog.addCancelButtonListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        undoDialogConfirmed = false;
+                        undoDialog.setVisible(false);
+                    }
+                });
+                undoDialog.setVisible(true);
+                if(undoDialogConfirmed) {
+                    updateView();
+                    view.revalidate();
+                    view.repaint();
+                    miniView.revalidate();
+                    miniView.repaint();
+                    MainView.getInstance().setTitleAt(view.getIndex(),
+                            model.getShortTitle());
+                }
             }
         });
 
         view.addDeleteOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int index = MainView.getInstance().indexOfComponent(view);
-                MainView.getInstance().remove(index);
-                MainView.getInstance().getWorkflowPresenter()
-                        .archiveTask(model.getId(), bucket.getModel().getId());
-                MainView.getInstance().getArchive().getArchiveBucket()
-                        .addTaskToView(miniView);
+                deleteDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+                deleteDialog.setCommentLabelText("Are you sure you want to delete this task?");
+                deleteDialog.addConfirmButtonListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        deleteDialogConfirmed = true;
+                        deleteDialog.setVisible(false);
+                    }
+                });
+                deleteDialog.addCancelButtonListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        deleteDialogConfirmed = false;
+                        deleteDialog.setVisible(false);
+                    }
+                });
+                deleteDialog.setVisible(true);
+                if(deleteDialogConfirmed) {
+                    int index = MainView.getInstance().indexOfComponent(view);
+                    MainView.getInstance().remove(index);
+                    MainView.getInstance().getWorkflowPresenter().archiveTask(model.getId(), bucket.getModel().getId());
+                    MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
+                }
             }
         });
 
         view.getCommentView().addOnPostListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 addActivity();
@@ -335,6 +397,29 @@ public class TaskPresenter {
     }
 
     /**
+     * @param users User array of all users in the database
+     */
+    public void addUsersToAllUserList(User[] users) {
+        this.allUserArray = users;
+    }
+    
+    /**
+     * Takes the allUsers array, and checks users with assigned users list
+     * all assigned users get added to the assigned view, and all others
+     * get added to unassigned view
+     */
+    public void addUsersToView() {
+        this.view.getUserListPanel().removeAllUsers();
+        for(User user: allUserArray) {
+            if(assignedUserList.contains(user.getIdNum())) {
+                this.view.getUserListPanel().addUserToList(user, true);
+            } else {
+                this.view.getUserListPanel().addUserToList(user, false);
+            }
+        }
+    }
+
+    /**
      * Have the presenter reload the view from the model.
      */
     public void updateFromDatabase() {
@@ -354,6 +439,7 @@ public class TaskPresenter {
         model.setActualEffort(view.getActualEffort());
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
+        model.setAssignedTo(assignedUserList);
         model.setStatus(view.getStatus());
         this.bucket = MainView.getInstance().getWorkflowPresenter()
                 .getBucket(view.getStatus());
@@ -369,6 +455,8 @@ public class TaskPresenter {
         miniView.setDueDate(model.getDueDate());
         miniView.setToolTipText(model.getTitle());
         updateCommentView();
+        assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
+        addUsersToView();
     }
 
     /**
@@ -450,5 +538,37 @@ public class TaskPresenter {
      */
     public BucketPresenter getBucket() {
         return bucket;
+    }
+
+    /**
+     * Removes a user from the assignedTo list
+     * @param user User to remove from assignedTo
+     */
+    public void removeUserFromAssignedTo(User user) {
+        this.assignedUserList.remove((Object)user.getIdNum());
+    }
+
+    /**
+     * Add a user from the assignedTo list
+     * @param user User to add to assignedTo 
+     */
+    public void addUserToAssignedTo(User user) {
+        this.assignedUserList.add(user.getIdNum());
+        this.view.validateFields();
+    }
+    
+    /**
+     * @return A shallow copy of the temporary assigned users list, not the model's user list
+     */
+    public List<Integer> getAssignedUserList() {
+        return this.assignedUserList;
+    }
+    
+    /**
+     * @param enable Whether or not to enable the cancel dialog
+     */
+    public void setAllowCancelDialogEnabled(boolean enable) {
+        this.allowCancelDialog = enable;
+        this.cancelDialogConfirmed = !enable; // if the dialog is enabled, the confirmation of the dialog box is opposite
     }
 }

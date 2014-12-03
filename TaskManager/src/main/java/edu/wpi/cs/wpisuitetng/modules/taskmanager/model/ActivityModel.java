@@ -24,7 +24,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public class ActivityModel extends AbstractModel {
 
     private int id;
-    private User user;
+    private int userId;
     private Date date;
     private String activity;
     private boolean isAutogen;
@@ -34,7 +34,7 @@ public class ActivityModel extends AbstractModel {
      */
     public ActivityModel() {
         this.id = -1;
-        this.user = new User("", "", "", -1);
+        this.userId = -1;
         this.activity = "";
         this.date = new Date();
         this.isAutogen = false;
@@ -57,7 +57,7 @@ public class ActivityModel extends AbstractModel {
     public ActivityModel(int id, User user, String activity, Date date,
             boolean isAutogen) {
         this.id = id;
-        this.user = user;
+        this.userId = user.getIdNum();
         this.activity = activity;
         this.date = date;
         this.isAutogen = isAutogen;
@@ -111,8 +111,8 @@ public class ActivityModel extends AbstractModel {
     /**
      * @return the user
      */
-    public User getUser() {
-        return user;
+    public int getUser() {
+        return userId;
     }
 
     /**
@@ -120,7 +120,7 @@ public class ActivityModel extends AbstractModel {
      *            the user to be set
      */
     public void setUser(User user) {
-        this.user = user;
+        this.userId = user.getIdNum();
 
     }
 
@@ -148,7 +148,7 @@ public class ActivityModel extends AbstractModel {
     public void copyFrom(ActivityModel other) {
         this.activity = other.getActivity();
         this.id = other.getId();
-        this.user = other.getUser();
+        this.userId = other.getUser();
         this.isAutogen = other.getIsAutogen(); 
     }
 

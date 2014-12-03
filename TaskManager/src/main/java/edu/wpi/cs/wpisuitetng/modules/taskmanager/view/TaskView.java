@@ -10,8 +10,8 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
+import java.awt.Color;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.text.ParseException;
 import java.util.Date;
@@ -28,6 +28,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -39,10 +40,7 @@ import org.jdesktop.swingx.JXTextArea;
 import org.jdesktop.swingx.JXTextField;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
-
-import java.awt.Color;
-
-import javax.swing.border.LineBorder;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
 
 /**
  * A {@link javax.swing.JComponent} that renders the fields of a single task and
@@ -66,7 +64,7 @@ public class TaskView extends JPanel {
     private JPanel detailsPanel = new JPanel();
     private JPanel infoPanel = new JPanel();
     private JPanel splitPanel = new JPanel();
-    private JPanel usersPanel = new JPanel();
+    private UserListsView usersPanel;
     private JScrollPane scrollPane = new JScrollPane();
     private JSpinner actualEffortSpinner = new JSpinner();
     private JSpinner estEffortSpinner = new JSpinner();
@@ -74,6 +72,7 @@ public class TaskView extends JPanel {
     private JXTextArea descriptionMessage = new JXTextArea("Write a description...", Color.GRAY);
     private JXTextField taskNameField = new JXTextField("Write a title...", Color.GRAY);
     private JXDatePicker datePicker = new JXDatePicker();
+    private TaskPresenter presenter;
     private TaskModel model = new TaskModel();
 
     private final static LineBorder validBorder = new LineBorder(Color.GRAY, 1);
@@ -93,22 +92,23 @@ public class TaskView extends JPanel {
      *
      * @param model
      *            The initial data that will be displayed
-     * @see #setTaskNameField(String)
-     * @see #setEstimatedEffort(int)
-     * @see #setDescriptionText(String)
-     * @see #setDueDate(Date)
+     * @param viewMode
+     *            The ViewMode of the task that says how the view will be displayed
+     * @param presenter
+     *            The TaskPresenter that is responsible for this view
      */
-    public TaskView(TaskModel model, ViewMode viewMode) {
+    public TaskView(TaskModel model, ViewMode viewMode, TaskPresenter presenter) {
         this.setBorder(null);
+        this.presenter = presenter;
+        this.usersPanel = new UserListsView(presenter);
         // Set layouts for all panels
         this.setLayout(new MigLayout("", "[grow]", "[grow][min]"));
 
         this.descriptionPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
         this.detailsPanel.setLayout(new MigLayout("", "[grow]",
-                "[][grow][grow]"));
+                "[][20%,grow][30%]"));
         this.infoPanel.setLayout(new MigLayout("", "[][][grow]", "[][][][][]"));
         this.splitPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
-        this.usersPanel.setLayout(new MigLayout("", "[]", "[]"));
 
         this.buttonPanel = new TaskButtonsPanel(viewMode);
         this.add(buttonPanel, "cell 0 1,grow");
@@ -307,8 +307,11 @@ public class TaskView extends JPanel {
         this.viewMode = viewMode;
         buttonPanel.validateButtons(viewMode);
     }
-
-    public ViewMode getViewMode() {
+    
+    /**
+     * @return The view mode of the task
+     */
+    public ViewMode getViewMode(){
         return this.viewMode;
     }
 
@@ -332,7 +335,7 @@ public class TaskView extends JPanel {
      * Check that all fields are valid and update the user interface to provide
      * feedback on what isn't valid.
      */
-    private void validateFields() {
+    public void validateFields() {
         JFormattedTextField dateEditor = this.datePicker.getEditor();
 
         /*
@@ -419,6 +422,11 @@ public class TaskView extends JPanel {
             isModified = true;
         }
         
+        if (this.presenter.getAssignedUserList().equals(this.model.getAssignedTo())) {
+        } else {
+            isModified = true;
+        }
+
         if (this.getStatus() == this.model.getStatus()) {
             this.statusLabel.setForeground(unmodifiedColor);
         } else {
@@ -451,6 +459,9 @@ public class TaskView extends JPanel {
 
         /* Allow the user to reset the fields if something is modified. */
         this.buttonPanel.setClearEnabledStatus(isModified);
+        
+        /* Don't show cancel dialog if something hasn't been modified. */
+        this.presenter.setAllowCancelDialogEnabled(isModified);
     }
 
     /**
@@ -460,5 +471,13 @@ public class TaskView extends JPanel {
      */
     public CommentView getCommentView() {
         return (CommentView) this.commentPanel;
+    }
+    
+    /**
+     * @return returns the panel that users are on
+     */
+    public UserListsView getUserListPanel() {
+        this.validateFields();
+        return this.usersPanel;
     }
 }

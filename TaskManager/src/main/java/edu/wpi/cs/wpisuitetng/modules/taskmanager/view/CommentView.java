@@ -46,8 +46,6 @@ public class CommentView extends JTabbedPane {
     private JScrollPane historyScroll = new JScrollPane();
     private JScrollPane commentScroll = new JScrollPane();
     private JPanel postedCommentPanel = new JPanel();
-    private ActivityView testActivity = new ActivityView();
-    private ActivityView testActivity2 = new ActivityView();
     private JScrollPane editCommentScroll = new JScrollPane();
     private JXTextArea commentText = new JXTextArea("Write a comment...",
             Color.GRAY);

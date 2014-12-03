@@ -29,7 +29,7 @@ public class TaskModel extends AbstractModel {
     private String title;
     private String shortTitle;
     private String description;
-    private List<User> assignedTo;
+    private List<Integer> assignedTo;
     private List<Integer> activityIds;
     private int estimatedEffort;
     private int actualEffort;
@@ -45,7 +45,7 @@ public class TaskModel extends AbstractModel {
         title = "New Task";
         shortTitle = this.shortenString(this.title);
         description = "";
-        assignedTo = new ArrayList<User>();
+        assignedTo = new ArrayList<Integer>();
         activityIds = new ArrayList<Integer>();
         estimatedEffort = 0;
         actualEffort = 0;
@@ -62,6 +62,8 @@ public class TaskModel extends AbstractModel {
      *            The title of the task
      * @param description
      *            The description of the task
+     * @param estimatedEffort
+     *            The estimated effort of a task
      * @param dueDate
      *            The due date for the task
      * @param status
@@ -176,20 +178,35 @@ public class TaskModel extends AbstractModel {
     public void setDescription(String description) {
         this.description = description;
     }
+    
+    /**
+     * @param userList The list of users assigned to this task
+     */
+    public void setAssignedTo(List<Integer> userList) {
+        this.assignedTo = new ArrayList<Integer>(userList);
+    }
 
     /**
      * @return The list of users assigned to this task
      */
-    public List<User> getAssignedTo() {
-        return assignedTo;
+    public List<Integer> getAssignedTo() {
+        return this.assignedTo;
     }
 
     /**
      * @param user
      *            Adds a user to the list of assigned users
      */
-    public void setAssignedTo(User user) {
-        this.assignedTo.add(user);
+    public void addUserToAssignedTo(User user) {
+        this.assignedTo.add(user.getIdNum());
+    }
+
+    /**
+     * @param user
+     *            The user to be removed from the list of assigned users
+     */
+    public void removeUserFromAssignedTo(User user) {
+        this.assignedTo.remove((Object)user.getIdNum());
     }
 
     /**
@@ -216,7 +233,8 @@ public class TaskModel extends AbstractModel {
     public void copyFrom(TaskModel other) {
         this.title = other.getTitle();
         this.description = other.getDescription();
-        this.assignedTo = other.getAssignedTo();
+        // Make sure we shallow-copy the array list, instead of pass references to it.
+        this.assignedTo = new ArrayList<Integer>(other.getAssignedTo());
         this.estimatedEffort = other.getEstimatedEffort();
         this.dueDate = other.getDueDate();
         this.actualEffort = other.getActualEffort();

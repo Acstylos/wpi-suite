@@ -34,7 +34,7 @@ public class TaskButtonsPanel extends JPanel {
     private final JButton okButton = new JButton();
     private final JButton cancelButton = new JButton("Close");
     private final JButton clearButton = new JButton();
-    private final JButton deleteButton = new JButton("Archive");
+    private final JButton deleteButton = new JButton("Delete");
     private String okString;
     private String clearString; 
     private String deleteString;// going to use this later for actual cancel, instead of close
@@ -48,17 +48,17 @@ public class TaskButtonsPanel extends JPanel {
      *        the currently enabled view
      */
     public TaskButtonsPanel(ViewMode viewMode) {
-
-        this.setLayout(new MigLayout("", "[][][][]", "[]"));
+        this.setLayout(new MigLayout("", "[0%,min][0%,min][0%,min][0%,min][0%,grow]", "[]"));
         this.add(okButton, "cell 0 0");
         this.add(clearButton, "cell 1 0");
         this.add(cancelButton, "cell 2 0");
-        errorLabel.setIcon(new ImageIcon(TaskButtonsPanel.class.getResource("error.png")));
-        errorLabel.setForeground(Color.RED);
-        errorLabel.setVisible(false);
-        
-        add(errorLabel, "cell 3 0");
+        this.add(deleteButton, "cell 3 0");
+        this.add(errorLabel, "cell 4 0");
         validateButtons(viewMode);
+        this.errorLabel.setIcon(new ImageIcon(TaskButtonsPanel.class.getResource("error.png")));
+        this.errorLabel.setForeground(Color.RED);
+        this.errorLabel.setVisible(false);
+        
         
         this.okButton.setIcon(Icons.OK);
         this.clearButton.setIcon(Icons.CLEAR);
@@ -72,27 +72,37 @@ public class TaskButtonsPanel extends JPanel {
      *            the currently enabled viewMode
      */
     public void validateButtons(ViewMode viewMode){
-        this.setLayout(new MigLayout("", "[][][][]", "[]"));
-        this.add(okButton);
-        if(viewMode != ViewMode.ARCHIVING)
-            this.add(clearButton);
-        if(viewMode != ViewMode.ARCHIVING)
-            this.add(cancelButton);
-        if(viewMode != ViewMode.CREATING)
-            this.add(deleteButton);
-        if (viewMode == ViewMode.CREATING) {
+        if(viewMode == ViewMode.CREATING) {
             okString = "Create";
             clearString = "Clear";
-        } else if (viewMode == ViewMode.EDITING){
+            cancelString = "Cancel";
+            deleteString = "";
+            this.okButton.setVisible(true);
+            this.clearButton.setVisible(true);
+            this.cancelButton.setVisible(true);
+            this.deleteButton.setVisible(false);
+        } else if (viewMode == ViewMode.EDITING) {
             okString = "Update";
             clearString = "Undo Changes";
-            deleteString = "Archive";
-        } else if (viewMode == ViewMode.ARCHIVING){
-            okString = "Restore";
+            cancelString = "Close";
             deleteString = "Delete";
+            this.okButton.setVisible(true);
+            this.clearButton.setVisible(true);
+            this.cancelButton.setVisible(true);
+            this.deleteButton.setVisible(true);
+        } else if (viewMode == ViewMode.ARCHIVING) {
+            okString = "Restore";
+            clearString = "";
+            cancelString = "";
+            deleteString = "Delete";
+            this.okButton.setVisible(true);
+            this.clearButton.setVisible(false);
+            this.cancelButton.setVisible(false);
+            this.deleteButton.setVisible(true);
         }
         this.okButton.setText(okString);
         this.clearButton.setText(clearString);
+        this.cancelButton.setText(cancelString);
         this.deleteButton.setText(deleteString);
     }
     
