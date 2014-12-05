@@ -34,8 +34,8 @@ public class WorkflowPresenter {
     /**
      * Constructor does nothing for now
      *
-     * @param mainView
-     *            The view associated with this presenter
+     * @param workflowId
+     *            the id of the workflow 
      */
     public WorkflowPresenter(int workflowId) {
         this.model = new WorkflowModel();
@@ -78,15 +78,9 @@ public class WorkflowPresenter {
             model.setBucketIds(bucketIds);
         }
 
-        // create archive, bucket id = 5
-        ArrayList<Integer> bucketIds = model.getBucketIds();
-        bucketIds.add(0);
-        model.setBucketIds(bucketIds);
-
         int hardCodedId = 1;
 
         ArrayList<Integer> newBuckets = new ArrayList<Integer>();
-        BucketPresenter archiveBucketPresenter = null;
         view.setTitle(model.getTitle());
         ArrayList<BucketView> bucketViews = new ArrayList<BucketView>();
         for (int i : model.getBucketIds()) {
@@ -96,14 +90,9 @@ public class WorkflowPresenter {
             hardCodedId++;
 
             newBuckets.add(bucketPresenter.getModel().getId());
-            if(bucketPresenter.getModel().getId() == 5){
-                archiveBucketPresenter = bucketPresenter;
-            } else {
-                bucketViews.add(bucketPresenter.getView());
-            }
+            bucketViews.add(bucketPresenter.getView());
         }
 
-        MainView.getInstance().getArchive().setArchiveBucket(archiveBucketPresenter.getView());
         view.setBucketViews(bucketViews);
         model.setBucketIds(newBuckets);
         view.revalidate();

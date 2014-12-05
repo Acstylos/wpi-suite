@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.Requirement;
 
 /**
  * The model end of the Task object
@@ -31,6 +32,7 @@ public class TaskModel extends AbstractModel {
     private String description;
     private List<Integer> assignedTo;
     private List<Integer> activityIds;
+    private List<Integer> requirementIds;
     private int estimatedEffort;
     private int actualEffort;
     private Date dueDate;
@@ -47,6 +49,7 @@ public class TaskModel extends AbstractModel {
         description = "";
         assignedTo = new ArrayList<Integer>();
         activityIds = new ArrayList<Integer>();
+        requirementIds = new ArrayList<Integer>();
         estimatedEffort = 0;
         actualEffort = 0;
         status = 1;
@@ -180,7 +183,8 @@ public class TaskModel extends AbstractModel {
     }
     
     /**
-     * @param userList The list of users assigned to this task
+     * @param userList 
+     *            The list of users assigned to this task
      */
     public void setAssignedTo(List<Integer> userList) {
         this.assignedTo = new ArrayList<Integer>(userList);
@@ -209,6 +213,43 @@ public class TaskModel extends AbstractModel {
         this.assignedTo.remove((Object)user.getIdNum());
     }
 
+    /**
+     * 
+     * @param reqList
+     *            The list of requirements that are available
+     */
+    public void setRequirements(List<Integer> reqList) {
+    	this.requirementIds = new ArrayList<Integer>(reqList);
+    }
+    
+    /**
+     * 
+     * @return  The list of Ids of requirements
+     */
+    public List<Integer> getRequirements() {
+        return this.requirementIds;
+    }
+
+    /**
+     * add requirement Id to the list of requirement Ids
+     * 
+     * @param req
+     *          the requirement that needs to be added
+     */
+    public void addRequirement(Requirement req) {
+        this.requirementIds.add(req.getId());
+    }
+
+    /**
+     * remove a requirement Id from the list of requirement Ids
+     * 
+     * @param req
+     *          the requirement that needs to be removed
+     */
+    public void removeRequirement(Requirement req) {
+        this.requirementIds.remove((Object)req.getId());
+    }
+    
     /**
      * @return The due date of this task
      */
@@ -240,6 +281,7 @@ public class TaskModel extends AbstractModel {
         this.actualEffort = other.getActualEffort();
         this.status = other.getStatus();
         this.activityIds = other.getActivityIds();
+        this.requirementIds = other.getRequirements();
     }
 
     /**
@@ -271,6 +313,9 @@ public class TaskModel extends AbstractModel {
     /**
      * Convert the given JSON string to a TaskModel instance
      * 
+     * @param json
+     * 			String to be converted
+     * 
      * @return The JSON string representing the object
      */
     public static TaskModel fromJson(String json) {
@@ -281,6 +326,9 @@ public class TaskModel extends AbstractModel {
     /**
      * Convert the given JSON string with a JSON array of tasks into an array of
      * tasks
+     * 
+     * @param json
+     * 			String to be converted
      * 
      * @return TaskModel array
      */

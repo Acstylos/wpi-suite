@@ -48,6 +48,8 @@ public class ActivityView extends JPanel {
 
     /**
      * Constructor sets up panel and colors
+     * @param text
+     * 			
      */
     public ActivityView(String text) {
         this.setLayout(new MigLayout("", "[grow]", "[grow]"));
