@@ -25,6 +25,7 @@ import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.updater.Updater;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
@@ -81,6 +82,7 @@ public class TaskPresenter {
         this.model.setTitle("New Task");
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         this.view = new TaskView(model, viewMode, this);
+        this.model.setBucketId(bucket.getModel().getId());
         this.miniView = new MiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
         final Request request = Network.getInstance().makeRequest("core/user",
                 HttpMethod.GET);
@@ -441,8 +443,8 @@ public class TaskPresenter {
         model.setDueDate(view.getDueDate());
         model.setAssignedTo(assignedUserList);
         model.setStatus(view.getStatus());
-        this.bucket = MainView.getInstance().getWorkflowPresenter()
-                .getBucket(view.getStatus());
+        model.setBucketId(view.getStatus());
+        this.bucket = MainView.getInstance().getWorkflowPresenter().getBucket(view.getStatus());
     }
 
     /**
@@ -530,6 +532,7 @@ public class TaskPresenter {
             p.load();
             activityPresenters.add(p);
         }
+        Updater.getInstance().registerTask(this);
     }
 
     /**

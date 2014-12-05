@@ -28,8 +28,6 @@ public class TaskObserver implements RequestObserver {
      */
     @Override
     public void responseSuccess(IRequest iReq) {
-        System.out
-                .println("Received response: " + iReq.getResponse().getBody());
 
         /*
          * Take the appropriate action based on what the method of the request
