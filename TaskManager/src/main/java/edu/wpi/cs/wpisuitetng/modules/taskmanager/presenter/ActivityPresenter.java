@@ -96,8 +96,9 @@ public class ActivityPresenter {
      */
     public void updateView() {
         view.setActivity(model.getActivity());
-        if (model.getIsAutogen())
+        if (model.getIsAutogen()) {
             commentView.postHistory(view);
+        }
         else
             commentView.postActivity(view);
         commentView.revalidate();
