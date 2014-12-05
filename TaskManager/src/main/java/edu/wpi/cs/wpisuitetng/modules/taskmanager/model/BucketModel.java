@@ -137,8 +137,9 @@ public class BucketModel extends AbstractModel {
      */
     public void removeTaskId(Integer rmid) {
     	for(int i = 0; i < taskIds.size(); i++){
-    		if(taskIds.get(i) == rmid)
+    		if(taskIds.get(i) == rmid) {
     			taskIds.remove(i);
+    		}
     	}
     }
 

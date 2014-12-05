@@ -15,71 +15,73 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
-import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.Requirement;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
 
-public class UserListItem extends JButton {
+public class RequirementListItem extends JButton {
 
     private static final long serialVersionUID = 4251094749415084075L;
 
-    private User user;
+    private Requirement requirement;
     private TaskPresenter presenter;
 
     /**
-     * Construct the UserListItem
-     * @param presenter task presenter
-     * @param user	user
-     * @param assigned True if assigned to task, false if not
+     * @param presenter 
+     *              Taskpresenter
+     * @param req       
+     *              The requirement
+     * @param assigned
      */
-    public UserListItem(TaskPresenter presenter, User user, boolean assigned) {
-        this.setText(user.getName());
-        this.user = user;
+    public RequirementListItem(TaskPresenter presenter, Requirement req, boolean assigned) {
+        this.setText(req.getName());
+        this.requirement = req;
         this.presenter = presenter;
-        
+
         if(assigned) {
-            this.setAsAssignedUser();
+            this.setAsRequirement();
         } else {
-            this.setAsUnassignedUser();
+            this.unsetAsRequirement();
         }
+
     }
 
     /**
-     * @param name Name of the User
+     * @param name
+     *              Name of the requirement
      */
-    public void setUserNameLabel(String name) {
+    public void setRequirementNameLabel(String name) {
         this.setText(name);
     }
 
     /**
-     * @return The Name of the User
+     * 
+     * @return  The Name of the Requirement
      */
-    public String getUserNameLabel() {
+    public String getRequirementNameLabel() {
         return this.getText();
     }
 
     /**
-     * Sets the user to be assigned type, so that button 
-     * shows an "add" icon
+     * ALSO NEEDS ICON
      */
-    public void setAsAssignedUser() {
+    public void setAsRequirement() {
         this.setIcon(Icons.REMOVE_USER);
         this.setHorizontalTextPosition(SwingConstants.LEFT);
         this.setAlignmentX(0.0f);
     }
     
     /**
-     * Sets the user to be unassigned type, so that button 
-     * shows a "remove" icon
+     * NEEDS ICONS ! ! !! !!! !!!!! !!!!!!!! !!!!!!!!!!!!! !!!!!!!!!!!!!!!!!!!!!
+     * !! !!! !!!!! !!!!!!! !!!!!!!!!!! !!!!!!!!!!!!! !!!!!!!!!!!!!!!! !!!!!!!!!!!!!!!!!!!
      */
-    public void setAsUnassignedUser() {
+    public void unsetAsRequirement() {
         this.setIcon(Icons.ADD_USER);
         this.setHorizontalTextPosition(SwingConstants.RIGHT);
     }
     
     /**
-     * Adds a listener based on which list the user is in.
      * 
-     * @param assigned True if assigned to task, false if not
+     * @param assigned
      */
     public void addChangeListButtonListener(boolean assigned) {
         if(assigned) {
@@ -88,25 +90,22 @@ public class UserListItem extends JButton {
             this.addActionListener(unassignedListListener);  
         }
     }
+
     
     /**
-     * Listener for assigned users button.
-     * Remove from assignedTo list in model.
-     * Add users to view again.
+     * 
      */
     private ActionListener assignedListListener = (ActionEvent e) -> {
-        presenter.removeUserFromAssignedTo(user);
-        presenter.addUsersToView();
+        presenter.removeRequirement(requirement);
+        presenter.addRequirementsToView();
     };
     
     /**
-     * Listener for unassigned users button
-     * Add to assignedTo list in model.
-     * Add users to view again.
+     * 
      */
     private ActionListener unassignedListListener = (ActionEvent e) -> {
-        presenter.addUserToAssignedTo(user);
-        presenter.addUsersToView();
+        presenter.addRequirement(requirement);
+        presenter.addRequirementsToView();
     };
 
 }
