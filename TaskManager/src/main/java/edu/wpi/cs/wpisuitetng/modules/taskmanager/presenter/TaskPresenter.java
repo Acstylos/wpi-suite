@@ -23,6 +23,7 @@ import java.util.List;
 
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.Requirement;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
@@ -50,6 +51,8 @@ public class TaskPresenter {
     private ViewMode viewMode;
     private User[] allUserArray = {};
     private List<Integer> assignedUserList;
+    private Requirement[] allReqArray = {};
+    private List<Integer> requirementList;
     /** Dialog variables for use */
     private VerifyActionDialog cancelDialog = new VerifyActionDialog();
     private VerifyActionDialog undoDialog = new VerifyActionDialog();
@@ -79,13 +82,18 @@ public class TaskPresenter {
         this.model = new TaskModel();
         this.model.setId(id);
         this.model.setTitle("New Task");
-        assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
+        this.assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
+        this.requirementList = new ArrayList<Integer>(model.getRequirements());
         this.view = new TaskView(model, viewMode, this);
         this.miniView = new MiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
-        final Request request = Network.getInstance().makeRequest("core/user",
+        final Request userRequest = Network.getInstance().makeRequest("core/user",
                 HttpMethod.GET);
-        request.addObserver(new UsersObserver(this));
-        request.send();
+        userRequest.addObserver(new UsersObserver(this));
+        userRequest.send();
+        final Request requirementRequest = Network.getInstance().makeRequest("requirementmanager/requirement", 
+        		HttpMethod.GET);
+        requirementRequest.addObserver(new RequirementsObserver(this));
+        requirementRequest.send();
         Dimension maxView = new Dimension(bucket.getView().getWidth()-32, bucket.getView().getHeight());
         this.miniView.setMaximumSize(maxView);//prevent horizontal scroll
         this.miniView.getTaskNameLabel().setMaximumSize(maxView);
@@ -418,6 +426,28 @@ public class TaskPresenter {
             }
         }
     }
+    
+    /**
+     * 
+     * @param reqs
+     */
+    public void addRequirementsToAllReqArray(Requirement[] reqs) {
+        this.allReqArray = reqs;
+    }
+    
+    /**
+     * 
+     */
+    public void addRequirementsToView() {
+        this.view.getRequirementListPanel().removeAllRequirements();
+        for(Requirement req: allReqArray) {
+            if(requirementList.contains(req.getId())) {
+                this.view.getRequirementListPanel().addRequirementToList(req, true);
+            } else {
+                this.view.getRequirementListPanel().addRequirementToList(req, false);
+            }
+        }
+    }
 
     /**
      * Have the presenter reload the view from the model.
@@ -440,6 +470,7 @@ public class TaskPresenter {
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
         model.setAssignedTo(assignedUserList);
+        model.setRequirements(requirementList);
         model.setStatus(view.getStatus());
         this.bucket = MainView.getInstance().getWorkflowPresenter()
                 .getBucket(view.getStatus());
@@ -558,10 +589,35 @@ public class TaskPresenter {
     }
     
     /**
+     * 
+     * @param req
+     */
+    public void removeRequirement(Requirement req) {
+        this.requirementList.remove((Object)req.getId());
+    }
+
+    /**
+     * 
+     * @param req
+     */
+    public void addRequirement(Requirement req) {
+        this.requirementList.add(req.getId());
+        this.view.validateFields();
+    }
+    
+    /**
      * @return A shallow copy of the temporary assigned users list, not the model's user list
      */
     public List<Integer> getAssignedUserList() {
         return this.assignedUserList;
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    public List<Integer> getRequirementList() {
+        return this.requirementList;
     }
     
     /**

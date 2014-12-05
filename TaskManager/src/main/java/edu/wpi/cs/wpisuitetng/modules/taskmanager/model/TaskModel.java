@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.Requirement;
 
 /**
  * The model end of the Task object
@@ -31,6 +32,7 @@ public class TaskModel extends AbstractModel {
     private String description;
     private List<Integer> assignedTo;
     private List<Integer> activityIds;
+    private List<Integer> requirementIds;
     private int estimatedEffort;
     private int actualEffort;
     private Date dueDate;
@@ -47,6 +49,7 @@ public class TaskModel extends AbstractModel {
         description = "";
         assignedTo = new ArrayList<Integer>();
         activityIds = new ArrayList<Integer>();
+        requirementIds = new ArrayList<Integer>();
         estimatedEffort = 0;
         actualEffort = 0;
         status = 1;
@@ -210,6 +213,38 @@ public class TaskModel extends AbstractModel {
     }
 
     /**
+     * 
+     * @param reqList
+     */
+    public void setRequirements(List<Integer> reqList) {
+    	this.requirementIds = new ArrayList<Integer>(reqList);
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    public List<Integer> getRequirements() {
+        return this.requirementIds;
+    }
+
+    /**
+     * 
+     * @param req
+     */
+    public void addRequirement(Requirement req) {
+        this.requirementIds.add(req.getId());
+    }
+
+    /**
+     * 
+     * @param req
+     */
+    public void removeRequirement(Requirement req) {
+        this.requirementIds.remove((Object)req.getId());
+    }
+    
+    /**
      * @return The due date of this task
      */
     public Date getDueDate() {
@@ -240,6 +275,7 @@ public class TaskModel extends AbstractModel {
         this.actualEffort = other.getActualEffort();
         this.status = other.getStatus();
         this.activityIds = other.getActivityIds();
+        this.requirementIds = other.getRequirements();
     }
 
     /**
