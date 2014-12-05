@@ -67,6 +67,7 @@ public class TaskView extends JPanel {
     private JPanel infoPanel = new JPanel();
     private JPanel splitPanel = new JPanel();
     private UserListsView usersPanel;
+    private RequirementListView requirementPanel;
     private JScrollPane scrollPane = new JScrollPane();
     private JSpinner actualEffortSpinner = new JSpinner();
     private JSpinner estEffortSpinner = new JSpinner();
@@ -103,6 +104,7 @@ public class TaskView extends JPanel {
         this.setBorder(null);
         this.presenter = presenter;
         this.usersPanel = new UserListsView(presenter);
+        this.requirementPanel = new RequirementListView(presenter);
         // Set layouts for all panels
         this.setLayout(new MigLayout("", "[grow]", "[grow][min]"));
 
@@ -132,7 +134,8 @@ public class TaskView extends JPanel {
         this.detailsPanel.add(infoPanel, "cell 0 0, grow");
         this.detailsPanel.add(descriptionPanel, "cell 0 1,grow");
         this.detailsPanel.add(usersPanel, "cell 0 2,grow");
-
+        this.detailsPanel.add(requirementPanel, "cell 0 3, grow");
+        
         // Format the infoPanel layout with components
         this.infoPanel.add(taskNameLabel, "cell 0 0");
         this.infoPanel.add(taskNameField, "cell 1 0 2 1, grow");
@@ -435,6 +438,11 @@ public class TaskView extends JPanel {
         } else {
             isModified = true;
         }
+        
+        if (this.presenter.getRequirementList().equals(this.model.getRequirements())) {
+        } else {
+            isModified = true;
+        }
 
         if (this.getStatus() == this.model.getStatus()) {
             this.statusLabel.setForeground(unmodifiedColor);
@@ -488,5 +496,13 @@ public class TaskView extends JPanel {
     public UserListsView getUserListPanel() {
         this.validateFields();
         return this.usersPanel;
+    }
+    
+    /**
+     * @return  returns the panel that requirements are on
+     */
+    public RequirementListView getRequirementListPanel() {
+    	this.validateFields();
+    	return this.requirementPanel;
     }
 }

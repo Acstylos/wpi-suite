@@ -23,6 +23,7 @@ import java.util.List;
 
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.Requirement;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
@@ -50,6 +51,8 @@ public class TaskPresenter {
     private ViewMode viewMode;
     private User[] allUserArray = {};
     private List<Integer> assignedUserList;
+    private Requirement[] allReqArray = {};
+    private List<Integer> requirementList;
     /** Dialog variables for use */
     private VerifyActionDialog cancelDialog = new VerifyActionDialog();
     private VerifyActionDialog undoDialog = new VerifyActionDialog();
@@ -79,13 +82,18 @@ public class TaskPresenter {
         this.model = new TaskModel();
         this.model.setId(id);
         this.model.setTitle("New Task");
-        assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
+        this.assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
+        this.requirementList = new ArrayList<Integer>(model.getRequirements());
         this.view = new TaskView(model, viewMode, this);
         this.miniView = new MiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
-        final Request request = Network.getInstance().makeRequest("core/user",
+        final Request userRequest = Network.getInstance().makeRequest("core/user",
                 HttpMethod.GET);
-        request.addObserver(new UsersObserver(this));
-        request.send();
+        userRequest.addObserver(new UsersObserver(this));
+        userRequest.send();
+        final Request requirementRequest = Network.getInstance().makeRequest("requirementmanager/requirement", 
+        		HttpMethod.GET);
+        requirementRequest.addObserver(new RequirementsObserver(this));
+        requirementRequest.send();
         Dimension maxView = new Dimension(bucket.getView().getWidth()-32, bucket.getView().getHeight());
         this.miniView.setMaximumSize(maxView);//prevent horizontal scroll
         this.miniView.getTaskNameLabel().setMaximumSize(maxView);
@@ -397,7 +405,8 @@ public class TaskPresenter {
     }
 
     /**
-     * @param users User array of all users in the database
+     * @param users 
+     *          User array of all users in the database
      */
     public void addUsersToAllUserList(User[] users) {
         this.allUserArray = users;
@@ -415,6 +424,30 @@ public class TaskPresenter {
                 this.view.getUserListPanel().addUserToList(user, true);
             } else {
                 this.view.getUserListPanel().addUserToList(user, false);
+            }
+        }
+    }
+    
+    /**
+     * @param reqs 
+     *          Requirement array of all requirement in the database
+     */
+    public void addRequirementsToAllReqArray(Requirement[] reqs) {
+        this.allReqArray = reqs;
+    }
+    
+    /**
+     * Takes the allReq array, and checks requirements with assigned users list
+     * all assigned users get added to the assigned view, and all others
+     * get added to unassigned view
+     */
+    public void addRequirementsToView() {
+        this.view.getRequirementListPanel().removeAllRequirements();
+        for(Requirement req: allReqArray) {
+            if(requirementList.contains(req.getId())) {
+                this.view.getRequirementListPanel().addRequirementToList(req, true);
+            } else {
+                this.view.getRequirementListPanel().addRequirementToList(req, false);
             }
         }
     }
@@ -440,6 +473,7 @@ public class TaskPresenter {
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
         model.setAssignedTo(assignedUserList);
+        model.setRequirements(requirementList);
         model.setStatus(view.getStatus());
         this.bucket = MainView.getInstance().getWorkflowPresenter()
                 .getBucket(view.getStatus());
@@ -457,6 +491,8 @@ public class TaskPresenter {
         updateCommentView();
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         addUsersToView();
+        requirementList = new ArrayList<Integer>(model.getRequirements());
+        addRequirementsToView();
     }
 
     /**
@@ -542,18 +578,39 @@ public class TaskPresenter {
 
     /**
      * Removes a user from the assignedTo list
-     * @param user User to remove from assignedTo
+     * @param user 
+     *          User to remove from assignedTo
      */
     public void removeUserFromAssignedTo(User user) {
         this.assignedUserList.remove((Object)user.getIdNum());
     }
 
     /**
-     * Add a user from the assignedTo list
-     * @param user User to add to assignedTo 
+     * Add a user to the assignedTo list
+     * @param user 
+     *          User to add to assignedTo 
      */
     public void addUserToAssignedTo(User user) {
         this.assignedUserList.add(user.getIdNum());
+        this.view.validateFields();
+    }
+    
+    /**
+     * Removes a requirement from the requirement list
+     * @param req
+     *          Requirement to add to requirementList
+     */
+    public void removeRequirement(Requirement req) {
+        this.requirementList.remove((Object)req.getId());
+    }
+
+    /**
+     * Add a requirement to the requirementList
+     * @param req
+     *          Requirement to add to requirementList
+     */
+    public void addRequirement(Requirement req) {
+        this.requirementList.add(req.getId());
         this.view.validateFields();
     }
     
@@ -562,6 +619,14 @@ public class TaskPresenter {
      */
     public List<Integer> getAssignedUserList() {
         return this.assignedUserList;
+    }
+    
+    /**
+     * 
+     * @return  a copy of the temporary requirementList, not the model's requirementList
+     */
+    public List<Integer> getRequirementList() {
+        return this.requirementList;
     }
     
     /**
