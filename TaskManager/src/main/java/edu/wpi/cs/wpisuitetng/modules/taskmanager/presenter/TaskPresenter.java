@@ -474,6 +474,9 @@ public class TaskPresenter {
 
     }
 
+    /**
+     * refresh comment view by using revalidate and repaint
+     */
     public void refreshCommentView() {
         view.getCommentView().revalidate();
         view.getCommentView().repaint();

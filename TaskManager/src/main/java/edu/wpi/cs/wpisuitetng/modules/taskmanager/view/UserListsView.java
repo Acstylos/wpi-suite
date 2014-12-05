@@ -31,6 +31,8 @@ public class UserListsView extends JPanel {
 
     /**
      * Create the panel.
+     * 
+     * @param presenter taks presenter
      */
     public UserListsView(TaskPresenter presenter) {
         this.setLayout(new MigLayout("", "[grow][grow]", "[][grow]"));

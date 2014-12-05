@@ -34,8 +34,8 @@ public class WorkflowPresenter {
     /**
      * Constructor does nothing for now
      *
-     * @param mainView
-     *            The view associated with this presenter
+     * @param workflowId
+     *            the id of the workflow 
      */
     public WorkflowPresenter(int workflowId) {
         this.model = new WorkflowModel();

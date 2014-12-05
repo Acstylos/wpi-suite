@@ -271,6 +271,9 @@ public class TaskModel extends AbstractModel {
     /**
      * Convert the given JSON string to a TaskModel instance
      * 
+     * @param json
+     * 			String to be converted
+     * 
      * @return The JSON string representing the object
      */
     public static TaskModel fromJson(String json) {
@@ -281,6 +284,9 @@ public class TaskModel extends AbstractModel {
     /**
      * Convert the given JSON string with a JSON array of tasks into an array of
      * tasks
+     * 
+     * @param json
+     * 			String to be converted
      * 
      * @return TaskModel array
      */

@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2014 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.event.ActionEvent;
@@ -17,7 +26,9 @@ public class UserListItem extends JButton {
     private TaskPresenter presenter;
 
     /**
-     * @param userName The users name
+     * Construct the UserListItem
+     * @param presenter task presenter
+     * @param user	user
      * @param assigned True if assigned to task, false if not
      */
     public UserListItem(TaskPresenter presenter, User user, boolean assigned) {
@@ -67,6 +78,8 @@ public class UserListItem extends JButton {
     
     /**
      * Adds a listener based on which list the user is in.
+     * 
+     * @param assigned True if assigned to task, false if not
      */
     public void addChangeListButtonListener(boolean assigned) {
         if(assigned) {

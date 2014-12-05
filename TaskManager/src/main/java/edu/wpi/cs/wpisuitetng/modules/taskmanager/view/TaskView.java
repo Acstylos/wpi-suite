@@ -28,7 +28,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeListener;
@@ -208,6 +207,7 @@ public class TaskView extends JPanel {
 
     /**
      * This should call something to save task to the model
+     * @param listener listen to click
      */
     public void addOkOnClickListener(ActionListener listener) {
         this.buttonPanel.addOkOnClickListener(listener);
@@ -215,6 +215,7 @@ public class TaskView extends JPanel {
 
     /**
      * This should call something to refresh the view with the model
+     * @param listener listen to click
      */
     public void addCancelOnClickListener(ActionListener listener) {
         this.buttonPanel.addCancelOnClickListener(listener);
@@ -222,6 +223,7 @@ public class TaskView extends JPanel {
 
     /**
      * This calls something to refresh, and closes the tab this view is open in
+     * @param listener listen to click
      */
     public void addClearOnClickListener(ActionListener listener) {
         this.buttonPanel.addClearOnClickListener(listener);
@@ -229,6 +231,7 @@ public class TaskView extends JPanel {
 
     /**
      * This calls something to move the task to the archive
+     * @param listener listen to click
      */
     public void addDeleteOnClickListener(ActionListener listener) {
         this.buttonPanel.addDeleteOnClickListener(listener);
