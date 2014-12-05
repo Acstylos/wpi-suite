@@ -10,17 +10,16 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.Requirement;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 import edu.wpi.cs.wpisuitetng.network.models.IRequest;
 
 /**
- * Observes the result of network requests for tasks
+ * Observes the result of network requests for requirements
  * 
  * @author TheFloorIsJava
  */
-public class TaskObserver implements RequestObserver {
-
+public class RequirementsObserver implements RequestObserver{
     TaskPresenter presenter;
 
     /**
@@ -29,62 +28,23 @@ public class TaskObserver implements RequestObserver {
      * @param presenter
      *            The presenter that make the request
      */
-    public TaskObserver(TaskPresenter presenter) {
+    public RequirementsObserver(TaskPresenter presenter) {
         this.presenter = presenter;
     }
 
     /**
-     * Parse the TaskViews from the response received by the network
+     * Parse the Requirement from the response received by the network
      *
      * @param iReq
      *            IRequest Request to the server
      * @see edu.wpi.cs.wpisuitetng.network.RequestObserver#responseSuccess(IRequest)
      */
     public void responseSuccess(IRequest iReq) {
-        System.out
-                .println("Received response: " + iReq.getResponse().getBody());
-
-        /*
-         * Take the appropriate action based on what the method of the request
-         * was.
-         */
-
-        String json = iReq.getResponse().getBody();
-        TaskModel model = new TaskModel();
-        switch (iReq.getHttpMethod()) {
-        case GET:
-            model = TaskModel.fromJsonArray(json)[0];
-            this.presenter.setModel(model);
-            this.presenter.updateView();
-            break;
-
-        case PUT:
-            System.out.println("Successfully saved new tasks!");
-            model = TaskModel.fromJson(json);
-            /*
-             * Set the new model and update the view to reflect the new data.
-             * GET and PUT requests both respond with a modified task - GET
-             * returns the task stored in the database and PUT returns the same
-             * task but with a new ID assigned.
-             */
-            this.presenter.addHistory("Create");
-
-            this.presenter.setModel(model);
-            this.presenter.updateView();
-
-            /*
-             * Update the list of tasks in the bucket now that we know that it
-             * is in the database and we have the ID.
-             */
-            this.presenter.getBucket().addTask(model.getId(), this.presenter);
-
-            break;
-
-        case POST:
-            break;
-
-        case DELETE:
-            break;
+        System.out.println(Requirement.fromJsonArray(iReq.getResponse().getBody()));
+        Requirement[] requirements = Requirement.fromJsonArray(iReq.getResponse().getBody());
+        presenter.mapReqs(requirements);
+        for(int i = 0; i < requirements.length; i++){
+            presenter.getView().addRequirementToComboBox(requirements[i]);
         }
     }
 
@@ -109,7 +69,8 @@ public class TaskObserver implements RequestObserver {
      *      Exception)
      */
     public void fail(IRequest iReq, Exception exception) {
-        System.err.println("Task request failed");
+        System.err.println("User request failed");
         exception.printStackTrace();
     }
+
 }

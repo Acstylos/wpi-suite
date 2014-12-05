@@ -53,6 +53,8 @@ public class ActivityModel extends AbstractModel {
      *            either auto-generated or manually added comments
      * @param isAutogen
      *            either auto-generated or manually added
+     * @param date
+     * 			  The date of activity
      */
     public ActivityModel(int id, User user, String activity, Date date,
             boolean isAutogen) {
@@ -182,6 +184,9 @@ public class ActivityModel extends AbstractModel {
     /**
      * Convert the given JSON string to a ActivityModel instance
      * 
+     * @param json
+     * 			String to be converted
+     * 
      * @return The JSON string representing the object
      */
     public static ActivityModel fromJson(String json) {
@@ -192,6 +197,9 @@ public class ActivityModel extends AbstractModel {
     /**
      * Convert the given JSON string with a JSON array of activities into an
      * array of activities
+     * 
+     * @param json
+     * 			String to be converted
      * 
      * @return ActivityModel array
      */
