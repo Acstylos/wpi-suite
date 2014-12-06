@@ -88,8 +88,8 @@ public class BucketPresenter {
             request.setBody(model.toJson());
         }
         request.addObserver(new BucketObserver(this, method)); // add an
-                                                               // observer to
-                                                               // the response
+        // observer to
+        // the response
         request.send();
     }
 
@@ -129,6 +129,9 @@ public class BucketPresenter {
             }
             taskMap.get(i).updateFromDatabase();
             MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
+            miniTaskView.updateMiniTaskView(taskMap.get(i).getModel().getShortTitle(), 
+                    taskMap.get(i).getModel().getDueDate(), 
+                    taskMap.get(i).getModel().getTitle());
             view.addTaskToView(miniTaskView);
         }
         view.revalidate();
@@ -140,12 +143,12 @@ public class BucketPresenter {
      */
     private void registerCallbacks() {
     }
-    
+
     /**
      * Adds a new task to the bucket view, in the form of a miniTaskView
      */
     public void addNewTaskToView(){
-        
+
         TaskPresenter taskPresenter = new TaskPresenter(0, this, ViewMode.CREATING);
         //taskPresenter.createInDatabase();
         TaskModel taskModel = taskPresenter.getModel();
@@ -181,7 +184,7 @@ public class BucketPresenter {
     public void addTask(int id, TaskPresenter taskPresenter) {
         model.addTaskID(id);
         if (!taskMap.containsKey(id)) {
-        	taskMap.put(id, taskPresenter);
+            taskMap.put(id, taskPresenter);
         }
         updateInDatabase();
     }
