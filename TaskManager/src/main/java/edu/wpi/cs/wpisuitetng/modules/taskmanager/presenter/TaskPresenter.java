@@ -9,6 +9,7 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -104,7 +105,12 @@ public class TaskPresenter {
             public void mouseClicked(MouseEvent e) {
                 MainView.getInstance().addTab(model.getShortTitle(),
                         Icons.TASK, view);// this line chooses tab title
-                view.setViewMode(ViewMode.EDITING);
+                if(model.getIsArchived()){
+                    view.setViewMode(ViewMode.ARCHIVING);
+                }
+                else{
+                    view.setViewMode(ViewMode.EDITING);
+                }
                 viewMode = view.getViewMode();
                 int tabCount = MainView.getInstance().getTabCount();
                 view.setIndex(tabCount - 1);
@@ -134,31 +140,41 @@ public class TaskPresenter {
                 }
 
                 else {
-                    updateBeforeModel();
-                    if (view.getStatus() != bucket.getModel().getId()) { // if
-                                                                         // we
-                                                                         // are
-                                                                         // switching
-                                                                         // buckets
-                        MainView.getInstance()
-                                .getWorkflowPresenter()
-                                .moveTask(model.getId(), view.getStatus(),
-                                        bucket.getModel().getId());
-                        bucket.writeModelToView();
+                    if(viewMode == ViewMode.ARCHIVING){
+                        int newIndex = MainView.getInstance().indexOfComponent(view);
+                        MainView.getInstance().remove(newIndex);
+                        model.setIsArchived(false);
                         saveView();
                         updateView();
-                        MainView.getInstance().setTitleAt(index,
-                                model.getShortTitle());
-                        MainView.getInstance().setToolTipTextAt(index, model.getTitle());
-                        addHistory(beforeModel, model);
-                        refreshCommentView();
-                    } else { // not switching buckets
-                        saveView();
-                        updateView();
-                        MainView.getInstance().setTitleAt(index,
-                                model.getShortTitle());
-                        MainView.getInstance().setToolTipTextAt(index, model.getTitle());
-                        addHistory(beforeModel, model);
+
+                    }
+                    else{
+                        updateBeforeModel();
+                        if (view.getStatus() != bucket.getModel().getId()) { // if
+                            // we
+                            // are
+                            // switching
+                            // buckets
+                            MainView.getInstance()
+                            .getWorkflowPresenter()
+                            .moveTask(model.getId(), view.getStatus(),
+                                    bucket.getModel().getId());
+                            bucket.writeModelToView();
+                            saveView();
+                            updateView();
+                            MainView.getInstance().setTitleAt(index,
+                                    model.getShortTitle());
+                            MainView.getInstance().setToolTipTextAt(index, model.getTitle());
+                            addHistory(beforeModel, model);
+                            refreshCommentView();
+                        } else { // not switching buckets
+                            saveView();
+                            updateView();
+                            MainView.getInstance().setTitleAt(index,
+                                    model.getShortTitle());
+                            MainView.getInstance().setToolTipTextAt(index, model.getTitle());
+                            addHistory(beforeModel, model);
+                        }
                     }
                 }
 
@@ -236,7 +252,12 @@ public class TaskPresenter {
             @Override
             public void actionPerformed(ActionEvent e) {
                 deleteDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-                deleteDialog.setCommentLabelText("Are you sure you want to delete this task?");
+                if(viewMode == ViewMode.ARCHIVING){
+                    deleteDialog.setCommentLabelText("Are you sure you want to delete this task?");
+                }
+                else{
+                    deleteDialog.setCommentLabelText("Are you sure you want to archive this task?");
+                }
                 deleteDialog.addConfirmButtonListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -255,8 +276,10 @@ public class TaskPresenter {
                 if(deleteDialogConfirmed) {
                     int index = MainView.getInstance().indexOfComponent(view);
                     MainView.getInstance().remove(index);
-                    MainView.getInstance().getWorkflowPresenter().archiveTask(model.getId(), bucket.getModel().getId());
-                    MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
+                    model.setIsArchived(true);
+                    saveView();
+                    updateView();
+                    //MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
                 }
             }
         });
@@ -293,7 +316,7 @@ public class TaskPresenter {
                 + dateFormat.format(cal.getTime()) + "]: ";
         ActivityPresenter activityPresenter = new ActivityPresenter(this,
                 userInformation
-                        + view.getCommentView().getCommentText().getText(),
+                + view.getCommentView().getCommentText().getText(),
                 false);
 
         view.getCommentView().postActivity(activityPresenter.getView());
@@ -402,7 +425,7 @@ public class TaskPresenter {
     public void addUsersToAllUserList(User[] users) {
         this.allUserArray = users;
     }
-    
+
     /**
      * Takes the allUsers array, and checks users with assigned users list
      * all assigned users get added to the assigned view, and all others
@@ -457,6 +480,12 @@ public class TaskPresenter {
         updateCommentView();
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         addUsersToView();
+        if(model.getIsArchived()){
+            miniView.setBackground(Color.CYAN);
+        }
+        else{
+            miniView.setBackground(new Color(240,240,240));
+        }
     }
 
     /**
@@ -559,14 +588,14 @@ public class TaskPresenter {
         this.assignedUserList.add(user.getIdNum());
         this.view.validateFields();
     }
-    
+
     /**
      * @return A shallow copy of the temporary assigned users list, not the model's user list
      */
     public List<Integer> getAssignedUserList() {
         return this.assignedUserList;
     }
-    
+
     /**
      * @param enable Whether or not to enable the cancel dialog
      */
