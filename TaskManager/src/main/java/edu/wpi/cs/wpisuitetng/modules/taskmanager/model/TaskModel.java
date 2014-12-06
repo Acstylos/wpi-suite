@@ -50,6 +50,7 @@ public class TaskModel extends AbstractModel {
         estimatedEffort = 0;
         actualEffort = 0;
         status = 1;
+        dueDate = null;
     }
 
     /**
