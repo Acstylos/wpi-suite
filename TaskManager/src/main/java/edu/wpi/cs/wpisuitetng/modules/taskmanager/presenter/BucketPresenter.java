@@ -129,6 +129,9 @@ public class BucketPresenter {
             }
             taskMap.get(i).updateFromDatabase();
             MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
+            miniTaskView.updateMiniTaskView(taskMap.get(i).getModel().getShortTitle(), 
+            							    taskMap.get(i).getModel().getDueDate(), 
+            							    taskMap.get(i).getModel().getTitle());
             view.addTaskToView(miniTaskView);
         }
         view.revalidate();

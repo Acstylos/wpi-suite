@@ -82,8 +82,9 @@ public class TaskPresenter {
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         this.view = new TaskView(model, viewMode, this);
         this.miniView = new MiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
+        this.miniView.setCollapsedView();
         final Request request = Network.getInstance().makeRequest("core/user",
-                HttpMethod.GET);
+        		HttpMethod.GET);
         request.addObserver(new UsersObserver(this));
         request.send();
         Dimension maxView = new Dimension(bucket.getView().getWidth()-32, bucket.getView().getHeight());
@@ -91,17 +92,32 @@ public class TaskPresenter {
         this.miniView.getTaskNameLabel().setMaximumSize(maxView);
         this.activityPresenters = new ArrayList<ActivityPresenter>();
         registerCallbacks();
-
-    }
+	
+	    }
 
     /**
      * Register callbacks with the local view.
      */
     private void registerCallbacks() {
         // onclick listener to open new tabs when minitaskview is clicked
-        miniView.addOnClickOpenTabView(new MouseAdapter() {
+        miniView.addOnClickOpenExpandedView(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+            	miniView.updateMiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
+            	if(!miniView.isExpanded()){
+            		addUsersToMiniTaskView();
+            		miniView.setExpandedView();
+            	} else {
+            		miniView.setCollapsedView();
+            	}
+            	bucket.getView().revalidate();
+        		bucket.getView().repaint();
+            }
+        });
+        
+        miniView.addOnClickEditButton(new ActionListener(){
+        	@Override
+            public void actionPerformed(ActionEvent e) {
                 MainView.getInstance().addTab(model.getShortTitle(),
                         Icons.TASK, view);// this line chooses tab title
                 view.setViewMode(ViewMode.EDITING);
@@ -111,7 +127,8 @@ public class TaskPresenter {
                 MainView.getInstance().setSelectedIndex(tabCount - 1);
                 MainView.getInstance().setToolTipTextAt(tabCount - 1,
                         model.getTitle());
-
+                miniView.updateMiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
+                miniView.setCollapsedView();
             }
         });
 
@@ -161,7 +178,9 @@ public class TaskPresenter {
                         addHistory(beforeModel, model);
                     }
                 }
-
+                miniView.updateMiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
+                miniView.revalidate();
+                miniView.repaint();
             }
         });
 
@@ -451,12 +470,11 @@ public class TaskPresenter {
     public void updateView() {
         view.setStatus(model.getStatus());
         view.setModel(model);
-        miniView.setTaskName(model.getShortTitle(), model.getTitle());
-        miniView.setDueDate(model.getDueDate());
-        miniView.setToolTipText(model.getTitle());
         updateCommentView();
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         addUsersToView();
+        miniView.updateMiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
+        miniView.setToolTipText(model.getTitle());
     }
 
     /**
@@ -561,7 +579,7 @@ public class TaskPresenter {
     }
     
     /**
-     * @return A shallow copy of the temporary assigned users list, not the model's user list
+     * @return assigned users list
      */
     public List<Integer> getAssignedUserList() {
         return this.assignedUserList;
@@ -573,5 +591,18 @@ public class TaskPresenter {
     public void setAllowCancelDialogEnabled(boolean enable) {
         this.allowCancelDialog = enable;
         this.cancelDialogConfirmed = !enable; // if the dialog is enabled, the confirmation of the dialog box is opposite
+    }
+    
+    /**
+     * Wrapper function to add all assigned users to the miniTaskView
+     */
+    public void addUsersToMiniTaskView(){
+    	List<String> userNames = new ArrayList<String>();
+		for(User user: allUserArray){
+			if(assignedUserList.contains(user.getIdNum())){
+				userNames.add(user.getName());
+			}
+		}
+		miniView.addUsersToUserPanel(userNames);
     }
 }

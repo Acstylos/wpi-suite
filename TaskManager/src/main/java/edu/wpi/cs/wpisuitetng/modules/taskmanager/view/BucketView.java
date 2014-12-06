@@ -53,7 +53,7 @@ public class BucketView extends JPanel
         this.setMinimumSize(new Dimension(300, 200));
         this.setBackground(Color.LIGHT_GRAY);
         this.setBorder(new EmptyBorder(0, 5, 5, 5));
-        this.setLayout(new MigLayout("fill"));
+        this.setLayout(new MigLayout("", "[grow]", "[grow]"));
         this.titleLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
         this.titleLabel.setText(title);
         

@@ -50,6 +50,7 @@ public class TaskModel extends AbstractModel {
         estimatedEffort = 0;
         actualEffort = 0;
         status = 1;
+        dueDate = null;
     }
 
     /**
@@ -129,6 +130,9 @@ public class TaskModel extends AbstractModel {
             summary += "Description was changed.";
         }
         return summary;
+        
+        // grab UserName from ID -- list of userID
+        // presenter.getUserNameById()
 
         // will implement "assigned to" changes and "status" from int to enum
     }
