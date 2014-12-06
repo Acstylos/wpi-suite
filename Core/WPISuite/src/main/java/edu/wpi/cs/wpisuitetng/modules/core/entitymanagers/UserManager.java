@@ -312,11 +312,11 @@ public class UserManager implements EntityManager<User> {
     public User createAdmin() {
         logger.log(Level.INFO, "Adding an admin");
 
-        User p = new User("Admin", "admin", "password", 0);
+        User p = new User("Admin", "admin", "thefloor", 0);
 
         try {
             if (getEntity(null, p.getUsername())[0] == null) {
-                String newPassword = "password";
+                String newPassword = "thefloor";
                 String hashedPassword = this.passwordHash.generateHash(newPassword);
 
                 p.setPassword(hashedPassword);
