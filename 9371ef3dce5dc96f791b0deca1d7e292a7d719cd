@@ -67,6 +67,52 @@
       "revId": "9371ef3dce5dc96f791b0deca1d7e292a7d719cd",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_222c4c02",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/model/TaskModel.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1002800
+      },
+      "writtenOn": "2014-12-07T04:10:14Z",
+      "side": 1,
+      "message": "why was the param deleted?",
+      "range": {
+        "startLine": 312,
+        "startChar": 6,
+        "endLine": 312,
+        "endChar": 7
+      },
+      "revId": "9371ef3dce5dc96f791b0deca1d7e292a7d719cd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_62365454",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1002800
+      },
+      "writtenOn": "2014-12-07T04:10:14Z",
+      "side": 1,
+      "message": "why was the javadoc deleted?",
+      "range": {
+        "startLine": 482,
+        "startChar": 4,
+        "endLine": 482,
+        "endChar": 10
+      },
+      "revId": "9371ef3dce5dc96f791b0deca1d7e292a7d719cd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
