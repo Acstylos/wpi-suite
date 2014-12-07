@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_227a8cf1",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/model/TaskModel.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1002798
+      },
+      "writtenOn": "2014-12-07T05:02:54Z",
+      "side": 1,
+      "message": "and the lines ^ from what John said are still missing",
+      "range": {
+        "startLine": 18,
+        "startChar": 27,
+        "endLine": 18,
+        "endChar": 28
+      },
+      "revId": "73b9cfbaaeb61a46abfd70930c5cfed635bf8355",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_027f88e1",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/model/TaskModel.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1002798
+      },
+      "writtenOn": "2014-12-07T05:02:54Z",
+      "side": 1,
+      "message": "right here too v",
+      "revId": "73b9cfbaaeb61a46abfd70930c5cfed635bf8355",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_e22084f9",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1002798
+      },
+      "writtenOn": "2014-12-07T05:02:54Z",
+      "side": 1,
+      "message": "these comments are formatted by ctrl shift f, should probably just put them on one line",
+      "revId": "73b9cfbaaeb61a46abfd70930c5cfed635bf8355",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
