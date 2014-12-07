@@ -56,6 +56,23 @@
       "revId": "73b9cfbaaeb61a46abfd70930c5cfed635bf8355",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_e277e400",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-07T06:18:56Z",
+      "side": 1,
+      "message": "I dont think you meant \"bt\" maybe \"by",
+      "revId": "73b9cfbaaeb61a46abfd70930c5cfed635bf8355",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
