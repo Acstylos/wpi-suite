@@ -9,8 +9,11 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
+import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragGestureListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Date;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -49,10 +52,19 @@ public class MiniTaskView extends JPanel {
         this.taskNameLabel.setIcon(Icons.TASK);
         
         this.setModel(model);
+
+        /* Initialize a drag when the user clicks on the MiniTaskView */
+        MouseAdapter dragAdapter = new MouseAdapter() {
+            public void mouseDragged(MouseEvent e) {
+                TransferHandler handler = getTransferHandler();
+                handler.exportAsDrag(MiniTaskView.this, e, TransferHandler.MOVE);
+            }
+        };
         
-        this.setTransferHandler(new TransferHandler("model"));
+        this.addMouseMotionListener(dragAdapter);
+        this.taskNameLabel.addMouseMotionListener(dragAdapter);
     }
-    
+
     /**
      * Add the listener for changing tabs
      * @param listener  the event that will trigger the action
