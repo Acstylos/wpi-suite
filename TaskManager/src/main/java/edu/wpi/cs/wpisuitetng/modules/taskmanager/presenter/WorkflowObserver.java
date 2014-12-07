@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2014 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
@@ -16,7 +25,13 @@ public class WorkflowObserver implements RequestObserver {
 
     private WorkflowPresenter presenter;
     private HttpMethod method;
-
+    
+    /** Construct the observer
+     * @param presenter
+     * 				The presenter that make requests
+     * @param method
+     * 				method to talk to network
+     */
     public WorkflowObserver(WorkflowPresenter presenter, HttpMethod method) {
         this.presenter = presenter;
         this.method = method;

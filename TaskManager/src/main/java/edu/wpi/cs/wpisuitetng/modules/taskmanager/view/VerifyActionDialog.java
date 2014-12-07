@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2014 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.BorderLayout;
@@ -11,7 +20,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
-import java.awt.Component;
 
 /**
  * General, all-purpose dialog that can be used.
@@ -37,25 +45,22 @@ public class VerifyActionDialog extends JDialog {
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
-        {
-            commentLabel.setIcon(Icons.ERROR_LARGE);
-            contentPanel.add(commentLabel, "cell 0 0,alignx center,aligny center");
-        }
-        {
-            buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-            getContentPane().add(buttonPane, BorderLayout.SOUTH);
-            {
-                okButton.setIcon(Icons.OK);
-                okButton.setActionCommand("Yes");
-                buttonPane.add(okButton);
-                getRootPane().setDefaultButton(okButton);
-            }
-            {
-                cancelButton.setIcon(Icons.CANCEL);
-                cancelButton.setActionCommand("Cancel");
-                buttonPane.add(cancelButton);
-            }
-        }
+        
+        commentLabel.setIcon(Icons.ERROR_LARGE);
+        contentPanel.add(commentLabel, "cell 0 0,alignx center,aligny center");
+                
+        buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        getContentPane().add(buttonPane, BorderLayout.SOUTH);
+        
+        okButton.setIcon(Icons.OK);
+        okButton.setActionCommand("Yes");
+        buttonPane.add(okButton);
+        getRootPane().setDefaultButton(okButton);
+                
+        cancelButton.setIcon(Icons.CANCEL);
+        cancelButton.setActionCommand("Cancel");
+        buttonPane.add(cancelButton);
+        
     }
     
     /**
