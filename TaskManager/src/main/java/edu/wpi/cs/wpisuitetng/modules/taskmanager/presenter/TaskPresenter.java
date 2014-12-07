@@ -140,18 +140,22 @@ public class TaskPresenter {
                                                                          // are
                                                                          // switching
                                                                          // buckets
+                        
                         MainView.getInstance()
                                 .getWorkflowPresenter()
                                 .moveTask(model.getId(), view.getStatus(),
                                         bucket.getModel().getId());
+                        
                         bucket.writeModelToView();
+                        //order of methods matter here.
                         saveView();
+                        addHistory(beforeModel, model);
+                        refreshCommentView();
                         updateView();
                         MainView.getInstance().setTitleAt(index,
                                 model.getShortTitle());
                         MainView.getInstance().setToolTipTextAt(index, model.getTitle());
-                        addHistory(beforeModel, model);
-                        refreshCommentView();
+                        
                     } else { // not switching buckets
                         saveView();
                         updateView();
@@ -277,6 +281,7 @@ public class TaskPresenter {
         beforeModel.setTitle(model.getTitle());
         beforeModel.setDescription(model.getDescription());
         beforeModel.setEstimatedEffort(model.getEstimatedEffort());
+        beforeModel.setAssignedTo(model.getAssignedTo());
         beforeModel.setActualEffort(model.getActualEffort());
         beforeModel.setDueDate(model.getDueDate());
         beforeModel.setStatus(model.getStatus());
@@ -473,9 +478,8 @@ public class TaskPresenter {
         }
 
     }
-
     /**
-     * refresh comment view by using revalidate and repaint
+     * refresh comment view bt using revalidate and repaint
      */
     public void refreshCommentView() {
         view.getCommentView().revalidate();
