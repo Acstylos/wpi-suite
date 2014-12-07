@@ -30,15 +30,12 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
 public class MainView extends JTabbedPane {
     private static final long serialVersionUID = -346061317795260862L;
     private JScrollPane workflowScrollPane = new JScrollPane();
-    private JScrollPane archiveScrollPane = new JScrollPane();
     private WorkflowPresenter workflowPresenter = new WorkflowPresenter(0);
     private static final MainView mainView = new MainView();
-    private ArchiveView archivePanel = new ArchiveView();
 
     private MainView() {
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         this.addTab("Workflow", Icons.WORKFLOW, workflowScrollPane);
-        this.archiveScrollPane.setViewportView(archivePanel);
 
         this.setWorkflowPresenter(workflowPresenter);
 
@@ -74,9 +71,5 @@ public class MainView extends JTabbedPane {
     public void setWorkflowPresenter(WorkflowPresenter workflowPresenter) {
         this.workflowPresenter = workflowPresenter;
         this.workflowScrollPane.setViewportView(workflowPresenter.getView());
-    }
-    
-    public ArchiveView getArchive(){
-        return this.archivePanel;
     }
 }

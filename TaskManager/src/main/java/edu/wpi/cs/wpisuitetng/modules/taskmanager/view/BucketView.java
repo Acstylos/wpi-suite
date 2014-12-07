@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -35,7 +36,7 @@ public class BucketView extends JPanel
 
     private static final long serialVersionUID = -5937582878085666950L;
     private List<MiniTaskView> taskViews = new ArrayList<MiniTaskView>();
-    private String title;
+    private BucketModel model;
     private JLabel titleLabel = new JLabel();
     private JPanel titlePanel = new JPanel();
     private JPanel taskViewHolderPanel = new JPanel();
@@ -45,9 +46,8 @@ public class BucketView extends JPanel
      * Constructor for BucketViews.
      * @param title Temporary constructor that will title the buckets
      */
-    public BucketView(String title) {
+    public BucketView(BucketModel model) {
         // Ensure the layout and properties of this panel is correct
-        this.title = title;
         this.setMaximumSize(new Dimension(300, 32767));
         this.setPreferredSize(new Dimension(300, 200));
         this.setMinimumSize(new Dimension(300, 200));
@@ -55,7 +55,6 @@ public class BucketView extends JPanel
         this.setBorder(new EmptyBorder(0, 5, 5, 5));
         this.setLayout(new MigLayout("fill"));
         this.titleLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
-        this.titleLabel.setText(title);
         
         // Start by adding the changeable title to the top of the view
         this.add(titlePanel, "dock north");
@@ -71,7 +70,9 @@ public class BucketView extends JPanel
         taskViewHolderPanel.setBorder(null);
         this.taskViewHolderPanel.setBackground(Color.LIGHT_GRAY);
         this.taskViewHolderPanel.setLayout(new MigLayout("fill"));
-        this.taskScrollPane.setViewportView(taskViewHolderPanel);    
+        this.taskScrollPane.setViewportView(taskViewHolderPanel);   
+        
+        this.setModel(model);
     }
     
     /**
@@ -82,23 +83,12 @@ public class BucketView extends JPanel
     }
 
     /**
-     * @return Returns the title of the bucket
+     * @param model The model of the bucket to render in this view
      */
-    public String getTitle() {
-        return this.title;
-    }
-
-    /**
-     * TODO: DO WE NEED THIS?
-     * @param taskViews A list of TaskViews
-     */
-
-    public void setTaskViews(List<MiniTaskView> taskViews) {
-        taskViewHolderPanel.removeAll();
-        this.taskViews = taskViews;
-        for (MiniTaskView task : taskViews) {
-            this.taskViewHolderPanel.add(task, "dock north");
-        }
+    public void setModel(BucketModel model) {
+        this.model = model;
+        
+        this.titleLabel.setText(this.model.getTitle());
     }
     
     /**
@@ -111,14 +101,4 @@ public class BucketView extends JPanel
         Component spacerStrut = Box.createVerticalStrut(5);
         this.taskViewHolderPanel.add(spacerStrut, "dock north");
     }
-
-    /**
-     * Changes the title label of the bucket to reflect the buckets name.
-     * @param title A string that corresponds to the title of the bucket
-     */
-    public void setTitle(String title) {
-        this.title = title;
-        this.titleLabel.setText(title);
-    }
-
 }

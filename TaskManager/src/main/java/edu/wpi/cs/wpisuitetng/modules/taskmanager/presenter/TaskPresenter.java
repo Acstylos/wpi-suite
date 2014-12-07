@@ -256,7 +256,6 @@ public class TaskPresenter {
                     int index = MainView.getInstance().indexOfComponent(view);
                     MainView.getInstance().remove(index);
                     MainView.getInstance().getWorkflowPresenter().archiveTask(model.getId(), bucket.getModel().getId());
-                    MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
                 }
             }
         });
