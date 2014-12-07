@@ -68,7 +68,6 @@ public class ActivityPresenter {
         this.model.setIsAutogen(isAutogen);
         this.model.setTaskId(task.getModel().getId());
         this.view = new ActivityView(this.model.getActivity());
-        load();
     }
 
     /**
@@ -156,6 +155,7 @@ public class ActivityPresenter {
         if (models[0].getId() == 0)
             return;
         this.model = models[0];
+        updateView();
         Updater.getInstance().registerActivity(this);
     }
 
