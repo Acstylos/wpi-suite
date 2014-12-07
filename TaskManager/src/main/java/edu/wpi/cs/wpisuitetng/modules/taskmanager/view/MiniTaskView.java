@@ -14,18 +14,21 @@ import java.util.Date;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.TransferHandler;
 
 import net.miginfocom.swing.MigLayout;
+
 import javax.swing.border.EmptyBorder;
+
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 
 /**
  * This is the TaskView shown inside of buckets to reduce the amount of clutter on screen
  */
 public class MiniTaskView extends JPanel {
     
-    private Date dueDate;
-    private String taskName;
-    private String fullName;
+    private TaskModel model;
+    
     JLabel taskNameLabel = new JLabel();
 
     /**
@@ -37,20 +40,17 @@ public class MiniTaskView extends JPanel {
 
     /**
      * Create the panel.
-     * @param taskName Name of mini task view
-     * @param dueDate  Date the task is due
-     * @param fullName Full name of the task
+     * @param model The model to render in this view
      */
-    public MiniTaskView(String taskName, Date dueDate, String fullName) {
+    public MiniTaskView(TaskModel model) {
         setLayout(new MigLayout("fill"));
-        this.taskName = taskName;
-        this.dueDate = dueDate;
-        this.fullName = fullName;
-        taskNameLabel.setToolTipText(this.fullName);
         taskNameLabel.setBorder(new EmptyBorder(8, 8, 8, 8));
         this.add(taskNameLabel, "dock west");
-        this.taskNameLabel.setText(fullName);
         this.taskNameLabel.setIcon(Icons.TASK);
+        
+        this.setModel(model);
+        
+        this.setTransferHandler(new TransferHandler("model"));
     }
     
     /**
@@ -63,48 +63,19 @@ public class MiniTaskView extends JPanel {
     }
     
     /**
-     * @return the dueDate of the task
+     * @param model The model to render in this view
      */
-    public Date getDueDate() {
-        return this.dueDate;
+    public void setModel(TaskModel model) {
+        this.model = model;
+
+        this.taskNameLabel.setText(this.model.getTitle());
+        this.taskNameLabel.setToolTipText(this.model.getTitle());
     }
 
     /**
-     * @return the task name of the task
+     * @return The model that this view renders
      */
-    public String getTaskName() {
-        return this.taskName;
+    public TaskModel getModel() {
+        return this.model;
     }
-
-    /**
-     * @param dueDate the dueDate of the task to set
-     */
-    public void setDueDate(Date dueDate) {
-        this.dueDate = dueDate;
-    }
-    /**
-     * @param taskName the title to set
-     * @param fullName the full name of the task
-     */
-    public void setTaskName(String taskName, String fullName) {
-        this.taskName = taskName;
-        this.taskNameLabel.setText(fullName);
-        this.taskNameLabel.setToolTipText(fullName);
-    }
-    
-    /**
-     * @return fullName of task
-     */
-    public String getFullName() {
-        return fullName;
-    }
-
-    /**
-     * @param fullName the task name to set
-     */
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-
 }

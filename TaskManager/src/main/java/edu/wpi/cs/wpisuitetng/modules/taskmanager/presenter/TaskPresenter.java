@@ -82,7 +82,7 @@ public class TaskPresenter {
         this.model.setTitle("New Task");
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         this.view = new TaskView(model, viewMode, this);
-        this.miniView = new MiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
+        this.miniView = new MiniTaskView(model);
         final Request request = Network.getInstance().makeRequest("core/user",
                 HttpMethod.GET);
         request.addObserver(new UsersObserver(this));
@@ -276,10 +276,11 @@ public class TaskPresenter {
                 if(deleteDialogConfirmed) {
                     int index = MainView.getInstance().indexOfComponent(view);
                     MainView.getInstance().remove(index);
+
                     model.setIsArchived(true);
                     saveView();
                     updateView();
-                    //MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
+
                 }
             }
         });
@@ -474,9 +475,7 @@ public class TaskPresenter {
     public void updateView() {
         view.setStatus(model.getStatus());
         view.setModel(model);
-        miniView.setTaskName(model.getShortTitle(), model.getTitle());
-        miniView.setDueDate(model.getDueDate());
-        miniView.setToolTipText(model.getTitle());
+        miniView.setModel(model);
         updateCommentView();
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         addUsersToView();
