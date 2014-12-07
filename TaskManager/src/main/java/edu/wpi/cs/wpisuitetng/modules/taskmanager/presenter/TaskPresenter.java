@@ -9,17 +9,27 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
+import javax.swing.TransferHandler;
+import javax.swing.TransferHandler.TransferSupport;
 
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
@@ -61,6 +71,8 @@ public class TaskPresenter {
 
     private BucketPresenter bucket;
     private List<ActivityPresenter> activityPresenters;
+    
+    public final static DataFlavor TASK_DATA_FLAVOR = new DataFlavor(TaskPresenter.class, "Task");
 
     /**
      * Constructs a TaskPresenter for the given model. Constructs the view
@@ -112,6 +124,50 @@ public class TaskPresenter {
                 MainView.getInstance().setToolTipTextAt(tabCount - 1,
                         model.getTitle());
 
+            }
+        });
+        
+        /* Set a handler to move the task when it's dragged and dropped */ 
+        miniView.setTransferHandler(new TransferHandler() {
+            /**
+             * @return {@link TransferHandler#MOVE}. At least for now, tasks
+             * are moved, never copied or linked.
+             */
+            @Override
+            public int getSourceActions(JComponent c) {
+                return MOVE;
+            }
+            
+            /**
+             * @return false always, since things can't be dragged onto tasks
+             */
+            @Override
+            public boolean canImport(TransferSupport support) {
+                return false;
+            }
+            
+            /**
+             * @return A transferable for the task presenter
+             */
+            @Override
+            protected Transferable createTransferable(JComponent c) {
+                return new Transferable() {
+                    @Override
+                    public DataFlavor[] getTransferDataFlavors() {
+                        return new DataFlavor[] { TASK_DATA_FLAVOR };
+                    }
+
+                    @Override
+                    public boolean isDataFlavorSupported(DataFlavor flavor) {
+                        return flavor == TASK_DATA_FLAVOR;
+                    }
+
+                    @Override
+                    public Object getTransferData(DataFlavor flavor)
+                            throws UnsupportedFlavorException, IOException {
+                        return TaskPresenter.this;
+                    }
+                };
             }
         });
 
@@ -538,6 +594,14 @@ public class TaskPresenter {
      */
     public BucketPresenter getBucket() {
         return bucket;
+    }
+
+    /**
+     * @param bucket the bucket that this task is in
+     */
+    public void setBucket(BucketPresenter bucket) {
+        this.bucket = bucket;
+        this.model.setStatus(bucket.getModel().getId());
     }
 
     /**
