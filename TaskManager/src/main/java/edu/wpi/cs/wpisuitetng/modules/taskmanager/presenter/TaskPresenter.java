@@ -451,7 +451,6 @@ public class TaskPresenter {
                 "taskmanager/task/" + this.model.getId(), HttpMethod.GET);
         request.addObserver(new TaskObserver(this));
         request.send();
-
     }
 
     /**
@@ -481,10 +480,19 @@ public class TaskPresenter {
         addUsersToView();
         if(model.getIsArchived()){
             miniView.setBackground(Color.CYAN);
-        }
-        else{
+        }else{
             miniView.setBackground(new Color(240,240,240));
         }
+        
+      /*  if(MainView.getInstance().getShowArchived()){
+            miniView.setVisible(true);
+        }
+        else{
+            if (model.getIsArchived())
+            miniView.setVisible(false);
+        }*/
+        miniView.revalidate();
+        miniView.repaint();
     }
 
     /**

@@ -38,6 +38,7 @@ public class BucketPresenter {
     private BucketView view;
     private BucketModel model;
     private Map<Integer, TaskPresenter> taskMap;
+
     private WorkflowPresenter workflow;
 
     /**
@@ -88,8 +89,8 @@ public class BucketPresenter {
             request.setBody(model.toJson());
         }
         request.addObserver(new BucketObserver(this, method)); // add an
-                                                               // observer to
-                                                               // the response
+        // observer to
+        // the response
         request.send();
     }
 
@@ -127,7 +128,9 @@ public class BucketPresenter {
             }
             taskMap.get(i).updateFromDatabase();
             MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
-            view.addTaskToView(miniTaskView);
+            if(MainView.getInstance().getShowArchived() || !taskMap.get(i).getModel().getIsArchived()){
+                view.addTaskToView(miniTaskView);
+            }
         }
         view.revalidate();
         view.repaint();
@@ -138,12 +141,12 @@ public class BucketPresenter {
      */
     private void registerCallbacks() {
     }
-    
+
     /**
      * Adds a new task to the bucket view, in the form of a miniTaskView
      */
     public void addNewTaskToView(){
-        
+
         TaskPresenter taskPresenter = new TaskPresenter(0, this, ViewMode.CREATING);
         //taskPresenter.createInDatabase();
         TaskModel taskModel = taskPresenter.getModel();
@@ -179,7 +182,7 @@ public class BucketPresenter {
     public void addTask(int id, TaskPresenter taskPresenter) {
         model.addTaskID(id);
         if (!taskMap.containsKey(id)) {
-        	taskMap.put(id, taskPresenter);
+            taskMap.put(id, taskPresenter);
         }
         updateInDatabase();
     }
@@ -268,6 +271,7 @@ public class BucketPresenter {
      *           The miniView associated with the task being added
      */
     public void addMiniTaskView(MiniTaskView miniView) {
+        
         view.addTaskToView(miniView);
     }
 
@@ -280,5 +284,12 @@ public class BucketPresenter {
      */
     public TaskPresenter getTask(int id) {
         return taskMap.get(id);
+    }
+    
+    /**
+     * @return gets the TaskMap
+     */
+    public Map<Integer, TaskPresenter> getTaskMap() {
+        return taskMap;
     }
 }

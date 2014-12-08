@@ -22,6 +22,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Map.Entry;
+
+import javax.swing.JToggleButton;
 
 /**
  * Sets up upper toolbar of TaskManager tab
@@ -29,19 +32,19 @@ import java.util.Date;
 public class ToolbarView extends JPanel
 {
     private static final long serialVersionUID = 5489162021821230861L;
-    
+    boolean showArchive;
 
     /**
      * Creates and positions option buttons in upper toolbar
      * @param visible boolean
      */
     public ToolbarView() {
-        setLayout(new MigLayout("", "[fill]", "[grow]"));
-        
+        setLayout(new MigLayout("", "[fill][]", "[grow]"));
+        showArchive = false;
         JButton createNewTaskButton = new JButton("<html>Create<br/>Task</html>");
         createNewTaskButton.setIcon(Icons.CREATE_TASK_LARGE);
-        
-        
+
+
         /**
          * Adds a new TaskView Tab into the MainView
          */
@@ -56,6 +59,34 @@ public class ToolbarView extends JPanel
             }
         });
         add(createNewTaskButton, "cell 0 0");
+
+        JToggleButton tglbtnArchive = new JToggleButton("Show Archive");
+        add(tglbtnArchive, "cell 1 0");
+
+        tglbtnArchive.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                if (tglbtnArchive.getText() == "Show Archive"){
+                    tglbtnArchive.setText("Hide Archive");
+                    MainView.getInstance().setShowArchived(true);
+                    System.out.println(MainView.getInstance().getShowArchived());
+                }
+                else{
+                    tglbtnArchive.setText("Show Archive");
+                    MainView.getInstance().setShowArchived(false);
+                    System.out.println(MainView.getInstance().getShowArchived());
+                }
+                MainView.getInstance().getWorkflowPresenter().getView().revalidate();
+                MainView.getInstance().getWorkflowPresenter().getView().repaint();
+                for(Entry<Integer, BucketPresenter> bucket: MainView.getInstance().getWorkflowPresenter().getBucketPresenters().entrySet()){
+                    /*for(Entry<Integer, TaskPresenter> task: bucket.getValue().getTaskMap().entrySet()){
+                        task.getValue().updateView();
+                        task.getValue().getMiniView().revalidate();
+                        task.getValue().getMiniView().repaint();
+                    }*/
+                    bucket.getValue().writeModelToView();
+                }
+            }
+        });
     }
-    
+
 }

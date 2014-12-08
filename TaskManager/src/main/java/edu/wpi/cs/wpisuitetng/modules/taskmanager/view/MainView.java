@@ -31,11 +31,11 @@ public class MainView extends JTabbedPane {
     private JScrollPane workflowScrollPane = new JScrollPane();
     private WorkflowPresenter workflowPresenter = new WorkflowPresenter(0);
     private static final MainView mainView = new MainView();
-
+    private boolean showArchived;
     private MainView() {
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         this.addTab("Workflow", Icons.WORKFLOW, workflowScrollPane);
-
+        this.setShowArchived(false);
         this.setWorkflowPresenter(workflowPresenter);
 
         /* As soon as this is added to a container, load the workflow */
@@ -70,5 +70,19 @@ public class MainView extends JTabbedPane {
     public void setWorkflowPresenter(WorkflowPresenter workflowPresenter) {
         this.workflowPresenter = workflowPresenter;
         this.workflowScrollPane.setViewportView(workflowPresenter.getView());
+    }
+
+    /**
+     * @return if archived are visible
+     */
+    public boolean getShowArchived() {
+        return showArchived;
+    }
+
+    /**
+     * @param showArchived set archived tasks visibility
+     */
+    public void setShowArchived(boolean showArchived) {
+        this.showArchived = showArchived;
     }
 }
