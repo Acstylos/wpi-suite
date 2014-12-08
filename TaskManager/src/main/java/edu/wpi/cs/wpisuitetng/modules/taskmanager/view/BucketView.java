@@ -112,6 +112,7 @@ public class BucketView extends JPanel
         this.taskViewHolderPanel.add(spacerStrut, "dock north");
     }
 
+    
     /**
      * Changes the title label of the bucket to reflect the buckets name.
      * @param title A string that corresponds to the title of the bucket
