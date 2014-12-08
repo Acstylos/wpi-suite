@@ -31,12 +31,7 @@ public class MainView extends JTabbedPane {
     private JScrollPane workflowScrollPane = new JScrollPane();
     private WorkflowPresenter workflowPresenter = new WorkflowPresenter(0);
     private static final MainView mainView = new MainView();
-<<<<<<< HEAD
-
-=======
-    private ArchiveView archivePanel = new ArchiveView();
     private boolean showArchived = false;
->>>>>>> hides and shows archived after being pressed
     private MainView() {
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         this.addTab("Workflow", Icons.WORKFLOW, workflowScrollPane);
@@ -91,5 +86,4 @@ public class MainView extends JTabbedPane {
     public void setShowArchived(boolean showArchived) {
         this.showArchived = showArchived;
     }
-
 }

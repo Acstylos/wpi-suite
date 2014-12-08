@@ -109,6 +109,6 @@ public class BucketView extends JPanel
     public void resetTaskList(){
         this.taskViewHolderPanel.removeAll();
     }
-
+    
 
 }

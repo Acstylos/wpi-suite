@@ -485,6 +485,9 @@ public class TaskPresenter {
         else{
             miniView.setBackground(new Color(240,240,240));
         }
+        view.revalidate();
+        view.repaint();
+        
     }
 
     /**
