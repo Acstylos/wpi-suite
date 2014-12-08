@@ -120,5 +120,12 @@ public class BucketView extends JPanel
         this.title = title;
         this.titleLabel.setText(title);
     }
+    
+    /**
+     * resets the task list by removing all from view
+     */
+    public void resetTaskList(){
+        this.taskViewHolderPanel.removeAll();
+    }
 
 }

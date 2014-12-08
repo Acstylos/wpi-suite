@@ -88,8 +88,8 @@ public class BucketPresenter {
             request.setBody(model.toJson());
         }
         request.addObserver(new BucketObserver(this, method)); // add an
-                                                               // observer to
-                                                               // the response
+        // observer to
+        // the response
         request.send();
     }
 
@@ -140,12 +140,12 @@ public class BucketPresenter {
      */
     private void registerCallbacks() {
     }
-    
+
     /**
      * Adds a new task to the bucket view, in the form of a miniTaskView
      */
     public void addNewTaskToView(){
-        
+
         TaskPresenter taskPresenter = new TaskPresenter(0, this, ViewMode.CREATING);
         //taskPresenter.createInDatabase();
         TaskModel taskModel = taskPresenter.getModel();
@@ -181,7 +181,7 @@ public class BucketPresenter {
     public void addTask(int id, TaskPresenter taskPresenter) {
         model.addTaskID(id);
         if (!taskMap.containsKey(id)) {
-        	taskMap.put(id, taskPresenter);
+            taskMap.put(id, taskPresenter);
         }
         updateInDatabase();
     }
@@ -282,5 +282,25 @@ public class BucketPresenter {
      */
     public TaskPresenter getTask(int id) {
         return taskMap.get(id);
+    }
+
+    /**
+     * removes all tasks from view and only adds
+     * back based on archive options
+     */
+    public void toggleShowArchived() {
+        List<Integer> taskIds = model.getTaskIds();
+        this.view.resetTaskList();
+        for(int i : taskIds){
+            MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
+            if (MainView.getInstance().getShowArchived()){
+                view.addTaskToView(miniTaskView);
+            }
+            else {
+                if (!taskMap.get(i).getModel().getIsArchived()){
+                    view.addTaskToView(miniTaskView);
+                }
+            }
+        }
     }
 }
