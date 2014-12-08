@@ -10,8 +10,6 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -79,97 +77,6 @@ public class TaskModel extends AbstractModel {
         this.estimatedEffort = estimatedEffort;
         this.dueDate = dueDate;
         this.status = status;
-    }
-
-    /**
-     * Compares the task models before and after it is updated and makes a
-     * string that contains all the user changes
-     * 
-     * @param that
-     *            the task model after it was updated.
-     * @return summary the message which shows what has changed.
-     */
-    public String compareTo(TaskModel that) {
-        boolean flag = false;// flag to tell if first print or not.
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-        String summary = "";
-        if (this.title.compareTo(that.title) != 0) {
-            summary = "Title was changed from " + this.title + " to "
-                    + that.title;
-            flag = true;
-        }
-        if (this.actualEffort != that.actualEffort) {
-            if (flag)
-                summary += "\n";
-            summary += "Actual Effort was changed from " + this.actualEffort
-                    + " to " + that.actualEffort;
-            flag = true;
-        } else if (!flag)
-            flag = false;
-        if (this.estimatedEffort != that.estimatedEffort) {
-            if (flag)
-                summary += "\n";
-            summary += "Estimated Effort was changed from "
-                    + this.estimatedEffort + " to " + that.estimatedEffort;
-            flag = true;
-        } else if (!flag)
-            flag = false;
-        if (this.dueDate.compareTo(that.dueDate) != 0) {
-            if (flag)
-                summary += "\n";
-            summary += "Due Date was changed from "
-                    + dateFormat.format(this.dueDate) + " to "
-                    + dateFormat.format(that.dueDate);
-            flag = true;
-        } else if (!flag)
-            flag = false;
-        if (this.description.compareTo(that.description) != 0) {
-            if (flag)
-                summary += "\n";
-            summary += "Description was changed.";
-            flag = true;
-
-        } else if (!flag)
-            flag = false;
-        if (!this.assignedTo.equals(that.assignedTo)) {
-            if (flag)
-                summary += "\n";
-            if (this.getAssignedTo().size() > that.getAssignedTo().size()) {
-                summary += "A user was removed.";
-            } else
-                summary += "A user was added.";
-            flag = true;
-
-        } else if (!flag)
-            flag = false;
-        if (this.status != that.status) {
-            if (flag)
-                summary += "\n";
-            summary += "Task was moved from " + intToStatus(this.status)
-                    + " to " + intToStatus(that.status);
-        }
-        return summary;
-    }
-
-    /**
-     * returns the bucket name with the given ID
-     * hard coded at the moment.
-     * @param bucket 
-     *              the bucket's ID
-     * @return String
-     *               the name of the bucket
-     */
-    private String intToStatus(int bucket) {
-        if (bucket == 1) {
-            return "New";
-        } else if (bucket == 2)
-            return "Selected";
-        else if (bucket == 3)
-            return "In Progress";
-        else if (bucket == 4)
-            return "Completed";
-        else
-            return "Archived";
     }
 
     /**

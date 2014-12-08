@@ -63,6 +63,19 @@ public class TaskPresenter {
     private List<ActivityPresenter> activityPresenters;
 
     /**
+     * Constructor for testing methods without creating View, or
+     * Buckets/Workflow Presenters PURELY TO TEST METHODS THAT ONLY OPERATE ON
+     * TASKMODELS
+     * 
+     * @param model
+     *            the model associated with this presenter
+     */
+    public TaskPresenter(TaskModel model) {
+        this.model = new TaskModel();
+        this.model.copyFrom(model);
+    }
+
+    /**
      * Constructs a TaskPresenter for the given model. Constructs the view
      * offscreen, available if you call getView().
      * 
@@ -146,7 +159,6 @@ public class TaskPresenter {
                         //order of methods matter here.
                         saveView();
                         addHistory(beforeModel, model);
-                        refreshCommentView();
                         updateView();
                         MainView.getInstance().setTitleAt(index,
                                 model.getShortTitle());
@@ -271,6 +283,118 @@ public class TaskPresenter {
     }
 
     /**
+     * Compares the task models before and after it is updated and makes a
+     * string that contains all the user changes
+     * 
+     * @param before
+     *            the task model before it was updated.
+     * @param after
+     *            the task model after it was updated.
+     * @return summary the message which shows what has changed.
+     */
+    public String compareTasks(TaskModel before, TaskModel after) {
+        boolean flag = false;// flag to tell if first print or not.
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        String summary = "";
+        if (before.getTitle().compareTo(after.getTitle()) != 0) {
+            summary = "Title was changed from " + before.getTitle() + " to "
+                    + after.getTitle();
+            flag = true;
+        }
+        if (before.getActualEffort() != after.getActualEffort()) {
+            if (flag)
+                summary += "\n";
+            summary += "Actual Effort was changed from "
+                    + before.getActualEffort() + " to "
+                    + after.getActualEffort();
+            flag = true;
+        } else if (!flag)
+            flag = false;
+        if (before.getEstimatedEffort() != after.getEstimatedEffort()) {
+            if (flag)
+                summary += "\n";
+            summary += "Estimated Effort was changed from "
+                    + before.getEstimatedEffort() + " to "
+                    + after.getEstimatedEffort();
+            flag = true;
+        } else if (!flag)
+            flag = false;
+        if (before.getDueDate().compareTo(after.getDueDate()) != 0) {
+            if (flag)
+                summary += "\n";
+            summary += "Due Date was changed from "
+                    + dateFormat.format(before.getDueDate()) + " to "
+                    + dateFormat.format(after.getDueDate());
+            flag = true;
+        } else if (!flag)
+            flag = false;
+        if (before.getDescription().compareTo(after.getDescription()) != 0) {
+            if (flag)
+                summary += "\n";
+            summary += "Description was changed.";
+            flag = true;
+
+        } else if (!flag)
+            flag = false;
+        if (!before.getAssignedTo().equals(after.getAssignedTo())) {
+            ArrayList<Integer> beforeTemp = new ArrayList<Integer>(
+                    before.getAssignedTo());
+            ArrayList<Integer> afterTemp = new ArrayList<Integer>(
+                    after.getAssignedTo());
+            if (flag)
+                summary += "\n";
+            if (before.getAssignedTo().size() > after.getAssignedTo().size()) {
+                beforeTemp.removeAll(afterTemp);
+                // find difference between the before and after IDs
+                for (int i = 0; i < beforeTemp.size(); i++) {
+                    summary += idToUsername(beforeTemp.get(i))
+                            + " was removed.";
+                    if (i < beforeTemp.size() - 1)
+                        summary += "\n";
+                }
+
+            } else {
+                afterTemp.removeAll(beforeTemp);
+                for (int i = 0; i < afterTemp.size(); i++) {
+                    summary += idToUsername(afterTemp.get(i)) + " was added.";
+                    if (i < afterTemp.size() - 1)
+                        summary += "\n";
+                }
+            }
+            flag = true;
+
+        } else if (!flag)
+            flag = false;
+        if (before.getStatus() != after.getStatus()) {
+            if (flag)
+                summary += "\n";
+            summary += "Task was moved from " + intToStatus(before.getStatus())
+                    + " to " + intToStatus(after.getStatus());
+        }
+        return summary;
+    }
+
+    /**
+     * returns the bucket name with the given ID hard coded at the moment.
+     * 
+     * @param bucket
+     *            the bucket's ID
+     * @return String the name of the bucket
+     */
+    private String intToStatus(int bucket) {
+        if (bucket == 1) {
+            return "New";
+        } else if (bucket == 2)
+            return "Selected";
+        else if (bucket == 3)
+            return "In Progress";
+        else if (bucket == 4)
+            return "Completed";
+        else
+            return "Archive";
+    }
+
+    /**
      * Updates another model with the fields before it gets updated
      */
     public void updateBeforeModel() {
@@ -318,7 +442,7 @@ public class TaskPresenter {
         String activity = user + " has updated tasks on "
                 + dateFormat.format(cal.getTime()) + ":\n";
 
-        activity += before.compareTo(after);
+        activity += compareTasks(before, after);
         ActivityPresenter activityPresenter = new ActivityPresenter(this,
                 activity, true);
         view.getCommentView().postHistory(activityPresenter.getView());
@@ -474,6 +598,7 @@ public class TaskPresenter {
         }
 
     }
+
     /**
      * refresh comment view by using revalidate and repaint
      */
@@ -573,5 +698,19 @@ public class TaskPresenter {
     public void setAllowCancelDialogEnabled(boolean enable) {
         this.allowCancelDialog = enable;
         this.cancelDialogConfirmed = !enable; // if the dialog is enabled, the confirmation of the dialog box is opposite
+    }
+    /**
+     * returns the Username with the given ID, otherwise blank.
+     * 
+     * @param id
+     *            the user's ID
+     * @return username the Username
+     */
+    public String idToUsername(int id) {
+        for (User u : this.allUserArray) {
+            if (u.getIdNum() == id)
+                return u.getUsername();
+        }
+        return "";
     }
 }
