@@ -102,6 +102,7 @@ public class BucketView extends JPanel
         this.taskViewHolderPanel.add(spacerStrut, "dock north");
     }
 
+
     
     /**
      * resets the task list by removing all from view
