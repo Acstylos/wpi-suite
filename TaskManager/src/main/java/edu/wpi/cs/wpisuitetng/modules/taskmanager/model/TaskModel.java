@@ -35,6 +35,7 @@ public class TaskModel extends AbstractModel {
     private int actualEffort;
     private Date dueDate;
     private int status;
+    private User[] allUserArray;
 
     /**
      * Constructor for a default Task object
@@ -132,12 +133,31 @@ public class TaskModel extends AbstractModel {
         } else if (!flag)
             flag = false;
         if (!this.assignedTo.equals(that.assignedTo)) {
+            ArrayList<Integer> beforeTemp = new ArrayList<Integer>(
+                    this.assignedTo);
+            ArrayList<Integer> afterTemp = new ArrayList<Integer>(
+                    that.assignedTo);
             if (flag)
                 summary += "\n";
             if (this.getAssignedTo().size() > that.getAssignedTo().size()) {
-                summary += "A user was removed.";
-            } else
-                summary += "A user was added.";
+                beforeTemp.removeAll(afterTemp);
+                // find difference between the before and after IDs
+                for (int i = 0; i < beforeTemp.size(); i++) {
+                    summary += this.idToUsername(beforeTemp.get(i))
+                            + " was removed.";
+                    if (i < beforeTemp.size() - 1)
+                        summary += "\n";
+                }
+
+            } else {
+                afterTemp.removeAll(beforeTemp);
+                for (int i = 0; i < afterTemp.size(); i++) {
+                    summary += this.idToUsername(afterTemp.get(i))
+                            + " was added.";
+                    if (i < afterTemp.size() - 1)
+                        summary += "\n";
+                }
+            }
             flag = true;
 
         } else if (!flag)
@@ -152,12 +172,11 @@ public class TaskModel extends AbstractModel {
     }
 
     /**
-     * returns the bucket name with the given ID
-     * hard coded at the moment.
-     * @param bucket 
-     *              the bucket's ID
-     * @return String
-     *               the name of the bucket
+     * returns the bucket name with the given ID hard coded at the moment.
+     * 
+     * @param bucket
+     *            the bucket's ID
+     * @return String the name of the bucket
      */
     private String intToStatus(int bucket) {
         if (bucket == 1) {
@@ -169,7 +188,7 @@ public class TaskModel extends AbstractModel {
         else if (bucket == 4)
             return "Completed";
         else
-            return "Archived";
+            return "Archive";
     }
 
     /**
@@ -311,7 +330,9 @@ public class TaskModel extends AbstractModel {
 
     /**
      * Convert the given JSON string to a TaskModel instance
-     * @param json string to be converted
+     * 
+     * @param json
+     *            string to be converted
      * @return The JSON string representing the object
      */
     public static TaskModel fromJson(String json) {
@@ -464,6 +485,36 @@ public class TaskModel extends AbstractModel {
      */
     public void addActivityID(int id) {
         activityIds.add(id);
+    }
+
+    /**
+     * returns the Username with the given ID, otherwise blank.
+     * 
+     * @param id
+     *            the user's ID
+     * @return username the Username
+     */
+    public String idToUsername(int id) {
+        for (User u : this.allUserArray) {
+            if (u.getIdNum() == id)
+                return u.getUsername();
+        }
+        return "";
+    }
+
+    /**
+     * @return the array of all the users in the project
+     */
+    public User[] getAllUserArray() {
+        return allUserArray;
+    }
+
+    /**
+     * @param allUserArray
+     *            the user array to set to
+     */
+    public void setAllUserArray(User[] allUserArray) {
+        this.allUserArray = allUserArray;
     }
 
 }

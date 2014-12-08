@@ -281,6 +281,7 @@ public class TaskPresenter {
         beforeModel.setActualEffort(model.getActualEffort());
         beforeModel.setDueDate(model.getDueDate());
         beforeModel.setStatus(model.getStatus());
+        beforeModel.setAllUserArray(model.getAllUserArray());
     }
 
     /**
@@ -458,6 +459,7 @@ public class TaskPresenter {
         updateCommentView();
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         addUsersToView();
+        this.model.setAllUserArray(this.allUserArray);
     }
 
     /**
