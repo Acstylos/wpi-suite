@@ -273,6 +273,9 @@ public class TaskView extends JPanel {
         this.estEffortSpinner.setValue(model.getEstimatedEffort());
         this.descriptionMessage.setText(model.getDescription());
         this.datePicker.setDate(model.getDueDate());
+        if(model.getLabelColor()==null);
+        else
+               this.colorComboBox.setSelectedItem(model.getLabelColor());
         validateFields();
     }
 
@@ -460,9 +463,14 @@ public class TaskView extends JPanel {
             this.statusLabel.setForeground(modifiedColor);
             isModified = true;
         }
-        if(this.model.getLabelColor()==null)
-            this.changeColorLabel.setForeground(unmodifiedColor);
-        else if (this.getLabelColor().equals(this.model.getLabelColor())) {
+        if(this.model.getLabelColor()==null){
+            if(this.colorComboBox.getSelectedItem().equals(new Color(255,255,255))){
+                this.changeColorLabel.setForeground(unmodifiedColor);
+            }
+            else
+                this.changeColorLabel.setForeground(modifiedColor);              
+        }
+        else if (this.model.getLabelColor().equals(this.colorComboBox.getSelectedItem())) {
             this.changeColorLabel.setForeground(unmodifiedColor);
         } else {
             this.changeColorLabel.setForeground(modifiedColor);
