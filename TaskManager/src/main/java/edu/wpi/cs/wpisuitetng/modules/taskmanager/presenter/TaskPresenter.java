@@ -25,6 +25,7 @@ import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.updater.Updater;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
@@ -80,6 +81,7 @@ public class TaskPresenter {
         this.model.setId(id);
         this.model.setTitle("New Task");
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
+        this.model.setBucketId(bucket.getModel().getId());
         this.view = new TaskView(model, viewMode, this);
         this.miniView = new MiniTaskView(model);
         final Request request = Network.getInstance().makeRequest("core/user",
@@ -129,6 +131,7 @@ public class TaskPresenter {
                     updateModel();
                     createInDatabase(); // is calling "PUT" in task observer
                     view.setViewMode(ViewMode.EDITING);
+                    view.setIndex(-1);
                     MainView.getInstance().remove(index);
                     MainView.getInstance().setSelectedIndex(0);
                 }
@@ -422,6 +425,7 @@ public class TaskPresenter {
      * Have the presenter reload the view from the model.
      */
     public void updateFromDatabase() {
+        System.out.println("Loading task: " + model.getId());
         Request request = Network.getInstance().makeRequest(
                 "taskmanager/task/" + this.model.getId(), HttpMethod.GET);
         request.addObserver(new TaskObserver(this));
@@ -440,6 +444,7 @@ public class TaskPresenter {
         model.setDueDate(view.getDueDate());
         model.setAssignedTo(assignedUserList);
         model.setStatus(view.getStatus());
+        model.setBucketId(view.getStatus());
         this.bucket = MainView.getInstance().getWorkflowPresenter()
                 .getBucket(view.getStatus());
     }
@@ -452,8 +457,25 @@ public class TaskPresenter {
         view.setModel(model);
         miniView.setModel(model);
         updateCommentView();
+        int index = MainView.getInstance().indexOfComponent(view);
+        if (index > 0)
+            MainView.getInstance().setTitleAt(index, model.getShortTitle());
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         addUsersToView();
+        if (this.getBucket().getModel().getId() != model.getBucketId()) {
+            System.out.println("Bad status. Changing.");
+            System.out.println("Old: " + this.getBucket().getModel().getId());
+            System.out.println("New: " + this.model.getBucketId());
+            this.view.setStatus(model.getBucketId());
+            MainView.getInstance().getWorkflowPresenter()
+                .getBucketPresenterById(model.getBucketId()).load();
+            this.getBucket().load();
+        }
+        System.out.println("Validating taskview " + model.getId());
+        view.revalidate();
+        view.repaint();
+        miniView.revalidate();
+        miniView.repaint();
     }
 
     /**
@@ -530,6 +552,7 @@ public class TaskPresenter {
             p.load();
             activityPresenters.add(p);
         }
+        Updater.getInstance().registerTask(this);
     }
 
     /**

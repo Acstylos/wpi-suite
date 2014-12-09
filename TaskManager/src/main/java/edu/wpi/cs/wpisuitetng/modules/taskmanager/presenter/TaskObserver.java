@@ -37,8 +37,6 @@ public class TaskObserver implements RequestObserver {
      */
     @Override
     public void responseSuccess(IRequest iReq) {
-        System.out
-                .println("Received response: " + iReq.getResponse().getBody());
 
         /*
          * Take the appropriate action based on what the method of the request
@@ -50,6 +48,7 @@ public class TaskObserver implements RequestObserver {
         switch (iReq.getHttpMethod()) {
         case GET:
             model = TaskModel.fromJsonArray(json)[0];
+            System.out.println("Received task: " + model.getId());
             this.presenter.setModel(model);
             this.presenter.updateView();
             break;
