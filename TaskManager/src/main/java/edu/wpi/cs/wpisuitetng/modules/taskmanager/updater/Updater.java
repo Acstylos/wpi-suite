@@ -72,6 +72,10 @@ public class Updater extends TimerTask implements RequestObserver {
         startPolling();
     }
 
+    /**
+     * Get instance of the updater for the client, or initialize one.
+     * @return Updater instance.
+     */
     public static Updater getInstance() {
         if (instance == null)
             instance = new Updater();
