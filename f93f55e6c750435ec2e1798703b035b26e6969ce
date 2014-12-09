@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_234a8b80",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/CommentView.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-09T23:20:40Z",
+      "side": 1,
+      "message": "Comment needed",
+      "revId": "f93f55e6c750435ec2e1798703b035b26e6969ce",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
