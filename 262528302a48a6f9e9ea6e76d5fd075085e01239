@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_6b22afba",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/model/TaskModel.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-09T05:56:36Z",
+      "side": 1,
+      "message": "Two lines of white space, should only be 1",
+      "revId": "262528302a48a6f9e9ea6e76d5fd075085e01239",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_cb2f5ba0",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/model/TaskModel.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-09T05:56:36Z",
+      "side": 1,
+      "message": "Tabs are used in these two lines",
+      "revId": "262528302a48a6f9e9ea6e76d5fd075085e01239",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_ab2c97ac",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-09T05:56:36Z",
+      "side": 1,
+      "message": "Tabs are used here in a few places below this comment, they should be spaces",
+      "revId": "262528302a48a6f9e9ea6e76d5fd075085e01239",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_0b196388",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 588,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-09T05:56:36Z",
+      "side": 1,
+      "message": "I think you mean \"convert them to hours\" not \"convert them in hours\"",
+      "revId": "262528302a48a6f9e9ea6e76d5fd075085e01239",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
