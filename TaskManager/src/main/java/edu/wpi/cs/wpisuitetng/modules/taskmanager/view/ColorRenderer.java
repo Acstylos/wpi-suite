@@ -50,11 +50,9 @@ public class ColorRenderer extends JButton implements ListCellRenderer {
      *            the index of the list
      */
     public Component getListCellRendererComponent(JList list, Object value,
-            int index,
-
-            boolean isSelected, boolean cellHasFocus) {
-
+            int index, boolean isSelected, boolean cellHasFocus) {
         b = true;
+        setFont(this.getFont().deriveFont(14.0f));
         setText(evaluateColor(((Color) value).toString()));
         setBackground((Color) value);
         b = false;
@@ -77,10 +75,10 @@ public class ColorRenderer extends JButton implements ListCellRenderer {
             return "gray";
         case "java.awt.Color[r=255,g=0,b=0]":
             return "red";
-        case "java.awt.Color[r=0,g=0,b=255]":
-            return "blue";
-        case "java.awt.Color[r=0,g=255,b=255]":
-            return "cyan";
+        case "java.awt.Color[r=255,g=0,b=255]":
+            return "magenta";
+        case "java.awt.Color[r=255,g=255,b=0]":
+            return "yellow";
         case "java.awt.Color[r=0,g=255,b=0]":
             return "green";
 

@@ -100,8 +100,6 @@ public class ActivityPresenter {
             commentView.postHistory(view);
         else
             commentView.postActivity(view);
-        commentView.revalidate();
-        commentView.repaint();
     }
 
     /**
