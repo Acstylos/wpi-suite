@@ -34,4 +34,12 @@ public class Icons {
     public final static Icon TASK = new ImageIcon(Icons.class.getResource("task.png"));
     public final static Icon TRASH = new ImageIcon(Icons.class.getResource("trash.png"));
     public final static Icon WORKFLOW = new ImageIcon(Icons.class.getResource("workflow.png"));
+    
+    public final static Icon TASKNEW = new ImageIcon(Icons.class.getResource("new_tasks.png"));
+    public final static Icon TASKSTART = new ImageIcon(Icons.class.getResource("middle_tasks.png"));
+    public final static Icon TASKNEARDUE = new ImageIcon(Icons.class.getResource("most_due_tasks.png"));
+    public final static Icon TASKDUE = new ImageIcon(Icons.class.getResource("over_due_tasks.png"));
+    public final static Icon TASKEDIT = new ImageIcon(Icons.class.getResource("edit_tasks.png"));
+    public final static Icon TASKCREATE = new ImageIcon(Icons.class.getResource("add_tasks.png"));
+  
 }

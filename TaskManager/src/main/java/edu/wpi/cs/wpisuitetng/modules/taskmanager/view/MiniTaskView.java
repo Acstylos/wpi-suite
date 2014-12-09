@@ -12,6 +12,7 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 import java.awt.event.MouseListener;
 import java.util.Date;
 
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.TransferHandler;
@@ -40,7 +41,9 @@ public class MiniTaskView extends JPanel {
 
     /**
      * Create the panel.
+
      * @param model The model to render in this view
+
      */
     public MiniTaskView(TaskModel model) {
         setLayout(new MigLayout("fill"));
@@ -78,4 +81,5 @@ public class MiniTaskView extends JPanel {
     public TaskModel getModel() {
         return this.model;
     }
+
 }
