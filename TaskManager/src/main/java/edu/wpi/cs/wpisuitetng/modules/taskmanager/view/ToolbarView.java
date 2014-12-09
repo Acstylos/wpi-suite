@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
@@ -22,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Sets up upper toolbar of TaskManager tab
@@ -56,6 +58,27 @@ public class ToolbarView extends JPanel
             }
         });
         add(createNewTaskButton, "cell 0 0");
+        
+        JToggleButton tglbtnArchive = new JToggleButton("Show Archive");
+        add(tglbtnArchive, "cell 1 0");
+        
+        tglbtnArchive.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                if(tglbtnArchive.getText() == "Show Archive"){//show everything
+                    tglbtnArchive.setText("Hide Archive");
+                    MainView.getInstance().setShowArchived(true);
+                }
+                
+                else{//only shows non-archived
+                    tglbtnArchive.setText("Show Archive");
+                    MainView.getInstance().setShowArchived(false);
+                }
+                MainView.getInstance().resetAllBuckets();
+            
+            }
+        });
     }
+    
+
     
 }
