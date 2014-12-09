@@ -80,6 +80,9 @@ public class TaskObserver implements RequestObserver {
             break;
 
         case DELETE:
+            
+            
+            System.out.println("Successfully deleted a task!");
             break;
         }
     }

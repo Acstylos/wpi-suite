@@ -137,6 +137,7 @@ public class TaskPresenter {
                     view.setViewMode(ViewMode.EDITING);
                     MainView.getInstance().remove(index);
                     MainView.getInstance().setSelectedIndex(0);
+
                 }
 
                 else {
@@ -167,7 +168,8 @@ public class TaskPresenter {
                             MainView.getInstance().setToolTipTextAt(index, model.getTitle());
                             addHistory(beforeModel, model);
                             refreshCommentView();
-                        } else { // not switching buckets
+                        }
+                        else { // not switching buckets
                             saveView();
                             updateView();
                             MainView.getInstance().setTitleAt(index,
@@ -177,7 +179,7 @@ public class TaskPresenter {
                         }
                     }
                 }
-
+                MainView.getInstance().resetAllBuckets();
             }
         });
 
@@ -273,14 +275,20 @@ public class TaskPresenter {
                     }
                 });
                 deleteDialog.setVisible(true);
-                if(deleteDialogConfirmed) {
+                if(deleteDialogConfirmed) {//delete has been confirmed
                     int index = MainView.getInstance().indexOfComponent(view);
                     MainView.getInstance().remove(index);
-
-                    model.setIsArchived(true);
-                    saveView();
-                    updateView();
-
+                    if(viewMode == ViewMode.ARCHIVING){//delete task
+                        
+                        TaskPresenter taskPresenter = bucket.getTask(model.getId());
+                        bucket.removeTaskView(taskPresenter);
+                    }
+                    else{
+                        model.setIsArchived(true);
+                        saveView();
+                        updateView();
+                        MainView.getInstance().resetAllBuckets();
+                    }
                 }
             }
         });
@@ -487,7 +495,7 @@ public class TaskPresenter {
         }
         view.revalidate();
         view.repaint();
-        
+
     }
 
     /**
