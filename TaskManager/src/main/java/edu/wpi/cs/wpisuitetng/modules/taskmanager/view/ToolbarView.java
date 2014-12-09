@@ -73,12 +73,12 @@ public class ToolbarView extends JPanel
                     tglbtnArchive.setText("Show Archive");
                     MainView.getInstance().setShowArchived(false);
                 }
-                for(Map.Entry<Integer, BucketPresenter> bucketEntry: MainView.getInstance().getWorkflowPresenter().getBucketPresenters().entrySet()){
-                    BucketPresenter bucket = bucketEntry.getValue();                    
-                    bucket.toggleShowArchived();
-                }                
+                MainView.getInstance().resetAllBuckets();
+            
             }
         });
     }
+    
+
     
 }
