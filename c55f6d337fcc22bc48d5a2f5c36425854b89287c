@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_03002700",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-09T17:48:58Z",
+      "side": 1,
+      "message": "Tabs are used here",
+      "revId": "c55f6d337fcc22bc48d5a2f5c36425854b89287c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_e3040317",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-09T17:48:58Z",
+      "side": 1,
+      "message": "commented out code should not be here",
+      "revId": "c55f6d337fcc22bc48d5a2f5c36425854b89287c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_8313775b",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-09T17:48:58Z",
+      "side": 1,
+      "message": "might want the function description comment, I know it just sets the requiremntes but it is not called setRequirements",
+      "revId": "c55f6d337fcc22bc48d5a2f5c36425854b89287c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_e32b6380",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/TaskView.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-09T17:48:58Z",
+      "side": 1,
+      "message": "unfinished comment",
+      "revId": "c55f6d337fcc22bc48d5a2f5c36425854b89287c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_032787b7",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/TaskView.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-09T17:48:58Z",
+      "side": 1,
+      "message": "unfinished comment",
+      "revId": "c55f6d337fcc22bc48d5a2f5c36425854b89287c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_c31d7f68",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/TaskView.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-09T17:48:58Z",
+      "side": 1,
+      "message": "unfinished comment",
+      "revId": "c55f6d337fcc22bc48d5a2f5c36425854b89287c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_6310134f",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/TaskView.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-09T17:48:58Z",
+      "side": 1,
+      "message": "unfinished comment",
+      "revId": "c55f6d337fcc22bc48d5a2f5c36425854b89287c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_a31afb6b",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/TaskView.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-09T17:48:58Z",
+      "side": 1,
+      "message": "unfinished comment",
+      "revId": "c55f6d337fcc22bc48d5a2f5c36425854b89287c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
