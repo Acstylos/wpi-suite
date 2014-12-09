@@ -9,6 +9,7 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -20,6 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import javax.swing.JComboBox;
 
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
@@ -279,6 +282,7 @@ public class TaskPresenter {
         beforeModel.setActualEffort(model.getActualEffort());
         beforeModel.setDueDate(model.getDueDate());
         beforeModel.setStatus(model.getStatus());
+        beforeModel.setLabelColor(model.getLabelColor());
     }
 
     /**
@@ -440,6 +444,7 @@ public class TaskPresenter {
         model.setDueDate(view.getDueDate());
         model.setAssignedTo(assignedUserList);
         model.setStatus(view.getStatus());
+        model.setLabelColor(view.getLabelColor());
         this.bucket = MainView.getInstance().getWorkflowPresenter()
                 .getBucket(view.getStatus());
     }
@@ -454,6 +459,7 @@ public class TaskPresenter {
         updateCommentView();
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         addUsersToView();
+        miniView.updateLabel();
     }
 
     /**
