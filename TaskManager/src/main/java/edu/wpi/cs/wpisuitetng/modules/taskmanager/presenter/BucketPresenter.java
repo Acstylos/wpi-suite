@@ -17,9 +17,11 @@ import java.util.Map;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
+//import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Entity;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ViewMode;
 import edu.wpi.cs.wpisuitetng.network.Network;
@@ -126,11 +128,11 @@ public class BucketPresenter {
                 taskMap.put(i, new TaskPresenter(i, this, ViewMode.EDITING));
             }
             taskMap.get(i).updateFromDatabase();
-            MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
-            view.addTaskToView(miniTaskView);
         }
+        addMiniTaskstoView();
         view.revalidate();
         view.repaint();
+
     }
 
     /**
@@ -142,16 +144,18 @@ public class BucketPresenter {
     /**
      * Adds a new task to the bucket view, in the form of a miniTaskView
      */
-    public void addNewTaskToView(){
+    public void addNewTaskToView() {
 
-        TaskPresenter taskPresenter = new TaskPresenter(0, this, ViewMode.CREATING);
-        //taskPresenter.createInDatabase();
+        TaskPresenter taskPresenter = new TaskPresenter(0, this,
+                ViewMode.CREATING);
+        // taskPresenter.createInDatabase();
         TaskModel taskModel = taskPresenter.getModel();
         TaskView taskView = taskPresenter.getView();
-        MainView.getInstance().addTab(taskModel.getShortTitle(), Icons.TASK, taskView);
+        MainView.getInstance().addTab(taskModel.getShortTitle(), Icons.TASK,
+                taskView);
         int tabCount = MainView.getInstance().getTabCount();
-        taskView.setIndex(tabCount-1);
-        MainView.getInstance().setSelectedIndex(tabCount-1);
+        taskView.setIndex(tabCount - 1);
+        MainView.getInstance().setSelectedIndex(tabCount - 1);
     }
 
     /**
@@ -168,12 +172,12 @@ public class BucketPresenter {
     }
 
     /**
-     * Adds a task ID to the list of taskIDs in the bucket model. Sends an async update
-     * to the database.
+     * Adds a task ID to the list of taskIDs in the bucket model. Sends an async
+     * update to the database.
      * 
      * @param id
      *            ID of the existing task.
-     * @param taskPresenter 
+     * @param taskPresenter
      *            taskPresenter associated with the task
      */
     public void addTask(int id, TaskPresenter taskPresenter) {
@@ -264,8 +268,9 @@ public class BucketPresenter {
 
     /**
      * Add the miniTaskView to view
+     * 
      * @param miniView
-     *           The miniView associated with the task being added
+     *            The miniView associated with the task being added
      */
     public void addMiniTaskView(MiniTaskView miniView) {
         view.addTaskToView(miniView);
@@ -283,22 +288,38 @@ public class BucketPresenter {
     }
 
     /**
-     * removes all tasks from view and only adds
-     * back based on archive options
+     * removes all tasks from view and only adds back based on archive options
      */
-    public void toggleShowArchived() {
+    public void addMiniTaskstoView() {
         List<Integer> taskIds = model.getTaskIds();
         this.view.resetTaskList();
-        for(int i : taskIds){
+        for (int i : taskIds) {
             MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
-            if (MainView.getInstance().getShowArchived()){
+            if (MainView.getInstance().getShowArchived()) {
                 view.addTaskToView(miniTaskView);
-            }
-            else {
-                if (!taskMap.get(i).getModel().getIsArchived()){
+            } else {
+                if (!taskMap.get(i).getModel().getIsArchived()) {
                     view.addTaskToView(miniTaskView);
                 }
             }
         }
+    }
+
+    /*
+     * removes task from bucketView, presenter, and model
+     * 
+     * @param task presenter of task to be moved
+     */
+
+    public void removeTaskView(TaskPresenter taskPresenter) {
+        taskMap.remove(taskPresenter.getModel().getId());
+        model.removeTaskId(taskPresenter.getModel().getId());
+        view.removeTaskView(taskPresenter.getMiniView());
+        Request request = Network.getInstance().makeRequest(
+                "taskmanager/task/" + this.model.getId(), HttpMethod.DELETE);
+        request.addObserver(new TaskObserver(taskPresenter));
+        request.send();
+        updateInDatabase();
+
     }
 }
