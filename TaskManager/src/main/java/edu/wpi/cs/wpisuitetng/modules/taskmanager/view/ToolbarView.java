@@ -39,7 +39,7 @@ public class ToolbarView extends JPanel
         setLayout(new MigLayout("", "[fill]", "[grow]"));
         
         JButton createNewTaskButton = new JButton("<html>Create<br/>Task</html>");
-        createNewTaskButton.setIcon(Icons.TASKCREATE);
+        createNewTaskButton.setIcon(Icons.CREATE_TASK_LARGE);
         
         
         /**
