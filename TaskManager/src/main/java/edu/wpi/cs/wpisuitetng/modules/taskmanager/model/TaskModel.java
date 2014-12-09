@@ -10,6 +10,7 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
 
+import java.awt.Color;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class TaskModel extends AbstractModel {
     private int actualEffort;
     private Date dueDate;
     private int status;
+    private Color labelColor;
 
     /**
      * Constructor for a default Task object
@@ -50,6 +52,7 @@ public class TaskModel extends AbstractModel {
         estimatedEffort = 0;
         actualEffort = 0;
         status = 1;
+        labelColor=null;
     }
 
     /**
@@ -79,6 +82,7 @@ public class TaskModel extends AbstractModel {
         this.estimatedEffort = estimatedEffort;
         this.dueDate = dueDate;
         this.status = status;
+        this.labelColor=null;
     }
 
     /**
@@ -240,6 +244,7 @@ public class TaskModel extends AbstractModel {
         this.actualEffort = other.getActualEffort();
         this.status = other.getStatus();
         this.activityIds = other.getActivityIds();
+        this.labelColor=other.getLabelColor();
     }
 
     /**
@@ -372,6 +377,21 @@ public class TaskModel extends AbstractModel {
      */
     public void setActualEffort(int actualEffort) {
         this.actualEffort = actualEffort;
+    }
+    
+    /**
+     * 
+     * @return labelColor color of label
+     */
+    public Color getLabelColor() {
+        return labelColor;
+    }
+    /**
+     * 
+     * @param labelColor color for the label to be
+     */
+    public void setLabelColor(Color labelColor) {
+        this.labelColor = labelColor; 
     }
 
     /**

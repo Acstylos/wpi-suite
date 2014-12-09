@@ -9,6 +9,7 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,7 +64,6 @@ public class BucketPresenter {
         this.taskMap = new HashMap<Integer, TaskPresenter>();
         this.model.setId(bucketId);
         this.view = new BucketView(this.model);
-        registerCallbacks();
         load();
     }
 
@@ -127,6 +127,14 @@ public class BucketPresenter {
             }
             taskMap.get(i).updateFromDatabase();
             MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
+            // white does no setBackground to panel.
+            if (taskMap.get(i).getModel().getLabelColor() != null) {
+                if (!taskMap.get(i).getModel().getLabelColor()
+                        .equals(new Color(255, 255, 255))){
+                    miniTaskView.getColorLabel().setBackground(
+                            taskMap.get(i).getModel().getLabelColor());
+                }
+            }
             view.addTaskToView(miniTaskView);
         }
         view.revalidate();
@@ -134,24 +142,19 @@ public class BucketPresenter {
     }
 
     /**
-     * Register callbacks with the local view.
-     */
-    private void registerCallbacks() {
-    }
-    
-    /**
      * Adds a new task to the bucket view, in the form of a miniTaskView
      */
-    public void addNewTaskToView(){
-        
-        TaskPresenter taskPresenter = new TaskPresenter(0, this, ViewMode.CREATING);
-        //taskPresenter.createInDatabase();
+    public void addNewTaskToView() {
+
+        TaskPresenter taskPresenter = new TaskPresenter(0, this,
+                ViewMode.CREATING);
         TaskModel taskModel = taskPresenter.getModel();
         TaskView taskView = taskPresenter.getView();
-        MainView.getInstance().addTab(taskModel.getShortTitle(), Icons.TASK, taskView);
+        MainView.getInstance().addTab(taskModel.getShortTitle(), Icons.TASK,
+                taskView);
         int tabCount = MainView.getInstance().getTabCount();
-        taskView.setIndex(tabCount-1);
-        MainView.getInstance().setSelectedIndex(tabCount-1);
+        taskView.setIndex(tabCount - 1);
+        MainView.getInstance().setSelectedIndex(tabCount - 1);
     }
 
     /**
