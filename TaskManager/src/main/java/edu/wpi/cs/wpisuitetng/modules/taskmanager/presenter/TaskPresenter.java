@@ -19,7 +19,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
@@ -103,7 +105,7 @@ public class TaskPresenter {
             @Override
             public void mouseClicked(MouseEvent e) {
                 MainView.getInstance().addTab(model.getShortTitle(),
-                        Icons.TASK, view);// this line chooses tab title
+                        Icons.TASKEDIT, view);// this line chooses tab title
                 view.setViewMode(ViewMode.EDITING);
                 viewMode = view.getViewMode();
                 int tabCount = MainView.getInstance().getTabCount();
@@ -454,6 +456,7 @@ public class TaskPresenter {
         updateCommentView();
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         addUsersToView();
+        this.setIconForMinitaskView();
     }
 
     /**
@@ -570,5 +573,42 @@ public class TaskPresenter {
     public void setAllowCancelDialogEnabled(boolean enable) {
         this.allowCancelDialog = enable;
         this.cancelDialogConfirmed = !enable; // if the dialog is enabled, the confirmation of the dialog box is opposite
+    }
+    
+    /**
+     * set icon for the task in update view
+     */
+    public void setIconForMinitaskView(){
+    	Calendar cal = Calendar.getInstance();
+        Date nowDate = cal.getTime(); //Current Date
+        Date iniDate = model.getDateCreated();
+        Date dueDate = model.getDueDate();
+        double percentLeft = 0;
+        
+        //Get time differences and convert them in hours 
+        long duration = dueDate.getTime() - iniDate.getTime();
+        long leftTime = dueDate.getTime() - nowDate.getTime();
+        long durInHours = TimeUnit.MILLISECONDS.toHours(duration);
+        long leftInHours = TimeUnit.MILLISECONDS.toHours(leftTime);
+        
+        // Set icons
+        if(leftInHours == 0) { //On the date it's due 
+        	this.miniView.setTaskNameLabelIcon(Icons.TASKDUE);
+        }
+        else {
+        	percentLeft = (leftInHours * 1.00) / (durInHours * 1.00);
+        	if (durInHours < 0 || leftInHours < 0){ //Overdue 
+        		this.miniView.setTaskNameLabelIcon(Icons.TASKDUE);
+            }
+            else if (percentLeft < 0.1){ //Nearly due
+            	this.miniView.setTaskNameLabelIcon(Icons.TASKNEARDUE);
+            }
+            else if (percentLeft < 0.5){ //In progress
+            	this.miniView.setTaskNameLabelIcon(Icons.TASKSTART);
+            }
+            else { //New
+            	this.miniView.setTaskNameLabelIcon(Icons.TASKNEW);
+            }
+        }
     }
 }
