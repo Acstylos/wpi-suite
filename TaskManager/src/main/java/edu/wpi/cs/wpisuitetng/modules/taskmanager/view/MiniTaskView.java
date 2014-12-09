@@ -12,6 +12,7 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 import java.awt.event.MouseListener;
 import java.util.Date;
 
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.TransferHandler;
@@ -78,4 +79,13 @@ public class MiniTaskView extends JPanel {
     public TaskModel getModel() {
         return this.model;
     }
+
+    /**
+     * Set Icon for this miniTaskView
+     * @param icon
+     */
+    public void setTaskNameLabelIcon(Icon icon) {
+    	this.taskNameLabel.setIcon(icon);
+    }
+
 }
