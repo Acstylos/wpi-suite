@@ -9,7 +9,6 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
-import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.datatransfer.DataFlavor;
@@ -27,9 +26,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
-import javax.swing.TransferHandler.TransferSupport;
 
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
@@ -177,6 +174,7 @@ public class TaskPresenter {
             protected void exportDone(JComponent source, Transferable data, int action) {
                 GhostGlassPane glassPane = MainView.getInstance().getGlassPane();
                 glassPane.setVisible(false);
+                miniView.setHighlighted(false);
             }
         });
 
@@ -200,31 +198,12 @@ public class TaskPresenter {
 
                 else {
                     updateBeforeModel();
-                    if (view.getStatus() != bucket.getModel().getId()) { // if
-                                                                         // we
-                                                                         // are
-                                                                         // switching
-                                                                         // buckets
-                        MainView.getInstance()
-                                .getWorkflowPresenter()
-                                .moveTask(model.getId(), view.getStatus(),
-                                        bucket.getModel().getId());
-                        bucket.writeModelToView();
-                        saveView();
-                        updateView();
-                        MainView.getInstance().setTitleAt(index,
-                                model.getShortTitle());
-                        MainView.getInstance().setToolTipTextAt(index, model.getTitle());
-                        addHistory(beforeModel, model);
-                        refreshCommentView();
-                    } else { // not switching buckets
-                        saveView();
-                        updateView();
-                        MainView.getInstance().setTitleAt(index,
-                                model.getShortTitle());
-                        MainView.getInstance().setToolTipTextAt(index, model.getTitle());
-                        addHistory(beforeModel, model);
-                    }
+                    saveView();
+                    updateView();
+                    MainView.getInstance().setTitleAt(index,
+                            model.getShortTitle());
+                    MainView.getInstance().setToolTipTextAt(index, model.getTitle());
+                    addHistory(beforeModel, model);
                 }
 
             }
@@ -504,16 +483,12 @@ public class TaskPresenter {
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
         model.setAssignedTo(assignedUserList);
-        model.setStatus(view.getStatus());
-        this.bucket = MainView.getInstance().getWorkflowPresenter()
-                .getBucket(view.getStatus());
     }
 
     /**
      * Update the view with data from the model
      */
     public void updateView() {
-        view.setStatus(model.getStatus());
         view.setModel(model);
         miniView.setModel(model);
         updateCommentView();

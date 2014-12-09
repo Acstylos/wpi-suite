@@ -53,10 +53,8 @@ public class TaskView extends JPanel {
     private int index;
     private ViewMode viewMode;
 
-    private JComboBox<BucketView> statusComboBox = new JComboBox<BucketView>();
     private JLabel taskNameLabel = new JLabel("Task Name:");
     private JLabel dateLabel = new JLabel("Due Date:");
-    private JLabel statusLabel = new JLabel("Status:");
     private JLabel actualEffortLabel = new JLabel("Actual Effort:");
     private JLabel estEffortLabel = new JLabel("Estimated Effort:");
     private TaskButtonsPanel buttonPanel;
@@ -137,18 +135,12 @@ public class TaskView extends JPanel {
         this.infoPanel.add(taskNameField, "cell 1 0 2 1, grow");
         this.infoPanel.add(dateLabel, "cell 0 1");
         this.infoPanel.add(datePicker, "cell 1 1, grow");
-        statusLabel.setForeground(unmodifiedColor);
-        this.infoPanel.add(statusLabel, "cell 0 2");
-        this.infoPanel.add(statusComboBox, "cell 1 2");
-        // TODO: Integrate this ComboBox with changing tasks between BucketViews
-        this.statusComboBox.setModel(new DefaultComboBoxModel(new String[] {
-                "New", "Selected", "In Progress", "Completed" }));
-        this.infoPanel.add(actualEffortLabel, "cell 0 3");
-        this.infoPanel.add(actualEffortSpinner, "cell 1 3");
+        this.infoPanel.add(actualEffortLabel, "cell 0 2");
+        this.infoPanel.add(actualEffortSpinner, "cell 1 2");
         this.actualEffortSpinner
                 .setModel(new SpinnerNumberModel(0, 0, 99999, 1));
-        this.infoPanel.add(estEffortLabel, "cell 0 4");
-        this.infoPanel.add(estEffortSpinner, "cell 1 4");
+        this.infoPanel.add(estEffortLabel, "cell 0 3");
+        this.infoPanel.add(estEffortSpinner, "cell 1 3");
         this.estEffortSpinner.setModel(new SpinnerNumberModel(0, 0, 99999, 1));
 
         // Format the descriptionPanel layout with components
@@ -184,10 +176,6 @@ public class TaskView extends JPanel {
         ChangeListener changeListener = (ChangeEvent) -> {
             validateFields();
         };
-        
-        ItemListener itemListener = (ItemListener) -> {
-            validateFields();
-        };
 
         /*
          * Re-validate all of the input fields every time any field is changed
@@ -199,9 +187,7 @@ public class TaskView extends JPanel {
         this.datePicker.getEditor().getDocument()
                 .addDocumentListener(validateListener);
         this.descriptionMessage.getDocument().addDocumentListener(
-                validateListener);
-        this.statusComboBox.addItemListener(itemListener);
-        
+                validateListener);        
         setModel(model);
     }
 
@@ -235,14 +221,6 @@ public class TaskView extends JPanel {
      */
     public void addDeleteOnClickListener(ActionListener listener) {
         this.buttonPanel.addDeleteOnClickListener(listener);
-    }
-    
-    /**
-     * This calls something to move the tasks to specified status
-     * @param listener The listener to be added to the ComboBox
-     */
-    public void addChangeStatusListener(ActionListener listener) {
-        this.statusComboBox.addActionListener(listener);
     }
     
     /**
@@ -325,22 +303,6 @@ public class TaskView extends JPanel {
      */
     public ViewMode getViewMode(){
         return this.viewMode;
-    }
-
-    /**
-     * @return The ID of the selected status
-     */
-    public int getStatus() {
-        return this.statusComboBox.getSelectedIndex() + 1;
-    }
-    
-    /**
-     * set the status view for the ComboBox
-     * @param status  the status of the task
-     */
-    public void setStatus(int status) {
-        System.out.println("setStatus:" + status);
-        statusComboBox.setSelectedIndex(status-1);
     }
     
     /**
@@ -439,13 +401,6 @@ public class TaskView extends JPanel {
             isModified = true;
         }
 
-        if (this.getStatus() == this.model.getStatus()) {
-            this.statusLabel.setForeground(unmodifiedColor);
-        } else {
-            this.statusLabel.setForeground(modifiedColor);
-            isModified = true;
-        }
-        
         /* The date value might be null */
         boolean datesAreEqual;
         if (this.getDueDate() == null && this.model.getDueDate() == null) {
