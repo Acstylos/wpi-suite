@@ -12,9 +12,10 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.ArrayList;jfjadfsjkdsjf
+import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.List;k
 
 import com.google.gson.Gson;
 
@@ -34,7 +35,8 @@ public class TaskModel extends AbstractModel {
     private int estimatedEffort;
     private int actualEffort;
     private Date dueDate;
-    private int status;
+    private Date dateCreated;
+	private int status;
 
     /**
      * Constructor for a default Task object
@@ -50,6 +52,9 @@ public class TaskModel extends AbstractModel {
         estimatedEffort = 0;
         actualEffort = 0;
         status = 1;
+        dueDate = null;
+        Calendar cal = Calendar.getInstance();
+        dateCreated = cal.getTime();
     }
 
     /**
@@ -428,5 +433,13 @@ public class TaskModel extends AbstractModel {
     public void addActivityID(int id) {
         activityIds.add(id);
     }
+    
+    
+    /**
+     * @return the date task was created
+     */
+    public Date getDateCreated() {
+		return dateCreated;
+	}
 
 }
