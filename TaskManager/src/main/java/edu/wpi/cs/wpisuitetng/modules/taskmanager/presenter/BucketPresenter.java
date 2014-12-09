@@ -241,6 +241,11 @@ public class BucketPresenter {
         taskPresenter.getModel().setStatus(this.getModel().getId());
         taskPresenter.updateView();
         
+        /* Immediately add the view for instant feedback to the user */
+        if (taskPresenter.getMiniView() != null) {
+            this.view.addTaskToView(taskPresenter.getMiniView());
+        }
+        
         view.setModel(model);
         view.revalidate();
         view.repaint();

@@ -9,19 +9,26 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
+import java.awt.Color;
+import java.awt.Point;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
+import java.awt.dnd.DragSource;
+import java.awt.dnd.DragSourceAdapter;
+import java.awt.dnd.DragSourceDragEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 
@@ -55,11 +62,34 @@ public class MiniTaskView extends JPanel {
 
         /* Initialize a drag when the user clicks on the MiniTaskView */
         MouseAdapter dragAdapter = new MouseAdapter() {
+            @Override
             public void mouseDragged(MouseEvent e) {
                 TransferHandler handler = getTransferHandler();
                 handler.exportAsDrag(MiniTaskView.this, e, TransferHandler.MOVE);
+                
+                /* Set a ghost version of this view to show under the cursor as
+                 * it gets dragged.
+                 */
+                GhostGlassPane glassPane = (GhostGlassPane) getRootPane().getGlassPane();
+                glassPane.setGhostComponent(MiniTaskView.this, e.getPoint());
+                glassPane.setVisible(true);
             }
         };
+        
+        DragSource.getDefaultDragSource().addDragSourceMotionListener(new DragSourceAdapter() {
+            @Override
+            public void dragMouseMoved(DragSourceDragEvent dsde) {
+                /* Move the ghost image when the mouse is moved during a drag */
+                GhostGlassPane glassPane = MainView.getInstance().getGlassPane();
+                Point point = dsde.getLocation();
+                SwingUtilities.convertPointFromScreen(point, glassPane);
+                glassPane.setPoint(point);
+                glassPane.repaint();
+            }
+        });
+        
+
+
         
         this.addMouseMotionListener(dragAdapter);
         this.taskNameLabel.addMouseMotionListener(dragAdapter);

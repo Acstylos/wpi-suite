@@ -34,6 +34,7 @@ import javax.swing.TransferHandler.TransferSupport;
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.GhostGlassPane;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
@@ -168,6 +169,14 @@ public class TaskPresenter {
                         return TaskPresenter.this;
                     }
                 };
+            }
+            
+            /**
+             * Hide the ghosted image after the drag and drop is done
+             */
+            protected void exportDone(JComponent source, Transferable data, int action) {
+                GhostGlassPane glassPane = MainView.getInstance().getGlassPane();
+                glassPane.setVisible(false);
             }
         });
 
