@@ -150,7 +150,7 @@ public class BucketPresenter {
         //taskPresenter.createInDatabase();
         TaskModel taskModel = taskPresenter.getModel();
         TaskView taskView = taskPresenter.getView();
-        MainView.getInstance().addTab(taskModel.getShortTitle(), Icons.TASK, taskView);
+        MainView.getInstance().addTab(taskModel.getShortTitle(), Icons.TASKEDIT, taskView);
         int tabCount = MainView.getInstance().getTabCount();
         taskView.setIndex(tabCount-1);
         MainView.getInstance().setSelectedIndex(tabCount-1);

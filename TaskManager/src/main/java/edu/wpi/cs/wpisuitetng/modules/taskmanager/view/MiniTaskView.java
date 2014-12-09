@@ -12,6 +12,7 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 import java.awt.event.MouseListener;
 import java.util.Date;
 
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -40,6 +41,7 @@ public class MiniTaskView extends JPanel {
      * @param taskName Name of mini task view
      * @param dueDate  Date the task is due
      * @param fullName Full name of the task
+     * @param dateCreated 
      */
     public MiniTaskView(String taskName, Date dueDate, String fullName) {
         setLayout(new MigLayout("fill"));
@@ -104,6 +106,14 @@ public class MiniTaskView extends JPanel {
      */
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+    
+    /**
+     * Set Icon for this miniTaskView
+     * @param icon
+     */
+    public void setTaskNameLabelIcon(Icon icon) {
+    	this.taskNameLabel.setIcon(icon);
     }
 
 
