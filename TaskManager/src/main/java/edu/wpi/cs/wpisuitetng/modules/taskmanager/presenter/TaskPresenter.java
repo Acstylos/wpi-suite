@@ -122,6 +122,7 @@ public class TaskPresenter {
                 MainView.getInstance().addTab(model.getShortTitle(),
                         Icons.TASK, view);// this line chooses tab title
                 view.setViewMode(ViewMode.EDITING);
+                view.getCommentView().toggleTextField(ViewMode.EDITING);
                 viewMode = view.getViewMode();
                 int tabCount = MainView.getInstance().getTabCount();
                 view.setIndex(tabCount - 1);
@@ -159,14 +160,15 @@ public class TaskPresenter {
                                 .moveTask(model.getId(), view.getStatus(),
                                         bucket.getModel().getId());
                         
-                        bucket.writeModelToView();
                         //order of methods matter here.
                         saveView();
-                        addHistory(beforeModel, model);
-                        updateView();
+                        switchBucketUpdateViews();
                         MainView.getInstance().setTitleAt(index,
                                 model.getShortTitle());
                         MainView.getInstance().setToolTipTextAt(index, model.getTitle());
+                        addHistory(beforeModel, model);
+                        view.getCommentView().revalidate();
+                        view.getCommentView().repaint();
                         
                     } else { // not switching buckets
                         saveView();
@@ -369,11 +371,11 @@ public class TaskPresenter {
         } else if (!flag)
             flag = false;
         if (before.getStatus() != after.getStatus()) {
-            if (flag){
+            if (flag)
                 summary += "\n";
             summary += "Task was moved from " + intToStatus(before.getStatus())
                     + " to " + intToStatus(after.getStatus());
-            }
+            
             flag = true;
         }
         
@@ -394,9 +396,9 @@ public class TaskPresenter {
      * @return String the name of the bucket
      */
     private String intToStatus(int bucket) {
-        if (bucket == 1) {
+        if (bucket == 1) 
             return "New";
-        } else if (bucket == 2)
+        else if (bucket == 2)
             return "Selected";
         else if (bucket == 3)
             return "In Progress";
@@ -477,10 +479,6 @@ public class TaskPresenter {
         switch (type) {
         case "Create":
             activity = user + " has created a task on "
-                    + dateFormat.format(cal.getTime());
-            break;
-        case "Move":
-            activity = user + " has moved a task from x to y on "
                     + dateFormat.format(cal.getTime());
             break;
         case "Archive":
@@ -592,6 +590,21 @@ public class TaskPresenter {
         view.setModel(model);
         miniView.setModel(model);
         updateCommentView();
+        assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
+        addUsersToView();
+        miniView.updateLabel();
+    }
+    
+    /**
+     * Similar to updateView but does not call update commentView.
+     * Made in effort to only call revalidate  + repaint at the very end
+     * (i.e. when the task has finished moving to the new bucket.)
+     * Function only used when a task is switching buckets.
+     */
+    private void switchBucketUpdateViews() {
+        view.setStatus(model.getStatus());
+        view.setModel(model);
+        miniView.setModel(model);
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         addUsersToView();
         miniView.updateLabel();

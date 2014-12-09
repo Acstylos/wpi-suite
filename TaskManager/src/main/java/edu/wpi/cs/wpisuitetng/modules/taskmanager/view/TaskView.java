@@ -54,7 +54,7 @@ public class TaskView extends JPanel {
     private ViewMode viewMode;
 
     private JComboBox<BucketView> statusComboBox = new JComboBox<BucketView>();
-    private Color colorsOptions[] = { Color.WHITE, Color.RED, Color.BLUE, Color.GRAY, Color.CYAN, Color.GREEN};
+    private Color colorsOptions[] = { Color.WHITE, Color.YELLOW, Color.RED, Color.GREEN, Color.MAGENTA, Color.GRAY};
     private JComboBox<Color> colorComboBox = new JComboBox <Color>(colorsOptions);
     private JLabel taskNameLabel = new JLabel("Task Name:");
     private JLabel dateLabel = new JLabel("Due Date:");
@@ -63,7 +63,7 @@ public class TaskView extends JPanel {
     private JLabel estEffortLabel = new JLabel("Estimated Effort:");
     private JLabel changeColorLabel = new JLabel ("Category:"); 
     private TaskButtonsPanel buttonPanel;
-    private JTabbedPane commentPanel = new CommentView();
+    private JTabbedPane commentPanel=new CommentView(this.viewMode);
     private JPanel descriptionPanel = new JPanel();
     private JPanel detailsPanel = new JPanel();
     private JPanel infoPanel = new JPanel();
@@ -83,7 +83,7 @@ public class TaskView extends JPanel {
     private final static LineBorder invalidBorder = new LineBorder(Color.RED, 1);
     private final static Color modifiedColor = Color.BLACK;
     private final static Color unmodifiedColor = Color.GRAY;
-    private Color labelColor= null;
+
     static {
         /* Change the default icons for JXDatePicker. */
         UIManager.put("JXDatePicker.arrowIcon", Icons.CALENDAR);
@@ -102,7 +102,6 @@ public class TaskView extends JPanel {
      *            The TaskPresenter that is responsible for this view
      */
     public TaskView(TaskModel model, ViewMode viewMode, TaskPresenter presenter) {
-        this.setBorder(null);
         this.presenter = presenter;
         this.usersPanel = new UserListsView(presenter);
         // Set layouts for all panels
@@ -143,11 +142,11 @@ public class TaskView extends JPanel {
         statusLabel.setForeground(unmodifiedColor);
         this.infoPanel.add(statusLabel, "cell 0 2");
         this.infoPanel.add(statusComboBox, "cell 1 2");
-        // TODO: Integrate this ComboBox with changing tasks between BucketViews
         this.statusComboBox.setModel(new DefaultComboBoxModel(new String[] {
                 "New", "Selected", "In Progress", "Completed" }));
         this.colorComboBox.setRenderer(new ColorRenderer());
         this.colorComboBox.setSelectedIndex(0);
+        this.colorComboBox.setSize(statusComboBox.getSize());
 //        this.colors.add
         this.infoPanel.add(actualEffortLabel, "cell 0 3");
         this.infoPanel.add(actualEffortSpinner, "cell 1 3");
@@ -167,6 +166,8 @@ public class TaskView extends JPanel {
         this.descriptionMessage.setWrapStyleWord(true);
         this.descriptionMessage.setLineWrap(true);
         this.viewMode = viewMode;
+        //if you are in create mode, then comments are disabled.
+        ((CommentView) this.commentPanel).toggleTextField(this.viewMode) ;
 
         DocumentListener validateListener = new DocumentListener() {
             /** {@inheritDoc} */
@@ -529,12 +530,5 @@ public class TaskView extends JPanel {
      */
     public Color getLabelColor() {
         return (Color) colorComboBox.getSelectedItem();
-    }
-    
-    /**
-     * @param labelColor color selected from colorComboBox
-     */
-    public void setLabelColor(Color labelColor) {
-        this.labelColor = (Color) colorComboBox.getSelectedItem();
     }
 }
