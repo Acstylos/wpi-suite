@@ -70,7 +70,7 @@ public class TaskModel extends AbstractModel {
      * @param dueDate
      *            The due date for the task
      * @param status
-     *             the bucket the task belongs in
+     *            the bucket the task belongs in
      */
     public TaskModel(int id, String title, String description,
             int estimatedEffort, Date dueDate, int status) {
@@ -85,58 +85,6 @@ public class TaskModel extends AbstractModel {
         this.labelColor=null;
     }
 
-    /**
-     * Compares the task models before and after it is updated and makes a
-     * string that contains all the user changes
-     * 
-     * @param that
-     *            the task model after it was updated.
-     * @return summary the message which shows what has changed.
-     */
-    public String compareTo(TaskModel that) {
-        boolean flag = false;
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-        String summary = "";
-        if (this.title.compareTo(that.title) != 0) {
-            summary = "Title was changed from " + this.title + " to "
-                    + that.title;
-            flag = true;
-        }
-        if (this.actualEffort != that.actualEffort) {
-            if (flag)
-                summary += "\n";
-            summary += "Actual Effort was changed from " + this.actualEffort
-                    + " to " + that.actualEffort;
-            flag = true;
-        } else if (!flag)
-            flag = false;
-        if (this.estimatedEffort != that.estimatedEffort) {
-            if (flag)
-                summary += "\n";
-            summary += "Estimated Effort was changed from "
-                    + this.estimatedEffort + " to " + that.estimatedEffort;
-            flag = true;
-        } else if (!flag)
-            flag = false;
-        if (this.dueDate.compareTo(that.dueDate) != 0) {
-            if (flag)
-                summary += "\n";
-            summary += "Due Date was changed from "
-                    + dateFormat.format(this.dueDate) + " to "
-                    + dateFormat.format(that.dueDate);
-            flag = true;
-        } else if (!flag)
-            flag = false;
-        if (this.description.compareTo(that.description) != 0) {
-            if (flag)
-                summary += "\n";
-            summary += "Description was changed.";
-        }
-        return summary;
-
-        // will implement "assigned to" changes and "status" from int to enum
-    }
-    
     /**
      * @return The ID of the task. Returns -1 by default
      */
@@ -165,7 +113,7 @@ public class TaskModel extends AbstractModel {
      */
     public void setTitle(String title) {
         this.title = title;
-        this.shortTitle=this.shortenString(title);
+        this.shortTitle = this.shortenString(title);
     }
 
     /**
@@ -182,9 +130,10 @@ public class TaskModel extends AbstractModel {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     /**
-     * @param userList The list of users assigned to this task
+     * @param userList
+     *            The list of users assigned to this task
      */
     public void setAssignedTo(List<Integer> userList) {
         this.assignedTo = new ArrayList<Integer>(userList);
@@ -210,7 +159,7 @@ public class TaskModel extends AbstractModel {
      *            The user to be removed from the list of assigned users
      */
     public void removeUserFromAssignedTo(User user) {
-        this.assignedTo.remove((Object)user.getIdNum());
+        this.assignedTo.remove((Object) user.getIdNum());
     }
 
     /**
@@ -237,7 +186,8 @@ public class TaskModel extends AbstractModel {
     public void copyFrom(TaskModel other) {
         this.title = other.getTitle();
         this.description = other.getDescription();
-        // Make sure we shallow-copy the array list, instead of pass references to it.
+        // Make sure we shallow-copy the array list, instead of pass references
+        // to it.
         this.assignedTo = new ArrayList<Integer>(other.getAssignedTo());
         this.estimatedEffort = other.getEstimatedEffort();
         this.dueDate = other.getDueDate();
@@ -275,10 +225,7 @@ public class TaskModel extends AbstractModel {
 
     /**
      * Convert the given JSON string to a TaskModel instance
-     * 
-     * @param json
-     * 			String to be converted
-     * 
+     * @param json string to be converted
      * @return The JSON string representing the object
      */
     public static TaskModel fromJson(String json) {
@@ -290,9 +237,6 @@ public class TaskModel extends AbstractModel {
      * Convert the given JSON string with a JSON array of tasks into an array of
      * tasks
      * 
-     * @param json
-     * 			String to be converted
-     * 
      * @return TaskModel array
      */
     public static TaskModel[] fromJsonArray(String json) {
@@ -303,7 +247,8 @@ public class TaskModel extends AbstractModel {
     /**
      * Checks if a given object is a TaskModel object
      * 
-     * @param o Object to check
+     * @param o
+     *            Object to check
      * @return true if TaskModel, otherwise false
      * @see edu.wpi.cs.wpisuitetng.modules.Model#identify(java.lang.Object)
      */
@@ -320,21 +265,22 @@ public class TaskModel extends AbstractModel {
 
     /**
      * Takes the title of a task and reduces the number of characters
-     * @param title: string to be modified
+     * 
+     * @param title
+     *            : string to be modified
      * @return String representing shortened title
      */
-    private String shortenString(String title){
-        int maxLength=12;
-        if (title.length() <= maxLength){
+    private String shortenString(String title) {
+        int maxLength = 12;
+        if (title.length() <= maxLength) {
             return title;
-        }
-        else{
-            title=title.substring(0, maxLength);
-            title=title.concat("...");
+        } else {
+            title = title.substring(0, maxLength);
+            title = title.concat("...");
             return title;
         }
     }
-    
+
     /**
      * Will implement later
      */
@@ -421,11 +367,11 @@ public class TaskModel extends AbstractModel {
     public List<Integer> getActivityIds() {
         return activityIds;
     }
-    
+
     /**
      * @return shortTitle shortened title for tabs and MiniTaskView
      */
-    public String getShortTitle(){
+    public String getShortTitle() {
         return this.shortenString(this.title);
     }
 

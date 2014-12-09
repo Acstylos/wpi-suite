@@ -63,14 +63,12 @@ public class ColorRenderer extends JButton implements ListCellRenderer {
 
     /**
      * Convert the string extracted from JComboBox to a string to be printed
-     * out.
-     * Static because will be used in compareTo(beforeTask, afterTask) in
+     * out. Static because will be used in compareTo(beforeTask, afterTask) in
      * TaskPresenter.java
      * 
      * @param string
      *            representation of the color object.
-     * @return string
-     *            the English string of the color object
+     * @return string the English string of the color object
      */
 
     public static String evaluateColor(String c) {
