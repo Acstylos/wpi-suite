@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_8b02733c",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/BucketObserver.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-09T04:49:50Z",
+      "side": 1,
+      "message": "tabs are used all through here too, these should be changed to spaces",
+      "revId": "fe7d224fc9cbaa2e2762dce1378084bec767268f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_6bff4f35",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-09T04:49:50Z",
+      "side": 1,
+      "message": "tabs are used here, they should be spaces",
+      "revId": "fe7d224fc9cbaa2e2762dce1378084bec767268f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
