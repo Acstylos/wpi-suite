@@ -11,8 +11,6 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.dnd.DragGestureEvent;
-import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragSource;
 import java.awt.dnd.DragSourceAdapter;
 import java.awt.dnd.DragSourceDragEvent;
@@ -24,11 +22,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
+import javax.swing.UIManager;
 
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
+
+import org.jfree.chart.block.LineBorder;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 
@@ -57,6 +57,7 @@ public class MiniTaskView extends JPanel {
         taskNameLabel.setBorder(new EmptyBorder(8, 8, 8, 8));
         this.add(taskNameLabel, "dock west");
         this.taskNameLabel.setIcon(Icons.TASK);
+        this.setBorder(new javax.swing.border.LineBorder(Color.GRAY, 1));
         
         this.setModel(model);
 
@@ -73,6 +74,9 @@ public class MiniTaskView extends JPanel {
                 GhostGlassPane glassPane = (GhostGlassPane) getRootPane().getGlassPane();
                 glassPane.setGhostComponent(MiniTaskView.this, e.getPoint());
                 glassPane.setVisible(true);
+                
+                /* Highlight the MiniTaskView to show which task is being dragged */
+                setHighlighted(true);
             }
         };
         
@@ -87,12 +91,26 @@ public class MiniTaskView extends JPanel {
                 glassPane.repaint();
             }
         });
-        
 
-
-        
         this.addMouseMotionListener(dragAdapter);
         this.taskNameLabel.addMouseMotionListener(dragAdapter);
+
+        this.setHighlighted(false);
+    }
+
+    /**
+     * @param If <code>true</code>, this view will be rendered with a different
+     * color scheme to suggest that it's selected.  This is used to indicate
+     * that a task is being dragged and dropped.
+     */
+    public void setHighlighted(boolean highlighted) {
+        if (highlighted) {
+            this.setBackground(UIManager.getColor("textHighlight"));
+            this.taskNameLabel.setForeground(UIManager.getColor("textHighlight").darker());
+        } else {
+            this.setBackground(UIManager.getColor("menu"));
+            this.taskNameLabel.setForeground(UIManager.getColor("textText"));
+        }
     }
 
     /**
