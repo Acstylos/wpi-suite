@@ -67,7 +67,7 @@ public class TaskView extends JPanel {
     private JLabel requirementLabel = new JLabel("Related Requirement:");
     private final JButton requirementButton = new JButton("View Requirement");
     private TaskButtonsPanel buttonPanel;
-    private JTabbedPane commentPanel = new CommentView();
+    private JTabbedPane commentPanel = new CommentView(this.viewMode);
     private JPanel descriptionPanel = new JPanel();
     private JPanel detailsPanel = new JPanel();
     private JPanel infoPanel = new JPanel();
@@ -169,7 +169,9 @@ public class TaskView extends JPanel {
         this.descriptionMessage.setWrapStyleWord(true);
         this.descriptionMessage.setLineWrap(true);
         this.viewMode = viewMode;
-
+        //if you are in create mode, then comments are disabled.
+        ((CommentView) this.commentPanel).toggleTextField(this.viewMode) ;
+        
         DocumentListener validateListener = new DocumentListener() {
             /** {@inheritDoc} */
             @Override
@@ -503,8 +505,13 @@ public class TaskView extends JPanel {
          * Allow the user to save the task if something is modified and
          * everything is still valid.
          */
+        if (this.viewMode == viewMode.ARCHIVING){ 
+        this.buttonPanel.setOkEnabledStatus(true);
+        }
+        else{
         this.buttonPanel.setOkEnabledStatus(isValid && isModified);
 
+        }
         /* Allow the user to reset the fields if something is modified. */
         this.buttonPanel.setClearEnabledStatus(isModified);
 
@@ -533,6 +540,7 @@ public class TaskView extends JPanel {
      * disable editing of task fields within taskView
      */
     public void disableEdits() {
+        buttonPanel.setOkEnabledStatus(true);
         this.taskNameField.setEditable(false);
         this.descriptionMessage.setEditable(false);
         this.actualEffortSpinner.setEnabled(false);
