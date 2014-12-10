@@ -9,10 +9,15 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.swing.TransferHandler;
+import javax.swing.TransferHandler.TransferSupport;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
@@ -138,6 +143,46 @@ public class BucketPresenter {
      * Register callbacks with the local view.
      */
     private void registerCallbacks() {
+        /* Add a handler to let the user drag tasks into this bucket */
+        this.view.setTransferHandler(new TransferHandler() {
+            /**
+             * @return true if it's a task being transfered
+             */
+            @Override
+            public boolean canImport(TransferHandler.TransferSupport support) {
+                try {
+                    TaskPresenter taskPresenter =
+                            (TaskPresenter) support.getTransferable().getTransferData(TaskPresenter.TASK_DATA_FLAVOR);
+                    
+                    /* The task can be imported into this bucket if it's not
+                     * already in it.
+                     */
+                    return taskPresenter.getBucket() != BucketPresenter.this;
+                } catch (UnsupportedFlavorException | IOException e) {
+                    return false;
+                }                
+            }
+            
+            /**
+             * Add the task to this bucket
+             */
+            @Override
+            public boolean importData(TransferSupport support) {
+                try {
+                    TaskPresenter taskPresenter =
+                            (TaskPresenter) support.getTransferable().getTransferData(TaskPresenter.TASK_DATA_FLAVOR);
+                    
+                    BucketPresenter.this.addTask(taskPresenter.getModel().getId(), taskPresenter);
+                    
+                    return true;
+                } catch (UnsupportedFlavorException | IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                
+                return false;
+            }
+        });
     }
 
     /**
@@ -156,14 +201,20 @@ public class BucketPresenter {
     }
 
     /**
-     * remove a task ID from the list of taskIDs in the model Sends an async
-     * update to the database
+     * Remove a task ID from the list of taskIDs in the model, update the
+     * view to not have that task, and update the database to remove the task
+     * from this bucket
      * 
      * @param rmid
      *            ID of the existing task to be removed
      */
     public void removeTask(int rmid) {
         model.removeTaskId(rmid);
+        
+        view.setModel(model);
+        view.revalidate();
+        view.repaint();
+        
         taskMap.remove(rmid);
         updateInDatabase();
     }
@@ -182,6 +233,24 @@ public class BucketPresenter {
         if (!taskMap.containsKey(id)) {
             taskMap.put(id, taskPresenter);
         }
+        
+        if (taskPresenter.getBucket() != this) {
+            taskPresenter.getBucket().removeTask(id);
+            taskPresenter.setBucket(this);
+        }
+        
+        taskPresenter.getModel().setStatus(this.getModel().getId());
+        taskPresenter.updateView();
+        
+        /* Immediately add the view for instant feedback to the user */
+        if (taskPresenter.getMiniView() != null) {
+            this.view.addTaskToView(taskPresenter.getMiniView());
+        }
+        
+        view.setModel(model);
+        view.revalidate();
+        view.repaint();
+        
         updateInDatabase();
     }
 
