@@ -57,6 +57,7 @@ public class BucketObserver implements RequestObserver {
             final BucketModel model = BucketModel.fromJson(response.getBody());
             switch (method) {
         	case GET:
+        	    presenter.writeModelToView();
         		break;
         	case POST:
         		presenter.responsePost(model);
