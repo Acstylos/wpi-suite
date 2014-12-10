@@ -53,9 +53,8 @@ public class BucketView extends JPanel
         this.setMinimumSize(new Dimension(300, 200));
         this.setBackground(Color.LIGHT_GRAY);
         this.setBorder(new EmptyBorder(0, 5, 5, 5));
-        this.setLayout(new MigLayout("fill"));
+        this.setLayout(new MigLayout("", "[grow]", "[grow]"));
         this.titleLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
-        
         // Start by adding the changeable title to the top of the view
         this.add(titlePanel, "dock north");
         this.titlePanel.setBackground(Color.LIGHT_GRAY);
@@ -63,8 +62,8 @@ public class BucketView extends JPanel
         this.titlePanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
         this.titlePanel.add(titleLabel, "cell 0 0, alignx center, aligny center");
         taskScrollPane.setBorder(null);
-        
-        
+
+
         // Need a scroll pane to allow us to scroll through all tasks in the bucketView. 
         this.add(taskScrollPane, "dock north");
         taskViewHolderPanel.setBorder(null);
@@ -74,7 +73,7 @@ public class BucketView extends JPanel
         
         this.setModel(model);
     }
-    
+
     /**
      * @return Returns a list of TaskViews
      */
@@ -90,7 +89,7 @@ public class BucketView extends JPanel
         
         this.titleLabel.setText(this.model.getTitle());
     }
-    
+
     /**
      * Adds a single MiniTaskView to the bucket, with spacers
      * @param task The MiniTaskView to be added to the bucket
