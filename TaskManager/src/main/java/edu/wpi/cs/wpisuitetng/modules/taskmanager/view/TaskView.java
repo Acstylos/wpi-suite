@@ -57,7 +57,7 @@ public class TaskView extends JPanel {
     private JLabel actualEffortLabel = new JLabel("Actual Effort:");
     private JLabel estEffortLabel = new JLabel("Estimated Effort:");
     private TaskButtonsPanel buttonPanel;
-    private JTabbedPane commentPanel = new CommentView();
+    private JTabbedPane commentPanel = new CommentView(this.viewMode);
     private JPanel descriptionPanel = new JPanel();
     private JPanel detailsPanel = new JPanel();
     private JPanel infoPanel = new JPanel();
@@ -150,7 +150,9 @@ public class TaskView extends JPanel {
         this.descriptionMessage.setWrapStyleWord(true);
         this.descriptionMessage.setLineWrap(true);
         this.viewMode = viewMode;
-
+        //if you are in create mode, then comments are disabled.
+        ((CommentView) this.commentPanel).toggleTextField(this.viewMode) ;
+        
         DocumentListener validateListener = new DocumentListener() {
             /** {@inheritDoc} */
             @Override

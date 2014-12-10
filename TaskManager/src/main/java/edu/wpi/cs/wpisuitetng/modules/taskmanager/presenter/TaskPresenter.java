@@ -127,6 +127,7 @@ public class TaskPresenter {
                 } else {
                     miniView.setCollapsedView();
                 }
+                view.getCommentView().toggleTextField(ViewMode.EDITING);
                 bucket.getView().revalidate();
                 bucket.getView().repaint();
             }
@@ -140,6 +141,7 @@ public class TaskPresenter {
                         Icons.TASKEDIT, view);// this line chooses tab title
                 if(model.getIsArchived()){
                     view.setViewMode(ViewMode.ARCHIVING);
+                    view.getCommentView().toggleTextField(ViewMode.ARCHIVING);
                     view.disableEdits();
                 }
                 else{
