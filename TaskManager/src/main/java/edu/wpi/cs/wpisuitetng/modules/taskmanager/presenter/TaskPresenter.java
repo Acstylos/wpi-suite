@@ -86,9 +86,6 @@ public class TaskPresenter {
                 HttpMethod.GET);
         request.addObserver(new UsersObserver(this));
         request.send();
-        Dimension maxView = new Dimension(bucket.getView().getWidth()-32, bucket.getView().getHeight());
-        this.miniView.setMaximumSize(maxView);//prevent horizontal scroll
-        this.miniView.getTaskNameLabel().setMaximumSize(maxView);
         this.activityPresenters = new ArrayList<ActivityPresenter>();
         registerCallbacks();
 
@@ -292,7 +289,7 @@ public class TaskPresenter {
                 + dateFormat.format(cal.getTime()) + "]: ";
         ActivityPresenter activityPresenter = new ActivityPresenter(this,
                 userInformation
-                        + view.getCommentView().getCommentText().getText(),
+                + view.getCommentView().getCommentText().getText(),
                 false);
 
         view.getCommentView().postActivity(activityPresenter.getView());
@@ -401,7 +398,7 @@ public class TaskPresenter {
     public void addUsersToAllUserList(User[] users) {
         this.allUserArray = users;
     }
-    
+
     /**
      * Takes the allUsers array, and checks users with assigned users list
      * all assigned users get added to the assigned view, and all others
@@ -495,7 +492,7 @@ public class TaskPresenter {
      * @return the TaskView for the current TaskPresenter
      */
     public TaskView getView() {
-        return view;
+        return this.view;
     }
 
     /**
@@ -504,7 +501,7 @@ public class TaskPresenter {
      * @return miniView for Task
      */
     public MiniTaskView getMiniView() {
-        return miniView;
+        return this.miniView;
     }
 
     /**
@@ -513,7 +510,7 @@ public class TaskPresenter {
      * @return This provider's model.
      */
     public TaskModel getModel() {
-        return model;
+        return this.model;
     }
 
     /**
@@ -530,6 +527,7 @@ public class TaskPresenter {
             p.load();
             activityPresenters.add(p);
         }
+        this.updateView();
     }
 
     /**

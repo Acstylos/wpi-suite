@@ -70,6 +70,8 @@ public class MiniTaskView extends JPanel {
 
         this.taskNameLabel.setText(this.model.getTitle());
         this.taskNameLabel.setToolTipText(this.model.getTitle());
+        this.revalidate();
+        this.repaint();
     }
 
     /**

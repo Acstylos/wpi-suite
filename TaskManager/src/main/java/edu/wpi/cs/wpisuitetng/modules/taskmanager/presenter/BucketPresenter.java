@@ -37,19 +37,8 @@ public class BucketPresenter {
 
     private BucketView view;
     private BucketModel model;
-    private Map<Integer, TaskPresenter> taskMap;
+    private Map<Integer, TaskPresenter> taskMap = new HashMap<Integer, TaskPresenter>();
     private WorkflowPresenter workflow;
-
-    /**
-     * Constructs a BucketPresenter for the given model.
-     * 
-     * @param model
-     * @param workflow
-     */
-    public BucketPresenter(BucketModel model, WorkflowPresenter workflow) {
-        this.model = model;
-        this.workflow = workflow;
-    }
 
     /**
      * Constructor for a bucket presenter
@@ -60,7 +49,6 @@ public class BucketPresenter {
     public BucketPresenter(int bucketId, WorkflowPresenter workflow) {
         this.workflow = workflow;
         this.model = new BucketModel();
-        this.taskMap = new HashMap<Integer, TaskPresenter>();
         this.model.setId(bucketId);
         this.view = new BucketView(this.model);
         registerCallbacks();
@@ -120,14 +108,13 @@ public class BucketPresenter {
         }
 
         this.view.setModel(this.model);
-        List<Integer> taskIds = model.getTaskIds();
-        for (int i : taskIds) {
+        for (int i : model.getTaskIds()) {
             if (!taskMap.containsKey(i)) {
                 taskMap.put(i, new TaskPresenter(i, this, ViewMode.EDITING));
             }
             taskMap.get(i).updateFromDatabase();
-            MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
-            view.addTaskToView(miniTaskView);
+            
+            this.addMiniTaskView(taskMap.get(i).getMiniView());
         }
         view.revalidate();
         view.repaint();
@@ -138,21 +125,7 @@ public class BucketPresenter {
      */
     private void registerCallbacks() {
     }
-    
-    /**
-     * Adds a new task to the bucket view, in the form of a miniTaskView
-     */
-    public void addNewTaskToView(){
-        
-        TaskPresenter taskPresenter = new TaskPresenter(0, this, ViewMode.CREATING);
-        //taskPresenter.createInDatabase();
-        TaskModel taskModel = taskPresenter.getModel();
-        TaskView taskView = taskPresenter.getView();
-        MainView.getInstance().addTab(taskModel.getShortTitle(), Icons.TASK, taskView);
-        int tabCount = MainView.getInstance().getTabCount();
-        taskView.setIndex(tabCount-1);
-        MainView.getInstance().setSelectedIndex(tabCount-1);
-    }
+
 
     /**
      * remove a task ID from the list of taskIDs in the model Sends an async
@@ -259,7 +232,7 @@ public class BucketPresenter {
      */
     public void setModel(BucketModel model) {
         this.model = model;
-        writeModelToView();
+        this.writeModelToView();
     }
 
     /**
