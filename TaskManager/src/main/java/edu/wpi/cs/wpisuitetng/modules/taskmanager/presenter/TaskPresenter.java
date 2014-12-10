@@ -13,6 +13,8 @@ import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DateFormat;
@@ -22,6 +24,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.swing.JTabbedPane;
 
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
@@ -282,7 +286,13 @@ public class TaskPresenter {
         view.addRequirementButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                ViewEventController.getInstance().editRequirement(reqMap.get(view.getRequirementIndex()-1));
+                if (reqMap.get(view.getRequirementIndex()-1) != null) {
+                    ViewEventController.getInstance().editRequirement(reqMap.get(view.getRequirementIndex()-1));
+                    JTabbedPane janeway = (JTabbedPane)MainView.getInstance().getParent().getParent();
+                    int index = janeway.indexOfTab("Requirement Manager");
+                    janeway.setSelectedIndex(index);
+                }
+
             }
             
         });

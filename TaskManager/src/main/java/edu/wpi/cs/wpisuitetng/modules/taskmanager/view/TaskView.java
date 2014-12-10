@@ -276,6 +276,15 @@ public class TaskView extends JPanel {
     }
     
     /**
+     * set the requirement button to enable or disenable
+     * @param enable
+     *              the boolean value to set the button either enable or disenable
+     */
+    public void setRequirementButtonEnable(boolean enable) {
+        this.requirementButton.setEnabled(enable);
+    }
+    
+    /**
      * Set all of the fields in the view from the data in the model
      * 
      * @param model
