@@ -135,9 +135,12 @@ public class TaskModel extends AbstractModel {
         }
         return summary;
 
+        // grab UserName from ID -- list of userID
+        // presenter.getUserNameById()
+
         // will implement "assigned to" changes and "status" from int to enum
     }
-    
+
     /**
      * @return The ID of the task. Returns -1 by default
      */
@@ -183,7 +186,7 @@ public class TaskModel extends AbstractModel {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     /**
      * @param userList The list of users assigned to this task
      */
@@ -334,7 +337,7 @@ public class TaskModel extends AbstractModel {
             return title;
         }
     }
-    
+
     /**
      * Will implement later
      */
@@ -406,7 +409,7 @@ public class TaskModel extends AbstractModel {
     public List<Integer> getActivityIds() {
         return activityIds;
     }
-    
+
     /**
      * @return shortTitle shortened title for tabs and MiniTaskView
      */

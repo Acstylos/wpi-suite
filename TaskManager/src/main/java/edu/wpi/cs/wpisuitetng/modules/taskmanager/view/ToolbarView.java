@@ -61,32 +61,7 @@ public class ToolbarView extends JPanel
                 MainView.getInstance().setSelectedIndex(tabCount-1);
             }
         });
-        add(createNewTaskButton, "cell 0 0");
-               
-        JLabel lblLegend = new JLabel("Legend:");
-        
-        JLabel labelOverdueIcon = new JLabel("");
-        labelOverdueIcon.setToolTipText("A task that is overdue");
-        labelOverdueIcon.setIcon(new ImageIcon(ToolbarView.class.getResource("/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/task-overdue.png")));
-                
-        JLabel lblDueIcon = new JLabel("");
-        lblDueIcon.setIcon(new ImageIcon(ToolbarView.class.getResource("/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/task-due-very-soon.png")));
-        lblDueIcon.setToolTipText("A task that is nearly due.");
-               
-        JLabel lblDueSoonIcon = new JLabel("");
-        lblDueSoonIcon.setToolTipText("A task that is due soon.");
-        lblDueSoonIcon.setIcon(new ImageIcon(ToolbarView.class.getResource("/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/task-due-soon.png")));
-               
-        JLabel lblNormalIcon = new JLabel("");
-        lblNormalIcon.setToolTipText("A task that is far from due");
-        lblNormalIcon.setIcon(new ImageIcon(ToolbarView.class.getResource("/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/task-normal.png")));
-        
-        add(lblNormalIcon, "cell 0 0, east");
-        add(lblDueSoonIcon, "cell 0 0, east");
-        add(lblDueIcon, "cell 0 0, east");
-        add(labelOverdueIcon, "cell 0 0, east");
-        add(lblLegend, "cell 0 0, east");
-        
+        add(createNewTaskButton, "cell 0 0");        
     }
     
 }

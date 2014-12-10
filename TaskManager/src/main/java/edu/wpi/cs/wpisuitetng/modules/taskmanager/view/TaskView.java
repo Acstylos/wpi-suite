@@ -12,12 +12,9 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.Color;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemListener;
 import java.text.ParseException;
 import java.util.Date;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -53,10 +50,8 @@ public class TaskView extends JPanel {
     private int index;
     private ViewMode viewMode;
 
-    private JComboBox<BucketView> statusComboBox = new JComboBox<BucketView>();
     private JLabel taskNameLabel = new JLabel("Task Name:");
     private JLabel dateLabel = new JLabel("Due Date:");
-    private JLabel statusLabel = new JLabel("Status:");
     private JLabel actualEffortLabel = new JLabel("Actual Effort:");
     private JLabel estEffortLabel = new JLabel("Estimated Effort:");
     private TaskButtonsPanel buttonPanel;
@@ -137,24 +132,17 @@ public class TaskView extends JPanel {
         this.infoPanel.add(taskNameField, "cell 1 0 2 1, grow");
         this.infoPanel.add(dateLabel, "cell 0 1");
         this.infoPanel.add(datePicker, "cell 1 1, grow");
-        statusLabel.setForeground(unmodifiedColor);
-        this.infoPanel.add(statusLabel, "cell 0 2");
-        this.infoPanel.add(statusComboBox, "cell 1 2");
-        // TODO: Integrate this ComboBox with changing tasks between BucketViews
-        this.statusComboBox.setModel(new DefaultComboBoxModel(new String[] {
-                "New", "Selected", "In Progress", "Completed" }));
-        this.infoPanel.add(actualEffortLabel, "cell 0 3");
-        this.infoPanel.add(actualEffortSpinner, "cell 1 3");
-        this.actualEffortSpinner
-                .setModel(new SpinnerNumberModel(0, 0, 99999, 1));
-        this.infoPanel.add(estEffortLabel, "cell 0 4");
-        this.infoPanel.add(estEffortSpinner, "cell 1 4");
+        this.infoPanel.add(actualEffortLabel, "cell 0 2");
+        this.infoPanel.add(actualEffortSpinner, "cell 1 2");
+        this.actualEffortSpinner.setModel(new SpinnerNumberModel(0, 0, 99999, 1));
+        this.infoPanel.add(estEffortLabel, "cell 0 3");
+        this.infoPanel.add(estEffortSpinner, "cell 1 3");
         this.estEffortSpinner.setModel(new SpinnerNumberModel(0, 0, 99999, 1));
 
         // Format the descriptionPanel layout with components
         this.descriptionPanel.add(scrollPane, "cell 0 0,grow");
         this.scrollPane
-                .setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        .setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         this.scrollPane.setViewportView(descriptionMessage);
 
         this.descriptionMessage.setWrapStyleWord(true);
@@ -184,10 +172,6 @@ public class TaskView extends JPanel {
         ChangeListener changeListener = (ChangeEvent) -> {
             validateFields();
         };
-        
-        ItemListener itemListener = (ItemListener) -> {
-            validateFields();
-        };
 
         /*
          * Re-validate all of the input fields every time any field is changed
@@ -197,11 +181,10 @@ public class TaskView extends JPanel {
         this.actualEffortSpinner.addChangeListener(changeListener);
         this.estEffortSpinner.addChangeListener(changeListener);
         this.datePicker.getEditor().getDocument()
-                .addDocumentListener(validateListener);
+        .addDocumentListener(validateListener);
         this.descriptionMessage.getDocument().addDocumentListener(
-                validateListener);
-        this.statusComboBox.addItemListener(itemListener);
-        
+                validateListener);        
+
         setModel(model);
     }
 
@@ -236,15 +219,7 @@ public class TaskView extends JPanel {
     public void addDeleteOnClickListener(ActionListener listener) {
         this.buttonPanel.addDeleteOnClickListener(listener);
     }
-    
-    /**
-     * This calls something to move the tasks to specified status
-     * @param listener The listener to be added to the ComboBox
-     */
-    public void addChangeStatusListener(ActionListener listener) {
-        this.statusComboBox.addActionListener(listener);
-    }
-    
+
     /**
      * Set all of the fields in the view from the data in the model
      * 
@@ -319,7 +294,7 @@ public class TaskView extends JPanel {
         this.viewMode = viewMode;
         buttonPanel.validateButtons(viewMode);
     }
-    
+
     /**
      * @return The view mode of the task
      */
@@ -327,22 +302,6 @@ public class TaskView extends JPanel {
         return this.viewMode;
     }
 
-    /**
-     * @return The ID of the selected status
-     */
-    public int getStatus() {
-        return this.statusComboBox.getSelectedIndex() + 1;
-    }
-    
-    /**
-     * set the status view for the ComboBox
-     * @param status  the status of the task
-     */
-    public void setStatus(int status) {
-        System.out.println("setStatus:" + status);
-        statusComboBox.setSelectedIndex(status-1);
-    }
-    
     /**
      * Check that all fields are valid and update the user interface to provide
      * feedback on what isn't valid.
@@ -433,19 +392,12 @@ public class TaskView extends JPanel {
         } else {
             isModified = true;
         }
-        
+
         if (this.presenter.getAssignedUserList().equals(this.model.getAssignedTo())) {
         } else {
             isModified = true;
         }
 
-        if (this.getStatus() == this.model.getStatus()) {
-            this.statusLabel.setForeground(unmodifiedColor);
-        } else {
-            this.statusLabel.setForeground(modifiedColor);
-            isModified = true;
-        }
-        
         /* The date value might be null */
         boolean datesAreEqual;
         if (this.getDueDate() == null && this.model.getDueDate() == null) {
@@ -471,7 +423,7 @@ public class TaskView extends JPanel {
 
         /* Allow the user to reset the fields if something is modified. */
         this.buttonPanel.setClearEnabledStatus(isModified);
-        
+
         /* Don't show cancel dialog if something hasn't been modified. */
         this.presenter.setAllowCancelDialogEnabled(isModified);
     }
@@ -484,7 +436,7 @@ public class TaskView extends JPanel {
     public CommentView getCommentView() {
         return (CommentView) this.commentPanel;
     }
-    
+
     /**
      * @return returns the panel that users are on
      */
