@@ -92,13 +92,20 @@ public class WorkflowModel extends AbstractModel{
     }
 
     /**
-     * Will implement later
+     * Checks to see if the given object is a workflowModel Obj
      * @see edu.wpi.cs.wpisuitetng.modules.Model#identify(java.lang.Object)
      */
     @Override
     public Boolean identify(Object o) {
-    	// TODO Auto-generated method stub
-    	return null;
+        try{
+            WorkflowModel trial =(WorkflowModel) o;
+            if(o.getClass().equals(this.getClass()))
+                return true;
+            return false;
+        }
+        catch(Exception e){
+            return false;
+        }
     }
     
     /**
@@ -154,5 +161,9 @@ public class WorkflowModel extends AbstractModel{
     	this.id = toCopyFrom.id;
     	this.title = toCopyFrom.title;
     	this.bucketIds = toCopyFrom.bucketIds;
+    }
+    
+    public boolean equals(WorkflowModel that){
+        return(this.id==that.id && this.title.equals(that.title) && this.bucketIds.equals(that.bucketIds));
     }
 }
