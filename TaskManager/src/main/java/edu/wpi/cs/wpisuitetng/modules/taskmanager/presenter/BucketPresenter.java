@@ -152,11 +152,8 @@ public class BucketPresenter {
                 try {
                     TaskPresenter taskPresenter =
                             (TaskPresenter) support.getTransferable().getTransferData(TaskPresenter.TASK_DATA_FLAVOR);
-                    
-                    /* The task can be imported into this bucket if it's not
-                     * already in it.
-                     */
-                    return taskPresenter.getBucket() != BucketPresenter.this;
+
+                    return taskPresenter.getBucket() != BucketPresenter.this;  
                 } catch (UnsupportedFlavorException | IOException e) {
                     return false;
                 }                
@@ -228,14 +225,11 @@ public class BucketPresenter {
      *            taskPresenter associated with the task
      */
     public void addTask(int id, TaskPresenter taskPresenter) {
+        taskPresenter.getBucket().removeTask(id);
+        taskPresenter.setBucket(this);
         model.addTaskID(id);
         if (!taskMap.containsKey(id)) {
         	taskMap.put(id, taskPresenter);
-        }
-        
-        if (taskPresenter.getBucket() != this) {
-            taskPresenter.getBucket().removeTask(id);
-            taskPresenter.setBucket(this);
         }
         
         taskPresenter.getModel().setStatus(this.getModel().getId());

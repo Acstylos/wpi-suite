@@ -11,6 +11,7 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -26,6 +27,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.TransferHandler;
 
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
@@ -35,6 +38,7 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.GhostGlassPane;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ReturnToOrigin;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.VerifyActionDialog;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ViewMode;
@@ -173,8 +177,19 @@ public class TaskPresenter {
              */
             protected void exportDone(JComponent source, Transferable data, int action) {
                 GhostGlassPane glassPane = MainView.getInstance().getGlassPane();
-                glassPane.setVisible(false);
-                miniView.setHighlighted(false);
+                if(action != NONE) {
+                    glassPane.setVisible(false);
+                    miniView.setHighlighted(false);
+                } else {
+                    Point end = SwingUtilities.convertPoint(getBucket().getView(), view.getLocation(), glassPane);
+                    
+                    end.x += glassPane.getStartDragPoint().x;
+                    end.y += glassPane.getStartDragPoint().y;
+                    
+                    Timer backTimer = new Timer(1000 / 60, new ReturnToOrigin(glassPane, glassPane.getPoint(), end));
+                    backTimer.start();
+                    miniView.setHighlighted(false);
+                }
             }
         });
 
