@@ -127,6 +127,7 @@ public class TaskPresenter {
                 } else {
                     miniView.setCollapsedView();
                 }
+                view.getCommentView().toggleTextField(ViewMode.EDITING);
                 bucket.getView().revalidate();
                 bucket.getView().repaint();
             }
