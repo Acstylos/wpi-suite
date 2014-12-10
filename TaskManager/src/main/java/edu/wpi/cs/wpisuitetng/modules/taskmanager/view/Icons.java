@@ -24,8 +24,8 @@ public class Icons {
     public final static Icon CLEAR = new ImageIcon(Icons.class.getResource("clear.png"));
     public final static Icon COMMENT = new ImageIcon(Icons.class.getResource("comment.png"));
     public final static Icon COMMENTS = new ImageIcon(Icons.class.getResource("comments.png"));
-    public final static Icon CREATE_TASK_LARGE = new ImageIcon(Icons.class.getResource("create-task-large.png"));
-    public final static Icon CREATE_TASK = new ImageIcon(Icons.class.getResource("create-task.png"));
+    public final static Icon CREATE_TASK_LARGE = new ImageIcon(Icons.class.getResource("add_task_large.png"));
+    public final static Icon CREATE_TASK = new ImageIcon(Icons.class.getResource("add_task_small.png"));
     public final static Icon ERROR = new ImageIcon(Icons.class.getResource("error.png"));
     public final static Icon ERROR_LARGE = new ImageIcon(Icons.class.getResource("error-large.png"));
     public final static Icon HISTORY = new ImageIcon(Icons.class.getResource("history.png"));
@@ -35,11 +35,10 @@ public class Icons {
     public final static Icon TRASH = new ImageIcon(Icons.class.getResource("trash.png"));
     public final static Icon WORKFLOW = new ImageIcon(Icons.class.getResource("workflow.png"));
     
-    public final static Icon TASKNEW = new ImageIcon(Icons.class.getResource("new_tasks.png"));
-    public final static Icon TASKSTART = new ImageIcon(Icons.class.getResource("middle_tasks.png"));
-    public final static Icon TASKNEARDUE = new ImageIcon(Icons.class.getResource("most_due_tasks.png"));
-    public final static Icon TASKDUE = new ImageIcon(Icons.class.getResource("over_due_tasks.png"));
-    public final static Icon TASKEDIT = new ImageIcon(Icons.class.getResource("edit_tasks.png"));
-    public final static Icon TASKCREATE = new ImageIcon(Icons.class.getResource("add_tasks.png"));
+    public final static Icon TASKNEW = new ImageIcon(Icons.class.getResource("task-normal.png"));
+    public final static Icon TASKSTART = new ImageIcon(Icons.class.getResource("task-due-soon.png"));
+    public final static Icon TASKNEARDUE = new ImageIcon(Icons.class.getResource("task-due-very-soon.png"));
+    public final static Icon TASKDUE = new ImageIcon(Icons.class.getResource("task-overdue.png"));
+    public final static Icon TASKEDIT = new ImageIcon(Icons.class.getResource("task-edit.png"));
   
 }
