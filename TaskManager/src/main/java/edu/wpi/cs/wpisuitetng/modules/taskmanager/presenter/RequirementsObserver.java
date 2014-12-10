@@ -43,9 +43,8 @@ public class RequirementsObserver implements RequestObserver{
         System.out.println(Requirement.fromJsonArray(iReq.getResponse().getBody()));
         Requirement[] requirements = Requirement.fromJsonArray(iReq.getResponse().getBody());
         presenter.mapReqs(requirements);
-        for(int i = 0; i < requirements.length; i++){
-            presenter.getView().addRequirementToComboBox(requirements[i]);
-        }
+        presenter.getView().addRequirementsToComboBox(requirements);
+        presenter.getView().setRequirement(presenter.getModel().getRequirement());
     }
 
     /**
