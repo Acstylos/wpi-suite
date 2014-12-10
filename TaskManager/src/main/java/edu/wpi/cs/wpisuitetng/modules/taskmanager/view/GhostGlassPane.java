@@ -80,20 +80,36 @@ public class GhostGlassPane extends JPanel {
         this.point = point;
     }
 
+    /**
+     * @return The location of the cursor
+     */
+    public Point getPoint() {
+        return this.point;
+    }
+
+    /**
+     * @return The position of where the cursor started dragging
+     */
+    public Point getStartDragPoint() {
+        return this.startDrag;
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         if (isVisible()) {
             Graphics2D g2d = (Graphics2D) g;
 
             if (this.image != null && this.point != null) {
-                g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+                g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                        RenderingHints.VALUE_INTERPOLATION_BICUBIC);
                 g2d.rotate(rotation, this.point.x, this.point.y);
                 g2d.setComposite(this.composite);
                 g2d.drawImage(this.image, this.point.x - this.startDrag.x,
                         this.point.y - this.startDrag.y, null);
 
                 /* Gradually approach the maximum rotation as the user drags */
-                if (rotation < MAX_ROTATION) rotation += MAX_ROTATION / 10.0;
+                if (rotation < MAX_ROTATION)
+                    rotation += MAX_ROTATION / 10.0;
             }
         }
     }

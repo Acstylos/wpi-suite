@@ -14,6 +14,7 @@ import java.awt.Point;
 import java.awt.dnd.DragSource;
 import java.awt.dnd.DragSourceAdapter;
 import java.awt.dnd.DragSourceDragEvent;
+import java.awt.dnd.DragSourceDropEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -28,17 +29,16 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.border.EmptyBorder;
 
-import org.jfree.chart.block.LineBorder;
-
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 
 /**
- * This is the TaskView shown inside of buckets to reduce the amount of clutter on screen
+ * This is the TaskView shown inside of buckets to reduce the amount of clutter
+ * on screen
  */
 public class MiniTaskView extends JPanel {
-    
+
     private TaskModel model;
-    
+
     JLabel taskNameLabel = new JLabel();
 
     /**
@@ -50,7 +50,9 @@ public class MiniTaskView extends JPanel {
 
     /**
      * Create the panel.
-     * @param model The model to render in this view
+     * 
+     * @param model
+     *            The model to render in this view
      */
     public MiniTaskView(TaskModel model) {
         setLayout(new MigLayout("fill"));
@@ -58,7 +60,6 @@ public class MiniTaskView extends JPanel {
         this.add(taskNameLabel, "dock west");
         this.taskNameLabel.setIcon(Icons.TASK);
         this.setBorder(new javax.swing.border.LineBorder(Color.GRAY, 1));
-        
         this.setModel(model);
 
         /* Initialize a drag when the user clicks on the MiniTaskView */
@@ -90,6 +91,7 @@ public class MiniTaskView extends JPanel {
                 glassPane.setPoint(point);
                 glassPane.repaint();
             }
+            
         });
 
         this.addMouseMotionListener(dragAdapter);
@@ -99,14 +101,16 @@ public class MiniTaskView extends JPanel {
     }
 
     /**
-     * @param If <code>true</code>, this view will be rendered with a different
-     * color scheme to suggest that it's selected.  This is used to indicate
-     * that a task is being dragged and dropped.
+     * @param If
+     *            <code>true</code>, this view will be rendered with a different
+     *            color scheme to suggest that it's selected. This is used to
+     *            indicate that a task is being dragged and dropped.
      */
     public void setHighlighted(boolean highlighted) {
         if (highlighted) {
             this.setBackground(UIManager.getColor("textHighlight"));
-            this.taskNameLabel.setForeground(UIManager.getColor("textHighlight").darker());
+            this.taskNameLabel.setForeground(UIManager
+                    .getColor("textHighlight").darker());
         } else {
             this.setBackground(UIManager.getColor("menu"));
             this.taskNameLabel.setForeground(UIManager.getColor("textText"));
@@ -115,15 +119,18 @@ public class MiniTaskView extends JPanel {
 
     /**
      * Add the listener for changing tabs
-     * @param listener  the event that will trigger the action
-     */     
-    public void addOnClickOpenTabView(MouseListener listener){
+     * 
+     * @param listener
+     *            the event that will trigger the action
+     */
+    public void addOnClickOpenTabView(MouseListener listener) {
         this.addMouseListener(listener);
         this.taskNameLabel.addMouseListener(listener);
     }
-    
+
     /**
-     * @param model The model to render in this view
+     * @param model
+     *            The model to render in this view
      */
     public void setModel(TaskModel model) {
         this.model = model;

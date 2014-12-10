@@ -153,10 +153,10 @@ public class BucketPresenter {
                     TaskPresenter taskPresenter =
                             (TaskPresenter) support.getTransferable().getTransferData(TaskPresenter.TASK_DATA_FLAVOR);
                     
-                    /* The task can be imported into this bucket if it's not
+                    /* The task can not be imported into this bucket if it's
                      * already in it.
                      */
-                    return taskPresenter.getBucket() != BucketPresenter.this;
+                    return taskPresenter.getBucket() != BucketPresenter.this;  
                 } catch (UnsupportedFlavorException | IOException e) {
                     return false;
                 }                
