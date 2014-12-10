@@ -99,5 +99,9 @@ public class BucketView extends JPanel
         this.taskViewHolderPanel.add(task, "north");
         Component spacerStrut = Box.createVerticalStrut(5);
         this.taskViewHolderPanel.add(spacerStrut, "north");
+        
+        Dimension maxView = new Dimension((int) this.getPreferredSize().getWidth()-32, (int) this.getMaximumSize().getHeight());
+        task.setMaximumSize(maxView);//prevent horizontal scroll
+        task.getTaskNameLabel().setMaximumSize(maxView);
     }
 }

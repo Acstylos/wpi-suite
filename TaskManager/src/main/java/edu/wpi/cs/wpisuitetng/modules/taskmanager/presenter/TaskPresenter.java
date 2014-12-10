@@ -87,9 +87,6 @@ public class TaskPresenter {
                 HttpMethod.GET);
         request.addObserver(new UsersObserver(this));
         request.send();
-        Dimension maxView = new Dimension(bucket.getView().getWidth()-32, bucket.getView().getHeight());
-        this.miniView.setMaximumSize(maxView);//prevent horizontal scroll
-        this.miniView.getTaskNameLabel().setMaximumSize(new Dimension(maxView.width -50, maxView.height));
         this.activityPresenters = new ArrayList<ActivityPresenter>();
         registerCallbacks();
 
@@ -517,7 +514,7 @@ public class TaskPresenter {
      * @return the TaskView for the current TaskPresenter
      */
     public TaskView getView() {
-        return view;
+        return this.view;
     }
 
     /**
@@ -526,7 +523,7 @@ public class TaskPresenter {
      * @return miniView for Task
      */
     public MiniTaskView getMiniView() {
-        return miniView;
+        return this.miniView;
     }
 
     /**
@@ -535,7 +532,7 @@ public class TaskPresenter {
      * @return This provider's model.
      */
     public TaskModel getModel() {
-        return model;
+        return this.model;
     }
 
     /**
@@ -552,6 +549,7 @@ public class TaskPresenter {
             p.load();
             activityPresenters.add(p);
         }
+        this.updateView();
     }
 
     /**
