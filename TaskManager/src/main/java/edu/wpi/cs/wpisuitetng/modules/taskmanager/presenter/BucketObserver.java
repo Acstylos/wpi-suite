@@ -25,7 +25,7 @@ public class BucketObserver implements RequestObserver {
     private BucketPresenter presenter;
     private HttpMethod method;
 
-    
+
     /** Construct the observer
      * @param presenter
      * 				The presenter that make requests
@@ -51,23 +51,24 @@ public class BucketObserver implements RequestObserver {
 
             // Parse the message
             final BucketModel[] models = BucketModel.fromJsonArray(response.getBody());
-        	presenter.responseGet(models);
+            presenter.responseGet(models);
         }else{
             // Parse the message
             final BucketModel model = BucketModel.fromJson(response.getBody());
             switch (method) {
-        	case GET:
-        		break;
-        	case POST:
-        		presenter.responsePost(model);
-        		break;
-        	case PUT:
-        		presenter.responsePut(model);
-        		break;
-        	case DELETE:
-        		presenter.responseDelete(model);
-        		break;
-        }
+            case GET:
+                presenter.writeModelToView();
+                break;
+            case POST:
+                presenter.responsePost(model);
+                break;
+            case PUT:
+                presenter.responsePut(model);
+                break;
+            case DELETE:
+                presenter.responseDelete(model);
+                break;
+            }
         }
     }
 
@@ -81,14 +82,18 @@ public class BucketObserver implements RequestObserver {
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     @Override
     public void fail(IRequest iReq, Exception exception) {
         System.err.println("The request to " + httpMethodToString(method)
                 + " a bucket failed.");
     }
-
+    
+    /**
+     * @param method_ The HttpMethod related to the request
+     * @return The string corresponding to the specified HttpMethod
+     */
     private static String httpMethodToString(HttpMethod method_) {
         String methodString = "";
         switch (method_) {
