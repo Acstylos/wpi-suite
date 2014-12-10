@@ -580,30 +580,23 @@ public class TaskPresenter {
      */
     public void setIconForMinitaskView(){
     	Calendar cal = Calendar.getInstance();
-        Date nowDate = cal.getTime(); //Current Date
-        Date iniDate = model.getDateCreated();
-        Date dueDate = model.getDueDate();
-        double percentLeft = 0;
-        
-        //Get time differences and convert them in hours 
-        long duration = dueDate.getTime() - iniDate.getTime();
+        Date nowDate = cal.getTime(); //Current Date        
+        Date dueDate = model.getDueDate();     
+        //Get time differences 
         long leftTime = dueDate.getTime() - nowDate.getTime();
-        long durInHours = TimeUnit.MILLISECONDS.toHours(duration);
         long leftInHours = TimeUnit.MILLISECONDS.toHours(leftTime);
-        
         // Set icons
         if(leftInHours == 0) { //On the date it's due 
         	this.miniView.setTaskNameLabelIcon(Icons.TASKDUE);
         }
         else {
-        	percentLeft = (leftInHours * 1.00) / (durInHours * 1.00);
-        	if (durInHours < 0 || leftInHours < 0){ //Overdue 
+        	if (leftInHours < -24){ //Overdue 
         		this.miniView.setTaskNameLabelIcon(Icons.TASKDUE);
             }
-            else if (percentLeft < 0.1){ //Nearly due
+            else if (leftInHours < 0){ //Nearly due
             	this.miniView.setTaskNameLabelIcon(Icons.TASKNEARDUE);
             }
-            else if (percentLeft < 0.5){ //In progress
+            else if (leftInHours < 48){ //In progress
             	this.miniView.setTaskNameLabelIcon(Icons.TASKSTART);
             }
             else { //New
