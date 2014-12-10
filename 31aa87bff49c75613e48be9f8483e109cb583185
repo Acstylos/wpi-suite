@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_46423d11",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/TaskView.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1002800
+      },
+      "writtenOn": "2014-12-10T03:02:30Z",
+      "side": 1,
+      "message": "missing javadoc",
+      "range": {
+        "startLine": 498,
+        "startChar": 11,
+        "endLine": 498,
+        "endChar": 15
+      },
+      "revId": "31aa87bff49c75613e48be9f8483e109cb583185",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_26473921",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/TaskView.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1002800
+      },
+      "writtenOn": "2014-12-10T03:02:30Z",
+      "side": 1,
+      "message": "missnig javadoc",
+      "range": {
+        "startLine": 519,
+        "startChar": 0,
+        "endLine": 519,
+        "endChar": 4
+      },
+      "revId": "31aa87bff49c75613e48be9f8483e109cb583185",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
