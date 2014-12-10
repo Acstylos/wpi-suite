@@ -11,6 +11,7 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
@@ -20,6 +21,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import net.miginfocom.swing.MigLayout;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
 
 /**
@@ -32,7 +34,7 @@ public class MainView extends JTabbedPane {
     private WorkflowPresenter workflowPresenter = new WorkflowPresenter(0);
     private GhostGlassPane glassPane = new GhostGlassPane();
     private static final MainView mainView = new MainView();
-
+    private boolean showArchived = true;
     private MainView() {
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         this.addTab("Workflow", Icons.WORKFLOW, workflowScrollPane);
@@ -87,5 +89,30 @@ public class MainView extends JTabbedPane {
     public void setWorkflowPresenter(WorkflowPresenter workflowPresenter) {
         this.workflowPresenter = workflowPresenter;
         this.workflowScrollPane.setViewportView(workflowPresenter.getView());
+    }
+
+
+    /** indicates if archived tasks are shown
+     * @return if archived tasks are shown
+     */
+    public boolean getShowArchived() {
+        return showArchived;
+    }
+
+    /**set if archived tasks are shown
+     * @param showArchived indicates if archived tasks are shown
+     */
+    public void setShowArchived(boolean showArchived) {
+        this.showArchived = showArchived;
+    }
+    
+    /**
+     * resets and reloads all buckets
+     */
+    public void resetAllBuckets(){
+        for(Map.Entry<Integer, BucketPresenter> bucketEntry: getWorkflowPresenter().getBucketPresenters().entrySet()){
+            BucketPresenter bucket = bucketEntry.getValue();                    
+            bucket.addMiniTaskstoView();
+        }    
     }
 }

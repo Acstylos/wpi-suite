@@ -12,6 +12,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,4 +103,22 @@ public class BucketView extends JPanel
         task.setMaximumSize(maxView);//prevent horizontal scroll
         task.getTaskNameLabel().setMaximumSize(maxView);
     }
+
+    
+    /**
+     * resets the task list by removing all from view
+     */
+    public void resetTaskList(){
+        this.taskViewHolderPanel.removeAll();
+    }
+
+
+/**
+ * Removes miniTaskView from BucketView
+ * @param miniTaskView miniTaskView to be removed
+ */
+public void removeTaskView(MiniTaskView miniTaskView){
+       this.taskViews.remove(miniTaskView);
+   }
+
 }

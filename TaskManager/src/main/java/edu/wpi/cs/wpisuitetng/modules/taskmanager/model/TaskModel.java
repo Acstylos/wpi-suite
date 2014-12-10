@@ -35,6 +35,7 @@ public class TaskModel extends AbstractModel {
     private int actualEffort;
     private Date dueDate;
     private int status;
+    private boolean isArchived;
 
     /**
      * Constructor for a default Task object
@@ -50,6 +51,7 @@ public class TaskModel extends AbstractModel {
         estimatedEffort = 0;
         actualEffort = 0;
         status = 1;
+        isArchived = false;
         dueDate = null;
     }
 
@@ -80,6 +82,7 @@ public class TaskModel extends AbstractModel {
         this.estimatedEffort = estimatedEffort;
         this.dueDate = dueDate;
         this.status = status;
+        this.isArchived = false;
     }
 
     /**
@@ -244,6 +247,7 @@ public class TaskModel extends AbstractModel {
         this.actualEffort = other.getActualEffort();
         this.status = other.getStatus();
         this.activityIds = other.getActivityIds();
+        this.isArchived = other.getIsArchived();
     }
 
     /**
@@ -431,6 +435,20 @@ public class TaskModel extends AbstractModel {
      */
     public void addActivityID(int id) {
         activityIds.add(id);
+    }
+
+    /**
+     * @return if task is archived
+     */
+    public boolean getIsArchived() {
+        return isArchived;
+    }
+
+    /**
+     * @param isArchived boolean indicating if task is archived
+     */
+    public void setIsArchived(boolean isArchived) {
+        this.isArchived = isArchived;
     }
 
 }

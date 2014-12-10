@@ -72,6 +72,11 @@ public class MiniTaskView extends JPanel {
         MouseAdapter dragAdapter = new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                if (MiniTaskView.this.model.getIsArchived()) {
+                    /* Archived tasks cannot be dragged */
+                    return;
+                }
+                
                 TransferHandler handler = getTransferHandler();
                 handler.exportAsDrag(MiniTaskView.this, e, TransferHandler.MOVE);
                 

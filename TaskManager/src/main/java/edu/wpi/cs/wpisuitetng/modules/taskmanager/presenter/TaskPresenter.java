@@ -9,6 +9,7 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -109,6 +110,9 @@ public class TaskPresenter {
     /**
      * Register callbacks with the local view.
      */
+    /**
+     * 
+     */
     private void registerCallbacks() {
         // onclick listener to expand minitaskview when clicked
         miniView.addOnClickOpenExpandedView(new MouseAdapter() {
@@ -132,7 +136,12 @@ public class TaskPresenter {
             public void actionPerformed(ActionEvent e) {
                 MainView.getInstance().addTab(model.getShortTitle(),
                         Icons.TASK, view);// this line chooses tab title
-                view.setViewMode(ViewMode.EDITING);
+                if(model.getIsArchived()){
+                    view.setViewMode(ViewMode.ARCHIVING);
+                }
+                else{
+                    view.setViewMode(ViewMode.EDITING);
+                }
                 viewMode = view.getViewMode();
                 int tabCount = MainView.getInstance().getTabCount();
                 view.setIndex(tabCount - 1);
@@ -210,7 +219,7 @@ public class TaskPresenter {
         });
 
         /**
-         * Open the task tab when a task is clicked
+         * Add listeners to the taskView okButton
          * 
          * @param ActionListener
          */
@@ -225,9 +234,23 @@ public class TaskPresenter {
                     view.setViewMode(ViewMode.EDITING);
                     MainView.getInstance().remove(index);
                     MainView.getInstance().setSelectedIndex(0);
+
                 }
 
                 else {
+
+     if(viewMode == ViewMode.ARCHIVING){
+                        int newIndex = MainView.getInstance().indexOfComponent(view);
+                        MainView.getInstance().remove(newIndex);
+                        model.setIsArchived(false);
+                        saveView();
+                        updateView();
+                        view.enableEdits();
+
+                    }
+                    else{
+                     
+                    }
                     updateBeforeModel();
                     saveView();
                     updateView();
@@ -236,9 +259,13 @@ public class TaskPresenter {
                     MainView.getInstance().setToolTipTextAt(index, model.getTitle());
                     addHistory(beforeModel, model);
                 }
+
+                MainView.getInstance().resetAllBuckets();
+
                 miniView.setModel(model);
                 miniView.revalidate();
                 miniView.repaint();
+
             }
         });
 
@@ -313,7 +340,12 @@ public class TaskPresenter {
             @Override
             public void actionPerformed(ActionEvent e) {
                 deleteDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-                deleteDialog.setCommentLabelText("Are you sure you want to delete this task?");
+                if(viewMode == ViewMode.ARCHIVING){
+                    deleteDialog.setCommentLabelText("Are you sure you want to delete this task?");
+                }
+                else{
+                    deleteDialog.setCommentLabelText("Are you sure you want to archive this task?");
+                }
                 deleteDialog.addConfirmButtonListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -329,10 +361,22 @@ public class TaskPresenter {
                     }
                 });
                 deleteDialog.setVisible(true);
-                if(deleteDialogConfirmed) {
+                if(deleteDialogConfirmed) {//delete has been confirmed
                     int index = MainView.getInstance().indexOfComponent(view);
                     MainView.getInstance().remove(index);
-                    MainView.getInstance().getWorkflowPresenter().archiveTask(model.getId(), bucket.getModel().getId());
+                    if(viewMode == ViewMode.ARCHIVING){//delete task
+                        
+                        TaskPresenter taskPresenter = bucket.getTask(model.getId());
+                        bucket.removeTaskView(taskPresenter);
+                        
+                    }
+                    else{
+                        model.setIsArchived(true);
+                        saveView();
+                        updateView();
+                        view.disableEdits();
+                        MainView.getInstance().resetAllBuckets();
+                    }
                 }
             }
         });
@@ -527,6 +571,17 @@ public class TaskPresenter {
         updateCommentView();
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         addUsersToView();
+        if(model.getIsArchived()){
+            miniView.setBackground(new Color(210,210,210));
+            miniView.getTaskNameLabel().setForeground(new Color(240,240,240));
+        }
+        else{
+            miniView.setBackground(new Color(240,240,240));
+            miniView.getTaskNameLabel().setForeground(Color.BLACK);
+        }
+        view.revalidate();
+        view.repaint();
+
         miniView.setModel(model);
         miniView.setToolTipText(model.getTitle());
     }
