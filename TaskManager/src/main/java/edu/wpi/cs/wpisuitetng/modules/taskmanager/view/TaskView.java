@@ -11,6 +11,7 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.text.ParseException;
@@ -42,6 +43,7 @@ import org.jdesktop.swingx.JXTextArea;
 import org.jdesktop.swingx.JXTextField;
 
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.Requirement;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
 
@@ -525,5 +527,49 @@ public class TaskView extends JPanel {
     public UserListsView getUserListPanel() {
         this.validateFields();
         return this.usersPanel;
+    }
+
+    /**
+     * disable editing of task fields within taskView
+     */
+    public void disableEdits() {
+        this.taskNameField.setEditable(false);
+        this.descriptionMessage.setEditable(false);
+        this.actualEffortSpinner.setEnabled(false);
+        this.estEffortSpinner.setEnabled(false);
+        this.datePicker.setEditable(false);
+        this.getCommentView().getCommentText().setEditable(false);
+        this.taskNameField.setEditable(false);
+       
+        
+        for (Component button : this.getUserListPanel().getAssignedUserListPanel().getComponents()){
+            System.out.println("assingedButton" + button);
+           button.setEnabled(false);   
+        }
+        for (Component button : this.getUserListPanel().getUnassignedUserListPanel().getComponents()){
+            System.out.println("unassignedButton" + button);
+            button.setEnabled(false);   
+         }
+        
+    }
+    
+    /**
+     * re-enable editing of task fields within a taskView
+     */
+    public void enableEdits() {
+        this.taskNameField.setEditable(true);
+        this.descriptionMessage.setEditable(true);
+        this.actualEffortSpinner.setEnabled(true);
+        this.estEffortSpinner.setEnabled(true);
+        this.datePicker.setEditable(true);
+        this.getCommentView().getCommentText().setEditable(true);
+        this.taskNameField.setEditable(true);
+        
+        for (Component button : this.getUserListPanel().getAssignedUserListPanel().getComponents()){
+            button.setEnabled(true);   
+         }
+         for (Component button : this.getUserListPanel().getUnassignedUserListPanel().getComponents()){
+             button.setEnabled(true);   
+          }
     }
 }

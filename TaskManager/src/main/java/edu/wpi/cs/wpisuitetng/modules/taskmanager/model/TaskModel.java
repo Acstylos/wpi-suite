@@ -13,6 +13,7 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -36,7 +37,9 @@ public class TaskModel extends AbstractModel {
     private int estimatedEffort;
     private int actualEffort;
     private Date dueDate;
+    private Date dateCreated;
     private int status;
+    private boolean isArchived;
 
     /**
      * Constructor for a default Task object
@@ -53,7 +56,10 @@ public class TaskModel extends AbstractModel {
         estimatedEffort = 0;
         actualEffort = 0;
         status = 1;
+        isArchived = false;
         dueDate = null;
+        Calendar cal = Calendar.getInstance();
+        dateCreated = cal.getTime();
     }
 
     /**
@@ -83,6 +89,7 @@ public class TaskModel extends AbstractModel {
         this.estimatedEffort = estimatedEffort;
         this.dueDate = dueDate;
         this.status = status;
+        this.isArchived = false;
     }
 
     /**
@@ -267,6 +274,7 @@ public class TaskModel extends AbstractModel {
         this.status = other.getStatus();
         this.activityIds = other.getActivityIds();
         this.requirement = other.getRequirement();
+        this.isArchived = other.getIsArchived();
     }
 
     /**
@@ -454,6 +462,28 @@ public class TaskModel extends AbstractModel {
      */
     public void addActivityID(int id) {
         activityIds.add(id);
+    }
+    
+    
+    /**
+     * @return the date task was created
+     */
+    public Date getDateCreated() {
+		return dateCreated;
+	}
+
+    /**
+     * @return if task is archived
+     */
+    public boolean getIsArchived() {
+        return isArchived;
+    }
+
+    /**
+     * @param isArchived boolean indicating if task is archived
+     */
+    public void setIsArchived(boolean isArchived) {
+        this.isArchived = isArchived;
     }
 
 }
