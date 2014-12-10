@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_e687f15f",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/model/ActivityEntityManager.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1002800
+      },
+      "writtenOn": "2014-12-10T02:10:08Z",
+      "side": 1,
+      "message": "author \u003d the floor is java?",
+      "range": {
+        "startLine": 25,
+        "startChar": 10,
+        "endLine": 25,
+        "endChar": 11
+      },
+      "revId": "c05422a4c7ba503a405db0ac819f491d5a0868f9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_8696e592",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/TaskView.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1002800
+      },
+      "writtenOn": "2014-12-10T02:10:08Z",
+      "side": 1,
+      "message": "what is something? that\u0027s vague. \nU can say something else like this makes a call to open the requirement tab",
+      "range": {
+        "startLine": 263,
+        "startChar": 18,
+        "endLine": 263,
+        "endChar": 27
+      },
+      "revId": "c05422a4c7ba503a405db0ac819f491d5a0868f9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_669301a4",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/TaskView.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1002800
+      },
+      "writtenOn": "2014-12-10T02:10:08Z",
+      "side": 1,
+      "message": "u mean \u0027add a requirement\u0027",
+      "range": {
+        "startLine": 393,
+        "startChar": 23,
+        "endLine": 393,
+        "endChar": 24
+      },
+      "revId": "c05422a4c7ba503a405db0ac819f491d5a0868f9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
