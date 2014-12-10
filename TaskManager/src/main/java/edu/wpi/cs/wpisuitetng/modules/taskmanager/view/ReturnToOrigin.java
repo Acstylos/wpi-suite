@@ -29,7 +29,7 @@ public class ReturnToOrigin implements ActionListener {
     private Point endPoint;
     private GhostGlassPane glassPane;
 
-    private static final double INIT_SPEED = 500.0;
+    private static final double INIT_SPEED = 1000.0;
     private static final double INIT_ACC = 6000.0;
 
     /**

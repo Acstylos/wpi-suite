@@ -181,7 +181,8 @@ public class TaskPresenter {
                     glassPane.setVisible(false);
                     miniView.setHighlighted(false);
                 } else {
-                    Point end = SwingUtilities.convertPoint(getBucket().getView(), view.getLocation(), glassPane);
+                    Point end = new Point(source.getLocationOnScreen());
+                    SwingUtilities.convertPointFromScreen(end, glassPane);
                     
                     end.x += glassPane.getStartDragPoint().x;
                     end.y += glassPane.getStartDragPoint().y;
