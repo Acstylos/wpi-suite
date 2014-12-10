@@ -10,6 +10,7 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.dnd.DragSource;
 import java.awt.dnd.DragSourceAdapter;
@@ -74,6 +75,11 @@ public class MiniTaskView extends JPanel {
         MouseAdapter dragAdapter = new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                if (MiniTaskView.this.model.getIsArchived()) {
+                    /* Archived tasks cannot be dragged */
+                    return;
+                }
+                
                 TransferHandler handler = getTransferHandler();
                 handler.exportAsDrag(MiniTaskView.this, e, TransferHandler.MOVE);
                 
@@ -85,9 +91,7 @@ public class MiniTaskView extends JPanel {
                 glassPane.setVisible(true);
                 
                 /* Highlight the MiniTaskView to show which task is being dragged */
-                setHighlighted(true);
-                
-                setCollapsedView();
+                setColorHighlighted(true);
             }
         };
         
@@ -110,7 +114,7 @@ public class MiniTaskView extends JPanel {
         this.userScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         this.userScrollPane.setBorder(new TitledBorder(null, "Assigned Users", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         this.userScrollPane.setViewportView(userPanel);
-        this.setHighlighted(false);
+        this.setColorHighlighted(false);
     }
 
     /**
@@ -118,14 +122,36 @@ public class MiniTaskView extends JPanel {
      * color scheme to suggest that it's selected.  This is used to indicate
      * that a task is being dragged and dropped.
      */
-    public void setHighlighted(boolean highlighted) {
+    public void setColorHighlighted(boolean highlighted) {
+        Color foreground, background;
+        
         if (highlighted) {
-            this.setBackground(UIManager.getColor("textHighlight"));
-            this.taskNameLabel.setForeground(UIManager.getColor("textHighlight").darker());
+            background = UIManager.getColor("textHighlight");
         } else {
-            this.setBackground(UIManager.getColor("menu"));
-            this.taskNameLabel.setForeground(UIManager.getColor("textText"));
+            background = UIManager.getColor("menu");
         }
+        
+        this.setBackground(background);
+        this.userPanel.setBackground(background);     
+        this.userScrollPane.setBackground(background);
+    }
+
+    /**
+     * @param archived If <code>true</code>, set the colors of the view to
+     * reflect that the task is archived
+     */
+    public void setColorArchived(boolean archived) {
+        Color foreground, background;
+        
+        if (archived) {
+            background = new Color(210, 210, 210);
+        } else {
+            background = UIManager.getColor("menu");
+        }
+        
+        this.setBackground(background);
+        this.userPanel.setBackground(background);     
+        this.userScrollPane.setBackground(background);
     }
 
     /**
@@ -197,7 +223,11 @@ public class MiniTaskView extends JPanel {
         DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd, yyyy");
         this.model = model;
 
-        this.taskNameLabel.setText(this.model.getTitle());
+        if (this.model.getIsArchived()) {
+            this.taskNameLabel.setText(this.model.getTitle() + " (archived)");
+        } else {
+            this.taskNameLabel.setText(this.model.getTitle());
+        }
         this.taskNameLabel.setToolTipText(this.model.getTitle());
         
         if(this.model.getDueDate() != null){
@@ -229,6 +259,9 @@ public class MiniTaskView extends JPanel {
     	this.taskNameLabel.setIcon(icon);
     }
 
+    /**
+     * @return the label containing the task name within this view
+     */
     public JLabel getTaskNameLabel() {
         return this.taskNameLabel;
     }
