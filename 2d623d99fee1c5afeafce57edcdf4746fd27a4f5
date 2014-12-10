@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_c6fc6d41",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/model/ActivityEntityManager.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1002800
+      },
+      "writtenOn": "2014-12-10T07:11:05Z",
+      "side": 1,
+      "message": "Pls remove this",
+      "range": {
+        "startLine": 28,
+        "startChar": 10,
+        "endLine": 28,
+        "endChar": 11
+      },
+      "revId": "2d623d99fee1c5afeafce57edcdf4746fd27a4f5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_46a07d43",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 699,
+      "author": {
+        "id": 1002800
+      },
+      "writtenOn": "2014-12-10T07:11:05Z",
+      "side": 1,
+      "message": "also here",
+      "range": {
+        "startLine": 699,
+        "startChar": 7,
+        "endLine": 699,
+        "endChar": 8
+      },
+      "revId": "2d623d99fee1c5afeafce57edcdf4746fd27a4f5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_e69a5113",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 720,
+      "author": {
+        "id": 1002800
+      },
+      "writtenOn": "2014-12-10T07:11:05Z",
+      "side": 1,
+      "message": "this needs to go away too",
+      "range": {
+        "startLine": 720,
+        "startChar": 0,
+        "endLine": 720,
+        "endChar": 7
+      },
+      "revId": "2d623d99fee1c5afeafce57edcdf4746fd27a4f5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
