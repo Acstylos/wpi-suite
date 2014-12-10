@@ -9,12 +9,11 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
-import java.awt.Dimension;
+import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -22,61 +21,46 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.TransferHandler;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
+import java.awt.Dimension;
 
 /**
  * This is the TaskView shown inside of buckets to reduce the amount of clutter on screen
  */
 public class MiniTaskView extends JPanel {
-
-    private Date dueDate;
-    private String taskName;
-    private String fullName;
+    
+    private static final long serialVersionUID = -5428820718299212324L;
     private JLabel taskNameLabel = new JLabel();
     private JButton editButton = new JButton("Edit");
     private JPanel userPanel = new JPanel();
     private JLabel dueDateLabel = new JLabel();
     private boolean expanded = false;
     private final JScrollPane userScrollPane = new JScrollPane();
-
+    private TaskModel model;
+    
     /**
-     * Create the panel.
-     * @param taskName Name of the task. Might be the short string.
-     * @param dueDate Date the task is due
-     * @param fullName Full Title of the task.
+     * Create the panel. Initially in collapsed view.
+     * @param model The model to render in this view
      */
-    public MiniTaskView(String taskName, Date dueDate, String fullName) {
-        this.taskName = taskName;
-        this.dueDate = dueDate;
-        this.fullName = fullName;
+    public MiniTaskView(TaskModel model) {
+        setMaximumSize(new Dimension(60, 60));
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
-        this.userPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
-        this.setMaximumSize(new Dimension(150, 60));
+        this.setExpandedView();
+        this.setModel(model);
+        
+        this.userPanel.setLayout(new MigLayout("fill"));
+        this.userScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        this.userScrollPane.setBorder(new TitledBorder(null, "Assigned Users", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        this.userScrollPane.setViewportView(userPanel);
+        
+        this.setTransferHandler(new TransferHandler("model"));
     }
-
-    /**
-     * @param taskName Name of the task. Might be the short string.
-     * @param dueDate Date the task is due
-     * @param fullName Full Title of the task.
-     */
-    public void updateMiniTaskView(String taskName, Date dueDate, String fullName){
-        DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd, yyyy");
-        this.taskName = taskName;
-        this.dueDate = dueDate;
-        this.fullName = fullName;
-
-        this.taskNameLabel.setText(this.fullName);
-        this.taskNameLabel.setToolTipText(this.fullName);
-        this.taskNameLabel.setIcon(Icons.TASK);
-
-        if(dueDate != null){
-            this.dueDateLabel.setText("Due : " + dateFormat.format(dueDate));
-        }
-    }
-
+    
     /**
      * Remove all of the components in the view, then add them back in
      * with the proper layout for a collapsed view.
@@ -85,6 +69,7 @@ public class MiniTaskView extends JPanel {
         this.removeAll();
         this.setLayout(new MigLayout("fill"));
         this.add(taskNameLabel, "dock west");
+        this.taskNameLabel.setIcon(Icons.TASK);
         this.expanded = false;
         this.revalidate();
         this.repaint();
@@ -98,17 +83,10 @@ public class MiniTaskView extends JPanel {
     public void setExpandedView(){
         this.removeAll();
 
-        this.setLayout(new MigLayout("", "0[grow][grow]", "0[][][grow][]"));
+        this.setLayout(new MigLayout("", "0[grow][grow]", "0[][][][]"));
         this.add(taskNameLabel, "cell 0 0 2 1");
         this.add(dueDateLabel, "cell 0 1");
-        this.userScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        this.userScrollPane.setBorder(new TitledBorder(null, "Assigned Users", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-
-        this.userScrollPane.setVisible(true);
-        this.userPanel.setVisible(true);
         this.add(userScrollPane, "cell 0 2 2 1,grow");
-        this.userScrollPane.setViewportView(userPanel);
-
         this.expanded = true;
         this.add(editButton, "cell 0 3,alignx left,aligny bottom");
         this.revalidate();
@@ -147,56 +125,18 @@ public class MiniTaskView extends JPanel {
     }
 
     /**
-     * @return the dueDate of the task
+     * @param model The model to render in this view
      */
-    public Date getDueDate() {
-        return this.dueDate;
-    }
+    public void setModel(TaskModel model) {
+        DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd, yyyy");
+        this.model = model;
 
-    /**
-     * @return the task name of the task
-     */
-    public String getTaskName() {
-        return this.taskName;
-    }
-
-    /**
-     * @return Label of taskName
-     */
-    public JLabel getTaskNameLabel() {
-        return taskNameLabel;
-    }
-
-    /**
-     * @param dueDate the dueDate of the task to set
-     */
-    public void setDueDate(Date dueDate) {
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-        this.dueDate = dueDate;
-        this.dueDateLabel.setText(dateFormat.format(dueDate));
-    }
-    /**
-     * @param taskName the title to set
-     * @param fullName the full name of the task
-     */
-    public void setTaskName(String taskName, String fullName) {
-        this.taskName = taskName;
-        this.taskNameLabel.setText(fullName);
-        this.taskNameLabel.setToolTipText(fullName);
-    }
-
-    /**
-     * @return fullName of task
-     */
-    public String getFullName() {
-        return fullName;
-    }
-
-    /**
-     * @param fullName the task name to set
-     */
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+        this.taskNameLabel.setText(this.model.getTitle());
+        this.taskNameLabel.setToolTipText(this.model.getTitle());
+        
+        if(this.model.getDueDate() != null){
+            this.dueDateLabel.setText("Due : " + dateFormat.format(this.model.getDueDate()));
+        }
     }
 
     /**
@@ -206,5 +146,14 @@ public class MiniTaskView extends JPanel {
         return expanded;
     }
 
+    /** 
+     * @return The model that this view renders
+     */
+    public TaskModel getModel() {
+        return this.model;
+    }
 
+    public JLabel getTaskNameLabel() {
+        return this.taskNameLabel;
+    }
 }

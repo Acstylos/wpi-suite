@@ -81,7 +81,7 @@ public class TaskPresenter {
         this.model.setTitle("New Task");
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         this.view = new TaskView(model, viewMode, this);
-        this.miniView = new MiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
+        this.miniView = new MiniTaskView(model);
         this.miniView.setCollapsedView();
         final Request request = Network.getInstance().makeRequest("core/user",
                 HttpMethod.GET);
@@ -103,7 +103,7 @@ public class TaskPresenter {
         miniView.addOnClickOpenExpandedView(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                miniView.updateMiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
+                miniView.setModel(model);
                 if(!miniView.isExpanded()){
                     addUsersToMiniTaskView();
                     miniView.setExpandedView();
@@ -128,7 +128,7 @@ public class TaskPresenter {
                 MainView.getInstance().setSelectedIndex(tabCount - 1);
                 MainView.getInstance().setToolTipTextAt(tabCount - 1,
                         model.getTitle());
-                miniView.updateMiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
+                miniView.setModel(model);
                 miniView.setCollapsedView();
             }
         });
@@ -179,7 +179,7 @@ public class TaskPresenter {
                         addHistory(beforeModel, model);
                     }
                 }
-                miniView.updateMiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
+                miniView.setModel(model);
                 miniView.revalidate();
                 miniView.repaint();
             }
@@ -276,7 +276,6 @@ public class TaskPresenter {
                     int index = MainView.getInstance().indexOfComponent(view);
                     MainView.getInstance().remove(index);
                     MainView.getInstance().getWorkflowPresenter().archiveTask(model.getId(), bucket.getModel().getId());
-                    MainView.getInstance().getArchive().getArchiveBucket().addTaskToView(miniView);
                 }
             }
         });
@@ -471,10 +470,11 @@ public class TaskPresenter {
     public void updateView() {
         view.setStatus(model.getStatus());
         view.setModel(model);
+        miniView.setModel(model);
         updateCommentView();
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         addUsersToView();
-        miniView.updateMiniTaskView(model.getShortTitle(), model.getDueDate(), model.getTitle());
+        miniView.setModel(model);
         miniView.setToolTipText(model.getTitle());
     }
 

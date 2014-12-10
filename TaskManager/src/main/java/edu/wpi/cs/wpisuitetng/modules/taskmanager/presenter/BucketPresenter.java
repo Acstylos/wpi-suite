@@ -62,7 +62,7 @@ public class BucketPresenter {
         this.model = new BucketModel();
         this.taskMap = new HashMap<Integer, TaskPresenter>();
         this.model.setId(bucketId);
-        this.view = new BucketView("Loading...");
+        this.view = new BucketView(this.model);
         registerCallbacks();
         load();
     }
@@ -119,19 +119,15 @@ public class BucketPresenter {
             model.setTitle(name);
         }
 
-        view.setTitle(model.getTitle());
+        this.view.setModel(this.model);
         List<Integer> taskIds = model.getTaskIds();
-        view.setTaskViews(new ArrayList<>());
-        view.setTaskViews(new ArrayList<MiniTaskView>());
         for (int i : taskIds) {
             if (!taskMap.containsKey(i)) {
                 taskMap.put(i, new TaskPresenter(i, this, ViewMode.EDITING));
             }
             taskMap.get(i).updateFromDatabase();
             MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
-            miniTaskView.updateMiniTaskView(taskMap.get(i).getModel().getShortTitle(), 
-                    taskMap.get(i).getModel().getDueDate(), 
-                    taskMap.get(i).getModel().getTitle());
+            miniTaskView.setModel(taskMap.get(i).getModel());
             view.addTaskToView(miniTaskView);
         }
         view.revalidate();
