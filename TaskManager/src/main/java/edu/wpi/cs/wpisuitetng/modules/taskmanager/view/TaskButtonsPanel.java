@@ -82,7 +82,7 @@ public class TaskButtonsPanel extends JPanel {
             okString = "Update";
             clearString = "Undo Changes";
             cancelString = "Close";
-            deleteString = "Delete";
+            deleteString = "Archive";
             this.okButton.setVisible(true);
             this.clearButton.setVisible(true);
             this.cancelButton.setVisible(true);
@@ -90,11 +90,12 @@ public class TaskButtonsPanel extends JPanel {
         } else if (viewMode == ViewMode.ARCHIVING) {
             okString = "Restore";
             clearString = "";
-            cancelString = "";
+            cancelString = "Close";
             deleteString = "Delete";
             this.okButton.setVisible(true);
+            this.okButton.setEnabled(true);
             this.clearButton.setVisible(false);
-            this.cancelButton.setVisible(false);
+            this.cancelButton.setVisible(true);
             this.deleteButton.setVisible(true);
         }
         this.okButton.setText(okString);
