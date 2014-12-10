@@ -11,12 +11,17 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,14 +32,21 @@ import java.util.Map;
 
 import javax.swing.JTabbedPane;
 
+import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import javax.swing.TransferHandler;
+
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.Requirement;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.view.ViewEventController;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.GhostGlassPane;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ReturnToOrigin;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.VerifyActionDialog;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ViewMode;
@@ -60,7 +72,6 @@ public class TaskPresenter {
     private List<Integer> assignedUserList;
     private Map<Integer, Requirement> reqMap = new HashMap<Integer, Requirement>();
     private List<Integer> requirementList;
-    private List<String>  allReqName = new ArrayList<String>();
     /** Dialog variables for use */
     private VerifyActionDialog cancelDialog = new VerifyActionDialog();
     private VerifyActionDialog undoDialog = new VerifyActionDialog();
@@ -72,6 +83,8 @@ public class TaskPresenter {
 
     private BucketPresenter bucket;
     private List<ActivityPresenter> activityPresenters;
+    
+    public final static DataFlavor TASK_DATA_FLAVOR = new DataFlavor(TaskPresenter.class, "Task");
 
     /**
      * Constructs a TaskPresenter for the given model. Constructs the view
@@ -93,17 +106,12 @@ public class TaskPresenter {
         this.assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         this.view = new TaskView(model, viewMode, this);
         this.miniView = new MiniTaskView(model);
+        this.miniView.setCollapsedView();
         final Request userRequest = Network.getInstance().makeRequest("core/user",
                 HttpMethod.GET);
         userRequest.addObserver(new UsersObserver(this));
         userRequest.send();
-        final Request requirementRequest = Network.getInstance().makeRequest("requirementmanager/requirement", 
-                HttpMethod.GET);
-        requirementRequest.addObserver(new RequirementsObserver(this));
-        requirementRequest.send();
-        Dimension maxView = new Dimension(bucket.getView().getWidth()-32, bucket.getView().getHeight());
-        this.miniView.setMaximumSize(maxView);//prevent horizontal scroll
-        this.miniView.getTaskNameLabel().setMaximumSize(maxView);
+        getRequirements();
         this.activityPresenters = new ArrayList<ActivityPresenter>();
         registerCallbacks();
 
@@ -113,10 +121,27 @@ public class TaskPresenter {
      * Register callbacks with the local view.
      */
     private void registerCallbacks() {
-        // onclick listener to open new tabs when minitaskview is clicked
-        miniView.addOnClickOpenTabView(new MouseAdapter() {
+        // onclick listener to expand minitaskview when clicked
+        miniView.addOnClickOpenExpandedView(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                miniView.setModel(model);
+                if(!miniView.isExpanded()){
+                    addUsersToMiniTaskView();
+                    miniView.setExpandedView();
+                } else {
+                    miniView.setCollapsedView();
+                }
+                bucket.getView().revalidate();
+                bucket.getView().repaint();
+            }
+        });
+
+        // on click listener to edit tasks from the expanded task view
+        miniView.addOnClickEditButton(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getRequirements();
                 MainView.getInstance().addTab(model.getShortTitle(),
                         Icons.TASK, view);// this line chooses tab title
                 view.setViewMode(ViewMode.EDITING);
@@ -126,7 +151,73 @@ public class TaskPresenter {
                 MainView.getInstance().setSelectedIndex(tabCount - 1);
                 MainView.getInstance().setToolTipTextAt(tabCount - 1,
                         model.getTitle());
+                miniView.setModel(model);
+                miniView.setCollapsedView();
+            }
+        });
+        
+        /* Set a handler to move the task when it's dragged and dropped */ 
+        miniView.setTransferHandler(new TransferHandler() {
+            /**
+             * @return {@link TransferHandler#MOVE}. At least for now, tasks
+             * are moved, never copied or linked.
+             */
+            @Override
+            public int getSourceActions(JComponent c) {
+                return MOVE;
+            }
+            
+            /**
+             * @return false always, since things can't be dragged onto tasks
+             */
+            @Override
+            public boolean canImport(TransferSupport support) {
+                return false;
+            }
+            
+            /**
+             * @return A transferable for the task presenter
+             */
+            @Override
+            protected Transferable createTransferable(JComponent c) {
+                return new Transferable() {
+                    @Override
+                    public DataFlavor[] getTransferDataFlavors() {
+                        return new DataFlavor[] { TASK_DATA_FLAVOR };
+                    }
 
+                    @Override
+                    public boolean isDataFlavorSupported(DataFlavor flavor) {
+                        return flavor == TASK_DATA_FLAVOR;
+                    }
+
+                    @Override
+                    public Object getTransferData(DataFlavor flavor)
+                            throws UnsupportedFlavorException, IOException {
+                        return TaskPresenter.this;
+                    }
+                };
+            }
+            
+            /**
+             * Hide the ghosted image after the drag and drop is done
+             */
+            protected void exportDone(JComponent source, Transferable data, int action) {
+                GhostGlassPane glassPane = MainView.getInstance().getGlassPane();
+                if(action != NONE) {
+                    glassPane.setVisible(false);
+                    miniView.setHighlighted(false);
+                } else {
+                    Point end = new Point(source.getLocationOnScreen());
+                    SwingUtilities.convertPointFromScreen(end, glassPane);
+                    
+                    end.x += glassPane.getStartDragPoint().x;
+                    end.y += glassPane.getStartDragPoint().y;
+                    
+                    Timer backTimer = new Timer(1000 / 60, new ReturnToOrigin(glassPane, glassPane.getPoint(), end));
+                    backTimer.start();
+                    miniView.setHighlighted(false);
+                }
             }
         });
 
@@ -150,33 +241,16 @@ public class TaskPresenter {
 
                 else {
                     updateBeforeModel();
-                    if (view.getStatus() != bucket.getModel().getId()) { // if
-                                                                         // we
-                                                                         // are
-                                                                         // switching
-                                                                         // buckets
-                        MainView.getInstance()
-                                .getWorkflowPresenter()
-                                .moveTask(model.getId(), view.getStatus(),
-                                        bucket.getModel().getId());
-                        bucket.writeModelToView();
-                        saveView();
-                        updateView();
-                        MainView.getInstance().setTitleAt(index,
-                                model.getShortTitle());
-                        MainView.getInstance().setToolTipTextAt(index, model.getTitle());
-                        addHistory(beforeModel, model);
-                        refreshCommentView();
-                    } else { // not switching buckets
-                        saveView();
-                        updateView();
-                        MainView.getInstance().setTitleAt(index,
-                                model.getShortTitle());
-                        MainView.getInstance().setToolTipTextAt(index, model.getTitle());
-                        addHistory(beforeModel, model);
-                    }
+                    saveView();
+                    updateView();
+                    MainView.getInstance().setTitleAt(index,
+                            model.getShortTitle());
+                    MainView.getInstance().setToolTipTextAt(index, model.getTitle());
+                    addHistory(beforeModel, model);
                 }
-
+                miniView.setModel(model);
+                miniView.revalidate();
+                miniView.repaint();
             }
         });
 
@@ -297,6 +371,16 @@ public class TaskPresenter {
             
         });
     }
+    
+    /**
+     * Sends a network requrest to query all of the available requirements
+     */
+    public void getRequirements() {
+        final Request requirementRequest = Network.getInstance().makeRequest("requirementmanager/requirement", 
+                HttpMethod.GET);
+        requirementRequest.addObserver(new RequirementsObserver(this));
+        requirementRequest.send();
+    }
 
     /**
      * Updates another model with the fields before it gets updated
@@ -323,7 +407,7 @@ public class TaskPresenter {
                 + dateFormat.format(cal.getTime()) + "]: ";
         ActivityPresenter activityPresenter = new ActivityPresenter(this,
                 userInformation
-                        + view.getCommentView().getCommentText().getText(),
+                + view.getCommentView().getCommentText().getText(),
                 false);
 
         view.getCommentView().postActivity(activityPresenter.getView());
@@ -433,7 +517,7 @@ public class TaskPresenter {
     public void addUsersToAllUserList(User[] users) {
         this.allUserArray = users;
     }
-    
+
     /**
      * Takes the allUsers array, and checks users with assigned users list
      * all assigned users get added to the assigned view, and all others
@@ -460,13 +544,6 @@ public class TaskPresenter {
             reqMap.put(reqs[i].getId(), reqs[i]);
         }
     }
-    
-    /**
-     * @return  The List String of requirement Names
-     */
-    public List<String> getRequirementNames(){
-        return allReqName;
-    }
 
     /**
      * Have the presenter reload the view from the model.
@@ -489,24 +566,21 @@ public class TaskPresenter {
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
         model.setAssignedTo(assignedUserList);
-        model.setStatus(view.getStatus());
         model.setRequirement(view.getRequirementIndex());
-        this.bucket = MainView.getInstance().getWorkflowPresenter()
-                .getBucket(view.getStatus());
     }
 
     /**
      * Update the view with data from the model
      */
     public void updateView() {
-        view.setStatus(model.getStatus());
         view.setRequirement(model.getRequirement());
         view.setModel(model);
         miniView.setModel(model);
         updateCommentView();
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         addUsersToView();
-
+        miniView.setModel(model);
+        miniView.setToolTipText(model.getTitle());
     }
 
     /**
@@ -548,7 +622,7 @@ public class TaskPresenter {
      * @return the TaskView for the current TaskPresenter
      */
     public TaskView getView() {
-        return view;
+        return this.view;
     }
 
     /**
@@ -557,7 +631,7 @@ public class TaskPresenter {
      * @return miniView for Task
      */
     public MiniTaskView getMiniView() {
-        return miniView;
+        return this.miniView;
     }
 
     /**
@@ -566,7 +640,7 @@ public class TaskPresenter {
      * @return This provider's model.
      */
     public TaskModel getModel() {
-        return model;
+        return this.model;
     }
 
     /**
@@ -583,6 +657,7 @@ public class TaskPresenter {
             p.load();
             activityPresenters.add(p);
         }
+        this.updateView();
     }
 
     /**
@@ -591,6 +666,14 @@ public class TaskPresenter {
      */
     public BucketPresenter getBucket() {
         return bucket;
+    }
+
+    /**
+     * @param bucket the bucket that this task is in
+     */
+    public void setBucket(BucketPresenter bucket) {
+        this.bucket = bucket;
+        this.model.setStatus(bucket.getModel().getId());
     }
 
     /**
@@ -611,8 +694,9 @@ public class TaskPresenter {
         this.assignedUserList.add(user.getIdNum());
         this.view.validateFields();
     }
-    
+
     /**
+<<<<<<< HEAD
      * Removes a requirement from the requirement list
      * @param req
      *          Requirement to add to requirementList
@@ -633,11 +717,14 @@ public class TaskPresenter {
     
     /**
      * @return A shallow copy of the temporary assigned users list, not the model's user list
+=======
+     * @return assigned users list
+>>>>>>> dcac836b8c72b686d23b3af398ccb71cf6f4dd41
      */
     public List<Integer> getAssignedUserList() {
         return this.assignedUserList;
     }
-    
+
     /**
      * 
      * @return  a copy of the temporary requirementList, not the model's requirementList
@@ -652,5 +739,18 @@ public class TaskPresenter {
     public void setAllowCancelDialogEnabled(boolean enable) {
         this.allowCancelDialog = enable;
         this.cancelDialogConfirmed = !enable; // if the dialog is enabled, the confirmation of the dialog box is opposite
+    }
+
+    /**
+     * Wrapper function to add all assigned users to the miniTaskView
+     */
+    public void addUsersToMiniTaskView(){
+        List<String> userNames = new ArrayList<String>();
+        for(User user: allUserArray){
+            if(assignedUserList.contains(user.getIdNum())){
+                userNames.add(user.getName());
+            }
+        }
+        miniView.addUsersToUserPanel(userNames);
     }
 }
