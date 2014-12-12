@@ -126,14 +126,7 @@ public class BucketPresenter {
             MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
             miniTaskView.setModel(taskMap.get(i).getModel());
 
-            // white does no setBackground to panel.
-            if (taskMap.get(i).getModel().getLabelColor() != null) {
-                if (!taskMap.get(i).getModel().getLabelColor()
-                        .equals(new Color(255, 255, 255))){
-                    miniTaskView.getColorLabel().setBackground(
-                            taskMap.get(i).getModel().getLabelColor());
-                }
-            }
+            taskMap.get(i).validateUpdateColorLabel();
             view.addTaskToView(miniTaskView);
             this.addMiniTaskView(taskMap.get(i).getMiniView());
             
