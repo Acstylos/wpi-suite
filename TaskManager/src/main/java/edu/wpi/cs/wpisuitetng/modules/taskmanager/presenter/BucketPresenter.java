@@ -10,17 +10,24 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import java.awt.Color;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.TransferHandler;
+import javax.swing.TransferHandler.TransferSupport;
+
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
+//import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Entity;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ViewMode;
 import edu.wpi.cs.wpisuitetng.network.Network;
@@ -38,19 +45,8 @@ public class BucketPresenter {
 
     private BucketView view;
     private BucketModel model;
-    private Map<Integer, TaskPresenter> taskMap;
+    private Map<Integer, TaskPresenter> taskMap = new HashMap<Integer, TaskPresenter>();
     private WorkflowPresenter workflow;
-
-    /**
-     * Constructs a BucketPresenter for the given model.
-     * 
-     * @param model
-     * @param workflow
-     */
-    public BucketPresenter(BucketModel model, WorkflowPresenter workflow) {
-        this.model = model;
-        this.workflow = workflow;
-    }
 
     /**
      * Constructor for a bucket presenter
@@ -61,9 +57,9 @@ public class BucketPresenter {
     public BucketPresenter(int bucketId, WorkflowPresenter workflow) {
         this.workflow = workflow;
         this.model = new BucketModel();
-        this.taskMap = new HashMap<Integer, TaskPresenter>();
         this.model.setId(bucketId);
         this.view = new BucketView(this.model);
+        registerCallbacks();
         load();
     }
 
@@ -88,8 +84,8 @@ public class BucketPresenter {
             request.setBody(model.toJson());
         }
         request.addObserver(new BucketObserver(this, method)); // add an
-                                                               // observer to
-                                                               // the response
+        // observer to
+        // the response
         request.send();
     }
 
@@ -120,70 +116,141 @@ public class BucketPresenter {
         }
 
         this.view.setModel(this.model);
-        List<Integer> taskIds = model.getTaskIds();
-        for (int i : taskIds) {
+        for (int i : model.getTaskIds()) {
             if (!taskMap.containsKey(i)) {
                 taskMap.put(i, new TaskPresenter(i, this, ViewMode.EDITING));
             }
             taskMap.get(i).updateFromDatabase();
+
+
             MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
-            // white does no setBackground to panel.
-            if (taskMap.get(i).getModel().getLabelColor() != null) {
-                if (!taskMap.get(i).getModel().getLabelColor()
-                        .equals(new Color(255, 255, 255))){
-                    miniTaskView.getColorLabel().setBackground(
-                            taskMap.get(i).getModel().getLabelColor());
-                }
-            }
+            miniTaskView.setModel(taskMap.get(i).getModel());
+
+            taskMap.get(i).validateUpdateColorLabel();
             view.addTaskToView(miniTaskView);
+            this.addMiniTaskView(taskMap.get(i).getMiniView());
+            
         }
+        addMiniTaskstoView();
         view.revalidate();
         view.repaint();
+
+    }
+
+    /**
+     * Register callbacks with the local view.
+     */
+    private void registerCallbacks() {
+        /* Add a handler to let the user drag tasks into this bucket */
+        this.view.setTransferHandler(new TransferHandler() {
+            /**
+             * @return true if it's a task being transfered
+             */
+            @Override
+            public boolean canImport(TransferHandler.TransferSupport support) {
+                try {
+                    TaskPresenter taskPresenter =
+                            (TaskPresenter) support.getTransferable().getTransferData(TaskPresenter.TASK_DATA_FLAVOR);
+                    
+                    /* The task can be imported into this bucket if it's not
+                     * already in it.
+                     */
+                    return taskPresenter.getBucket() != BucketPresenter.this;
+                } catch (UnsupportedFlavorException | IOException e) {
+                    return false;
+                }                
+            }
+            
+            /**
+             * Add the task to this bucket
+             */
+            @Override
+            public boolean importData(TransferSupport support) {
+                try {
+                    TaskPresenter taskPresenter =
+                            (TaskPresenter) support.getTransferable().getTransferData(TaskPresenter.TASK_DATA_FLAVOR);
+                    
+                    BucketPresenter.this.addTask(taskPresenter.getModel().getId(), taskPresenter);
+                    
+                    return true;
+                } catch (UnsupportedFlavorException | IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                
+                return false;
+            }
+        });
     }
 
     /**
      * Adds a new task to the bucket view, in the form of a miniTaskView
      */
-    public void addNewTaskToView() {
+    public void addNewMiniTaskToView() {
 
         TaskPresenter taskPresenter = new TaskPresenter(0, this,
                 ViewMode.CREATING);
+        // taskPresenter.createInDatabase();
         TaskModel taskModel = taskPresenter.getModel();
         TaskView taskView = taskPresenter.getView();
-        MainView.getInstance().addTab(taskModel.getShortTitle(), Icons.TASK,
-                taskView);
+        MainView.getInstance().addTab(taskModel.getShortTitle(), Icons.TASKEDIT, taskView);
         int tabCount = MainView.getInstance().getTabCount();
         taskView.setIndex(tabCount - 1);
         MainView.getInstance().setSelectedIndex(tabCount - 1);
     }
 
+
     /**
-     * remove a task ID from the list of taskIDs in the model Sends an async
-     * update to the database
+     * Remove a task ID from the list of taskIDs in the model, update the
+     * view to not have that task, and update the database to remove the task
+     * from this bucket
      * 
      * @param rmid
      *            ID of the existing task to be removed
      */
     public void removeTask(int rmid) {
         model.removeTaskId(rmid);
+        
+        view.setModel(model);
+        view.revalidate();
+        view.repaint();
+        
         taskMap.remove(rmid);
         updateInDatabase();
     }
 
     /**
-     * Adds a task ID to the list of taskIDs in the bucket model. Sends an async update
-     * to the database.
+     * Adds a task ID to the list of taskIDs in the bucket model. Sends an async
+     * update to the database.
      * 
      * @param id
      *            ID of the existing task.
-     * @param taskPresenter 
+     * @param taskPresenter
      *            taskPresenter associated with the task
      */
     public void addTask(int id, TaskPresenter taskPresenter) {
         model.addTaskID(id);
         if (!taskMap.containsKey(id)) {
-        	taskMap.put(id, taskPresenter);
+            taskMap.put(id, taskPresenter);
         }
+        
+        if (taskPresenter.getBucket() != this) {
+            taskPresenter.getBucket().removeTask(id);
+            taskPresenter.setBucket(this);
+        }
+        
+        taskPresenter.getModel().setStatus(this.getModel().getId());
+        taskPresenter.updateView();
+        
+        /* Immediately add the view for instant feedback to the user */
+        if (taskPresenter.getMiniView() != null) {
+            this.view.addTaskToView(taskPresenter.getMiniView());
+        }
+        
+        view.setModel(model);
+        view.revalidate();
+        view.repaint();
+        
         updateInDatabase();
     }
 
@@ -262,13 +329,14 @@ public class BucketPresenter {
      */
     public void setModel(BucketModel model) {
         this.model = model;
-        writeModelToView();
+        this.writeModelToView();
     }
 
     /**
      * Add the miniTaskView to view
+     * 
      * @param miniView
-     *           The miniView associated with the task being added
+     *            The miniView associated with the task being added
      */
     public void addMiniTaskView(MiniTaskView miniView) {
         view.addTaskToView(miniView);
@@ -283,5 +351,41 @@ public class BucketPresenter {
      */
     public TaskPresenter getTask(int id) {
         return taskMap.get(id);
+    }
+
+    /**
+     * removes all tasks from view and only adds back based on archive options
+     */
+    public void addMiniTaskstoView() {
+        List<Integer> taskIds = model.getTaskIds();
+        this.view.resetTaskList();
+        for (int i : taskIds) {
+            MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
+            if (MainView.getInstance().getShowArchived()) {
+                view.addTaskToView(miniTaskView);
+            } else {
+                if (!taskMap.get(i).getModel().getIsArchived()) {
+                    view.addTaskToView(miniTaskView);
+                }
+            }
+        }
+    }
+
+    /*
+     * removes task from bucketView, presenter, and model
+     * 
+     * @param task presenter of task to be moved
+     */
+
+    public void removeTaskView(TaskPresenter taskPresenter) {
+        taskMap.remove(taskPresenter.getModel().getId());
+        model.removeTaskId(taskPresenter.getModel().getId());
+        view.removeTaskView(taskPresenter.getMiniView());
+        Request request = Network.getInstance().makeRequest(
+                "taskmanager/task/" + this.model.getId(), HttpMethod.DELETE);
+        request.addObserver(new TaskObserver(taskPresenter));
+        request.send();
+        updateInDatabase();
+
     }
 }
