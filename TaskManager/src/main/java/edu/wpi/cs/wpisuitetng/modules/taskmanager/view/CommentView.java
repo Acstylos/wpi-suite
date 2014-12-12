@@ -80,7 +80,6 @@ public class CommentView extends JTabbedPane {
         this.clearCommentButton.setIcon(Icons.CLEAR);
         this.setupListeners();
     }
-    
     /**
      * If the current ViewMode is CREATING,
      * then we disable the post and clear comment buttons, and replace the background text for JTextBox.
@@ -92,13 +91,6 @@ public class CommentView extends JTabbedPane {
             if(currentView.equals(ViewMode.CREATING)){
                 this.commentText.setEditable(false);
                 this.commentText.setPrompt("Comments unavailable until task created.");
-                this.commentText.setPromptForeground(Color.GRAY);
-                this.postCommentButton.setEnabled(false);
-                this.clearCommentButton.setEnabled(false);
-            }
-            else if(currentView.equals(ViewMode.ARCHIVING)){
-                this.commentText.setEditable(false);
-                this.commentText.setPrompt("Comments unavailable because task is Archived.");
                 this.commentText.setPromptForeground(Color.GRAY);
                 this.postCommentButton.setEnabled(false);
                 this.clearCommentButton.setEnabled(false);

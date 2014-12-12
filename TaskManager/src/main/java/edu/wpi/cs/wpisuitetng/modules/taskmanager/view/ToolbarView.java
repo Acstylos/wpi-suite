@@ -13,7 +13,6 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
@@ -21,14 +20,8 @@ import net.miginfocom.swing.MigLayout;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Map;
-
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 
 /**
  * Sets up upper toolbar of TaskManager tab
@@ -41,10 +34,9 @@ public class ToolbarView extends JPanel
     /**
      * Creates and positions option buttons in upper toolbar
      * @param visible boolean
-     * @throws IOException 
      */
     public ToolbarView() {
-        setLayout(new MigLayout("fill"));
+        setLayout(new MigLayout("", "[fill]", "[grow]"));
         
         JButton createNewTaskButton = new JButton("<html>Create<br/>Task</html>");
         createNewTaskButton.setIcon(Icons.CREATE_TASK_LARGE);
@@ -63,33 +55,7 @@ public class ToolbarView extends JPanel
                 MainView.getInstance().setSelectedIndex(tabCount-1);
             }
         });
-
-        add(createNewTaskButton, "cell 0 0");        
-        
-        JToggleButton tglbtnArchive = new JToggleButton("<html>Hide<br/>Archived</html>");
-        tglbtnArchive.setIcon(Icons.HIDE_ARCHIVE_LARGE);
-        tglbtnArchive.setSelected(true);
-        add(tglbtnArchive, "cell 0 0");
-
-        tglbtnArchive.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                if (tglbtnArchive.isSelected()) {
-                    /* Show all tasks */
-                    tglbtnArchive.setText("<html>Hide<br/>Archived</html>");
-                    MainView.getInstance().setShowArchived(true);
-                    tglbtnArchive.setIcon(Icons.HIDE_ARCHIVE_LARGE);
-                } else {
-                    /* Only show non-archived tasks */
-                    tglbtnArchive.setText("<html>Show<br/>Archived</html>");
-                    MainView.getInstance().setShowArchived(false);
-                    tglbtnArchive.setIcon(Icons.SHOW_ARCHIVE_LARGE);
-                }
-
-                MainView.getInstance().resetAllBuckets();
-            }
-        });
+        add(createNewTaskButton, "cell 0 0");
     }
-    
-
     
 }
