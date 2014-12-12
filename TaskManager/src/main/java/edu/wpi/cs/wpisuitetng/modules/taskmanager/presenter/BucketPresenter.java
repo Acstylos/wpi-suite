@@ -134,7 +134,7 @@ public class BucketPresenter {
         addMiniTaskstoView();
         view.revalidate();
         view.repaint();
-
+ 
     }
 
     /**
