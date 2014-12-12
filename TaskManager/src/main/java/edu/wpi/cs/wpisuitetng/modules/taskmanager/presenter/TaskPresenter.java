@@ -924,4 +924,20 @@ public class TaskPresenter {
         }
         miniView.addUsersToUserPanel(userNames);
     }
+    
+    /**
+     * check if the label is null, 
+     * then if it is not, then update the miniview to the color of the task's colorLabel
+     * @param model taskModel containing a colorLabel
+     */
+    public void validateUpdateLabel() {
+        // white does no setBackground to panel.
+        if (this.getModel().getLabelColor() != null) {
+            if (!this.getModel().getLabelColor()
+                    .equals(new Color(255, 255, 255))){
+                this.getMiniView().getColorLabel().setBackground(
+                        this.getModel().getLabelColor());
+            }
+        }        
+    }
 }

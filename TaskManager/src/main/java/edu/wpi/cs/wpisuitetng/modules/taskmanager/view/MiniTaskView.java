@@ -138,6 +138,7 @@ public class MiniTaskView extends JPanel {
         }
         
         this.setBackground(background);
+        this.holderPanel.setBackground(background);
         this.userPanel.setBackground(background);     
         this.userScrollPane.setBackground(background);
     }
@@ -156,6 +157,7 @@ public class MiniTaskView extends JPanel {
         }
         
         this.setBackground(background);
+        this.holderPanel.setBackground(background);
         this.userPanel.setBackground(background);     
         this.userScrollPane.setBackground(background);
     }
