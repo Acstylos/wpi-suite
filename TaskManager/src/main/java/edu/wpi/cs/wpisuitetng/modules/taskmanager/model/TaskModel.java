@@ -14,6 +14,7 @@ import java.awt.Color;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -35,8 +36,10 @@ public class TaskModel extends AbstractModel {
     private int estimatedEffort;
     private int actualEffort;
     private Date dueDate;
+    private Date dateCreated;
     private int status;
     private Color labelColor;
+    private boolean isArchived;
 
     /**
      * Constructor for a default Task object
@@ -53,6 +56,10 @@ public class TaskModel extends AbstractModel {
         actualEffort = 0;
         status = 1;
         labelColor=null;
+        isArchived = false;
+        dueDate = null;
+        Calendar cal = Calendar.getInstance();
+        dateCreated = cal.getTime();
     }
 
     /**
@@ -83,6 +90,7 @@ public class TaskModel extends AbstractModel {
         this.dueDate = dueDate;
         this.status = status;
         this.labelColor=null;
+        this.isArchived = false;
     }
 
     /**
@@ -195,6 +203,7 @@ public class TaskModel extends AbstractModel {
         this.status = other.getStatus();
         this.activityIds = other.getActivityIds();
         this.labelColor=other.getLabelColor();
+        this.isArchived = other.getIsArchived();
     }
 
     /**
@@ -393,6 +402,28 @@ public class TaskModel extends AbstractModel {
      */
     public void addActivityID(int id) {
         activityIds.add(id);
+    }
+    
+    
+    /**
+     * @return the date task was created
+     */
+    public Date getDateCreated() {
+		return dateCreated;
+	}
+
+    /**
+     * @return if task is archived
+     */
+    public boolean getIsArchived() {
+        return isArchived;
+    }
+
+    /**
+     * @param isArchived boolean indicating if task is archived
+     */
+    public void setIsArchived(boolean isArchived) {
+        this.isArchived = isArchived;
     }
 
 }
