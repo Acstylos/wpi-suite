@@ -200,6 +200,18 @@ public class WorkflowPresenter {
     }
 
     /**
+     * moves a task from a bucket to the archive
+     * 
+     * @param taskId
+     *            id of the task being moved
+     * @param bucketId
+     *            id of the bucket the task is being removed from
+     */
+    public void archiveTask(int taskId, int bucketId) {
+        moveTask(taskId, 5, bucketId);
+    }
+
+    /**
      * get the bucket id from the hashmap
      * @param id the id of the bucket to be retrieved
      * @return the bucket model from the hashmap
