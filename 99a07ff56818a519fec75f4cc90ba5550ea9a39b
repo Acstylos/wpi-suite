@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_adde613d",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/BucketPresenter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1002787
+      },
+      "writtenOn": "2014-12-12T04:30:30Z",
+      "side": 1,
+      "message": "Remember to call this in the task presenter. The bucket should not be setting things about task views.",
+      "revId": "99a07ff56818a519fec75f4cc90ba5550ea9a39b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
