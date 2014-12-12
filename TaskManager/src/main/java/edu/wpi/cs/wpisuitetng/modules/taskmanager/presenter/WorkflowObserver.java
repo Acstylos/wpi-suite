@@ -9,11 +9,14 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowModel;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 import edu.wpi.cs.wpisuitetng.network.models.IRequest;
 import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowModel;
 
 /**
  * 
@@ -43,32 +46,39 @@ public class WorkflowObserver implements RequestObserver {
      */
     @Override
     public void responseSuccess(IRequest iReq) {
-        System.err.println(iReq.getResponse().getBody() + method);
         // Store the response
         final ResponseModel response = iReq.getResponse();
-
-        // Parse the message
-        if(method == HttpMethod.GET){
-        	final WorkflowModel[] models = WorkflowModel.fromJSONArray(response.getBody());
-        	System.err.println(models[0].getTitle());
-        	presenter.responseGet(models);
-        }
-        else{
-        	final WorkflowModel model = WorkflowModel.fromJson(response.getBody());
-        	System.err.println(model.getTitle());
-        	switch (method) {
-        	case GET:
-        		break;
-        	case POST:
-        		presenter.responsePost(model);
-        		break;
-        	case PUT:
-        		presenter.responsePut(model);
-        		break;
-        	case DELETE:
-        		presenter.responseDelete(model);
-        		break;
-        	}
+        
+        final WorkflowModel model;
+        
+        switch (iReq.getHttpMethod()) {
+        case GET:
+            // Parse the message
+            WorkflowModel workflows[] = WorkflowModel.fromJSONArray(response.getBody());
+            ArrayList<WorkflowModel> workflowArrayList = new ArrayList<WorkflowModel>(Arrays.asList(workflows));
+            if(workflowArrayList.size() == 0){
+                this.presenter.initWorkflow(this.presenter);
+            } else {
+                System.out.println("GET Response Body: " + response.getBody().toString());
+                model = WorkflowModel.fromJSONArray(response.getBody())[0];
+                this.presenter.responseGet(model);
+            }
+            break;
+        case POST:
+            // Parse the message
+            model = WorkflowModel.fromJson(response.getBody());
+            this.presenter.responsePost(model);
+            break;
+        case PUT:
+            // Parse the message
+            model = WorkflowModel.fromJson(response.getBody());
+            this.presenter.responsePut(model);
+            break;
+        case DELETE:
+            // Parse the message
+            model = WorkflowModel.fromJson(response.getBody());
+            this.presenter.responseDelete(model);
+            break;
         }
     }
 
