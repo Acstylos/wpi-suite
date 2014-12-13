@@ -134,7 +134,7 @@ public class BucketPresenter {
         addMiniTaskstoView();
         view.revalidate();
         view.repaint();
- 
+        
     }
 
     /**
@@ -149,9 +149,9 @@ public class BucketPresenter {
             @Override
             public boolean canImport(TransferHandler.TransferSupport support) {
                 try {
-                    TaskPresenter taskPresenter =
+                    TaskPresenter taskPresenter = 
                             (TaskPresenter) support.getTransferable().getTransferData(TaskPresenter.TASK_DATA_FLAVOR);
-                    
+
                     /* The task can be imported into this bucket if it's not
                      * already in it.
                      */
@@ -167,7 +167,7 @@ public class BucketPresenter {
             @Override
             public boolean importData(TransferSupport support) {
                 try {
-                    TaskPresenter taskPresenter =
+                    TaskPresenter taskPresenter = 
                             (TaskPresenter) support.getTransferable().getTransferData(TaskPresenter.TASK_DATA_FLAVOR);
                     
                     BucketPresenter.this.addTask(taskPresenter.getModel().getId(), taskPresenter);
@@ -359,16 +359,24 @@ public class BucketPresenter {
     public void addMiniTaskstoView() {
         List<Integer> taskIds = model.getTaskIds();
         this.view.resetTaskList();
+        Color filterColor = MainView.getInstance().getFilterColor();
         for (int i : taskIds) {
             MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
-            if (MainView.getInstance().getShowArchived()) {
-                view.addTaskToView(miniTaskView);
-            } else {
-                if (!taskMap.get(i).getModel().getIsArchived()) {
+
+            if (filterColor.equals(taskMap.get(i).getModel().getLabelColor())
+                    || filterColor.equals(MainView.getInstance()
+                            .getNoFilterColor())) {
+                if (MainView.getInstance().getShowArchived()) {
                     view.addTaskToView(miniTaskView);
+                } else {
+                    if (!taskMap.get(i).getModel().getIsArchived()) {
+                        view.addTaskToView(miniTaskView);
+                    }
                 }
             }
         }
+        view.revalidate();
+        view.repaint();
     }
 
     /*
