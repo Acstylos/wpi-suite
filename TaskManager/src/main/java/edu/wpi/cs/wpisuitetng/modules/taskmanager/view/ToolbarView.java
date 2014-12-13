@@ -15,7 +15,9 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.view.requirements.NewPieChartPanel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.HelpPresenter;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
 import net.miginfocom.swing.MigLayout;
 
@@ -36,8 +38,7 @@ import javax.swing.SwingConstants;
 public class ToolbarView extends JPanel
 {
     private static final long serialVersionUID = 5489162021821230861L;
-    
-
+    HelpView helpView = new HelpView();
     /**
      * Creates and positions option buttons in upper toolbar
      * @param visible boolean
@@ -45,11 +46,10 @@ public class ToolbarView extends JPanel
      */
     public ToolbarView() {
         setLayout(new MigLayout("fill"));
-        
+
         JButton createNewTaskButton = new JButton("<html>Create<br/>Task</html>");
         createNewTaskButton.setIcon(Icons.CREATE_TASK_LARGE);
-        
-        
+
         /**
          * Adds a new TaskView Tab into the MainView
          */
@@ -64,8 +64,8 @@ public class ToolbarView extends JPanel
             }
         });
 
-        add(createNewTaskButton, "cell 0 0");        
-        
+        add(createNewTaskButton, "flowx,cell 0 0");        
+
         JToggleButton tglbtnArchive = new JToggleButton("<html>Hide<br/>Archived</html>");
         tglbtnArchive.setIcon(Icons.HIDE_ARCHIVE_LARGE);
         tglbtnArchive.setSelected(true);
@@ -88,8 +88,21 @@ public class ToolbarView extends JPanel
                 MainView.getInstance().resetAllBuckets();
             }
         });
-    }
-    
 
-    
+        /**
+         * Adds a help Tab into the MainView
+         */
+        JButton btnHelp = new JButton("<html>Help</html>");
+        btnHelp.setIcon(Icons.HELP_LARGE);
+        add(btnHelp, "cell 0 0");
+
+        btnHelp.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                HelpPresenter helpPresenter = new HelpPresenter();
+                MainView.getInstance().addTab("Help", Icons.HELP, helpPresenter.getView());
+                int tabCount = MainView.getInstance().getTabCount();
+                MainView.getInstance().setSelectedIndex(tabCount - 1);         
+            }
+        });   
+    }    
 }
