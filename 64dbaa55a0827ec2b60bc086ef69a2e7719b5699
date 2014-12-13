@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_59edf724",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/ColorRenderer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-12-13T05:07:18Z",
+      "side": 1,
+      "message": "Why?",
+      "revId": "64dbaa55a0827ec2b60bc086ef69a2e7719b5699",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_d991e79b",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/MainView.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-12-13T05:07:18Z",
+      "side": 1,
+      "message": "Don\u0027t commit formatting changes to unrelated code in your feature branch.  This is what causes merges to take so long.",
+      "revId": "64dbaa55a0827ec2b60bc086ef69a2e7719b5699",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_3991139a",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/MainView.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-12-13T05:07:18Z",
+      "side": 1,
+      "message": "Same deal.",
+      "revId": "64dbaa55a0827ec2b60bc086ef69a2e7719b5699",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_198c0f7f",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/MainView.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-12-13T05:07:18Z",
+      "side": 1,
+      "message": "This should have actual documentation.  What does \"filterColor\" mean?",
+      "revId": "64dbaa55a0827ec2b60bc086ef69a2e7719b5699",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_79ea7b10",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/MainView.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-12-13T05:07:18Z",
+      "side": 1,
+      "message": "Needs javadocs",
+      "revId": "64dbaa55a0827ec2b60bc086ef69a2e7719b5699",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
