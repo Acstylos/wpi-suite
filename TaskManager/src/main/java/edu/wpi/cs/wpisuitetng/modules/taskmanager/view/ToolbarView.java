@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.HelpPresenter;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
 import net.miginfocom.swing.MigLayout;
 
@@ -64,12 +65,13 @@ public class ToolbarView extends JPanel
             }
         });
 
-        add(createNewTaskButton, "cell 0 0");        
+        add(createNewTaskButton, "flowx,cell 0 0");        
         
         JToggleButton tglbtnArchive = new JToggleButton("<html>Hide<br/>Archived</html>");
         tglbtnArchive.setIcon(Icons.HIDE_ARCHIVE_LARGE);
         tglbtnArchive.setSelected(true);
         add(tglbtnArchive, "cell 0 0");
+        
 
         tglbtnArchive.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
@@ -88,8 +90,29 @@ public class ToolbarView extends JPanel
                 MainView.getInstance().resetAllBuckets();
             }
         });
-    }
-    
-
-    
+        
+        JButton btnHelp = new JButton("<html>Help</html>");
+        btnHelp.setIcon(Icons.HELP_LARGE);
+        add(btnHelp, "cell 0 0");
+        
+        /**
+         * Adds a help Tab into the MainView
+         */
+        btnHelp.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	HelpPresenter helpPresenter = new HelpPresenter();
+            	if (HelpView.isOpened) {            		
+            		int tabCount = helpPresenter.getView().getIndex();
+            		MainView.getInstance().setSelectedIndex(tabCount);
+            	}
+            	else {
+            		MainView.getInstance().addTab("Help", Icons.HELP, helpPresenter.getView());
+                    int tabCount = MainView.getInstance().getTabCount();
+                    helpPresenter.getView().setIndex(tabCount-1);
+                    helpPresenter.getView().setOpened();
+                    MainView.getInstance().setSelectedIndex(tabCount-1);
+            	}
+            }
+        });   
+    }    
 }
