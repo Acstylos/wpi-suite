@@ -883,6 +883,21 @@ public class TaskPresenter {
 }
     
     /**
+     * returns the Name with the given ID, otherwise blank.
+     * 
+     * @param id
+     *            the user's ID
+     * @return name the Name
+     */
+    public String idToName(int id) {
+        for (User u : this.allUserArray) {
+            if (u.getIdNum() == id)
+                return u.getName();
+        }
+        return "";
+    }
+    
+    /**
      * set icon for the task in update view
      */
     public void setIconForMinitaskView(){
