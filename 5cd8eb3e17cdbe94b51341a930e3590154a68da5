@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_79ef1b88",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/BucketPresenter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-13T22:53:50Z",
+      "side": 1,
+      "message": "I do not think this empty line needs to be here",
+      "revId": "5cd8eb3e17cdbe94b51341a930e3590154a68da5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_79bd5b68",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/BucketView.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-13T22:53:50Z",
+      "side": 1,
+      "message": "typo I think you mean determine",
+      "revId": "5cd8eb3e17cdbe94b51341a930e3590154a68da5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
