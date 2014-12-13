@@ -9,8 +9,10 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
+import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -33,8 +35,11 @@ public class MainView extends JTabbedPane {
     private JScrollPane workflowScrollPane = new JScrollPane();
     private WorkflowPresenter workflowPresenter = new WorkflowPresenter(0);
     private GhostGlassPane glassPane = new GhostGlassPane();
+    private Color noFilterColor = new Color(238, 238, 238);
+    private Color filterColor = noFilterColor;
     private static final MainView mainView = new MainView();
-    private boolean showArchived = true;
+
+
     private MainView() {
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         this.addTab("Workflow", Icons.WORKFLOW, workflowScrollPane);
@@ -92,20 +97,6 @@ public class MainView extends JTabbedPane {
     }
 
 
-    /** indicates if archived tasks are shown
-     * @return if archived tasks are shown
-     */
-    public boolean getShowArchived() {
-        return showArchived;
-    }
-
-    /**set if archived tasks are shown
-     * @param showArchived indicates if archived tasks are shown
-     */
-    public void setShowArchived(boolean showArchived) {
-        this.showArchived = showArchived;
-    }
-    
     /**
      * resets and reloads all buckets
      */
@@ -115,4 +106,5 @@ public class MainView extends JTabbedPane {
             bucket.addMiniTaskstoView();
         }    
     }
+
 }
