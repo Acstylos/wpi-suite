@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -358,19 +359,27 @@ public class BucketPresenter {
      */
     public void addMiniTaskstoView() {
         List<Integer> taskIds = model.getTaskIds();
+        Filter filter = new Filter();
         this.view.resetTaskList();
+
         for (int i : taskIds) {
             MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
-            if (MainView.getInstance().getShowArchived()) {
-                view.addTaskToView(miniTaskView);
-            } else {
-                if (!taskMap.get(i).getModel().getIsArchived()) {
+            if (filter.matches(taskMap.get(i))) {
+                if (MainView.getInstance().getShowArchived()) {
                     view.addTaskToView(miniTaskView);
+                } else {
+                    if (!taskMap.get(i).getModel().getIsArchived()) {
+                        view.addTaskToView(miniTaskView);
+                    }
                 }
             }
         }
+        view.revalidate();
+        view.repaint();
     }
 
+
+    
     /*
      * removes task from bucketView, presenter, and model
      * 
