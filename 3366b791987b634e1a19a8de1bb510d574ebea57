@@ -1,0 +1,191 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_f995cb40",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/HelpPresenter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-13T16:57:21Z",
+      "side": 1,
+      "message": "Needs @author the floor is java",
+      "revId": "3366b791987b634e1a19a8de1bb510d574ebea57",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_79a27baf",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/HelpPresenter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-13T16:57:21Z",
+      "side": 1,
+      "message": "You use tabs throughout this file, they should be space bars",
+      "revId": "3366b791987b634e1a19a8de1bb510d574ebea57",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_99af5f94",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/HelpPresenter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-13T16:57:21Z",
+      "side": 1,
+      "message": "Something seems wrong with tabbing in this function",
+      "revId": "3366b791987b634e1a19a8de1bb510d574ebea57",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_59a5f7b3",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/HelpPresenter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-13T16:57:21Z",
+      "side": 1,
+      "message": "@return needs to be filled in",
+      "revId": "3366b791987b634e1a19a8de1bb510d574ebea57",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_b9ace3a1",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/HelpPresenter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-13T16:57:21Z",
+      "side": 1,
+      "message": "@param needs to be filled in",
+      "revId": "3366b791987b634e1a19a8de1bb510d574ebea57",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_d990c750",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/HelpView.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-13T16:57:21Z",
+      "side": 1,
+      "message": "Needs @author",
+      "revId": "3366b791987b634e1a19a8de1bb510d574ebea57",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_39a0f39e",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/HelpView.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-13T16:57:21Z",
+      "side": 1,
+      "message": "Tabs are used, they should be space bars.  the first /** is too far over",
+      "revId": "3366b791987b634e1a19a8de1bb510d574ebea57",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_199b6f73",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/HelpView.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-13T16:57:21Z",
+      "side": 1,
+      "message": "/** is too far to the left",
+      "revId": "3366b791987b634e1a19a8de1bb510d574ebea57",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_7989db25",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/HelpView.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-13T16:57:21Z",
+      "side": 1,
+      "message": "this function needs a comment and is too far to the right",
+      "revId": "3366b791987b634e1a19a8de1bb510d574ebea57",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_598cd735",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/ToolbarView.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-13T16:57:21Z",
+      "side": 1,
+      "message": "one too many lines of white space",
+      "revId": "3366b791987b634e1a19a8de1bb510d574ebea57",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_b9834303",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/ToolbarView.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-13T16:57:21Z",
+      "side": 1,
+      "message": "Tabs are used below this, they should be spacebars",
+      "revId": "3366b791987b634e1a19a8de1bb510d574ebea57",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
