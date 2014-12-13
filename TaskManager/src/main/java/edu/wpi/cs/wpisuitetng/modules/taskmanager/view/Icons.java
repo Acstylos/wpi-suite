@@ -42,4 +42,7 @@ public class Icons {
     public final static Icon TASKNEARDUE = new ImageIcon(Icons.class.getResource("task-due-very-soon.png"));
     public final static Icon TASKDUE = new ImageIcon(Icons.class.getResource("task-overdue.png"));
     public final static Icon TASKEDIT = new ImageIcon(Icons.class.getResource("task-edit.png"));  
+    
+    public final static Icon HELP = new ImageIcon(Icons.class.getResource("help.png")); 
+    public final static Icon HELP_LARGE = new ImageIcon(Icons.class.getResource("help-medium.png")); 
 }
