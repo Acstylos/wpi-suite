@@ -21,7 +21,7 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
-import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.Requirement;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.RequirementModel;
 
 /**
  * The model end of the Task object
@@ -138,6 +138,14 @@ public class TaskModel extends AbstractModel {
             if (flag)
                 summary += "\n";
             summary += "Description was changed.";
+        } else if (!flag)
+            flag = false;
+        if (this.requirement != that.requirement) {
+            if (flag)
+                summary += "\n";
+            summary += "Associated requirement was changed from "
+                    + (this.requirement == 0 ? "none" : RequirementModel.getInstance().getRequirement(this.requirement-1).getName()) + " to "
+                    + (that.requirement == 0 ? "none" : RequirementModel.getInstance().getRequirement(that.requirement-1).getName());
         }
         return summary;
 
