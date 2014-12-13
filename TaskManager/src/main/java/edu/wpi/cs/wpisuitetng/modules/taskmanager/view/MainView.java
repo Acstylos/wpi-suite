@@ -9,8 +9,10 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
+import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -33,8 +35,15 @@ public class MainView extends JTabbedPane {
     private JScrollPane workflowScrollPane = new JScrollPane();
     private WorkflowPresenter workflowPresenter = new WorkflowPresenter(0);
     private GhostGlassPane glassPane = new GhostGlassPane();
+    private Color noFilterColor = new Color(238, 238, 238);
+    private Color filterColor = noFilterColor;
     private static final MainView mainView = new MainView();
     private boolean showArchived = true;
+    private Date filterStartDate;
+    private Date filterEndDate;
+    private String filterText;
+    private String filterUser;
+
     private MainView() {
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         this.addTab("Workflow", Icons.WORKFLOW, workflowScrollPane);
@@ -114,5 +123,110 @@ public class MainView extends JTabbedPane {
             BucketPresenter bucket = bucketEntry.getValue();                    
             bucket.addMiniTaskstoView();
         }    
+    }
+
+    /**
+     * this function retrieves the color that is being allowed on the view.
+     * 
+     * @return current filterColor
+     */
+    public Color getFilterColor() {
+        return filterColor;
+    }
+
+    /**
+     * this function sets the color to be allowed on the view
+     *
+     * @param filterColor
+     *            to change to
+     */
+    public void setFilterColor(Color filterColor) {
+        this.filterColor = filterColor;
+    }
+
+    /**
+     * this function is use to allow other files to check if the filter for
+     * colors is set to not filter by color.
+     * 
+     * @return noFilterColor the 'color' set by the combobox indicating that the
+     *         user does not want to filter by colors.
+     */
+    public Color getNoFilterColor() {
+        return noFilterColor;
+    }
+
+    /**
+     * this function retrieves the first date that tasks should be filtered by.
+     * 
+     * @return this.filterStartDate the date that should be the beginning of
+     *         filtering by date.
+     */
+    public Date getFilterStartDate() {
+        return this.filterStartDate;
+    }
+
+    /**
+     * this function sets the starting due date to be shown on the view.
+     * 
+     * @param filterStartDate
+     *            the date to filter the start by.
+     */
+    public void setFilterStartDate(Date filterStartDate) {
+        this.filterStartDate = filterStartDate;
+    }
+
+    /**
+     * this function retrieves the last date that tasks should be filtered by.
+     * 
+     * @return this.filterEndDate the date that should be the end of filtering
+     *         by date.
+     */
+    public Date getFilterEndDate() {
+        return this.filterEndDate;
+    }
+
+    /**
+     * this function sets the ending due date to be shown on the view.
+     * 
+     * @param filterEndDate
+     *            the date to end date filtering at.
+     */
+    public void setFilterEndDate(Date filterEndDate) {
+        this.filterEndDate = filterEndDate;
+
+    }
+
+    /**
+     * this function gets the text that is currently being filtered for.
+     * 
+     * @return the text that is currently being filtered for.
+     */
+    public String getFilterText() {
+        return filterText;
+    }
+
+    /**
+     * this function sets the text that should be filtered
+     * 
+     * @param filterText the text to filter for.
+     */
+    public void setFilterText(String filterText) {
+        this.filterText = filterText;
+    }
+    /**
+     * this function gets the text of the username that is currently being filtered for.
+     * 
+     * @return the text of the username that is currently being filtered for.
+     */
+    public String getFilterUser() {
+        return filterUser;
+    }
+    /**
+     * this function sets the text of the username that should be filtered
+     * 
+     * @param filterUser the user to filter for.
+     */
+    public void setFilterUser(String filterUser) {
+        this.filterUser = filterUser;
     }
 }
