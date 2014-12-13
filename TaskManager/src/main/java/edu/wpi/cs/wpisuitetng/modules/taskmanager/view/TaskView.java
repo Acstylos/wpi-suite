@@ -83,13 +83,6 @@ public class TaskView extends JPanel {
     private final static Color modifiedColor = Color.BLACK;
     private final static Color unmodifiedColor = Color.GRAY;
 
-    static {
-        /* Change the default icons for JXDatePicker. */
-        UIManager.put("JXDatePicker.arrowIcon", Icons.CALENDAR);
-        UIManager.put("JXMonthView.monthDownFileName", Icons.LEFT_ARROW);
-        UIManager.put("JXMonthView.monthUpFileName", Icons.RIGHT_ARROW);
-    }
-
     /**
      * Create a new TaskView with the specified default values.
      *
