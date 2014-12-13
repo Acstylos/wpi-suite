@@ -16,12 +16,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
-import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.Requirement;
 
 /**
  * The model end of the Task object
@@ -138,6 +136,12 @@ public class TaskModel extends AbstractModel {
             if (flag)
                 summary += "\n";
             summary += "Description was changed.";
+        } else if (!flag)
+            flag = false;
+        if (this.requirement != that.requirement) {
+            if (flag)
+                summary += "\n";
+            summary += "Related Requirement was changed.";
         }
         return summary;
 

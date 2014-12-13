@@ -30,17 +30,23 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.swing.JTabbedPane;
+
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.TransferHandler;
 
+import com.sun.glass.ui.View;
+
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.RequirementManager;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.Requirement;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.view.ViewEventController;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
@@ -756,39 +762,12 @@ public class TaskPresenter {
         this.assignedUserList.add(user.getIdNum());
         this.view.validateFields();
     }
-
-    /**
-     * Removes a requirement from the requirement list
-     * @param req
-     *          Requirement to add to requirementList
-     */
-    public void removeRequirement(Requirement req) {
-        this.requirementList.remove((Object)req.getId());
-    }
-
-    /**
-     * Add a requirement to the requirementList
-     * @param req
-     *          Requirement to add to requirementList
-     */
-    public void addRequirement(Requirement req) {
-        this.requirementList.add(req.getId());
-        this.view.validateFields();
-    }
     
     /**
      * @return A shallow copy of the temporary assigned users list, not the model's user list
      */
     public List<Integer> getAssignedUserList() {
         return this.assignedUserList;
-    }
-
-    /**
-     * 
-     * @return  a copy of the temporary requirementList, not the model's requirementList
-     */
-    public List<Integer> getRequirementList() {
-        return this.requirementList;
     }
     
     /**
