@@ -138,6 +138,12 @@ public class TaskModel extends AbstractModel {
             if (flag)
                 summary += "\n";
             summary += "Description was changed.";
+        } else if (!flag)
+            flag = false;
+        if (this.requirement != that.requirement) {
+            if (flag)
+                summary += "\n";
+            summary += "Related Requirement was changed.";
         }
         return summary;
 
