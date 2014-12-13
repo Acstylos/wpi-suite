@@ -9,16 +9,17 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
-import java.awt.Color;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.TransferHandler;
-import javax.swing.TransferHandler.TransferSupport;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
@@ -27,7 +28,6 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ViewMode;
 import edu.wpi.cs.wpisuitetng.network.Network;
@@ -180,6 +180,40 @@ public class BucketPresenter {
                 
                 return false;
             }
+        });
+        
+        /* Allows clicking of the bucket's title to open
+         * the change view. Which will allow users to change the
+         * title of the bucket.
+         */
+        view.addChangeBucketNameListener(new MouseAdapter(){
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                view.setChangeTitlePanel();
+                view.revalidate();
+                view.repaint();
+            }
+        });
+        
+        /* Allows the OK button to revert the Title Panel of the
+         * bucket. Also saves the new label to the model for load.
+         */
+        view.addOkButtonListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String title = view.getChangeTextField().getText();
+                if(title.trim().equals("")){
+                    view.getTaskNameLabel().setText(view.getChangeTextField().getPrompt());
+                } else {
+                    view.getTaskNameLabel().setText(title);
+                }
+                view.setStaticTitlePanel();
+                view.revalidate();
+                view.repaint();
+            }
+            
         });
     }
 
