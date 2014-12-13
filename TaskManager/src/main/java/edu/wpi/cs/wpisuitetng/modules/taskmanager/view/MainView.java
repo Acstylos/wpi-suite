@@ -9,6 +9,7 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
+import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.util.Map;
@@ -33,8 +34,11 @@ public class MainView extends JTabbedPane {
     private JScrollPane workflowScrollPane = new JScrollPane();
     private WorkflowPresenter workflowPresenter = new WorkflowPresenter(0);
     private GhostGlassPane glassPane = new GhostGlassPane();
+    private Color noFilterColor = new Color(238, 238, 238);
+    private Color filterColor = noFilterColor;
     private static final MainView mainView = new MainView();
     private boolean showArchived = true;
+
     private MainView() {
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         this.addTab("Workflow", Icons.WORKFLOW, workflowScrollPane);
@@ -114,5 +118,26 @@ public class MainView extends JTabbedPane {
             BucketPresenter bucket = bucketEntry.getValue();                    
             bucket.addMiniTaskstoView();
         }    
+    }
+    /** this function retrieves the color that is being allowed on the view.
+     * @return current filterColor
+     */
+    public Color getFilterColor(){
+        return filterColor;
+    }
+    /** this function sets the color to be allowed on the view
+     *@param filterColor to change to  
+     */
+    public void setFilterColor(Color filterColor) {
+        this.filterColor = filterColor;
+    }
+    /** this function is use to allow other files to check if the filter for colors 
+     * is set to not filter by color.
+     * 
+     * @return noFilterColor the 'color' set by the combobox indicating that the user
+     * does not want to filter by colors.
+     */
+    public Color getNoFilterColor(){
+        return noFilterColor;
     }
 }

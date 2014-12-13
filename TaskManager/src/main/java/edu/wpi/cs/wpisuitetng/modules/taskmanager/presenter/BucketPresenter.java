@@ -359,16 +359,24 @@ public class BucketPresenter {
     public void addMiniTaskstoView() {
         List<Integer> taskIds = model.getTaskIds();
         this.view.resetTaskList();
+        Color filterColor = MainView.getInstance().getFilterColor();
         for (int i : taskIds) {
             MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
-            if (MainView.getInstance().getShowArchived()) {
-                view.addTaskToView(miniTaskView);
-            } else {
-                if (!taskMap.get(i).getModel().getIsArchived()) {
+
+            if (filterColor.equals(taskMap.get(i).getModel().getLabelColor())
+                    || filterColor.equals(MainView.getInstance()
+                            .getNoFilterColor())) {
+                if (MainView.getInstance().getShowArchived()) {
                     view.addTaskToView(miniTaskView);
+                } else {
+                    if (!taskMap.get(i).getModel().getIsArchived()) {
+                        view.addTaskToView(miniTaskView);
+                    }
                 }
             }
         }
+        view.revalidate();
+        view.repaint();
     }
 
     /*
