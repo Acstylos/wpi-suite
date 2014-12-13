@@ -9,6 +9,7 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
+import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.util.Map;
@@ -33,8 +34,11 @@ public class MainView extends JTabbedPane {
     private JScrollPane workflowScrollPane = new JScrollPane();
     private WorkflowPresenter workflowPresenter = new WorkflowPresenter(0);
     private GhostGlassPane glassPane = new GhostGlassPane();
+    private Color noFilterColor = new Color(238, 238, 238);
+    private Color filterColor = noFilterColor;
     private static final MainView mainView = new MainView();
     private boolean showArchived = true;
+
     private MainView() {
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         this.addTab("Workflow", Icons.WORKFLOW, workflowScrollPane);
@@ -46,16 +50,16 @@ public class MainView extends JTabbedPane {
             this.workflowPresenter.load();
         });
     }
-    
+
     /**
      * Sets the glass pane when the main view is added to the window
      */
     public void addNotify() {
         super.addNotify();
-        
+
         this.getRootPane().setGlassPane(this.glassPane);
     }
-    
+
     /**
      * @return The glass pane for this component
      */
@@ -91,28 +95,48 @@ public class MainView extends JTabbedPane {
         this.workflowScrollPane.setViewportView(workflowPresenter.getView());
     }
 
-
-    /** indicates if archived tasks are shown
+    /**
+     * indicates if archived tasks are shown
+     * 
      * @return if archived tasks are shown
      */
     public boolean getShowArchived() {
         return showArchived;
     }
 
-    /**set if archived tasks are shown
-     * @param showArchived indicates if archived tasks are shown
+    /**
+     * set if archived tasks are shown
+     * 
+     * @param showArchived
+     *            indicates if archived tasks are shown
      */
     public void setShowArchived(boolean showArchived) {
         this.showArchived = showArchived;
     }
-    
+
     /**
      * resets and reloads all buckets
      */
-    public void resetAllBuckets(){
-        for(Map.Entry<Integer, BucketPresenter> bucketEntry: getWorkflowPresenter().getBucketPresenters().entrySet()){
-            BucketPresenter bucket = bucketEntry.getValue();                    
+    public void resetAllBuckets() {
+        for (Map.Entry<Integer, BucketPresenter> bucketEntry : getWorkflowPresenter()
+                .getBucketPresenters().entrySet()) {
+            BucketPresenter bucket = bucketEntry.getValue();
             bucket.addMiniTaskstoView();
-        }    
+        }
+    }
+    /**
+     * @return current filterColor
+     */
+    public Color getFilterColor(){
+        return filterColor;
+    }
+    /**
+     *@param filterColor to change to  
+     */
+    public void setFilterColor(Color filterColor) {
+        this.filterColor = filterColor;
+    }
+    public Color getNoFilterColor(){
+        return noFilterColor;
     }
 }

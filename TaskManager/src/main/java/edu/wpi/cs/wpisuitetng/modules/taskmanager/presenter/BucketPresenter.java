@@ -122,19 +122,18 @@ public class BucketPresenter {
             }
             taskMap.get(i).updateFromDatabase();
 
-
             MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
             miniTaskView.setModel(taskMap.get(i).getModel());
 
             taskMap.get(i).validateUpdateLabel();
             view.addTaskToView(miniTaskView);
             this.addMiniTaskView(taskMap.get(i).getMiniView());
-            
+
         }
         addMiniTaskstoView();
         view.revalidate();
         view.repaint();
- 
+
     }
 
     /**
@@ -149,35 +148,39 @@ public class BucketPresenter {
             @Override
             public boolean canImport(TransferHandler.TransferSupport support) {
                 try {
-                    TaskPresenter taskPresenter =
-                            (TaskPresenter) support.getTransferable().getTransferData(TaskPresenter.TASK_DATA_FLAVOR);
-                    
-                    /* The task can be imported into this bucket if it's not
+                    TaskPresenter taskPresenter = (TaskPresenter) support
+                            .getTransferable().getTransferData(
+                                    TaskPresenter.TASK_DATA_FLAVOR);
+
+                    /*
+                     * The task can be imported into this bucket if it's not
                      * already in it.
                      */
                     return taskPresenter.getBucket() != BucketPresenter.this;
                 } catch (UnsupportedFlavorException | IOException e) {
                     return false;
-                }                
+                }
             }
-            
+
             /**
              * Add the task to this bucket
              */
             @Override
             public boolean importData(TransferSupport support) {
                 try {
-                    TaskPresenter taskPresenter =
-                            (TaskPresenter) support.getTransferable().getTransferData(TaskPresenter.TASK_DATA_FLAVOR);
-                    
-                    BucketPresenter.this.addTask(taskPresenter.getModel().getId(), taskPresenter);
-                    
+                    TaskPresenter taskPresenter = (TaskPresenter) support
+                            .getTransferable().getTransferData(
+                                    TaskPresenter.TASK_DATA_FLAVOR);
+
+                    BucketPresenter.this.addTask(taskPresenter.getModel()
+                            .getId(), taskPresenter);
+
                     return true;
                 } catch (UnsupportedFlavorException | IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                
+
                 return false;
             }
         });
@@ -193,28 +196,28 @@ public class BucketPresenter {
         // taskPresenter.createInDatabase();
         TaskModel taskModel = taskPresenter.getModel();
         TaskView taskView = taskPresenter.getView();
-        MainView.getInstance().addTab(taskModel.getShortTitle(), Icons.TASKEDIT, taskView);
+        MainView.getInstance().addTab(taskModel.getShortTitle(),
+                Icons.TASKEDIT, taskView);
         int tabCount = MainView.getInstance().getTabCount();
         taskView.setIndex(tabCount - 1);
         MainView.getInstance().setSelectedIndex(tabCount - 1);
     }
 
-
     /**
-     * Remove a task ID from the list of taskIDs in the model, update the
-     * view to not have that task, and update the database to remove the task
-     * from this bucket
+     * Remove a task ID from the list of taskIDs in the model, update the view
+     * to not have that task, and update the database to remove the task from
+     * this bucket
      * 
      * @param rmid
      *            ID of the existing task to be removed
      */
     public void removeTask(int rmid) {
         model.removeTaskId(rmid);
-        
+
         view.setModel(model);
         view.revalidate();
         view.repaint();
-        
+
         taskMap.remove(rmid);
         updateInDatabase();
     }
@@ -233,24 +236,24 @@ public class BucketPresenter {
         if (!taskMap.containsKey(id)) {
             taskMap.put(id, taskPresenter);
         }
-        
+
         if (taskPresenter.getBucket() != this) {
             taskPresenter.getBucket().removeTask(id);
             taskPresenter.setBucket(this);
         }
-        
+
         taskPresenter.getModel().setStatus(this.getModel().getId());
         taskPresenter.updateView();
-        
+
         /* Immediately add the view for instant feedback to the user */
         if (taskPresenter.getMiniView() != null) {
             this.view.addTaskToView(taskPresenter.getMiniView());
         }
-        
+
         view.setModel(model);
         view.revalidate();
         view.repaint();
-        
+
         updateInDatabase();
     }
 
@@ -359,16 +362,24 @@ public class BucketPresenter {
     public void addMiniTaskstoView() {
         List<Integer> taskIds = model.getTaskIds();
         this.view.resetTaskList();
+        Color filterColor = MainView.getInstance().getFilterColor();
         for (int i : taskIds) {
             MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
-            if (MainView.getInstance().getShowArchived()) {
-                view.addTaskToView(miniTaskView);
-            } else {
-                if (!taskMap.get(i).getModel().getIsArchived()) {
+
+            if (filterColor.equals(taskMap.get(i).getModel().getLabelColor())
+                    || filterColor.equals(MainView.getInstance()
+                            .getNoFilterColor())) {
+                if (MainView.getInstance().getShowArchived()) {
                     view.addTaskToView(miniTaskView);
+                } else {
+                    if (!taskMap.get(i).getModel().getIsArchived()) {
+                        view.addTaskToView(miniTaskView);
+                    }
                 }
             }
         }
+        view.revalidate();
+        view.repaint();
     }
 
     /*
