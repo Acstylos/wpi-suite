@@ -23,9 +23,11 @@ String coreprojecttitle = "CoreProject";
 String coreprojectpath = "core/project";
 String[] coreproject = {
 		"idNum",
-		"name"
+		"name",
+		"automaticEmailAddress",
+		"automaticEmailPassword"
 };
-int coreprojectlength = 2;
+int coreprojectlength = 4;
 
 public String createModelField(String title, String path, String[] args, int length)
 {
