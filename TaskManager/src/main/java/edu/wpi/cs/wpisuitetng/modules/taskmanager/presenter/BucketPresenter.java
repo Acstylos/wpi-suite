@@ -24,7 +24,6 @@ import javax.swing.TransferHandler;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
-//import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Entity;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
@@ -46,7 +45,6 @@ public class BucketPresenter {
     private BucketView view;
     private BucketModel model;
     private Map<Integer, TaskPresenter> taskMap = new HashMap<Integer, TaskPresenter>();
-    private WorkflowPresenter workflow;
 
     /**
      * Constructor for a bucket presenter
@@ -54,38 +52,22 @@ public class BucketPresenter {
      * @param bucketId
      * @param workflow
      */
-    public BucketPresenter(int bucketId, WorkflowPresenter workflow) {
-        this.workflow = workflow;
+    public BucketPresenter(int bucketId) {
         this.model = new BucketModel();
         this.model.setId(bucketId);
         this.view = new BucketView(this.model);
         registerCallbacks();
-        load();
     }
 
     /**
      * Requests the server for a new bucket or the bucket corresponding to the
      * current ID
      */
-    public void load() {
-        HttpMethod method;
-        String id = "/" + model.getId();
-        if (model.getId() == 0) { // Put = create a new model
-            method = HttpMethod.PUT;
-            id = "";
-        } else {// Retrieve a model
-            method = HttpMethod.GET;
-        }
-
+    public void load() {;
         // Sends a request for the TaskViews associated with the BucketView
         final Request request = Network.getInstance().makeRequest(
-                "taskmanager/bucket" + id, method);
-        if (method == HttpMethod.PUT) {
-            request.setBody(model.toJson());
-        }
-        request.addObserver(new BucketObserver(this, method)); // add an
-        // observer to
-        // the response
+                "taskmanager/bucket", HttpMethod.GET);
+        request.addObserver(new BucketObserver(this, HttpMethod.GET));
         request.send();
     }
 
@@ -93,27 +75,6 @@ public class BucketPresenter {
      * Sets the view of the model
      */
     public void writeModelToView() {
-        String name = "";
-        switch (model.getId()) {
-        case 1:
-            name = "New";
-            break;
-        case 2:
-            name = "Selected";
-            break;
-        case 3:
-            name = "In Progress";
-            break;
-        case 4:
-            name = "Completed";
-            break;
-        case 5:
-            name = "Archive";
-            break;
-        }
-        if (name.length() > 1) {
-            model.setTitle(name);
-        }
 
         this.view.setModel(this.model);
         for (int i : model.getTaskIds()) {
@@ -210,6 +171,8 @@ public class BucketPresenter {
                     view.getTaskNameLabel().setText(title);
                 }
                 view.setStaticTitlePanel();
+                model.setTitle(title);
+                updateInDatabase();
                 view.revalidate();
                 view.repaint();
             }
@@ -305,10 +268,8 @@ public class BucketPresenter {
      * @param models
      *            The models sent from the network
      */
-    public void responseGet(BucketModel[] models) {
-        if (models[0].getId() == 0)
-            return;
-        this.model = models[0];
+    public void responseGet(BucketModel models) {
+        this.model = models;
         writeModelToView();
     }
 
@@ -329,8 +290,6 @@ public class BucketPresenter {
      *            The model sent from the network
      */
     public void responsePut(BucketModel model) {
-        this.model = model;
-        writeModelToView();
     }
 
     /**
@@ -355,15 +314,6 @@ public class BucketPresenter {
      */
     public BucketModel getModel() {
         return model;
-    }
-
-    /**
-     * @param model
-     *            THe model of the presenter to be set
-     */
-    public void setModel(BucketModel model) {
-        this.model = model;
-        this.writeModelToView();
     }
 
     /**
@@ -421,5 +371,47 @@ public class BucketPresenter {
         request.send();
         updateInDatabase();
 
+    }
+    
+    /*
+     * The ideas for the following functions comes from reading code and using implementations found at 
+     * https://github.com/dcpounds/wpi-suite/tree/dev-gradle/TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/controller/stage
+     * Team 4 of year B2014's implementation 
+     */
+    
+    /**
+     * Saves the 4 preset stages. Should only happen if db is empty.
+     */
+    public static final void saveBaseBuckets(){
+        BucketModel newStage = new BucketModel(1, "New");
+        BucketModel scheduledStage = new BucketModel(2, "Scheduled");
+        BucketModel inProgressStage = new BucketModel(3, "In Progress");
+        BucketModel completedStage = new BucketModel(4, "Completed");
+        
+        try {
+            sendAddBucketRequest(new BucketPresenter(1), newStage);
+            Thread.sleep(1000);
+            sendAddBucketRequest(new BucketPresenter(2), scheduledStage);
+            Thread.sleep(1000);
+            sendAddBucketRequest(new BucketPresenter(3), inProgressStage);
+            Thread.sleep(1000);
+            sendAddBucketRequest(new BucketPresenter(4), completedStage);
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            System.err.println("Sleep Exception: " + e.getStackTrace().toString());
+        }
+
+    }
+    
+    /**
+     * Adds a bucket model to the DB.
+     * @param bucket Bucket to add to the DB
+     */
+    private static final void sendAddBucketRequest(BucketPresenter presenter, BucketModel bucket){
+        final Request request = Network.getInstance().makeRequest("taskmanager/bucket", HttpMethod.PUT);
+        System.out.println("Send Bucket Put Request: " + bucket.toJson().toString());
+        request.setBody(bucket.toJson());
+        request.addObserver(new BucketObserver(presenter, HttpMethod.PUT));
+        request.send();
     }
 }

@@ -98,7 +98,6 @@ public class BucketView extends JPanel
      */
     public void setModel(BucketModel model) {
         this.model = model;
-        
         this.titleLabel.setText(this.model.getTitle());
     }
 
