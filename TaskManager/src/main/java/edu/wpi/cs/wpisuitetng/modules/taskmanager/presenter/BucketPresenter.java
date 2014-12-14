@@ -169,9 +169,9 @@ public class BucketPresenter {
                     view.getTaskNameLabel().setText(view.getChangeTextField().getPrompt());
                 } else {
                     view.getTaskNameLabel().setText(title);
+                    model.setTitle(title);
                 }
                 view.setStaticTitlePanel();
-                model.setTitle(title);
                 updateInDatabase();
                 view.revalidate();
                 view.repaint();
