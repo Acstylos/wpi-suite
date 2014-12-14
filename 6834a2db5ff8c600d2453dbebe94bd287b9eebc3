@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_e43a3e33",
+        "filename": "Core/WPISuite-Interfaces/src/main/java/edu/wpi/cs/wpisuitetng/modules/core/models/Notification.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1002787
+      },
+      "writtenOn": "2014-12-14T17:31:27Z",
+      "side": 1,
+      "message": "should be @param not just param",
+      "revId": "6834a2db5ff8c600d2453dbebe94bd287b9eebc3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_444a2ac6",
+        "filename": "Core/WPISuite-Interfaces/src/main/java/edu/wpi/cs/wpisuitetng/modules/core/models/Notification.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1002787
+      },
+      "writtenOn": "2014-12-14T17:31:27Z",
+      "side": 1,
+      "message": "should be @param not just param",
+      "revId": "6834a2db5ff8c600d2453dbebe94bd287b9eebc3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_044022a4",
+        "filename": "Core/WPISuite-Interfaces/src/main/java/edu/wpi/cs/wpisuitetng/modules/core/models/Notification.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1002787
+      },
+      "writtenOn": "2014-12-14T17:31:27Z",
+      "side": 1,
+      "message": "should be an @param not just param",
+      "revId": "6834a2db5ff8c600d2453dbebe94bd287b9eebc3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_244566b3",
+        "filename": "Core/WPISuite-Interfaces/src/main/java/edu/wpi/cs/wpisuitetng/modules/core/models/Project.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1002787
+      },
+      "writtenOn": "2014-12-14T17:31:27Z",
+      "side": 1,
+      "message": "needs javadocs",
+      "revId": "6834a2db5ff8c600d2453dbebe94bd287b9eebc3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_64164ea9",
+        "filename": "Core/WPISuite-Interfaces/src/main/java/edu/wpi/cs/wpisuitetng/modules/core/models/Project.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1002787
+      },
+      "writtenOn": "2014-12-14T17:31:27Z",
+      "side": 1,
+      "message": "needs java docs",
+      "revId": "6834a2db5ff8c600d2453dbebe94bd287b9eebc3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_c40d7a92",
+        "filename": "Core/WPISuite-Interfaces/src/main/java/edu/wpi/cs/wpisuitetng/modules/core/models/Project.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1002787
+      },
+      "writtenOn": "2014-12-14T17:31:27Z",
+      "side": 1,
+      "message": "needs java dos",
+      "revId": "6834a2db5ff8c600d2453dbebe94bd287b9eebc3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_04278213",
+        "filename": "Core/WPISuite-Interfaces/src/main/java/edu/wpi/cs/wpisuitetng/modules/core/models/Project.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1002787
+      },
+      "writtenOn": "2014-12-14T17:31:27Z",
+      "side": 1,
+      "message": "needs java docs",
+      "revId": "6834a2db5ff8c600d2453dbebe94bd287b9eebc3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_44218afa",
+        "filename": "Core/WPISuite-Interfaces/src/main/java/edu/wpi/cs/wpisuitetng/modules/core/models/Project.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1002787
+      },
+      "writtenOn": "2014-12-14T17:31:27Z",
+      "side": 1,
+      "message": "This looks good.",
+      "revId": "6834a2db5ff8c600d2453dbebe94bd287b9eebc3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_847a52ef",
+        "filename": "Core/WPISuite-Interfaces/src/main/java/edu/wpi/cs/wpisuitetng/modules/core/models/ProjectDeserializer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1002787
+      },
+      "writtenOn": "2014-12-14T17:31:27Z",
+      "side": 1,
+      "message": "Do you add automatic email password to the Json in the Project class? I didn\u0027t see it so I don\u0027t know if you\u0027ll be able to check if deflated.has(password)",
+      "revId": "6834a2db5ff8c600d2453dbebe94bd287b9eebc3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
