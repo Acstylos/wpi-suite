@@ -98,7 +98,6 @@ public class BucketView extends JPanel
      */
     public void setModel(BucketModel model) {
         this.model = model;
-        
         this.titleLabel.setText(this.model.getTitle());
     }
 
@@ -143,7 +142,7 @@ public class BucketView extends JPanel
     /**
      * Adds a listener to the OK button. Should set the view back to 
      * static view.
-     * @param listener ActionListener that will detemine how the button acts.
+     * @param listener ActionListener that will determine how the button acts.
      */
     public void addOkButtonListener(ActionListener listener){
         this.okButton.addActionListener(listener);
