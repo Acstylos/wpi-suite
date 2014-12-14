@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_64cbee1e",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/BucketPresenter.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-12-14T18:05:27Z",
+      "side": 1,
+      "message": "Probably don\u0027t do filtering as one big if statement inside of an unrelated function.  Make a separate class for filtering, so you can add different filters without modifying this function.\n\nSomething like this psuedocode:\n\nfunc addMiniTasksToView:\n    for Task in tasks:\n        if this.filter.matches(task):\n            addMiniTask(task)",
+      "revId": "7eea4d87a0bd845a85433250f25e2e2b49fdfc84",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_a4d5d6ba",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/MainView.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-12-14T18:05:27Z",
+      "side": 1,
+      "message": "Make sure you format everything correctly.  Select all of the functions you wrote and hit \"Ctrl+Shift+F\".",
+      "revId": "7eea4d87a0bd845a85433250f25e2e2b49fdfc84",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
