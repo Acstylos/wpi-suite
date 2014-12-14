@@ -120,7 +120,7 @@ public class OverviewTable extends JTable {
 
             // re-enter the value last in the cell if in Mult. Req. Editing mode and req estimate not just edited
             if (isInEditMode &&
-                (!currEst.equals(pastEst[i])) && (!req.getEstimateEdited())) {
+                    (!currEst.equals(pastEst[i])) && (!req.getEstimateEdited())) {
                 currEst = pastEst[i];
             }
 
@@ -148,9 +148,9 @@ public class OverviewTable extends JTable {
         // if the column contains the estimate, the requirement is not deleted, in progress or completed,
         // and the table is in Multiple Requirement Editing mode, make the cell editable
         if ((col == 7) &&
-            (isInEditMode) && (!req.isDeleted()) &&
-            (req.getStatus() != RequirementStatus.COMPLETE) &&
-            (req.getStatus() != RequirementStatus.INPROGRESS)) {
+                (isInEditMode) && (!req.isDeleted()) &&
+                (req.getStatus() != RequirementStatus.COMPLETE) &&
+                (req.getStatus() != RequirementStatus.INPROGRESS)) {
             return true;
         }
 
@@ -197,6 +197,15 @@ public class OverviewTable extends JTable {
      */
     @Override
     public void paintComponent(Graphics g) {
+        this.initialize();
+
+        super.paintComponent(g);
+    }
+    
+    /**
+     * Retrieves the requirements and iterations if it hasn't been initialized already.
+     */
+    public void initialize(){
         if (!initialized) {
             try {
                 GetRequirementsController.getInstance().retrieveRequirements();
@@ -207,8 +216,6 @@ public class OverviewTable extends JTable {
                 e.printStackTrace();
             }
         }
-
-        super.paintComponent(g);
     }
 
     /**

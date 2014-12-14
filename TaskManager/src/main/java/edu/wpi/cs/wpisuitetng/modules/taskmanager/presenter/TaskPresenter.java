@@ -431,13 +431,7 @@ public class TaskPresenter {
         requirementRequest.addObserver(new RequirementsObserver(this));
         requirementRequest.send();
         
-        try {
-            GetRequirementsController.getInstance().retrieveRequirements();
-            GetIterationController.getInstance().retrieveIterations();
-        } catch (Exception e) {
-            //TODO Stop swallowing exceptions
-            e.printStackTrace();
-        }
+        ViewEventController.getInstance().getOverviewTable().initialize();
     }
 
     /**
