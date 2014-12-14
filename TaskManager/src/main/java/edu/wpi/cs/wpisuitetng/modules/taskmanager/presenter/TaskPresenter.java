@@ -74,7 +74,7 @@ public class TaskPresenter {
     private VerifyActionDialog deleteDialog = new VerifyActionDialog();
     private boolean cancelDialogConfirmed = false;
     private boolean undoDialogConfirmed = false;
-    private boolean deleteDialogConfirmed = false;
+    private boolean deleteDialogConfirmed = true;
     private boolean allowCancelDialog = false;
 
     private BucketPresenter bucket;
@@ -254,39 +254,20 @@ public class TaskPresenter {
                     updateModel();
                     createInDatabase(); // is calling "PUT" in task observer
                     view.setViewMode(ViewMode.EDITING);
-                    MainView.getInstance().remove(index);
-                    MainView.getInstance().setSelectedIndex(0);
-
-                }
-
-                else {
-                    if(viewMode == ViewMode.ARCHIVING){
-                        int newIndex = MainView.getInstance().indexOfComponent(view);
-                        MainView.getInstance().remove(newIndex);
+                } else if(viewMode == ViewMode.ARCHIVING){
                         model.setIsArchived(false);
-                        saveView();
-                        updateView();
                         view.enableEdits();
-
-                    }
-                    else{
-                     
-                    }
-                    updateBeforeModel();
-                    saveView();
-                    updateView();
-                    MainView.getInstance().setTitleAt(index,
-                            model.getShortTitle());
-                    MainView.getInstance().setToolTipTextAt(index, model.getTitle());
-                    addHistory(beforeModel, model);
                 }
-
+                updateBeforeModel();
+                MainView.getInstance().remove(index);
+                MainView.getInstance().setSelectedIndex(0);
+                saveView();
+                updateView();
+                addHistory(beforeModel, model);
                 MainView.getInstance().resetAllBuckets();
-
                 miniView.setModel(model);
                 miniView.revalidate();
                 miniView.repaint();
-
             }
         });
 
@@ -315,6 +296,7 @@ public class TaskPresenter {
                 if(cancelDialogConfirmed) {
                     int index = MainView.getInstance().indexOfComponent(view);
                     MainView.getInstance().remove(index);
+                    MainView.getInstance().setSelectedIndex(0);
                     updateView();
                     view.revalidate();
                     view.repaint();
@@ -361,12 +343,6 @@ public class TaskPresenter {
             @Override
             public void actionPerformed(ActionEvent e) {
                 deleteDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-                if(viewMode == ViewMode.ARCHIVING){
-                    deleteDialog.setCommentLabelText("Are you sure you want to delete this task?");
-                }
-                else{
-                    deleteDialog.setCommentLabelText("Are you sure you want to archive this task?");
-                }
                 deleteDialog.addConfirmButtonListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -381,10 +357,14 @@ public class TaskPresenter {
                         deleteDialog.setVisible(false);
                     }
                 });
-                deleteDialog.setVisible(true);
+                if(viewMode == ViewMode.ARCHIVING){
+                    deleteDialog.setCommentLabelText("Are you sure you want to delete this task?");
+                    deleteDialog.setVisible(true);
+                }
                 if(deleteDialogConfirmed) {//delete has been confirmed
                     int index = MainView.getInstance().indexOfComponent(view);
                     MainView.getInstance().remove(index);
+                    MainView.getInstance().setSelectedIndex(0);
                     if(viewMode == ViewMode.ARCHIVING){//delete task
                         
                         TaskPresenter taskPresenter = bucket.getTask(model.getId());
