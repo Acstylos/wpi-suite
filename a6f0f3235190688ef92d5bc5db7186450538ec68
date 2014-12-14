@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_591cd777",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/HelpPresenter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-14T06:11:13Z",
+      "side": 1,
+      "message": "Tabs are still used to indent code.",
+      "revId": "a6f0f3235190688ef92d5bc5db7186450538ec68",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_b9134365",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/HelpPresenter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-14T06:11:13Z",
+      "side": 1,
+      "message": "@return needs to be finished",
+      "revId": "a6f0f3235190688ef92d5bc5db7186450538ec68",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_99163f54",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/HelpPresenter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-14T06:11:13Z",
+      "side": 1,
+      "message": "@param needs to be finished",
+      "revId": "a6f0f3235190688ef92d5bc5db7186450538ec68",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_f90cab44",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/HelpView.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-14T06:11:13Z",
+      "side": 1,
+      "message": "Tabs are used in this file as well, they should be space bars",
+      "revId": "a6f0f3235190688ef92d5bc5db7186450538ec68",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
