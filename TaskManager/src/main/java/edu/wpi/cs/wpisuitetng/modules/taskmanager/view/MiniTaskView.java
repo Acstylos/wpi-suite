@@ -168,7 +168,7 @@ public class MiniTaskView extends JPanel {
      */
     public void setCollapsedView(){
         this.removeAll();
-        this.setLayout(new MigLayout("", "[grow][]", "-5[grow]"));
+        this.setLayout(new MigLayout("", "0[grow][]", "-1[grow]"));
         this.add(taskNameLabel, "cell 0 0,grow");
         this.add(holderPanel, "cell 1 0,grow");
         this.holderPanel.setBorder(null);
@@ -185,11 +185,12 @@ public class MiniTaskView extends JPanel {
     public void setExpandedView(){
         this.removeAll();
 
-        this.setLayout(new MigLayout("", "0[grow][grow][]", "0[][][][]"));
-        this.add(taskNameLabel, "cell 0 0 2 1");
+        this.setLayout(new MigLayout("", "0[grow][grow][]", "-1[][][][]"));
+        this.add(taskNameLabel, "cell 0 0 2 1, grow");
         this.add(dueDateLabel, "cell 0 1");
         this.add(userScrollPane, "cell 0 2 3 1,grow");
         this.add(holderPanel, "cell 2 0,grow");
+        this.holderPanel.setBorder(null);
         this.expanded = true;
         this.add(editButton, "cell 0 3,alignx left,aligny bottom");
         this.revalidate();
