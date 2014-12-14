@@ -74,13 +74,14 @@ public class TaskPresenter {
     private VerifyActionDialog deleteDialog = new VerifyActionDialog();
     private boolean cancelDialogConfirmed = false;
     private boolean undoDialogConfirmed = false;
-    private boolean deleteDialogConfirmed = false;
+    private boolean deleteDialogConfirmed = true;
     private boolean allowCancelDialog = false;
 
     private BucketPresenter bucket;
     private List<ActivityPresenter> activityPresenters;
-    
-    public final static DataFlavor TASK_DATA_FLAVOR = new DataFlavor(TaskPresenter.class, "Task");
+
+    public final static DataFlavor TASK_DATA_FLAVOR = new DataFlavor(
+            TaskPresenter.class, "Task");
 
     /**
      * Constructor for testing methods without creating View, or
@@ -137,7 +138,7 @@ public class TaskPresenter {
             @Override
             public void mouseClicked(MouseEvent e) {
                 miniView.setModel(model);
-                if(!miniView.isExpanded()){
+                if (!miniView.isExpanded()) {
                     addUsersToMiniTaskView();
                     miniView.setExpandedView();
                 } else {
@@ -150,17 +151,16 @@ public class TaskPresenter {
         });
 
         // on click listener to edit tasks from the expanded task view
-        miniView.addOnClickEditButton(new ActionListener(){
+        miniView.addOnClickEditButton(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 MainView.getInstance().addTab(model.getShortTitle(),
                         Icons.TASKEDIT, view);// this line chooses tab title
-                if(model.getIsArchived()){
+                if (model.getIsArchived()) {
                     view.setViewMode(ViewMode.ARCHIVING);
                     view.getCommentView().toggleTextField(ViewMode.ARCHIVING);
                     view.disableEdits();
-                }
-                else{
+                } else {
                     view.setViewMode(ViewMode.EDITING);
                     view.enableEdits();
                 }
@@ -174,18 +174,18 @@ public class TaskPresenter {
                 miniView.setCollapsedView();
             }
         });
-        
-        /* Set a handler to move the task when it's dragged and dropped */ 
+
+        /* Set a handler to move the task when it's dragged and dropped */
         miniView.setTransferHandler(new TransferHandler() {
             /**
-             * @return {@link TransferHandler#MOVE}. At least for now, tasks
-             * are moved, never copied or linked.
+             * @return {@link TransferHandler#MOVE}. At least for now, tasks are
+             *         moved, never copied or linked.
              */
             @Override
             public int getSourceActions(JComponent c) {
                 return MOVE;
             }
-            
+
             /**
              * @return false always, since things can't be dragged onto tasks
              */
@@ -193,7 +193,7 @@ public class TaskPresenter {
             public boolean canImport(TransferSupport support) {
                 return false;
             }
-            
+
             /**
              * @return A transferable for the task presenter
              */
@@ -217,23 +217,26 @@ public class TaskPresenter {
                     }
                 };
             }
-            
+
             /**
              * Hide the ghosted image after the drag and drop is done
              */
-            protected void exportDone(JComponent source, Transferable data, int action) {
-                GhostGlassPane glassPane = MainView.getInstance().getGlassPane();
-                if(action != NONE) {
+            protected void exportDone(JComponent source, Transferable data,
+                    int action) {
+                GhostGlassPane glassPane = MainView.getInstance()
+                        .getGlassPane();
+                if (action != NONE) {
                     glassPane.setVisible(false);
                     miniView.setColorHighlighted(false);
                 } else {
                     Point end = new Point(source.getLocationOnScreen());
                     SwingUtilities.convertPointFromScreen(end, glassPane);
-                    
+
                     end.x += glassPane.getStartDragPoint().x;
                     end.y += glassPane.getStartDragPoint().y;
-                    
-                    Timer backTimer = new Timer(1000 / 60, new ReturnToOrigin(glassPane, glassPane.getPoint(), end));
+
+                    Timer backTimer = new Timer(1000 / 60, new ReturnToOrigin(
+                            glassPane, glassPane.getPoint(), end));
                     backTimer.start();
                     miniView.setColorHighlighted(false);
                 }
@@ -254,34 +257,17 @@ public class TaskPresenter {
                     updateModel();
                     createInDatabase(); // is calling "PUT" in task observer
                     view.setViewMode(ViewMode.EDITING);
-                    MainView.getInstance().remove(index);
-                    MainView.getInstance().setSelectedIndex(0);
 
+                } else if (viewMode == ViewMode.ARCHIVING) {
+                    model.setIsArchived(false);
+                    view.enableEdits();
                 }
-
-                else {
-                    if(viewMode == ViewMode.ARCHIVING){
-                        int newIndex = MainView.getInstance().indexOfComponent(view);
-                        MainView.getInstance().remove(newIndex);
-                        model.setIsArchived(false);
-                        saveView();
-                        updateView();
-                        view.enableEdits();
-
-                    }
-                    else{
-                     
-                    }
-                    updateBeforeModel();
-                    saveView();
-                    updateView();
-                    MainView.getInstance().setTitleAt(index,
-                            model.getShortTitle());
-                    MainView.getInstance().setToolTipTextAt(index, model.getTitle());
-                    addHistory(beforeModel, model);
-                }
-
-                MainView.getInstance().resetAllBuckets();
+                updateBeforeModel();
+                saveView();
+                updateView();
+                addHistory(beforeModel, model);
+                MainView.getInstance().remove(index);
+                MainView.getInstance().setSelectedIndex(0);
 
                 miniView.setModel(model);
                 miniView.revalidate();
@@ -293,8 +279,10 @@ public class TaskPresenter {
         view.addCancelOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cancelDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-                cancelDialog.setCommentLabelText("Are you sure you want to close the tab?");
+                cancelDialog
+                        .setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+                cancelDialog
+                        .setCommentLabelText("Are you sure you want to close the tab?");
                 cancelDialog.addConfirmButtonListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -312,7 +300,7 @@ public class TaskPresenter {
                 if (allowCancelDialog) {
                     cancelDialog.setVisible(true);
                 }
-                if(cancelDialogConfirmed) {
+                if (cancelDialogConfirmed) {
                     int index = MainView.getInstance().indexOfComponent(view);
                     MainView.getInstance().remove(index);
                     updateView();
@@ -328,8 +316,10 @@ public class TaskPresenter {
         view.addClearOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                undoDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-                undoDialog.setCommentLabelText("Are you sure you want to undo your changes?");
+                undoDialog
+                        .setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+                undoDialog
+                        .setCommentLabelText("Are you sure you want to undo your changes?");
                 undoDialog.addConfirmButtonListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -345,7 +335,7 @@ public class TaskPresenter {
                     }
                 });
                 undoDialog.setVisible(true);
-                if(undoDialogConfirmed) {
+                if (undoDialogConfirmed) {
                     updateView();
                     view.revalidate();
                     view.repaint();
@@ -360,13 +350,8 @@ public class TaskPresenter {
         view.addDeleteOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                deleteDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-                if(viewMode == ViewMode.ARCHIVING){
-                    deleteDialog.setCommentLabelText("Are you sure you want to delete this task?");
-                }
-                else{
-                    deleteDialog.setCommentLabelText("Are you sure you want to archive this task?");
-                }
+                deleteDialog
+                        .setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
                 deleteDialog.addConfirmButtonListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -381,21 +366,27 @@ public class TaskPresenter {
                         deleteDialog.setVisible(false);
                     }
                 });
-                deleteDialog.setVisible(true);
-                if(deleteDialogConfirmed) {//delete has been confirmed
+                if (viewMode == ViewMode.ARCHIVING) {
+                    deleteDialog
+                            .setCommentLabelText("Are you sure you want to delete this task?");
+                    deleteDialog.setVisible(true);
+                }
+                if (deleteDialogConfirmed) {// delete has been confirmed
                     int index = MainView.getInstance().indexOfComponent(view);
                     MainView.getInstance().remove(index);
-                    if(viewMode == ViewMode.ARCHIVING){//delete task
-                        
-                        TaskPresenter taskPresenter = bucket.getTask(model.getId());
+                    MainView.getInstance().setSelectedIndex(0);
+                    if (viewMode == ViewMode.ARCHIVING) {// delete task
+
+                        TaskPresenter taskPresenter = bucket.getTask(model
+                                .getId());
                         bucket.removeTaskView(taskPresenter);
-                        
-                    }
-                    else{
+
+                    } else {
                         model.setIsArchived(true);
                         saveView();
                         updateView();
                         view.disableEdits();
+                        
                         MainView.getInstance().resetAllBuckets();
                     }
                 }
@@ -499,15 +490,19 @@ public class TaskPresenter {
                 summary += "\n";
             summary += "Task was moved from " + intToStatus(before.getStatus())
                     + " to " + intToStatus(after.getStatus());
-            
+
             flag = true;
         }
-        
+
         if (!before.getLabelColor().equals(after.getLabelColor())) {
             if (flag)
                 summary += "\n";
-            summary += "Label was changed from " + ColorRenderer.evaluateColor(before.getLabelColor().toString())
-                    + " to " + ColorRenderer.evaluateColor(after.getLabelColor().toString());
+            summary += "Label was changed from "
+                    + ColorRenderer.evaluateColor(before.getLabelColor()
+                            .toString())
+                    + " to "
+                    + ColorRenderer.evaluateColor(after.getLabelColor()
+                            .toString());
         }
         return summary;
     }
@@ -520,7 +515,7 @@ public class TaskPresenter {
      * @return String the name of the bucket
      */
     private String intToStatus(int bucket) {
-        if (bucket == 1) 
+        if (bucket == 1)
             return "New";
         else if (bucket == 2)
             return "Selected";
@@ -557,7 +552,7 @@ public class TaskPresenter {
                 + dateFormat.format(cal.getTime()) + "]: ";
         ActivityPresenter activityPresenter = new ActivityPresenter(this,
                 userInformation
-                + view.getCommentView().getCommentText().getText(),
+                        + view.getCommentView().getCommentText().getText(),
                 false);
 
         view.getCommentView().postActivity(activityPresenter.getView());
@@ -657,21 +652,22 @@ public class TaskPresenter {
     }
 
     /**
-     * @param users User array of all users in the database
+     * @param users
+     *            User array of all users in the database
      */
     public void addUsersToAllUserList(User[] users) {
         this.allUserArray = users;
     }
 
     /**
-     * Takes the allUsers array, and checks users with assigned users list
-     * all assigned users get added to the assigned view, and all others
-     * get added to unassigned view
+     * Takes the allUsers array, and checks users with assigned users list all
+     * assigned users get added to the assigned view, and all others get added
+     * to unassigned view
      */
     public void addUsersToView() {
         this.view.getUserListPanel().removeAllUsers();
-        for(User user: allUserArray) {
-            if(assignedUserList.contains(user.getIdNum())) {
+        for (User user : allUserArray) {
+            if (assignedUserList.contains(user.getIdNum())) {
                 this.view.getUserListPanel().addUserToList(user, true);
             } else {
                 this.view.getUserListPanel().addUserToList(user, false);
@@ -714,10 +710,9 @@ public class TaskPresenter {
         addUsersToView();
         this.setIconForMinitaskView();
 
-        if(model.getIsArchived()) {
+        if (model.getIsArchived()) {
             miniView.setColorArchived(true);
-        }
-        else {
+        } else {
             miniView.setColorArchived(false);
         }
         view.revalidate();
@@ -727,12 +722,12 @@ public class TaskPresenter {
         miniView.setToolTipText(model.getTitle());
         miniView.updateLabel();
     }
-    
+
     /**
-     * Similar to updateView but does not call update commentView.
-     * Made in effort to only call revalidate  + repaint at the very end
-     * (i.e. when the task has finished moving to the new bucket.)
-     * Function only used when a task is switching buckets.
+     * Similar to updateView but does not call update commentView. Made in
+     * effort to only call revalidate + repaint at the very end (i.e. when the
+     * task has finished moving to the new bucket.) Function only used when a
+     * task is switching buckets.
      */
     private void switchBucketUpdateViews() {
         view.setModel(model);
@@ -828,7 +823,8 @@ public class TaskPresenter {
     }
 
     /**
-     * @param bucket the bucket that this task is in
+     * @param bucket
+     *            the bucket that this task is in
      */
     public void setBucket(BucketPresenter bucket) {
         this.bucket = bucket;
@@ -837,15 +833,19 @@ public class TaskPresenter {
 
     /**
      * Removes a user from the assignedTo list
-     * @param user User to remove from assignedTo
+     * 
+     * @param user
+     *            User to remove from assignedTo
      */
     public void removeUserFromAssignedTo(User user) {
-        this.assignedUserList.remove((Object)user.getIdNum());
+        this.assignedUserList.remove((Object) user.getIdNum());
     }
 
     /**
      * Add a user from the assignedTo list
-     * @param user User to add to assignedTo 
+     * 
+     * @param user
+     *            User to add to assignedTo
      */
     public void addUserToAssignedTo(User user) {
         this.assignedUserList.add(user.getIdNum());
@@ -860,13 +860,16 @@ public class TaskPresenter {
     }
 
     /**
-     * @param enable Whether or not to enable the cancel dialog
+     * @param enable
+     *            Whether or not to enable the cancel dialog
      */
     public void setAllowCancelDialogEnabled(boolean enable) {
         this.allowCancelDialog = enable;
-        this.cancelDialogConfirmed = !enable; // if the dialog is enabled, the confirmation of the dialog box is opposite
+        this.cancelDialogConfirmed = !enable; // if the dialog is enabled, the
+                                              // confirmation of the dialog box
+                                              // is opposite
     }
-    
+
     /**
      * returns the Username with the given ID, otherwise blank.
      * 
@@ -880,43 +883,36 @@ public class TaskPresenter {
                 return u.getUsername();
         }
         return "";
-}
-    
+    }
+
     /**
      * set icon for the task in update view
      */
-    public void setIconForMinitaskView(){
-    	Calendar cal = Calendar.getInstance();
-        Date nowDate = cal.getTime(); //Current Date        
-        Date dueDate = model.getDueDate();     
-        //Get time differences 
+    public void setIconForMinitaskView() {
+        Calendar cal = Calendar.getInstance();
+        Date nowDate = cal.getTime(); // Current Date
+        Date dueDate = model.getDueDate();
+        // Get time differences
         long leftTime = dueDate.getTime() - nowDate.getTime();
         long leftInHours = TimeUnit.MILLISECONDS.toHours(leftTime);
         // Set icons
-        if(leftInHours == 0) { //On the date it's due 
-        	this.miniView.setTaskNameLabelIcon(Icons.TASKDUE);
-        }
-        else {
-        	if (leftInHours < -24){ //Overdue 
-        		this.miniView.setTaskNameLabelIcon(Icons.TASKDUE);
-            }
-            else if (leftInHours < 0){ //Nearly due
-            	this.miniView.setTaskNameLabelIcon(Icons.TASKNEARDUE);
-            }
-            else if (leftInHours < 48){ //In progress
-            	this.miniView.setTaskNameLabelIcon(Icons.TASKSTART);
-            }
-            else if (dueDate.getMonth() + 1 == 12 && dueDate.getDate() == 25) {
+        if (leftInHours == 0) { // On the date it's due
+            this.miniView.setTaskNameLabelIcon(Icons.TASKDUE);
+        } else {
+            if (leftInHours < -24) { // Overdue
+                this.miniView.setTaskNameLabelIcon(Icons.TASKDUE);
+            } else if (leftInHours < 0) { // Nearly due
+                this.miniView.setTaskNameLabelIcon(Icons.TASKNEARDUE);
+            } else if (leftInHours < 48) { // In progress
+                this.miniView.setTaskNameLabelIcon(Icons.TASKSTART);
+            } else if (dueDate.getMonth() + 1 == 12 && dueDate.getDate() == 25) {
                 this.miniView.setTaskNameLabelIcon(Icons.TASKCHRISTMAS);
-            }
-            else if (dueDate.getMonth() + 1 == 4 && dueDate.getDate() == 20) {
+            } else if (dueDate.getMonth() + 1 == 4 && dueDate.getDate() == 20) {
                 this.miniView.setTaskNameLabelIcon(Icons.TASKSNOOPDOGG);
-            }
-            else if (dueDate.getMonth() + 1 == 10 && dueDate.getDate() == 31) {
+            } else if (dueDate.getMonth() + 1 == 10 && dueDate.getDate() == 31) {
                 this.miniView.setTaskNameLabelIcon(Icons.TASKHALLOWEEN);
-            }
-            else { //New
-            	this.miniView.setTaskNameLabelIcon(Icons.TASKNEW);
+            } else { // New
+                this.miniView.setTaskNameLabelIcon(Icons.TASKNEW);
             }
         }
     }
@@ -924,29 +920,31 @@ public class TaskPresenter {
     /**
      * Wrapper function to add all assigned users to the miniTaskView
      */
-    public void addUsersToMiniTaskView(){
+    public void addUsersToMiniTaskView() {
         List<String> userNames = new ArrayList<String>();
-        for(User user: allUserArray){
-            if(assignedUserList.contains(user.getIdNum())){
+        for (User user : allUserArray) {
+            if (assignedUserList.contains(user.getIdNum())) {
                 userNames.add(user.getName());
             }
         }
         miniView.addUsersToUserPanel(userNames);
     }
-    
+
     /**
-     * check if the label is null, 
-     * then if it is not, then update the miniview to the color of the task's colorLabel
-     * @param model taskModel containing a colorLabel
+     * check if the label is null, then if it is not, then update the miniview
+     * to the color of the task's colorLabel
+     * 
+     * @param model
+     *            taskModel containing a colorLabel
      */
     public void validateUpdateLabel() {
         // white does no setBackground to panel.
         if (this.getModel().getLabelColor() != null) {
             if (!this.getModel().getLabelColor()
-                    .equals(new Color(255, 255, 255))){
-                this.getMiniView().getColorLabel().setBackground(
-                        this.getModel().getLabelColor());
+                    .equals(new Color(255, 255, 255))) {
+                this.getMiniView().getColorLabel()
+                        .setBackground(this.getModel().getLabelColor());
             }
-        }        
+        }
     }
 }
