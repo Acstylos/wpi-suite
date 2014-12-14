@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fafc7978_a45e7674",
+        "filename": "Core/WPISuite-Interfaces/src/main/java/edu/wpi/cs/wpisuitetng/modules/core/models/Notification.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-12-14T18:16:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fafc7978_e43a3e33",
+      "revId": "6834a2db5ff8c600d2453dbebe94bd287b9eebc3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fafc7978_444a2ac6",
         "filename": "Core/WPISuite-Interfaces/src/main/java/edu/wpi/cs/wpisuitetng/modules/core/models/Notification.java",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "fafc7978_0455c24f",
+        "filename": "Core/WPISuite-Interfaces/src/main/java/edu/wpi/cs/wpisuitetng/modules/core/models/Notification.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-12-14T18:16:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fafc7978_444a2ac6",
+      "revId": "6834a2db5ff8c600d2453dbebe94bd287b9eebc3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fafc7978_044022a4",
         "filename": "Core/WPISuite-Interfaces/src/main/java/edu/wpi/cs/wpisuitetng/modules/core/models/Notification.java",
         "patchSetId": 2
@@ -47,6 +83,24 @@
       "writtenOn": "2014-12-14T17:31:27Z",
       "side": 1,
       "message": "should be an @param not just param",
+      "revId": "6834a2db5ff8c600d2453dbebe94bd287b9eebc3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_e44fdebc",
+        "filename": "Core/WPISuite-Interfaces/src/main/java/edu/wpi/cs/wpisuitetng/modules/core/models/Notification.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-12-14T18:16:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fafc7978_044022a4",
       "revId": "6834a2db5ff8c600d2453dbebe94bd287b9eebc3",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
@@ -121,6 +175,24 @@
     },
     {
       "key": {
+        "uuid": "fafc7978_64648e49",
+        "filename": "Core/WPISuite-Interfaces/src/main/java/edu/wpi/cs/wpisuitetng/modules/core/models/Project.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-12-14T18:16:00Z",
+      "side": 1,
+      "message": "My reasoning for this was to follow the convention in the rest of the file.  This isn\u0027t part of our module, so there are different standards.",
+      "parentUuid": "fafc7978_04278213",
+      "revId": "6834a2db5ff8c600d2453dbebe94bd287b9eebc3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fafc7978_44218afa",
         "filename": "Core/WPISuite-Interfaces/src/main/java/edu/wpi/cs/wpisuitetng/modules/core/models/Project.java",
         "patchSetId": 2
@@ -149,6 +221,24 @@
       "writtenOn": "2014-12-14T17:31:27Z",
       "side": 1,
       "message": "Do you add automatic email password to the Json in the Project class? I didn\u0027t see it so I don\u0027t know if you\u0027ll be able to check if deflated.has(password)",
+      "revId": "6834a2db5ff8c600d2453dbebe94bd287b9eebc3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_24e1e69a",
+        "filename": "Core/WPISuite-Interfaces/src/main/java/edu/wpi/cs/wpisuitetng/modules/core/models/ProjectDeserializer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-12-14T18:16:00Z",
+      "side": 1,
+      "message": "No, automatic email isn\u0027t added in toJson, but it\u0027s available when sent from the JSP interface, or when read from the database.  That\u0027s why these checks are necessary.",
+      "parentUuid": "fafc7978_847a52ef",
       "revId": "6834a2db5ff8c600d2453dbebe94bd287b9eebc3",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
