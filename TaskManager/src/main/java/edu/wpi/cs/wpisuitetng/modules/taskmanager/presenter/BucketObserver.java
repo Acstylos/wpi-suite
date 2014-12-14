@@ -10,6 +10,7 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.updater.Updater;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 import edu.wpi.cs.wpisuitetng.network.models.IRequest;
@@ -46,28 +47,29 @@ public class BucketObserver implements RequestObserver {
         // Store the response
         final ResponseModel response = iReq.getResponse();
 
-
-        if(method == HttpMethod.GET){
-
+        final BucketModel model;
+        switch (iReq.getHttpMethod()) {
+        case GET:
             // Parse the message
-            final BucketModel[] models = BucketModel.fromJsonArray(response.getBody());
-        	presenter.responseGet(models);
-        }else{
+            model = BucketModel.fromJsonArray(response.getBody())[0];
+            this.presenter.setModel(model);
+            Updater.getInstance().registerBucket(presenter);
+            break;
+        case POST:
             // Parse the message
-            final BucketModel model = BucketModel.fromJson(response.getBody());
-            switch (method) {
-        	case GET:
-        		break;
-        	case POST:
-        		presenter.responsePost(model);
-        		break;
-        	case PUT:
-        		presenter.responsePut(model);
-        		break;
-        	case DELETE:
-        		presenter.responseDelete(model);
-        		break;
-        }
+            model = BucketModel.fromJson(response.getBody());
+            this.presenter.responsePost(model);
+            break;
+        case PUT:
+            // Parse the message
+            model = BucketModel.fromJson(response.getBody());
+            this.presenter.responsePut(model);
+            break;
+        case DELETE:
+            // Parse the message
+            model = BucketModel.fromJson(response.getBody());
+            this.presenter.responseDelete(model);
+            break;
         }
     }
 
@@ -89,6 +91,10 @@ public class BucketObserver implements RequestObserver {
                 + " a bucket failed.");
     }
 
+    /**
+     * @param method_ The HttpMethod related to the request
+     * @return The string corresponding to the specified HttpMethod
+     */
     private static String httpMethodToString(HttpMethod method_) {
         String methodString = "";
         switch (method_) {

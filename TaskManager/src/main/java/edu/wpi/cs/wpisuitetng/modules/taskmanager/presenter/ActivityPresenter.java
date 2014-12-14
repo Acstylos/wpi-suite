@@ -100,17 +100,10 @@ public class ActivityPresenter {
      */
     public void updateView() {
         view.setActivity(model.getActivity());
-        if (model.getIsAutogen()) {
+        if (model.getIsAutogen())
             commentView.postHistory(view);
-        }
         else
             commentView.postActivity(view);
-        commentView.revalidate();
-        commentView.repaint();
-
-        // view.setUser(model.getUser());
-        // view.setDate(model.getDate());
-
     }
 
     /**
@@ -118,8 +111,6 @@ public class ActivityPresenter {
      */
     public void updateModel() {
         model.setActivity(view.getActivity());
-        // model.setDate(view.getDate());
-        // model.setUser(view.getUser());
     }
 
     /**
@@ -131,19 +122,6 @@ public class ActivityPresenter {
                 "taskmanager/activity/" + model.getId(), HttpMethod.GET);
         request.addObserver(new ActivityObserver(this));
         request.setReadTimeout(10000);
-        request.send();
-    }
-
-    /**
-     * Write the model to the network/database. Must be created already.
-     */
-    private void updateToDataBase() {
-        updateModel();
-
-        Request request = Network.getInstance().makeRequest(
-                "taskmanager/activity", HttpMethod.POST); // Update.
-        request.setBody(model.toJson());
-        request.addObserver(new ActivityObserver(this));
         request.send();
     }
 

@@ -148,6 +148,10 @@ public class TaskEntityManager implements EntityManager<TaskModel> {
     @Override
     public boolean deleteEntity(Session s, String id) throws WPISuiteException {
         System.out.println("Delete Task ID: " + id);
+
+        UpdateEntityManager.registerChange(new ChangeModel(HttpMethod.DELETE,
+                ChangeModel.ChangeObjectType.TASK, Integer.valueOf(id)));
+
         // TODO Auto-generated method stub
         return (db.delete(getEntity(s, id)[0]) != null) ? true : false;
     }

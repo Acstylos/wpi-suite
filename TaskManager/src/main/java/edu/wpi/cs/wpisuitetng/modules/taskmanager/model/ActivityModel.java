@@ -245,5 +245,19 @@ public class ActivityModel extends AbstractModel {
         // TODO Auto-generated method stub
         return null;
     }
-
+    
+    /**
+     * Checks if two models are the same
+     * 
+     * @param that
+     *            the model to be compared
+     * @return if it is equal or not
+     */
+    public Boolean isEqual(ActivityModel that) {
+        return (this.isAutogen == that.isAutogen
+                && this.activity.equals(that.activity)
+                && this.date.equals(that.date)
+                && this.id == that.id
+                && this.userId == that.userId);
+    }
 }

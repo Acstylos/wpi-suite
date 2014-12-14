@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
+
 /* Presenters to update. */
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;
@@ -22,6 +23,7 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.ActivityPresenter;
 /* Get buckets. */
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ViewMode;
 /* Networking. */
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
@@ -263,7 +265,7 @@ public class Updater extends TimerTask implements RequestObserver {
     public void changeTask(HttpMethod operation, int id) {
         switch (operation) {
         case PUT:
-            System.out.println("PUT'd task. Creating.");
+            System.out.println("PUT'd task. Creating. Bucket ID: " + id);
             this.buckets.get(id).load();
             break;
         case GET:
@@ -273,7 +275,9 @@ public class Updater extends TimerTask implements RequestObserver {
             this.tasks.get(id).updateFromDatabase();
             break;
         case DELETE:
-            this.buckets.get(id).load();
+            System.out.println("DELETE'd task. Updating.");
+            TaskPresenter p = this.tasks.get(id);
+            p.getBucket().removeTaskLocal(id);
             break;
         }
         return;
