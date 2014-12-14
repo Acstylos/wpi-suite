@@ -502,12 +502,13 @@ public class TaskPresenter {
             
             flag = true;
         }
-        
-        if (!before.getLabelColor().equals(after.getLabelColor())) {
-            if (flag)
-                summary += "\n";
-            summary += "Label was changed from " + ColorRenderer.evaluateColor(before.getLabelColor().toString())
-                    + " to " + ColorRenderer.evaluateColor(after.getLabelColor().toString());
+        if(before.getLabelColor()!=null){
+            if (!before.getLabelColor().equals(after.getLabelColor())) {
+                if (flag)
+                    summary += "\n";
+                summary += "Label was changed from " + ColorRenderer.evaluateColor(before.getLabelColor().toString())
+                        + " to " + ColorRenderer.evaluateColor(after.getLabelColor().toString());
+            }
         }
         return summary;
     }
@@ -940,4 +941,25 @@ public class TaskPresenter {
             }
         }        
     }
+    
+    /**
+     * 
+     * @return beforeModel, TaskModel before updateBeforeModel() is called.
+     */
+    public TaskModel getBeforeModel() {
+        return beforeModel;
+    }
+    
+    /**
+     * Set the model for this class.
+     * EXCEPT does not update any Views.
+     * 
+     * @param model
+     *            This provider's model.
+     */
+    public void setModelNoView(TaskModel other){
+        this.model = other;
+    }
+    
+    
 }
