@@ -50,10 +50,10 @@ public class BucketView extends JPanel
     private JPanel taskViewHolderPanel = new JPanel();
     private JScrollPane taskScrollPane = new JScrollPane();
     private final JXTextField changeTitleField = new JXTextField("", Color.GRAY);
-    private final JButton okButton = new JButton("Ok");
-    private final JLabel editStageLabel = new JLabel("Edit Stage Name: ");
+    private final JButton okButton = new JButton(Icons.OK);
     private final static LineBorder validBorder = new LineBorder(Color.GRAY, 1);
     private final static LineBorder invalidBorder = new LineBorder(Color.RED, 1);
+    private final JButton cancelButton = new JButton(Icons.CANCEL);
 
     /**
      * Constructor for BucketViews.
@@ -149,37 +149,29 @@ public class BucketView extends JPanel
     }
     
     /**
+     * Adds a listener to the Cancel button. Should set the view back to 
+     * static view, without changing the title.
+     * @param listener ActionListener that will determine how the button acts.
+     */
+    public void addCancelButtonListener(ActionListener listener){
+        this.cancelButton.addActionListener(listener);
+    }
+    
+    /**
      * Sets the layout of the title panel to allow for editing the label name.
      */
     public void setChangeTitlePanel(){
         this.titlePanel.removeAll();
         
-        this.titlePanel.setLayout(new MigLayout("", "[][grow][]", "[grow]"));
-        
-        this.titlePanel.add(editStageLabel, "cell 0 0,alignx leading,growy");
-        this.titlePanel.add(changeTitleField, "cell 1 0,grow");
-        this.titlePanel.add(okButton, "cell 2 0");
+        this.titlePanel.setLayout(new MigLayout("", "[grow][min]", "[grow]"));
+        this.titlePanel.add(changeTitleField, "cell 0 0,grow");
+        this.titlePanel.add(okButton, "flowx,cell 1 0,alignx center,growy");
         this.changeTitleField.setDocument(new PlainDocument());
         this.changeTitleField.setPrompt(this.titleLabel.getText());
         
-        this.changeTitleField.getDocument().addDocumentListener(
-                new DocumentListener() {
-
-                    @Override
-                    public void removeUpdate(DocumentEvent e) {
-                        validateField();
-                    }
-
-                    @Override
-                    public void insertUpdate(DocumentEvent e) {
-                        validateField();
-                    }
-
-                    @Override
-                    public void changedUpdate(DocumentEvent arg0) {
-                        validateField();
-                    }
-                });
+        titlePanel.add(cancelButton, "cell 2 0,alignx center,growy");
+        
+        this.changeTitleField.getDocument().addDocumentListener(changedTaskNameListener);
     }
     
     /**
@@ -219,5 +211,23 @@ public class BucketView extends JPanel
             this.changeTitleField.setBorder(validBorder);
         }
     }
+    
+    private final DocumentListener changedTaskNameListener = new DocumentListener() {
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            validateField();
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            validateField();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent arg0) {
+            validateField();
+        }
+    };
 
 }

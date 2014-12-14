@@ -168,11 +168,24 @@ public class BucketPresenter {
                 if(title.trim().equals("")){
                     view.getTaskNameLabel().setText(view.getChangeTextField().getPrompt());
                 } else {
-                    view.getTaskNameLabel().setText(title);
+                    view.getTaskNameLabel().setText(title.trim());
+                    model.setTitle(title.trim());
                 }
                 view.setStaticTitlePanel();
-                model.setTitle(title);
                 updateInDatabase();
+                view.revalidate();
+                view.repaint();
+            }
+        });
+        
+        /* Allows the Cancel button to revert the Title Panel of the
+         * bucket. 
+         */
+        view.addCancelButtonListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.setStaticTitlePanel();
                 view.revalidate();
                 view.repaint();
             }
