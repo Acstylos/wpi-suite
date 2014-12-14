@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_c46f3ac4",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/model/TaskModel.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-12-14T08:51:50Z",
+      "side": 1,
+      "message": "The signature of this method should be `public boolean equals(Object)` and it should have an `@Override` annotation.",
+      "revId": "0806314ca299bfa07396e9d1541db1cd8a096e56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_a472f6aa",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-12-14T08:51:50Z",
+      "side": 1,
+      "message": "This looks unrelated to writing tests - commit it separately if at all.",
+      "revId": "0806314ca299bfa07396e9d1541db1cd8a096e56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_e4635edb",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/TaskPresenter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-12-14T08:51:50Z",
+      "side": 1,
+      "message": "This also seems unrelated to testing.",
+      "revId": "0806314ca299bfa07396e9d1541db1cd8a096e56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_046942be",
+        "filename": "TaskManager/src/test/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/model/TestTaskPresenter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-12-14T08:51:50Z",
+      "side": 1,
+      "message": "This assertion is always true. The only way this test can fail is if an exception is thrown, so you can just remove this line.",
+      "revId": "0806314ca299bfa07396e9d1541db1cd8a096e56",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
