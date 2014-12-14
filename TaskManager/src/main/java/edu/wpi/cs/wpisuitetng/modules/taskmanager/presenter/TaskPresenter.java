@@ -24,9 +24,12 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JComponent;
@@ -34,7 +37,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.TransferHandler;
 
+import edu.wpi.cs.wpisuitetng.Session;
+import edu.wpi.cs.wpisuitetng.exceptions.SessionException;
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Notification;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.GhostGlassPane;
@@ -406,6 +413,8 @@ public class TaskPresenter {
         beforeModel.setActualEffort(model.getActualEffort());
         beforeModel.setDueDate(model.getDueDate());
         beforeModel.setStatus(model.getStatus());
+        beforeModel.setAssignedTo(new ArrayList<>(model.getAssignedTo()));
+        beforeModel.setActivityIds(new ArrayList<>(model.getActivityIds()));
     }
 
     /**
@@ -439,8 +448,8 @@ public class TaskPresenter {
     public void addHistory(TaskModel before, TaskModel after) {
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
         Calendar cal = Calendar.getInstance();
-        String user = ConfigManager.getConfig().getUserName();
-        String activity = user + " has updated tasks on "
+        String username = ConfigManager.getConfig().getUserName();
+        String activity = username + " has updated tasks on "
                 + dateFormat.format(cal.getTime()) + ":\n";
 
         activity += before.compareTo(after);
@@ -449,6 +458,35 @@ public class TaskPresenter {
         view.getCommentView().postHistory(activityPresenter.getView());
         activityPresenter.createInDatabase();
         activityPresenters.add(activityPresenter);
+        
+        /*
+         * Send an email to any users assigned to this task (or who used to be
+         * assigned to this task) saying what just changed.
+         */
+        List<String> recipients = new ArrayList<>();
+        for (User user : this.allUserArray) {
+            if ((before.getAssignedTo().contains(user.getIdNum()) || after
+                    .getAssignedTo().contains(user.getIdNum()))
+                    && user.getEmailAddress() != null
+                    && !user.getEmailAddress().isEmpty()) {
+                if (!recipients.contains(user.getEmailAddress())) {
+                    recipients.add(user.getEmailAddress());
+                }
+            }
+        }
+
+        Notification notification = new Notification();
+        notification.setRecipients(recipients);
+        notification.setSubject(ConfigManager.getConfig().getUserName()
+                + " updated " + this.model.getTitle() + " in "
+                + ConfigManager.getConfig().getProjectName());
+        notification.setContent(before.compareToHtml(after));
+        notification.setProjectName(ConfigManager.getConfig().getProjectName());
+
+        Request request = Network.getInstance().makeRequest("Notification",
+                HttpMethod.POST);
+        request.setBody(notification.toJson());
+        request.send();
     }
 
     /**
