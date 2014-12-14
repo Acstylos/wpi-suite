@@ -74,7 +74,7 @@ public class TaskPresenter {
     private VerifyActionDialog deleteDialog = new VerifyActionDialog();
     private boolean cancelDialogConfirmed = false;
     private boolean undoDialogConfirmed = false;
-    private boolean deleteDialogConfirmed = false;
+    private boolean deleteDialogConfirmed = true;
     private boolean allowCancelDialog = false;
 
     private BucketPresenter bucket;
@@ -259,18 +259,16 @@ public class TaskPresenter {
 
                 }
 
-                else {
-                    if(viewMode == ViewMode.ARCHIVING){
+                else if(viewMode == ViewMode.ARCHIVING){
                         int newIndex = MainView.getInstance().indexOfComponent(view);
                         MainView.getInstance().remove(newIndex);
                         model.setIsArchived(false);
                         saveView();
                         updateView();
                         view.enableEdits();
+                        MainView.getInstance().remove(index);
+                        MainView.getInstance().setSelectedIndex(0);
 
-                    }
-                    else{
-                     
                     }
                     updateBeforeModel();
                     saveView();
@@ -279,7 +277,9 @@ public class TaskPresenter {
                             model.getShortTitle());
                     MainView.getInstance().setToolTipTextAt(index, model.getTitle());
                     addHistory(beforeModel, model);
-                }
+                    MainView.getInstance().remove(index);
+                    MainView.getInstance().setSelectedIndex(0);
+                
 
                 MainView.getInstance().resetAllBuckets();
 
@@ -361,12 +361,6 @@ public class TaskPresenter {
             @Override
             public void actionPerformed(ActionEvent e) {
                 deleteDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-                if(viewMode == ViewMode.ARCHIVING){
-                    deleteDialog.setCommentLabelText("Are you sure you want to delete this task?");
-                }
-                else{
-                    deleteDialog.setCommentLabelText("Are you sure you want to archive this task?");
-                }
                 deleteDialog.addConfirmButtonListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -381,7 +375,10 @@ public class TaskPresenter {
                         deleteDialog.setVisible(false);
                     }
                 });
-                deleteDialog.setVisible(true);
+                if(viewMode == ViewMode.ARCHIVING){
+                    deleteDialog.setCommentLabelText("Are you sure you want to delete this task?");
+                    deleteDialog.setVisible(true);
+                }
                 if(deleteDialogConfirmed) {//delete has been confirmed
                     int index = MainView.getInstance().indexOfComponent(view);
                     MainView.getInstance().remove(index);
