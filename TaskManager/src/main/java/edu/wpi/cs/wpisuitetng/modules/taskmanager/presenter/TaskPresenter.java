@@ -502,12 +502,13 @@ public class TaskPresenter {
             
             flag = true;
         }
-        
-        if (!before.getLabelColor().equals(after.getLabelColor())) {
-            if (flag)
-                summary += "\n";
-            summary += "Label was changed from " + ColorRenderer.evaluateColor(before.getLabelColor().toString())
-                    + " to " + ColorRenderer.evaluateColor(after.getLabelColor().toString());
+        if(before.getLabelColor()!=null){
+            if (!before.getLabelColor().equals(after.getLabelColor())) {
+                if (flag)
+                    summary += "\n";
+                summary += "Label was changed from " + ColorRenderer.evaluateColor(before.getLabelColor().toString())
+                        + " to " + ColorRenderer.evaluateColor(after.getLabelColor().toString());
+            }
         }
         return summary;
     }
@@ -729,20 +730,6 @@ public class TaskPresenter {
     }
     
     /**
-     * Similar to updateView but does not call update commentView.
-     * Made in effort to only call revalidate  + repaint at the very end
-     * (i.e. when the task has finished moving to the new bucket.)
-     * Function only used when a task is switching buckets.
-     */
-    private void switchBucketUpdateViews() {
-        view.setModel(model);
-        miniView.setModel(model);
-        assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
-        addUsersToView();
-        miniView.updateLabel();
-    }
-
-    /**
      * takes the current comment view, clears the posts, and puts each comment,
      * one by one back on to the current view.
      */
@@ -880,7 +867,7 @@ public class TaskPresenter {
                 return u.getUsername();
         }
         return "";
-}
+    }
     
     /**
      * set icon for the task in update view
@@ -940,4 +927,25 @@ public class TaskPresenter {
             }
         }        
     }
+    
+    /**
+     * 
+     * @return beforeModel, TaskModel before updateBeforeModel() is called.
+     */
+    public TaskModel getBeforeModel() {
+        return beforeModel;
+    }
+    
+    /**
+     * Set the model for this class.
+     * EXCEPT does not update any Views.
+     * 
+     * @param model
+     *            This provider's model.
+     */
+    public void setModelNoView(TaskModel other){
+        this.model = other;
+    }
+    
+    
 }

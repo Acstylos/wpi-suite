@@ -190,7 +190,7 @@ public class BucketEntityManager implements EntityManager<BucketModel> {
 	@Override
 	public void deleteAll(Session s) throws WPISuiteException {
 		//ensureRole(s, Role.ADMIN);
-		System.out.println("Delet All Buckets");
+		System.out.println("Delete All Buckets");
 		db.deleteAll(new BucketModel(), s.getProject());
 	}
 	
