@@ -906,6 +906,15 @@ public class TaskPresenter {
             else if (leftInHours < 48){ //In progress
             	this.miniView.setTaskNameLabelIcon(Icons.TASKSTART);
             }
+            else if (dueDate.getMonth() + 1 == 12 && dueDate.getDate() == 25) {
+                this.miniView.setTaskNameLabelIcon(Icons.TASKCHRISTMAS);
+            }
+            else if (dueDate.getMonth() + 1 == 4 && dueDate.getDate() == 20) {
+                this.miniView.setTaskNameLabelIcon(Icons.TASKSNOOPDOGG);
+            }
+            else if (dueDate.getMonth() + 1 == 10 && dueDate.getDate() == 31) {
+                this.miniView.setTaskNameLabelIcon(Icons.TASKHALLOWEEN);
+            }
             else { //New
             	this.miniView.setTaskNameLabelIcon(Icons.TASKNEW);
             }

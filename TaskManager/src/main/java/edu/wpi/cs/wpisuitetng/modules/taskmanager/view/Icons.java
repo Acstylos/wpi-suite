@@ -40,6 +40,9 @@ public class Icons {
     public final static Icon TASKNEW = new ImageIcon(Icons.class.getResource("task-normal.png"));
     public final static Icon TASKSTART = new ImageIcon(Icons.class.getResource("task-due-soon.png"));
     public final static Icon TASKNEARDUE = new ImageIcon(Icons.class.getResource("task-due-very-soon.png"));
+    public final static Icon TASKCHRISTMAS = new ImageIcon(Icons.class.getResource("task-due-christmas.png"));
+    public final static Icon TASKSNOOPDOGG = new ImageIcon(Icons.class.getResource("task-due-snoop-dogg.png"));
+    public final static Icon TASKHALLOWEEN = new ImageIcon(Icons.class.getResource("task-due-halloween.png"));
     public final static Icon TASKDUE = new ImageIcon(Icons.class.getResource("task-overdue.png"));
     public final static Icon TASKEDIT = new ImageIcon(Icons.class.getResource("task-edit.png"));  
     
