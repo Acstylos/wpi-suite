@@ -46,7 +46,7 @@ public class TestBucketEntityManager {
 	 * Test manager
 	 */
 	@Test
-	public void testMakeBusketEntity() {
+	public void testMakeBucketEntity() {
 		assertNotNull(manager);
 	}
     
@@ -184,10 +184,12 @@ public class TestBucketEntityManager {
 
         boolean exceptionThrown = false;
         try {
+            //this bucketModel is not saved yet , so will cause error
             manager.update(defaultSession, new BucketModel(4, "change Id 4").toJson());
-        } catch (BadRequestException e) {
+        } catch (WPISuiteException e) {
             exceptionThrown = true;
         }
+        //an exception will be thrown because the model was never saved, so cant update.
         assertTrue(exceptionThrown);
     }
 }
