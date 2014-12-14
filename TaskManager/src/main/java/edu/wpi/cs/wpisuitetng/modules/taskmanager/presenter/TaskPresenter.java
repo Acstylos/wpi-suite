@@ -9,17 +9,13 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
-import java.awt.Color;
 import java.awt.Dialog;
-import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -34,7 +30,6 @@ import java.util.Map;
 import javax.swing.JTabbedPane;
 
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JComponent;
@@ -42,11 +37,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.TransferHandler;
 
-import com.sun.glass.ui.View;
-
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
-import edu.wpi.cs.wpisuitetng.modules.requirementmanager.RequirementManager;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.controller.GetRequirementsController;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.iterationcontroller.GetIterationController;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.Requirement;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.view.ViewEventController;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
@@ -79,7 +73,6 @@ public class TaskPresenter {
     private User[] allUserArray = {};
     private List<Integer> assignedUserList;
     private Map<Integer, Requirement> reqMap = new HashMap<Integer, Requirement>();
-    private List<Integer> requirementList;
     /** Dialog variables for use */
     private VerifyActionDialog cancelDialog = new VerifyActionDialog();
     private VerifyActionDialog undoDialog = new VerifyActionDialog();
@@ -417,10 +410,11 @@ public class TaskPresenter {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 if (reqMap.get(view.getRequirementIndex()-1) != null) {
-                    ViewEventController.getInstance().editRequirement(reqMap.get(view.getRequirementIndex()-1));
                     JTabbedPane janeway = (JTabbedPane)MainView.getInstance().getParent().getParent();
                     int index = janeway.indexOfTab("Requirement Manager");
                     janeway.setSelectedIndex(index);
+                    
+                    ViewEventController.getInstance().editRequirement(reqMap.get(view.getRequirementIndex()-1));
                 }
 
             }
@@ -436,6 +430,14 @@ public class TaskPresenter {
                 HttpMethod.GET);
         requirementRequest.addObserver(new RequirementsObserver(this));
         requirementRequest.send();
+        
+        try {
+            GetRequirementsController.getInstance().retrieveRequirements();
+            GetIterationController.getInstance().retrieveIterations();
+        } catch (Exception e) {
+            //TODO Stop swallowing exceptions
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -769,7 +771,7 @@ public class TaskPresenter {
     public List<Integer> getAssignedUserList() {
         return this.assignedUserList;
     }
-    
+
     /**
      * @param enable Whether or not to enable the cancel dialog
      */
