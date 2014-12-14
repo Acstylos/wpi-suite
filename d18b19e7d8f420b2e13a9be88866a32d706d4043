@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fafc7978_9f0d7f3a",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/HelpPresenter.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-14T21:54:34Z",
+      "side": 1,
+      "message": "There seems to be a tab after this brace, it should be removed but its not a big deal",
+      "revId": "d18b19e7d8f420b2e13a9be88866a32d706d4043",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fafc7978_ff13eb59",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/HelpView.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1002789
+      },
+      "writtenOn": "2014-12-14T21:54:34Z",
+      "side": 1,
+      "message": "Two tabs after this line.  they should be removed, but its not a huge deal",
+      "revId": "d18b19e7d8f420b2e13a9be88866a32d706d4043",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
