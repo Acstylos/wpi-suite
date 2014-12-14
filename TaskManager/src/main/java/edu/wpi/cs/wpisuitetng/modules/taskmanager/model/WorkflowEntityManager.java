@@ -140,15 +140,14 @@ public class WorkflowEntityManager implements EntityManager<WorkflowModel> {
     @Override
     public boolean deleteEntity(Session s, String id) throws WPISuiteException {
         System.out.println("Delete Workflow ID: " + id);
-        // TODO Auto-generated method stub
-        return false;
+        return (db.delete(getEntity(s, id)[0]) != null) ? true : false;
     }
 
     /** @inheritDoc */
     @Override
     public void deleteAll(Session s) throws WPISuiteException {
         System.out.println("Delete All Workflows");
-        db.deleteAll(WorkflowModel.class);
+        db.deleteAll(new WorkflowModel(), s.getProject());
         // TODO Auto-generated method stub
 
     }
