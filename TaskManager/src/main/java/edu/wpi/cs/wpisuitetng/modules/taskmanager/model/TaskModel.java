@@ -92,6 +92,26 @@ public class TaskModel extends AbstractModel {
         this.labelColor=null;
         this.isArchived = false;
     }
+    /**
+     * determines if this taskModel is equal to that taskModel
+     * 
+     * @param that the other TaskModel
+     * @return boolean, true if equal , false otherwise
+     */
+    public boolean equals(TaskModel that){
+        if(this.id == that.id
+                && this.title == that.title
+                && this.shortTitle == that.shortTitle
+                && this.description == that.description
+                && this.estimatedEffort == that.estimatedEffort
+                && this.dueDate == that.dueDate
+                && this.status == that.status
+                && this.labelColor == that.labelColor
+                && this.isArchived == that.isArchived
+                )
+            return true;
+        return false;
+    }
 
     /**
      * @return The ID of the task. Returns -1 by default
