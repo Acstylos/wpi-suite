@@ -23,7 +23,8 @@ import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
  */
 public class Notification extends AbstractModel {
 
-    String subject, content;
+    String subject, content, projectName;
+
     List<String> recipients;
 
     /**
@@ -34,7 +35,7 @@ public class Notification extends AbstractModel {
     }
 
     /**
-     * param subject The new subject of the message
+     * @param subject The new subject of the message
      */
     public void setSubject(String subject) {
         this.subject = subject;
@@ -48,10 +49,25 @@ public class Notification extends AbstractModel {
     }
 
     /**
-     * param content The text of the message itself
+     * @param content The text of the message itself
      */
     public void setContent(String content) {
         this.content = content;
+    }
+    
+    /**
+     * @return The name of the project that triggered this notification
+     */
+    public String getProjectName() {
+        return projectName;
+    }
+
+    /**
+     * @param projectName
+     *            The name of the project that triggered this notification
+     */
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     /**

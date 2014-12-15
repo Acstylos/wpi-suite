@@ -10,8 +10,6 @@
 package edu.wpi.cs.wpisuitetng;
 
 import java.io.IOException;
-import java.util.ArrayList;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,8 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.mail.Email;
-import org.apache.commons.mail.SimpleEmail;
-
+import org.apache.commons.mail.HtmlEmail;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Notification;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 
@@ -50,9 +47,8 @@ public class WPINotificationServlet extends HttpServlet {
         /* Get the secret authentication info for this project from the database */
         String emailUsername, emailPassword;
         try {
-            String projectIdNum = notification.getProject().getIdNum();
             Project project = ManagerLayer.getInstance().getProjects()
-                    .getEntity(projectIdNum)[0];
+                    .getEntityByName(null, notification.getProjectName())[0];
             emailUsername = project.getAutomaticEmailAddress();
             emailPassword = project.getAutomaticEmailPassword();
         } catch (Exception e) {
@@ -64,19 +60,20 @@ public class WPINotificationServlet extends HttpServlet {
              * Send an email to the addresses marked as recipients of the
              * notification
              */
-            Email email = new SimpleEmail();
+            HtmlEmail email = new HtmlEmail();
+            email.setHostName(SMTP_HOST_NAME);
             email.setAuthentication(emailUsername, emailPassword);
-            email.setSSLOnConnect(true);
-
-            email.setFrom(emailUsername, "WPISuite Task Manager");
-            email.setSubject(notification.getSubject());
-            email.setMsg(notification.getContent());
+            
+            email.setHtmlMsg(notification.getContent())
+                 .setSSLOnConnect(true)
+                 .setFrom(emailUsername, "WPISuite Task Manager")
+                 .setSubject(notification.getSubject())
+                 .setSmtpPort(SMTP_PORT);
+            
             for (String recipient : notification.getRecipients()) {
                 email.addTo(recipient);
             }
-
-            email.setHostName(SMTP_HOST_NAME);
-            email.setSmtpPort(SMTP_PORT);
+            
             email.send();
         } catch (Exception e) {
             throw new ServletException(e);
