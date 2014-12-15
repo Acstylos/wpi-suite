@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "fafc7978_1f722f49",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/Filter.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1002857
+      },
+      "writtenOn": "2014-12-15T04:38:44Z",
+      "side": 1,
+      "message": "I thought the whole purpose of creating the filter class was so we didn\u0027t need to create changes in other files when we wanted to add new filters? Doesn\u0027t this change mean that we would have to edit the parameters of the setFilter(...) method each time a new filter was added?",
+      "parentUuid": "fafc7978_df77073a",
+      "revId": "c8f688f337f3d916d0351544637d69af693599af",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fafc7978_1fffcfab",
         "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/Filter.java",
         "patchSetId": 5
