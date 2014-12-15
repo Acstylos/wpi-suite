@@ -252,6 +252,24 @@
     },
     {
       "key": {
+        "uuid": "fafc7978_df3a6733",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/Filter.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1002857
+      },
+      "writtenOn": "2014-12-15T05:37:38Z",
+      "side": 1,
+      "message": "I wrote and posted my last comment as a response to the one that was two before it not one. \n\nWhen I say bucketPresenter I mean the entire file.  I am confused how setFilter can update the filter without needing calls to the setter or creating a new filter each time you call it.\n\nDo you mean have the constructor for filter call the get info from view functions and then give setFilter an entirely new filter?\n\nI guess I am just not quite understanding how you want me to do this.",
+      "parentUuid": "fafc7978_9f39ff43",
+      "revId": "c8f688f337f3d916d0351544637d69af693599af",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fafc7978_1fffcfab",
         "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/Filter.java",
         "patchSetId": 5
