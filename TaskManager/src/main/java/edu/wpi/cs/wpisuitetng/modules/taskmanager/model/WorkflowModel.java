@@ -133,6 +133,16 @@ public class WorkflowModel extends AbstractModel {
     public void setBucketIds(ArrayList<Integer> bucketIds) {
         this.bucketIds = bucketIds;
     }
+    
+    /**
+     * Adds a single ID to the bucketId list.
+     * @param id ID of the bucket to add to the list.
+     */
+    public void addBucketId(int id){
+        if(!this.bucketIds.contains(id)){
+            this.bucketIds.add(id);
+        }
+    }
 
     /**
      * @return The title of the workflow
