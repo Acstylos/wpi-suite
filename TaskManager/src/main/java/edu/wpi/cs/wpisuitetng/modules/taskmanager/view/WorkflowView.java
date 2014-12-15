@@ -79,7 +79,6 @@ public class WorkflowView extends JPanel
             Component spacerStrut = Box.createHorizontalStrut(5);
             this.add(spacerStrut, "dock west");
         }
-        
     }
 
     /**

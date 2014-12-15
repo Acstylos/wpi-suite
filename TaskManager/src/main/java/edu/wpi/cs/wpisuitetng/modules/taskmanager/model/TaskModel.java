@@ -97,6 +97,32 @@ public class TaskModel extends AbstractModel {
         this.labelColor=null;
         this.isArchived = false;
     }
+    /**
+     * determines if this taskModel is equal to that taskModel
+     * 
+     * @param that the other TaskModel
+     * @return boolean, true if equal , false otherwise
+     */
+    @Override
+    public boolean equals(Object other){
+        try{
+            TaskModel that = (TaskModel) other;
+            if(this.title == that.title
+                    && this.shortTitle == that.shortTitle
+                    && this.description == that.description
+                    && this.estimatedEffort == that.estimatedEffort
+                    && this.dueDate == that.dueDate
+                    && this.status == that.status
+                    && this.labelColor == that.labelColor
+                    && this.isArchived == that.isArchived
+                    )
+                return true;
+            return false;
+        }
+        catch (Exception e){
+            return false;
+        }
+    }
 
     /**
      * @return The Id of the parent bucket. -1 by default.

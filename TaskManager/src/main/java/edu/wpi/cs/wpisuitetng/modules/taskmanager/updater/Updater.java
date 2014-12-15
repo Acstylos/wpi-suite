@@ -250,7 +250,18 @@ public class Updater extends TimerTask implements RequestObserver {
      *            ID of the bucket to change.
      */
     public void changeBucket(HttpMethod operation, int id) {
-        /* When we need to manipulate buckets, add code here. */
+        switch (operation) {
+        case GET:
+            break; /* We don't care about reads. */
+        case POST:
+            System.out.println("POST'd workflow. Updating. Bucket ID: " + id);
+            this.buckets.get(id).load();
+            break;
+        case PUT:
+            break; /* We don't create yet. */
+        case DELETE:
+            break; /* We don't delete yet. */
+        }
         return;
     }
 
