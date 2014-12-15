@@ -162,6 +162,24 @@
     },
     {
       "key": {
+        "uuid": "fafc7978_7f053b79",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/Filter.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-12-15T05:26:09Z",
+      "side": 1,
+      "message": "I would do the first way I think.",
+      "parentUuid": "fafc7978_3fdc5312",
+      "revId": "c8f688f337f3d916d0351544637d69af693599af",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fafc7978_1fffcfab",
         "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/Filter.java",
         "patchSetId": 5
