@@ -1,17 +1,24 @@
-/*
- * 
- * 
- * 
- */
+/*******************************************************************************
+ * Copyright (c) 2014 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ManageBucketsPanel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.WorkflowView;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
@@ -27,6 +34,7 @@ import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 public class WorkflowPresenter {
 
     private WorkflowView view;
+    private ManageBucketsPanel manageView;
     private WorkflowModel model;
     private Map<Integer, BucketPresenter> bucketPresenters = new HashMap<>();
 
@@ -40,6 +48,8 @@ public class WorkflowPresenter {
         this.model = new WorkflowModel();
         model.setId(workflowId);
         this.view = new WorkflowView("Loading...");
+        this.manageView = new ManageBucketsPanel(this.model);
+        registerCallbacks();
     }
 
     /**
@@ -53,7 +63,7 @@ public class WorkflowPresenter {
         request.addObserver(new WorkflowObserver(this, HttpMethod.GET));
         request.send();
     }
-    
+
     /**
      * Initializes the workflow and stores it to the DB.
      * @param presenter Presenter to associate the workflow with.
@@ -63,7 +73,7 @@ public class WorkflowPresenter {
         BucketPresenter.saveBaseBuckets();
         writeModelToView();
     }
-    
+
     /**
      * Adds in a default workflow with id=1 to the DB
      * @param presenter Presenter to associate the workflow with.
@@ -78,7 +88,6 @@ public class WorkflowPresenter {
         workflow.setBucketIds(baseBucketList);
         presenter.setModel(workflow);
         final Request request = Network.getInstance().makeRequest("taskmanager/workflow", HttpMethod.PUT);
-        System.out.println("Workflow JSON: " + workflow.toJson().toString());
         request.setBody(workflow.toJson());
         request.addObserver(new WorkflowObserver(presenter, HttpMethod.PUT));
         request.send();
@@ -88,19 +97,19 @@ public class WorkflowPresenter {
      * Set the view of the model
      */
     public void writeModelToView() {
-        ArrayList<Integer> buckets = model.getBucketIds();
-        System.out.println("Buckets in the Workflow: " + buckets.toString());
-        ArrayList<BucketView> bucketViews = new ArrayList<BucketView>();
-        for(int bucketId: buckets){
-            BucketPresenter bucketPresenter = new BucketPresenter(bucketId);
-            bucketPresenters.put(bucketId, bucketPresenter);
-            bucketPresenter.load();
-            bucketViews.add(bucketPresenter.getView());
+        view.removeAll();
+        view.addSpacers();
+        for (int i : model.getBucketIds()) {
+            if (!bucketPresenters.containsKey(i)) {
+                bucketPresenters.put(i, new BucketPresenter(i, this));
+            }
+            bucketPresenters.get(i).load();
+            BucketView bucketView = bucketPresenters.get(i).getView();
+            view.addBucketToView(bucketView);
         }
-        view.setBucketViews(bucketViews);
+        updateManageWorkflowView();
         view.revalidate();
         view.repaint();
-        saveModel();
     }
 
     /**
@@ -160,7 +169,7 @@ public class WorkflowPresenter {
     public WorkflowView getView() {
         return view;
     }
-    
+
     /**
      * @param model The model this workflow presenter represents.
      */
@@ -174,14 +183,14 @@ public class WorkflowPresenter {
     public WorkflowModel getModel() {
         return model;
     }
-    
+
     /**
      * @return The list of BucketPresenters inside of the workflow.
      */
     public Map<Integer, BucketPresenter> getBucketPresenters() {
         return bucketPresenters;
     }
-    
+
     /**
      * @param id ID of bucket to return
      * @return a bucket with the corresponding ID
@@ -210,7 +219,82 @@ public class WorkflowPresenter {
      * @param id the id of the bucket to be retrieved
      * @return the bucket model from the hashmap
      */
-	public BucketPresenter getBucket(int id) {
-		return bucketPresenters.get(id);
-	}
+    public BucketPresenter getBucket(int id) {
+        return bucketPresenters.get(id);
+    }
+
+    /**
+     * Adds a bucket ID to the list of bucketIDs in the workflow model. Sends an async
+     * update to the database.
+     * 
+     * @param id ID of the existing bucket.
+     * @param bucket bucketPresenter associated with the task
+     */
+    public void addBucket(int id, BucketPresenter bucket){
+        model.addBucketId(id);
+        if (!bucketPresenters.containsKey(id)) {
+            bucketPresenters.put(id, bucket);
+        }        
+        saveModel();
+    }
+
+    /**
+     * @return The ManageWorkflowPanel for this workflow.
+     */
+    public ManageBucketsPanel getManageWorkflowView(){
+        return this.manageView;
+    }
+
+    /**
+     * Updates the manageWorkflowView to reflect the buckets in the workflow.
+     */
+    public void updateManageWorkflowView(){
+        for(int id: model.getBucketIds()){
+            this.manageView.addBucketToList(this.getBucketPresenterById(id).getModel());
+        }
+    }
+
+    /**
+     * Registers all listeners for all views related to workflow.
+     */
+    public void registerCallbacks(){
+        /*
+         * Adds a close button to the managerView, so that you can close the tab.
+         */
+        this.manageView.addCloseButtonListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int index = MainView.getInstance().indexOfComponent(manageView);
+                MainView.getInstance().remove(index);
+                MainView.getInstance().setSelectedIndex(0);
+            }
+
+        });
+
+        /*
+         * Creates a new bucket in the DB, and adds it to the workflowView. 
+         */
+        this.manageView.addAddBucketButtonListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BucketPresenter bucketPresenter = new BucketPresenter(0, MainView.getInstance().getWorkflowPresenter());
+                bucketPresenter.getModel().setTitle(manageView.getNewBucketTitle());
+                bucketPresenter.createInDatabase();
+                view.addBucketToView(bucketPresenter.getView());
+            }
+
+        });
+
+        /*
+         * Deletes a bucket in the DB, and resets the workflow view.
+         * ONLY DELETES IF THERE ARE NO TASKS AND IT IS NOT THE LAST BUCKET IN ON THE SCREEN
+         */
+        this.manageView.addDeleteBucketButtonListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO: Make a method for this.
+            }
+
+        });
+    }
 }

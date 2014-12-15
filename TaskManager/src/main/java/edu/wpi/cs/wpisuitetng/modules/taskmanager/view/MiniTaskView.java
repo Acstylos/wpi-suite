@@ -75,7 +75,7 @@ public class MiniTaskView extends JPanel {
         taskNameLabel.setBorder(new EmptyBorder(8, 8, 8, 8));
         this.taskNameLabel.setIcon(Icons.TASKNEW);
         this.setBorder(new CompoundBorder(new LineBorder(Color.LIGHT_GRAY, 1), new EmptyBorder(0, 8, 0, 8)));
-        this.setExpandedView();
+        this.setCollapsedView();
         this.setModel(model);
 
         /* Initialize a drag when the user clicks on the MiniTaskView */
