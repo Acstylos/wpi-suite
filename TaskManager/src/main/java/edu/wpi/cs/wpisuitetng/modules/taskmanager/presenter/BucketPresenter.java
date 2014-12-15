@@ -9,6 +9,8 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
@@ -105,6 +108,49 @@ public class BucketPresenter {
         /* Add a handler to let the user drag tasks into this bucket */
         this.view.setTransferHandler(new TransferHandler() {
             /**
+             * @return {@link TransferHandler#COPY}.
+             */
+            @Override
+            public int getSourceActions(JComponent c) {
+                return MOVE;
+            }
+            
+            /**
+             * @return A transferable for the bucket presenter. Buckets can
+             * be converted into HTML tables, allowing them to be dropped into
+             * spreadsheets.
+             */
+            @Override
+            protected Transferable createTransferable(JComponent c) {
+                return new Transferable() {
+
+                    /** {@inheritDoc} */
+                    @Override
+                    public DataFlavor[] getTransferDataFlavors() {
+                        return new DataFlavor[] { DataFlavor.fragmentHtmlFlavor };
+                    }
+
+                    /** {@inheritDoc} */
+                    @Override
+                    public boolean isDataFlavorSupported(DataFlavor flavor) {
+                        return flavor == DataFlavor.fragmentHtmlFlavor;
+                    }
+
+
+                    /** {@inheritDoc} */
+                    @Override
+                    public Object getTransferData(DataFlavor flavor)
+                            throws UnsupportedFlavorException, IOException {
+                        if (!isDataFlavorSupported(flavor)) {
+                            throw new UnsupportedFlavorException(flavor);
+                        } else {
+                            return BucketPresenter.this.toHtml();
+                        }
+                    }
+                };
+            }
+            
+            /**
              * @return true if it's a task being transfered
              */
             @Override
@@ -190,6 +236,38 @@ public class BucketPresenter {
                 view.repaint();
             }
         });
+    }
+    
+    /**
+     * @return A representation of the key information in this bucket as an
+     * HTML table
+     */
+    protected String toHtml() {
+        String str = "<table>";
+
+        str += "<tr><td><b>" + this.model.getTitle() + "</b></tr>";
+        str += "<tr><td><b>Task<td><b>Due Date<td><b>Actual Effort<td><b>Estimated Effort<td><b>Category</tr>";
+
+        for (Integer taskId : this.model.getTaskIds()) {
+            TaskPresenter taskPresenter = this.taskMap.get(taskId);
+            TaskModel taskModel = taskPresenter.getModel();
+
+            str += "<tr>";
+            str += "<td>" + taskModel.getTitle();
+            str += "<td>" + taskModel.getDueDate();
+            str += "<td>" + taskModel.getActualEffort();
+            str += "<td>" + taskModel.getEstimatedEffort();
+            if (taskModel.getLabelColor() == null) {
+                str += "<td><i>None";
+            } else {
+                str += "<td bgcolor=\"#"
+                        + Integer.toHexString(taskModel.getLabelColor()
+                                .getRGB()) + "\">&nbsp";
+            }
+            str += "</tr>";
+        }
+
+        return str;
     }
 
     /**

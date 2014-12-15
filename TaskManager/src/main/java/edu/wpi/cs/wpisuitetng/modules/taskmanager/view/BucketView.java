@@ -12,6 +12,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.TransferHandler;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
@@ -84,6 +87,16 @@ public class BucketView extends JPanel
         this.taskScrollPane.setViewportView(taskViewHolderPanel);   
         
         this.setModel(model);
+        
+        MouseAdapter dragAdapter = new MouseAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                TransferHandler handler = getTransferHandler();
+                handler.exportAsDrag(BucketView.this, e, TransferHandler.MOVE);
+            }
+        };
+        
+        this.addMouseMotionListener(dragAdapter);
     }
 
     /**
