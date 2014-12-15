@@ -234,6 +234,24 @@
     },
     {
       "key": {
+        "uuid": "fafc7978_9f39ff43",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/Filter.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-12-15T05:33:25Z",
+      "side": 1,
+      "message": "BucketPresenter should not change just because another fields is added.  Read my last comment again.",
+      "parentUuid": "fafc7978_3ff3b39f",
+      "revId": "c8f688f337f3d916d0351544637d69af693599af",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fafc7978_1fffcfab",
         "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/Filter.java",
         "patchSetId": 5
