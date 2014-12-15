@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "fafc7978_df77073a",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/Filter.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1002785
+      },
+      "writtenOn": "2014-12-15T04:35:29Z",
+      "side": 1,
+      "message": "You should store the filter parameters in the filter class instead of having them retrieved from MainView every time.  Then, instead of constructing a new Filter in BucketView every time, there\u0027s a setFilter() method that lets you set a Filter object with all of the parameters.\n\nThis decreases the dependency on global variables, and makes it possible to write JUnit tests for your code.",
+      "parentUuid": "fafc7978_9f861f12",
+      "revId": "c8f688f337f3d916d0351544637d69af693599af",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fafc7978_1fffcfab",
         "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/presenter/Filter.java",
         "patchSetId": 5
