@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,15 +45,17 @@ public class BucketPresenter {
 
     private BucketView view;
     private BucketModel model;
+    private WorkflowPresenter workflow;
     private Map<Integer, TaskPresenter> taskMap = new HashMap<Integer, TaskPresenter>();
 
     /**
      * Constructor for a bucket presenter
      * 
-     * @param bucketId
-     * @param workflow
+     * @param bucketId Id of the bucket associated with this presenter
+     * @param workflow Workflow that contains this bucket.
      */
-    public BucketPresenter(int bucketId) {
+    public BucketPresenter(int bucketId, WorkflowPresenter workflow) {
+        this.workflow = workflow;
         this.model = new BucketModel();
         this.model.setId(bucketId);
         this.view = new BucketView(this.model);
@@ -83,19 +86,15 @@ public class BucketPresenter {
             }
             taskMap.get(i).updateFromDatabase();
 
-
             MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
             miniTaskView.setModel(taskMap.get(i).getModel());
 
             taskMap.get(i).validateUpdateLabel();
             view.addTaskToView(miniTaskView);
-            this.addMiniTaskView(taskMap.get(i).getMiniView());
-            
         }
         addMiniTaskstoView();
         view.revalidate();
         view.repaint();
- 
     }
 
     /**
@@ -166,9 +165,9 @@ public class BucketPresenter {
             public void actionPerformed(ActionEvent e) {
                 String title = view.getChangeTextField().getText();
                 if(title.trim().equals("")){
-                    view.getTaskNameLabel().setText(view.getChangeTextField().getPrompt());
+                    view.getBucketNameLabel().setText(view.getChangeTextField().getPrompt());
                 } else {
-                    view.getTaskNameLabel().setText(title.trim());
+                    view.getBucketNameLabel().setText(title.trim());
                     model.setTitle(title.trim());
                 }
                 view.setStaticTitlePanel();
@@ -302,6 +301,14 @@ public class BucketPresenter {
      *            The model sent from the network
      */
     public void responsePut(BucketModel model) {
+        this.model.setId(model.getId());
+        this.model.setTaskIds(model.getTaskIds());
+        this.model.setTitle(model.getTitle());
+        this.model = model;
+        this.view.setModel(model);
+        this.addMiniTaskstoView();
+        view.revalidate();
+        view.repaint();
     }
 
     /**
@@ -326,6 +333,13 @@ public class BucketPresenter {
      */
     public BucketModel getModel() {
         return model;
+    }
+    
+    /**
+     * @return The workflow that contains this bucket
+     */
+    public WorkflowPresenter getWorkflow(){
+        return workflow;
     }
 
     /**
@@ -382,7 +396,6 @@ public class BucketPresenter {
         request.addObserver(new TaskObserver(taskPresenter));
         request.send();
         updateInDatabase();
-
     }
     
     /*
@@ -395,19 +408,19 @@ public class BucketPresenter {
      * Saves the 4 preset stages. Should only happen if db is empty.
      */
     public static final void saveBaseBuckets(){
-        BucketModel newStage = new BucketModel(1, "New");
-        BucketModel scheduledStage = new BucketModel(2, "Scheduled");
-        BucketModel inProgressStage = new BucketModel(3, "In Progress");
-        BucketModel completedStage = new BucketModel(4, "Completed");
+        BucketModel newBucket = new BucketModel(1, "New");
+        BucketModel scheduledBucket = new BucketModel(2, "Scheduled");
+        BucketModel inProgressBucket = new BucketModel(3, "In Progress");
+        BucketModel completedBucket = new BucketModel(4, "Completed");
         
         try {
-            sendAddBucketRequest(new BucketPresenter(1), newStage);
+            sendBaseBucketRequest(new BucketPresenter(1, MainView.getInstance().getWorkflowPresenter()), newBucket);
             Thread.sleep(1000);
-            sendAddBucketRequest(new BucketPresenter(2), scheduledStage);
+            sendBaseBucketRequest(new BucketPresenter(2, MainView.getInstance().getWorkflowPresenter()), scheduledBucket);
             Thread.sleep(1000);
-            sendAddBucketRequest(new BucketPresenter(3), inProgressStage);
+            sendBaseBucketRequest(new BucketPresenter(3, MainView.getInstance().getWorkflowPresenter()), inProgressBucket);
             Thread.sleep(1000);
-            sendAddBucketRequest(new BucketPresenter(4), completedStage);
+            sendBaseBucketRequest(new BucketPresenter(4, MainView.getInstance().getWorkflowPresenter()), completedBucket);
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             System.err.println("Sleep Exception: " + e.getStackTrace().toString());
@@ -419,11 +432,21 @@ public class BucketPresenter {
      * Adds a bucket model to the DB.
      * @param bucket Bucket to add to the DB
      */
-    private static final void sendAddBucketRequest(BucketPresenter presenter, BucketModel bucket){
+    private static final void sendBaseBucketRequest(BucketPresenter presenter, BucketModel bucket){
         final Request request = Network.getInstance().makeRequest("taskmanager/bucket", HttpMethod.PUT);
-        System.out.println("Send Bucket Put Request: " + bucket.toJson().toString());
         request.setBody(bucket.toJson());
         request.addObserver(new BucketObserver(presenter, HttpMethod.PUT));
+        request.send();
+    }
+    
+    /**
+     * Create a new bucket in the database. Initializes an async network request
+     * with an observer.
+     */
+    public void createInDatabase() {
+        Request request = Network.getInstance().makeRequest("taskmanager/bucket", HttpMethod.PUT);
+        request.setBody(this.model.toJson());
+        request.addObserver(new BucketObserver(this, HttpMethod.PUT));
         request.send();
     }
 }
