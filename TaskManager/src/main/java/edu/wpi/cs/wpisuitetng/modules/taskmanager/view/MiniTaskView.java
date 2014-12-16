@@ -65,6 +65,7 @@ public class MiniTaskView extends JPanel {
     private static final long serialVersionUID = -5428820718299212324L;
     private JLabel taskNameLabel = new JLabel();
     private JButton editButton = new JButton("Edit");
+    private JButton archiveButton = new JButton("");
     private JPanel userPanel = new JPanel();
     private JLabel dueDateLabel = new JLabel();
     private JPanel holderPanel = new JPanel();
@@ -85,7 +86,7 @@ public class MiniTaskView extends JPanel {
         taskNameLabel.setBorder(new EmptyBorder(8, 8, 8, 8));
         this.taskNameLabel.setIcon(Icons.TASKNEW);
         this.setBorder(new CompoundBorder(new LineBorder(Color.LIGHT_GRAY, 1), new EmptyBorder(0, 8, 0, 8)));
-        this.setExpandedView();
+        this.setCollapsedView();
         this.setModel(model);
 
         /* Initialize a drag when the user clicks on the MiniTaskView */
@@ -202,7 +203,12 @@ public class MiniTaskView extends JPanel {
         this.add(holderPanel, "cell 2 0,grow");
         this.holderPanel.setBorder(null);
         this.expanded = true;
-        this.add(editButton, "cell 0 3,alignx left,aligny bottom");
+        this.add(editButton, "flowx,cell 0 3,alignx left,aligny bottom");
+        if (this.model.getIsArchived()){
+            archiveButton.setText("Restore");
+        }
+        else archiveButton.setText("Archive");
+        this.add(archiveButton, "cell 0 3,alignx left,aligny bottom");
         this.revalidate();
         this.repaint();
     }
@@ -238,6 +244,13 @@ public class MiniTaskView extends JPanel {
         this.editButton.addActionListener(listener);
     }
 
+    /**
+     * Adds the listener for archiving a task 
+     * @param listener the listener that reacts on button click
+     */
+    public void addOnClickArchiveButton(ActionListener listener){
+        this.archiveButton.addActionListener(listener);
+    }
     /**
      * updates this miniTaskView's color label with the color from this MiniTaskView's Model.
      * paints null if the user selected no label.
