@@ -186,7 +186,7 @@ public class BucketView extends JPanel
     /**
      * @return The task name label, so that it can be edited
      */
-    public JLabel getTaskNameLabel(){
+    public JLabel getBucketNameLabel(){
         return this.titleLabel;
     }
     
