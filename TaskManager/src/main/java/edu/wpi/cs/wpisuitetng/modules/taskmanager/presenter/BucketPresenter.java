@@ -9,6 +9,7 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import java.awt.Point;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
@@ -116,7 +118,8 @@ public class BucketPresenter {
                     /* The task can be imported into this bucket if it's not
                      * already in it.
                      */
-                    return taskPresenter.getBucket() != BucketPresenter.this;
+//                    return taskPresenter.getBucket() != BucketPresenter.this;
+                    return true;
                 } catch (UnsupportedFlavorException | IOException e) {
                     return false;
                 }                
@@ -130,8 +133,16 @@ public class BucketPresenter {
                 try {
                     TaskPresenter taskPresenter =
                             (TaskPresenter) support.getTransferable().getTransferData(TaskPresenter.TASK_DATA_FLAVOR);
+                    boolean flag = taskPresenter.getBucket().getModel()
+                            .getTitle().equals(model.getTitle());
+                    Point point = MainView.getInstance().getGlassPane()
+                            .getPoint();
+                    point = SwingUtilities.convertPoint(MainView.getInstance()
+                            .getGlassPane(), point, BucketPresenter.this.getView());
                     
-                    BucketPresenter.this.addTask(taskPresenter.getModel().getId(), taskPresenter);
+                    BucketPresenter.this.insertTask(taskPresenter.getModel().getId(),
+                            taskPresenter,
+                            BucketPresenter.this.getView().getInsertionIndex(point, flag));
                     
                     return true;
                 } catch (UnsupportedFlavorException | IOException e) {
@@ -238,14 +249,43 @@ public class BucketPresenter {
      *            taskPresenter associated with the task
      */
     public void addTask(int id, TaskPresenter taskPresenter) {
+        taskPresenter.getBucket().removeTask(id);
+        taskPresenter.setBucket(this);
         model.addTaskID(id);
         if (!taskMap.containsKey(id)) {
             taskMap.put(id, taskPresenter);
         }
         
-        if (taskPresenter.getBucket() != this) {
-            taskPresenter.getBucket().removeTask(id);
-            taskPresenter.setBucket(this);
+        taskPresenter.getModel().setStatus(this.getModel().getId());
+        taskPresenter.updateView();
+        
+        /* Immediately add the view for instant feedback to the user */
+        if (taskPresenter.getMiniView() != null) {
+            this.view.addTaskToView(taskPresenter.getMiniView());
+        }
+        
+        view.setModel(model);
+        view.revalidate();
+        view.repaint();
+        
+        updateInDatabase();
+    }
+    
+    /**
+     * Adds a task ID to the list of taskIDs in the bucket model. Sends an async
+     * update to the database.
+     * 
+     * @param id
+     *            ID of the existing task.
+     * @param taskPresenter
+     *            taskPresenter associated with the task
+     */
+    public void insertTask(int id, TaskPresenter taskPresenter, int index) {
+        taskPresenter.getBucket().removeTask(id);
+        taskPresenter.setBucket(this);
+        model.addTaskID(index, id);
+        if (!taskMap.containsKey(id)) {
+            taskMap.put(id, taskPresenter);
         }
         
         taskPresenter.getModel().setStatus(this.getModel().getId());

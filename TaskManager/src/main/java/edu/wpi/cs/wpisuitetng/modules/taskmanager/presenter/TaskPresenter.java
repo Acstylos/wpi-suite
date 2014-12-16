@@ -33,6 +33,7 @@ import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.TransferHandler;
+import javax.swing.TransferHandler.TransferSupport;
 
 import javax.swing.JComboBox;
 
@@ -191,6 +192,36 @@ public class TaskPresenter {
              */
             @Override
             public boolean canImport(TransferSupport support) {
+                return true;
+            }
+            
+            /**
+             * Add the task to this bucket
+             */
+            @Override
+            public boolean importData(TransferSupport support) {
+                try {
+                    TaskPresenter taskPresenter =
+                            (TaskPresenter) support.getTransferable().getTransferData(TaskPresenter.TASK_DATA_FLAVOR);
+                    if(taskPresenter.getModel().getId() == model.getId())
+                        return false;
+                    boolean flag = taskPresenter.getBucket().getModel()
+                            .getTitle().equals(bucket.getModel().getTitle());
+                    Point point = MainView.getInstance().getGlassPane()
+                            .getPoint();
+                    point = SwingUtilities.convertPoint(MainView.getInstance()
+                            .getGlassPane(), point, bucket.getView());
+
+                    bucket.insertTask(taskPresenter.getModel().getId(),
+                            taskPresenter,
+                            bucket.getView().getInsertionIndex(point, flag));
+
+                    return true;
+                } catch (UnsupportedFlavorException | IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                
                 return false;
             }
             

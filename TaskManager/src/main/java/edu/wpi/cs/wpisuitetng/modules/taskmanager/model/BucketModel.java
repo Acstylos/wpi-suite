@@ -129,6 +129,14 @@ public class BucketModel extends AbstractModel {
     public void addTaskID(int id) {
        taskIds.add(id);
     }
+    
+    /**
+     * Add a task to the model at the index.
+     * @param id ID of the task you're adding.
+     */
+    public void addTaskID(int index, int id) {
+       taskIds.add(index, id);
+    }
 
     /**
      * remove the task id from the list of taskIds
