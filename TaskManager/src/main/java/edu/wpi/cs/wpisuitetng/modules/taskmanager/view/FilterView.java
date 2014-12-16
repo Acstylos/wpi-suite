@@ -5,27 +5,23 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  ******************************************************************************/
+
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.IOException;
 import java.util.Date;
 
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
-import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -35,96 +31,100 @@ import org.jdesktop.swingx.JXDatePicker;
 import org.jdesktop.swingx.JXTextField;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
 
 /**
- * Sets up upper toolbar of TaskManager tab
+ * 
+ * 
+ * @author Alex R, David R, Alex S
+ * 
  */
-public class ToolbarView extends JPanel
-{
-    private static final long serialVersionUID = 5489162021821230861L;
+/**
+ * @author Alex
+ *
+ */
+/**
+ * @author Alex
+ *
+ */
+public class FilterView extends JPanel{
+
+    private JLabel filterLabel = new JLabel("<HTML>F<br>i<br>l<br>t<br>e<br>r</HTML>");
+    private JPanel titleHolderPanel = new JPanel();
+    private JPanel dateHolderPanel = new JPanel();
+    JLabel filterByTextLabel = new JLabel("Filter By Text Fields");
+    JLabel filterByUserLabel = new JLabel("Filter By Users");
+
+    JXDatePicker filterStartDatePicker = new JXDatePicker();
+    JXDatePicker filterEndDatePicker = new JXDatePicker();
+    private Color colorsFilterOptions[] = { new Color(238, 238, 238), Color.WHITE,
+            Color.YELLOW, Color.RED, Color.GREEN, Color.MAGENTA, Color.GRAY };
+
+    private JLabel startDateFilterLabel = new JLabel("Start Date");
+    private JLabel endDateFilterLabel = new JLabel("End Date");
+    private JLabel filterByColorLabel = new JLabel("Filter By Color");
+    private JLabel filterByDateLabel = new JLabel("Filter By Date");
+    private JXTextField filterByText = new JXTextField();
+    private JXTextField filterByUser = new JXTextField();
+
+    private JComboBox<Color> filterColorComboBox = new JComboBox<Color>(colorsFilterOptions);
     private Date upperDateBound=null;
     private Date lowerDateBound=null;
+    private boolean isExpanded = false;
+
     
-    static {
-        /* Change the default icons for JXDatePicker. */
-        UIManager.put("JXDatePicker.arrowIcon", Icons.CALENDAR);
-        UIManager.put("JXMonthView.monthDownFileName", Icons.LEFT_ARROW);
-        UIManager.put("JXMonthView.monthUpFileName", Icons.RIGHT_ARROW);
-    }
     /**
-     * Creates and positions option buttons in upper toolbar
-     * @param visible boolean
-     * @throws IOException 
+     * Constructs view contain all filters
      */
-    public ToolbarView() {
-        Color colorsFilterOptions[] = { new Color(238, 238, 238), Color.WHITE,
-                Color.YELLOW, Color.RED, Color.GREEN, Color.MAGENTA, Color.GRAY };
-        setLayout(new MigLayout("fill", "[grow][10%][10%][10%][10%]"));
-
-        JButton createNewTaskButton = new JButton("<html>Create<br/>Task</html>");
-        createNewTaskButton.setIcon(Icons.CREATE_TASK_LARGE);
-        
-        
-        /**
-         * Adds a new TaskView Tab into the MainView
-         */
-        createNewTaskButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // get instance of the New-Bucket Presenter to add new tasks into
-                TaskPresenter taskPresenter = new TaskPresenter(0, MainView.getInstance().getWorkflowPresenter().getBucketPresenterById(1), ViewMode.CREATING);
-                MainView.getInstance().addTab(taskPresenter.getModel().getTitle(), Icons.CREATE_TASK, taskPresenter.getView());
-                int tabCount = MainView.getInstance().getTabCount();
-                taskPresenter.getView().setIndex(tabCount-1);
-                MainView.getInstance().setSelectedIndex(tabCount-1);
-            }
-        });
-
-        add(createNewTaskButton, "flowx,cell 0 0");
-        
-        JToggleButton tglbtnArchive = new JToggleButton("<html>Hide<br/>Archived</html>");
-        tglbtnArchive.setIcon(Icons.HIDE_ARCHIVE_LARGE);
-        tglbtnArchive.setSelected(true);
-        add(tglbtnArchive, "cell 0 0");
-
-        JComboBox filterColorComboBox = new JComboBox<Color>(
-                colorsFilterOptions);
+    public FilterView() {
+        setCollapsed();
+        dateHolderPanel.setLayout(new MigLayout("", "[grow]", "[][]"));
+        dateHolderPanel.add(startDateFilterLabel, "flowx, cell 0 0");
+        dateHolderPanel.add(endDateFilterLabel, "flowx, cell 0 1");
+        dateHolderPanel.add(filterEndDatePicker, "cell 0 1");
+        dateHolderPanel.add(filterStartDatePicker, "cell 0 0");
+        titleHolderPanel.setLayout(new MigLayout("fill"));
+        titleHolderPanel.setBorder(new LineBorder(Color.BLACK));
         filterColorComboBox.setRenderer(new ColorRenderer());
         filterColorComboBox.setSelectedIndex(0);
         filterColorComboBox.setSize(new Dimension(20, 5));
-        add(filterColorComboBox, "cell 1 0");
-        filterColorComboBox.addItemListener(new ItemListener() {
+        registerCallbacks();
+    }
+    
+    /**
+     * set Filter View to collapsed view, hides filters
+     */
+    public void setCollapsed(){
+        removeAll();
+        setLayout(new MigLayout("fill"));
+        filterLabel.setBorder(new EmptyBorder(0, 5, 0, 5));
+        this.add(titleHolderPanel, "dock west");
+        this.revalidate();
+        this.repaint();
+    }
+    
+    /**
+     * Expands filter view showing all filters
+     */
+    public void setExpanded(){
+        removeAll();
+        setLayout(new MigLayout("", "[grow][][grow]", "[][][][][]"));
+        add(titleHolderPanel, "cell 0 0 1 5, grow");
+        add(filterByTextLabel, "cell 1 0");
+        add(filterByColorLabel, "cell 1 1");
+        add(filterByDateLabel, "cell 1 2");
+        add(filterByTextLabel, "cell 1 0, grow");
+        add(filterColorComboBox, "cell  2 1 , grow");
+        add(dateHolderPanel, "cell 1 3 2 2, grow");
+        add(filterByText, "cell 2 0, grow");
+        this.revalidate();
+        this.repaint();
+        
+    }
 
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                BucketPresenter.getTaskFilter().setFilterColor(
-                        (Color) filterColorComboBox.getSelectedItem());
-                MainView.getInstance().resetAllBuckets();
-            }
-
-        });
-
-        tglbtnArchive.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (tglbtnArchive.isSelected()) {
-                    /* Show all tasks */
-                    tglbtnArchive.setText("<html>Hide<br/>Archived</html>");
-                    BucketPresenter.getTaskFilter().setIncludeArchived(true);
-                    tglbtnArchive.setIcon(Icons.HIDE_ARCHIVE_LARGE);
-                } else {
-                    /* Only show non-archived tasks */
-                    tglbtnArchive.setText("<html>Show<br/>Archived</html>");
-                    BucketPresenter.getTaskFilter().setIncludeArchived(false);
-                    tglbtnArchive.setIcon(Icons.SHOW_ARCHIVE_LARGE);
-                }
-
-                MainView.getInstance().resetAllBuckets();
-            }
-        });
-        JXDatePicker filterStartDatePicker = new JXDatePicker();
-        JXDatePicker filterEndDatePicker = new JXDatePicker();
-        add(new FilterView(), "cell 2 0");
-        add(filterEndDatePicker, "cell 3 0");
+    /**
+     * Gives filters operations
+     */
+    public void registerCallbacks(){
         DocumentListener startDateListener = new DocumentListener() {
             /** {@inheritDoc} */
             @Override
@@ -275,15 +275,17 @@ public class ToolbarView extends JPanel
             }
 
         });
-        JLabel startDateFilter = new JLabel("Filter By Start Date");
-        JLabel endDateFilter = new JLabel("Filter By End Date");
-        add(startDateFilter, "cell 2 1");
-        add(endDateFilter, "cell 3 1");
 
-        JXTextField filterByText = new JXTextField();
-        filterByText.setMinimumSize(new Dimension(100, 25));
-        add(filterByText, "cell 4 0");
+        filterColorComboBox.addItemListener(new ItemListener() {
 
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                BucketPresenter.getTaskFilter().setFilterColor(
+                        (Color) filterColorComboBox.getSelectedItem());
+                MainView.getInstance().resetAllBuckets();
+            }
+
+        });
         filterByText.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
@@ -306,9 +308,6 @@ public class ToolbarView extends JPanel
             }
 
         });
-        JXTextField filterByUser = new JXTextField();
-        filterByUser.setMinimumSize(new Dimension(100, 25));
-        add(filterByUser, "cell 5 0");
 
         filterByUser.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -331,13 +330,68 @@ public class ToolbarView extends JPanel
             }
 
         });
-        JLabel filterByTextLabel = new JLabel("Filter By Text Fields");
-        JLabel filterByUserLabel = new JLabel("Filter By Users");
-        add(filterByTextLabel, "cell 4 1");
-        add(filterByUserLabel, "cell 5 1");
+        filterByUser.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                BucketPresenter.getTaskFilter().setFilterUser(filterByUser.getText());
+                MainView.getInstance().resetAllBuckets();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                BucketPresenter.getTaskFilter().setFilterUser(filterByUser.getText());
+                MainView.getInstance().resetAllBuckets();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                BucketPresenter.getTaskFilter().setFilterUser(filterByUser.getText());
+                MainView.getInstance().resetAllBuckets();
+            }
+
+        });
+        
+        MouseListener expandListener = new MouseListener(){
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(isExpanded){
+                    setCollapsed();
+                    isExpanded=false;
+                }
+                else{
+                    setExpanded();
+                    isExpanded=true;
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+            
+        };
+        titleHolderPanel.addMouseListener(expandListener);
+        filterLabel.addMouseListener(expandListener);
+        titleHolderPanel.add(filterLabel, "dock west");
 
     }
-
+    
+    
+    
     /**gets highest date allowed by start date
      * @return upperDateBound highest date allowed
      */
@@ -366,8 +420,5 @@ public class ToolbarView extends JPanel
         this.lowerDateBound = lowerDateBound;
     }
 
-    /**gets highest date allowed by start date
-     * @return upperDateBound highest date allowed
-     */
-
-} 
+    
+}
