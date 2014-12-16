@@ -110,7 +110,7 @@ public class BucketPresenter {
         /* Add a handler to let the user drag tasks into this bucket */
         this.view.setTransferHandler(new TransferHandler() {
             /**
-             * @return {@link TransferHandler#COPY}.
+             * @return {@link TransferHandler#MOVE}.
              */
             @Override
             public int getSourceActions(JComponent c) {
@@ -274,8 +274,6 @@ public class BucketPresenter {
                         + Integer.toHexString(
                                 taskModel.getLabelColor().getRGB())
                                 .substring(2) + "\">&nbsp";
-                System.out.println(Integer.toHexString(taskModel.getLabelColor()
-                                .getRGB()).subSequence(0, 6));
             }
             str += "</tr>";
         }
