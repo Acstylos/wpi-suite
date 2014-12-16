@@ -9,6 +9,9 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import java.awt.Point;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.SwingUtilities;
+import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
@@ -104,6 +109,49 @@ public class BucketPresenter {
         /* Add a handler to let the user drag tasks into this bucket */
         this.view.setTransferHandler(new TransferHandler() {
             /**
+             * @return {@link TransferHandler#MOVE}.
+             */
+            @Override
+            public int getSourceActions(JComponent c) {
+                return MOVE;
+            }
+            
+            /**
+             * @return A transferable for the bucket presenter. Buckets can
+             * be converted into HTML tables, allowing them to be dropped into
+             * spreadsheets.
+             */
+            @Override
+            protected Transferable createTransferable(JComponent c) {
+                return new Transferable() {
+
+                    /** {@inheritDoc} */
+                    @Override
+                    public DataFlavor[] getTransferDataFlavors() {
+                        return new DataFlavor[] { DataFlavor.fragmentHtmlFlavor };
+                    }
+
+                    /** {@inheritDoc} */
+                    @Override
+                    public boolean isDataFlavorSupported(DataFlavor flavor) {
+                        return flavor == DataFlavor.fragmentHtmlFlavor;
+                    }
+
+
+                    /** {@inheritDoc} */
+                    @Override
+                    public Object getTransferData(DataFlavor flavor)
+                            throws UnsupportedFlavorException, IOException {
+                        if (!isDataFlavorSupported(flavor)) {
+                            throw new UnsupportedFlavorException(flavor);
+                        } else {
+                            return BucketPresenter.this.toHtml();
+                        }
+                    }
+                };
+            }
+            
+            /**
              * @return true if it's a task being transfered
              */
             @Override
@@ -115,7 +163,7 @@ public class BucketPresenter {
                     /* The task can be imported into this bucket if it's not
                      * already in it.
                      */
-                    return taskPresenter.getBucket() != BucketPresenter.this;
+                    return true;
                 } catch (UnsupportedFlavorException | IOException e) {
                     return false;
                 }                
@@ -129,8 +177,16 @@ public class BucketPresenter {
                 try {
                     TaskPresenter taskPresenter =
                             (TaskPresenter) support.getTransferable().getTransferData(TaskPresenter.TASK_DATA_FLAVOR);
+                    boolean flag = taskPresenter.getBucket().getModel()
+                            .getTitle().equals(model.getTitle());
+                    Point point = MainView.getInstance().getGlassPane()
+                            .getPoint();
+                    point = SwingUtilities.convertPoint(MainView.getInstance()
+                            .getGlassPane(), point, BucketPresenter.this.getView());
                     
-                    BucketPresenter.this.addTask(taskPresenter.getModel().getId(), taskPresenter);
+                    BucketPresenter.this.insertTask(taskPresenter.getModel().getId(),
+                            taskPresenter,
+                            BucketPresenter.this.getView().getInsertionIndex(point, flag));
                     
                     return true;
                 } catch (UnsupportedFlavorException | IOException e) {
@@ -190,6 +246,39 @@ public class BucketPresenter {
             }
         });
     }
+    
+    /**
+     * @return A representation of the key information in this bucket as an
+     * HTML table
+     */
+    protected String toHtml() {
+        String str = "<table>";
+
+        str += "<tr><td><b>" + this.model.getTitle() + "</b></tr>";
+        str += "<tr><td><b>Task<td><b>Due Date<td><b>Actual Effort<td><b>Estimated Effort<td><b>Category</tr>";
+
+        for (Integer taskId : this.model.getTaskIds()) {
+            TaskPresenter taskPresenter = this.taskMap.get(taskId);
+            TaskModel taskModel = taskPresenter.getModel();
+
+            str += "<tr>";
+            str += "<td>" + taskModel.getTitle();
+            str += "<td>" + taskModel.getDueDate();
+            str += "<td>" + taskModel.getActualEffort();
+            str += "<td>" + taskModel.getEstimatedEffort();
+            if (taskModel.getLabelColor() == null) {
+                str += "<td><i>None";
+            } else {
+                str += "<td bgcolor=\"#"
+                        + Integer.toHexString(
+                                taskModel.getLabelColor().getRGB())
+                                .substring(2) + "\">&nbsp";
+            }
+            str += "</tr>";
+        }
+
+        return str;
+    }
 
     /**
      * Adds a new task to the bucket view, in the form of a miniTaskView
@@ -237,14 +326,45 @@ public class BucketPresenter {
      *            taskPresenter associated with the task
      */
     public void addTask(int id, TaskPresenter taskPresenter) {
+        taskPresenter.getBucket().removeTask(id);
+        taskPresenter.setBucket(this);
         model.addTaskID(id);
         if (!taskMap.containsKey(id)) {
             taskMap.put(id, taskPresenter);
         }
         
-        if (taskPresenter.getBucket() != this) {
-            taskPresenter.getBucket().removeTask(id);
-            taskPresenter.setBucket(this);
+        taskPresenter.getModel().setStatus(this.getModel().getId());
+        taskPresenter.updateView();
+        
+        /* Immediately add the view for instant feedback to the user */
+        if (taskPresenter.getMiniView() != null) {
+            this.view.addTaskToView(taskPresenter.getMiniView());
+        }
+        
+        view.setModel(model);
+        view.revalidate();
+        view.repaint();
+        
+        updateInDatabase();
+    }
+    
+    /**
+     * Adds a task ID to the list of taskIDs in the bucket model. Sends an async
+     * update to the database.
+     * 
+     * @param id
+     *            ID of the existing task.
+     * @param taskPresenter
+     *            taskPresenter associated with the task
+     * @param index
+     *            the index to add the given task in the list
+     */
+    public void insertTask(int id, TaskPresenter taskPresenter, int index) {
+        taskPresenter.getBucket().removeTask(id);
+        taskPresenter.setBucket(this);
+        model.addTaskID(index, id);
+        if (!taskMap.containsKey(id)) {
+            taskMap.put(id, taskPresenter);
         }
         
         taskPresenter.getModel().setStatus(this.getModel().getId());
