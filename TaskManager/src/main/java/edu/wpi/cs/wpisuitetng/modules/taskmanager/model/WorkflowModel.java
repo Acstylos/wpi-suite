@@ -143,6 +143,29 @@ public class WorkflowModel extends AbstractModel {
             this.bucketIds.add(id);
         }
     }
+    
+    /**
+     * Deletes a single bucket from the list of buckets.
+     * @param id Id of the bucket to remove.
+     */
+    public void deleteBucketId(int id){
+        if(this.bucketIds.contains(id)){
+            this.bucketIds.remove((Object)id);
+        }
+    }
+    
+    /**
+     * Swaps two bucektId's in the BucketId's list.
+     * @param id1 The first bucketId
+     * @param id2 The second bucketId
+     */
+    public void swapBucketIds(int id1, int id2){
+        int index1 = this.bucketIds.indexOf(id1);
+        int index2 = this.bucketIds.indexOf(id2);
+        int temp = this.bucketIds.get(index1);
+        this.bucketIds.set(index1, this.bucketIds.get(index2));
+        this.bucketIds.set(index2, temp);
+    }
 
     /**
      * @return The title of the workflow

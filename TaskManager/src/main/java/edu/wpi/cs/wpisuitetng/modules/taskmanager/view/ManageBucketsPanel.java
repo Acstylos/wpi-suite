@@ -14,15 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowModel;
-import javax.swing.JTextField;
-import javax.swing.JList;
 
 public class ManageBucketsPanel extends JPanel {
 
@@ -38,8 +35,6 @@ public class ManageBucketsPanel extends JPanel {
     private JPanel addStagePanel = new JPanel();
     private JPanel buttonPanel = new JPanel();
     private JList<String> bucketList = new JList<String>();
-    private List<String> bucketNamesList = new ArrayList<String>();
-    private String[] bucketNamesArray = {};
 
     /**
      * Create the panel.
@@ -95,8 +90,8 @@ public class ManageBucketsPanel extends JPanel {
      * Adds a single bucket to the bucketList to be displayed.
      * @param bucket BucketModel to be added to the list.
      */
-    public void addBucketToList(BucketModel bucket){
-        // TODO: add buckets to the list.
+    public void addBucketNameArrayToList(String[] bucketNames){
+        this.bucketList.setListData(bucketNames);
     }
     
     /**
@@ -114,10 +109,31 @@ public class ManageBucketsPanel extends JPanel {
     }
     
     /**
-     * @param listener The listener to detemine how deleteBucketButton will function.
+     * @param listener The listener to determine how deleteBucketButton will function.
      */
     public void addDeleteBucketButtonListener(ActionListener listener){
         this.deleteBucketButton.addActionListener(listener);
+    }
+    
+    /**
+     * @param listener The listener to determine how moveBucketUpButton will function.
+     */
+    public void addMoveBucketUpButtonListener(ActionListener listener){
+        this.moveBucketUpButton.addActionListener(listener);
+    }
+    
+    /**
+     * @param listener The listener to determine how moveBucketDownButton will function.
+     */
+    public void addMoveBucketDownButtonListener(ActionListener listener){
+        this.moveBucketDownButton.addActionListener(listener);
+    }
+
+    /**
+     * @return the index of the selected item in the Jlist
+     */
+    public int getBucketListIndex() {
+        return this.bucketList.getSelectedIndex();
     }
 
 }

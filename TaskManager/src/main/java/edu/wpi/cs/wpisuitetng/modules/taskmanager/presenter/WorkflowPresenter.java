@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowModel;
@@ -237,6 +238,18 @@ public class WorkflowPresenter {
         }        
         saveModel();
     }
+    
+    /**
+     * Removes a bucket from the presenters list, model list, view, and the database.
+     * @param id Id of the bucket to remove.
+     */
+    public void removeBucket(int id){
+        bucketPresenters.remove(id);
+        model.deleteBucketId(id);
+        saveModel();
+        writeModelToView();
+        // TODO: remove from the database.
+    }
 
     /**
      * @return The ManageWorkflowPanel for this workflow.
@@ -249,8 +262,25 @@ public class WorkflowPresenter {
      * Updates the manageWorkflowView to reflect the buckets in the workflow.
      */
     public void updateManageWorkflowView(){
-        for(int id: model.getBucketIds()){
-            this.manageView.addBucketToList(this.getBucketPresenterById(id).getModel());
+        List<String> bucketNamesList = new ArrayList<String>();
+        for(int id : model.getBucketIds()){
+            bucketNamesList.add(bucketPresenters.get(id).getModel().getTitle());
+        }
+        String[] bucketNamesArray = new String[bucketNamesList.size()];
+        bucketNamesArray = bucketNamesList.toArray(bucketNamesArray);
+        manageView.addBucketNameArrayToList(bucketNamesArray);
+    }
+    
+    /**
+     * Adds all buckets in the bucketPresenters map to the view.
+     * Takes into account the order mapping from mapPositionToId
+     */
+    public void addAllBucketsToView(){
+        this.view.removeAll();
+        this.view.addSpacers();
+        for(int id : model.getBucketIds()){
+            BucketView bucketView = bucketPresenters.get(id).getView();
+            view.addBucketToView(bucketView);
         }
     }
 
@@ -281,6 +311,12 @@ public class WorkflowPresenter {
                 bucketPresenter.getModel().setTitle(manageView.getNewBucketTitle());
                 bucketPresenter.createInDatabase();
                 view.addBucketToView(bucketPresenter.getView());
+                try {
+                    Thread.sleep(500); // needed to make sure the ManageWorkflowPanel reflects changes in time.
+                    updateManageWorkflowView();
+                } catch (InterruptedException e1) {
+                    System.err.println("addBucketButton: sleeping for 500 ms failed: " + e1.getStackTrace());
+                }
             }
 
         });
@@ -292,9 +328,53 @@ public class WorkflowPresenter {
         this.manageView.addDeleteBucketButtonListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: Make a method for this.
+                int id = model.getBucketIds().get(manageView.getBucketListIndex()); //getBucketIdFromList(mapPositionToId);
+                if(bucketPresenters.size() > 1){
+                    if(bucketPresenters.get(id).getModel().getTaskIds().isEmpty()){
+                        removeBucket(id);
+                        updateManageWorkflowView();
+                    }
+                }
             }
 
+        });
+        
+        /*
+         * Moves buckets left in the workflow view. Up == left in the workflow view.
+         * Moves buckets up in the ManageWorkflow List.
+         */
+        this.manageView.addMoveBucketUpButtonListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int currentIndex = manageView.getBucketListIndex();
+                int currentId = model.getBucketIds().get(currentIndex);
+                if(currentIndex > 0){ // if current index is 0, we can't move it more left.
+                    int  leftId = model.getBucketIds().get(currentIndex-1);
+                    model.swapBucketIds(currentId, leftId);
+                }
+                updateManageWorkflowView();
+                addAllBucketsToView();
+                saveModel();
+            }
+        });
+
+        /*
+         * Moves buckets right in the workflow view. Down == right in the workflow view.
+         * Moves buckets down in the ManageWorkflow List.
+         */
+        this.manageView.addMoveBucketDownButtonListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int currentIndex = manageView.getBucketListIndex();
+                int currentId = model.getBucketIds().get(currentIndex);
+                if(currentIndex < model.getBucketIds().size()){ // if current index is > total indexes, we can't move it more right.
+                    int  leftId = model.getBucketIds().get(currentIndex+1);
+                    model.swapBucketIds(currentId, leftId);
+                }
+                updateManageWorkflowView();
+                addAllBucketsToView();
+                saveModel();
+            }
         });
     }
 }

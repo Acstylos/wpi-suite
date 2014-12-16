@@ -396,7 +396,6 @@ public class BucketPresenter {
         request.addObserver(new TaskObserver(taskPresenter));
         request.send();
         updateInDatabase();
-
     }
     
     /*
@@ -435,7 +434,6 @@ public class BucketPresenter {
      */
     private static final void sendBaseBucketRequest(BucketPresenter presenter, BucketModel bucket){
         final Request request = Network.getInstance().makeRequest("taskmanager/bucket", HttpMethod.PUT);
-        System.out.println("Send Bucket Put Request: " + bucket.toJson().toString());
         request.setBody(bucket.toJson());
         request.addObserver(new BucketObserver(presenter, HttpMethod.PUT));
         request.send();
@@ -447,7 +445,6 @@ public class BucketPresenter {
      */
     public void createInDatabase() {
         Request request = Network.getInstance().makeRequest("taskmanager/bucket", HttpMethod.PUT);
-        System.out.println("Send New Bucket Put Request: " + this.getModel().toJson().toString());
         request.setBody(this.model.toJson());
         request.addObserver(new BucketObserver(this, HttpMethod.PUT));
         request.send();
