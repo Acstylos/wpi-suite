@@ -153,12 +153,12 @@ public class TaskView extends JPanel {
         this.requirementComboBox.setModel(new DefaultComboBoxModel(new String[] {
         "None" }));
         this.infoPanel.add(requirementButton, "cell 2 2");
-        this.infoPanel.add(actualEffortLabel, "cell 0 3");
-        this.infoPanel.add(actualEffortSpinner, "cell 1 3");
+        this.infoPanel.add(actualEffortLabel, "cell 0 4");
+        this.infoPanel.add(actualEffortSpinner, "cell 1 4");
         this.actualEffortSpinner.setModel(new SpinnerNumberModel(0, 0, 99999, 1));
 
-        this.infoPanel.add(estEffortLabel, "cell 0 4");
-        this.infoPanel.add(estEffortSpinner, "cell 1 4");
+        this.infoPanel.add(estEffortLabel, "cell 0 3");
+        this.infoPanel.add(estEffortSpinner, "cell 1 3");
         this.estEffortSpinner.setModel(new SpinnerNumberModel(0, 0, 99999, 1));
         this.colorComboBox.setRenderer(new ColorRenderer());
         this.colorComboBox.setSelectedIndex(0);
