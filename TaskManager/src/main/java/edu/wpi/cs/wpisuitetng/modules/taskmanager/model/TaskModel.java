@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.RequirementModel;
 
 /**
  * The model end of the Task object
@@ -33,6 +34,7 @@ public class TaskModel extends AbstractModel {
     private String description;
     private List<Integer> assignedTo;
     private List<Integer> activityIds;
+    private int requirement;
     private int estimatedEffort;
     private int actualEffort;
     private Date dueDate;
@@ -52,6 +54,7 @@ public class TaskModel extends AbstractModel {
         description = "";
         assignedTo = new ArrayList<Integer>();
         activityIds = new ArrayList<Integer>();
+        requirement = 0;
         estimatedEffort = 0;
         actualEffort = 0;
         status = 1;
@@ -197,6 +200,24 @@ public class TaskModel extends AbstractModel {
     }
 
     /**
+     * add requirement Id to the list of requirement Ids
+     * 
+     * @param req
+     *          the requirement that needs to be added
+     */
+    public void setRequirement(int req) {
+        this.requirement = req;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public int getRequirement() {
+        return this.requirement;
+    }
+    
+    /**
      * @return The due date of this task
      */
     public Date getDueDate() {
@@ -228,6 +249,7 @@ public class TaskModel extends AbstractModel {
         this.actualEffort = other.getActualEffort();
         this.status = other.getStatus();
         this.activityIds = other.getActivityIds();
+        this.requirement = other.getRequirement();
         this.labelColor=other.getLabelColor();
         this.isArchived = other.getIsArchived();
     }

@@ -11,7 +11,6 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import java.awt.Color;
 import java.awt.Dialog;
-import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -25,19 +24,28 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.swing.JTabbedPane;
+
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.TransferHandler;
-
 import javax.swing.JComboBox;
 
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.controller.GetRequirementsController;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.iterationcontroller.GetIterationController;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.Requirement;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.RequirementModel;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.view.ViewEventController;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ColorRenderer;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.GhostGlassPane;
@@ -68,6 +76,7 @@ public class TaskPresenter {
     private ViewMode viewMode;
     private User[] allUserArray = {};
     private List<Integer> assignedUserList;
+    private Map<Integer, Requirement> reqMap = new HashMap<Integer, Requirement>();
     /** Dialog variables for use */
     private VerifyActionDialog cancelDialog = new VerifyActionDialog();
     private VerifyActionDialog undoDialog = new VerifyActionDialog();
@@ -112,14 +121,15 @@ public class TaskPresenter {
         this.model = new TaskModel();
         this.model.setId(id);
         this.model.setTitle("New Task");
-        assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
+        this.assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         this.view = new TaskView(model, viewMode, this);
         this.miniView = new MiniTaskView(model);
         this.miniView.setCollapsedView();
-        final Request request = Network.getInstance().makeRequest("core/user",
+        final Request userRequest = Network.getInstance().makeRequest("core/user",
                 HttpMethod.GET);
-        request.addObserver(new UsersObserver(this));
-        request.send();
+        userRequest.addObserver(new UsersObserver(this));
+        userRequest.send();
+        getRequirements();
         this.activityPresenters = new ArrayList<ActivityPresenter>();
         registerCallbacks();
 
@@ -153,6 +163,8 @@ public class TaskPresenter {
         miniView.addOnClickEditButton(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
+                getRequirements();
+                updateView();
                 MainView.getInstance().addTab(model.getShortTitle(),
                         Icons.TASKEDIT, view);// this line chooses tab title
                 if(model.getIsArchived()){
@@ -248,22 +260,25 @@ public class TaskPresenter {
         view.addOkOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                updateBeforeModel();
                 int index = MainView.getInstance().indexOfComponent(view);
                 if (viewMode == ViewMode.CREATING) {
                     // CREATING MODE
                     updateModel();
                     createInDatabase(); // is calling "PUT" in task observer
                     view.setViewMode(ViewMode.EDITING);
+                    addHistory("Create");
                 } else if(viewMode == ViewMode.ARCHIVING){
                         model.setIsArchived(false);
                         view.enableEdits();
                 }
-                updateBeforeModel();
                 MainView.getInstance().remove(index);
                 MainView.getInstance().setSelectedIndex(0);
                 saveView();
+                if(viewMode==ViewMode.EDITING){
+                    addHistory(beforeModel, model);
+                }
                 updateView();
-                addHistory(beforeModel, model);
                 MainView.getInstance().resetAllBuckets();
                 miniView.setModel(model);
                 miniView.revalidate();
@@ -389,6 +404,33 @@ public class TaskPresenter {
             }
 
         });
+        
+        view.addRequirementButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                if (reqMap.get(view.getRequirementIndex()-1) != null) {
+                    JTabbedPane janeway = (JTabbedPane)MainView.getInstance().getParent().getParent();
+                    int index = janeway.indexOfTab("Requirement Manager");
+                    janeway.setSelectedIndex(index);
+                    
+                    ViewEventController.getInstance().editRequirement(reqMap.get(view.getRequirementIndex()-1));
+                }
+
+            }
+            
+        });
+    }
+    
+    /**
+     * Sends a network request to query all of the available requirements
+     */
+    public void getRequirements() {
+        final Request requirementRequest = Network.getInstance().makeRequest("requirementmanager/requirement", 
+                HttpMethod.GET);
+        requirementRequest.addObserver(new RequirementsObserver(this));
+        requirementRequest.send();
+        
+        ViewEventController.getInstance().getOverviewTable().initialize();
     }
 
     /**
@@ -445,6 +487,13 @@ public class TaskPresenter {
 
         } else if (!flag)
             flag = false;
+        if (before.getRequirement() != after.getRequirement()) {
+            if (flag)
+                summary += "\n";
+            summary += "Associated requirement was changed from "
+                    + (before.getRequirement() == 0 ? "none" : RequirementModel.getInstance().getRequirement(before.getRequirement()-1).getName()) + " to "
+                    + (after.getRequirement() == 0 ? "none" : RequirementModel.getInstance().getRequirement(after.getRequirement()-1).getName());
+        }
         if (!before.getAssignedTo().equals(after.getAssignedTo())) {
             ArrayList<Integer> beforeTemp = new ArrayList<Integer>(
                     before.getAssignedTo());
@@ -524,6 +573,8 @@ public class TaskPresenter {
         beforeModel.setActualEffort(model.getActualEffort());
         beforeModel.setDueDate(model.getDueDate());
         beforeModel.setStatus(model.getStatus());
+        beforeModel.setAssignedTo(model.getAssignedTo());
+        beforeModel.setRequirement(model.getRequirement());
         beforeModel.setLabelColor(model.getLabelColor());
     }
 
@@ -638,7 +689,8 @@ public class TaskPresenter {
     }
 
     /**
-     * @param users User array of all users in the database
+     * @param users 
+     *          User array of all users in the database
      */
     public void addUsersToAllUserList(User[] users) {
         this.allUserArray = users;
@@ -657,6 +709,17 @@ public class TaskPresenter {
             } else {
                 this.view.getUserListPanel().addUserToList(user, false);
             }
+        }
+    }
+    
+    /**
+     * put requirements into a hashmap, the requirement id is the key
+     * @param reqs 
+     *          Requirement array of all requirement in the database
+     */
+    public void mapReqs(Requirement[] reqs) {
+        for (int i = 0; i < reqs.length; i++) {
+            reqMap.put(reqs[i].getId(), reqs[i]);
         }
     }
 
@@ -681,6 +744,7 @@ public class TaskPresenter {
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
         model.setAssignedTo(assignedUserList);
+        model.setRequirement(view.getRequirementIndex());
         model.setLabelColor(view.getLabelColor());
     }
 
@@ -688,6 +752,7 @@ public class TaskPresenter {
      * Update the view with data from the model
      */
     public void updateView() {
+        view.setRequirement(model.getRequirement());
         view.setModel(model);
         miniView.setModel(model);
         updateCommentView();
@@ -804,23 +869,25 @@ public class TaskPresenter {
 
     /**
      * Removes a user from the assignedTo list
-     * @param user User to remove from assignedTo
+     * @param user 
+     *          User to remove from assignedTo
      */
     public void removeUserFromAssignedTo(User user) {
         this.assignedUserList.remove((Object)user.getIdNum());
     }
 
     /**
-     * Add a user from the assignedTo list
-     * @param user User to add to assignedTo 
+     * Add a user to the assignedTo list
+     * @param user 
+     *          User to add to assignedTo 
      */
     public void addUserToAssignedTo(User user) {
         this.assignedUserList.add(user.getIdNum());
         this.view.validateFields();
     }
-
+    
     /**
-     * @return assigned users list
+     * @return A shallow copy of the temporary assigned users list, not the model's user list
      */
     public List<Integer> getAssignedUserList() {
         return this.assignedUserList;
