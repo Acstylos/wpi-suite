@@ -166,11 +166,9 @@ public class TaskPresenter {
                 if(model.getIsArchived()){
                     view.setViewMode(ViewMode.ARCHIVING);
                     view.getCommentView().toggleTextField(ViewMode.ARCHIVING);
-                    view.disableEdits();
                 }
                 else{
                     view.setViewMode(ViewMode.EDITING);
-                    view.enableEdits();
                 }
                 viewMode = view.getViewMode();
                 int tabCount = MainView.getInstance().getTabCount();
@@ -182,6 +180,25 @@ public class TaskPresenter {
                 miniView.setCollapsedView();
             }
         });
+        /*on click listener to restore or archive a task*/
+        miniView.addOnClickArchiveButton(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                if (miniView.getModel().getIsArchived()){
+                    miniView.getModel().setIsArchived(false);
+                    miniView.getArchiveButton().setText("Archive");
+                }
+                else {
+                    miniView.getModel().setIsArchived(true);
+                    miniView.getArchiveButton().setText("Restore");
+                }
+            saveView();
+            updateView();
+            MainView.getInstance().resetAllBuckets();
+            }
+        });
+        
+      
         
         /* Set a handler to move the task when it's dragged and dropped */ 
         miniView.setTransferHandler(new TransferHandler() {
@@ -292,9 +309,6 @@ public class TaskPresenter {
                     updateModel();
                     createInDatabase(); // is calling "PUT" in task observer
                     view.setViewMode(ViewMode.EDITING);
-                } else if(viewMode == ViewMode.ARCHIVING){
-                        model.setIsArchived(false);
-                        view.enableEdits();
                 }
                 updateBeforeModel();
                 MainView.getInstance().remove(index);
@@ -409,13 +423,7 @@ public class TaskPresenter {
                         bucket.removeTaskView(taskPresenter);
                         
                     }
-                    else{
-                        model.setIsArchived(true);
-                        saveView();
-                        updateView();
-                        view.disableEdits();
-                        MainView.getInstance().resetAllBuckets();
-                    }
+                    
                 }
             }
         });
