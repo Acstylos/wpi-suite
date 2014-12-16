@@ -22,6 +22,29 @@
       "revId": "c0d464f6e26bd949996248f98d2064982059c019",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da01753e_91081c2f",
+        "filename": "TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/view/FilterView.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1002857
+      },
+      "writtenOn": "2014-12-16T23:50:09Z",
+      "side": 1,
+      "message": "containing",
+      "range": {
+        "startLine": 76,
+        "startChar": 23,
+        "endLine": 76,
+        "endChar": 31
+      },
+      "revId": "c0d464f6e26bd949996248f98d2064982059c019",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
