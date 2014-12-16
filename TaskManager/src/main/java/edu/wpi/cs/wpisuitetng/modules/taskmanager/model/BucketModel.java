@@ -175,11 +175,11 @@ public class BucketModel extends AbstractModel {
     }
 
     /**
-     * @param newTaskIds
+     * @param list
      *            The list of task IDs to be set
      */
-    public void setTaskIds(ArrayList<Integer> newTaskIds) {
-        this.taskIds = newTaskIds;
+    public void setTaskIds(List<Integer> list) {
+        this.taskIds = list;
     }
 
     /**

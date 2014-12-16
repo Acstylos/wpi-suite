@@ -116,11 +116,9 @@ public class TaskPresenter {
         this.viewMode = viewMode;
         this.model = new TaskModel();
         this.model.setId(id);
-        this.model.setTitle("New Task");
-        this.assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
+        assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         this.view = new TaskView(model, viewMode, this);
         this.miniView = new MiniTaskView(model);
-        this.miniView.setCollapsedView();
         final Request userRequest = Network.getInstance().makeRequest("core/user",
                 HttpMethod.GET);
         userRequest.addObserver(new UsersObserver(this));
