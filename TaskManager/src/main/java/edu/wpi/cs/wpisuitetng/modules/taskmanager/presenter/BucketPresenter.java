@@ -9,24 +9,29 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
+import java.awt.Point;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.SwingUtilities;
+import javax.swing.JComponent;
 import javax.swing.TransferHandler;
-import javax.swing.TransferHandler.TransferSupport;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
-//import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Entity;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ViewMode;
 import edu.wpi.cs.wpisuitetng.network.Network;
@@ -45,7 +50,6 @@ public class BucketPresenter {
     private BucketView view;
     private BucketModel model;
     private Map<Integer, TaskPresenter> taskMap = new HashMap<Integer, TaskPresenter>();
-    private WorkflowPresenter workflow;
 
     /**
      * Constructor for a bucket presenter
@@ -53,38 +57,22 @@ public class BucketPresenter {
      * @param bucketId
      * @param workflow
      */
-    public BucketPresenter(int bucketId, WorkflowPresenter workflow) {
-        this.workflow = workflow;
+    public BucketPresenter(int bucketId) {
         this.model = new BucketModel();
         this.model.setId(bucketId);
         this.view = new BucketView(this.model);
         registerCallbacks();
-        load();
     }
 
     /**
      * Requests the server for a new bucket or the bucket corresponding to the
      * current ID
      */
-    public void load() {
-        HttpMethod method;
-        String id = "/" + model.getId();
-        if (model.getId() == 0) { // Put = create a new model
-            method = HttpMethod.PUT;
-            id = "";
-        } else {// Retrieve a model
-            method = HttpMethod.GET;
-        }
-
+    public void load() {;
         // Sends a request for the TaskViews associated with the BucketView
         final Request request = Network.getInstance().makeRequest(
-                "taskmanager/bucket" + id, method);
-        if (method == HttpMethod.PUT) {
-            request.setBody(model.toJson());
-        }
-        request.addObserver(new BucketObserver(this, method)); // add an
-        // observer to
-        // the response
+                "taskmanager/bucket", HttpMethod.GET);
+        request.addObserver(new BucketObserver(this, HttpMethod.GET));
         request.send();
     }
 
@@ -92,27 +80,6 @@ public class BucketPresenter {
      * Sets the view of the model
      */
     public void writeModelToView() {
-        String name = "";
-        switch (model.getId()) {
-        case 1:
-            name = "New";
-            break;
-        case 2:
-            name = "Selected";
-            break;
-        case 3:
-            name = "In Progress";
-            break;
-        case 4:
-            name = "Completed";
-            break;
-        case 5:
-            name = "Archive";
-            break;
-        }
-        if (name.length() > 1) {
-            model.setTitle(name);
-        }
 
         this.view.setModel(this.model);
         for (int i : model.getTaskIds()) {
@@ -124,13 +91,16 @@ public class BucketPresenter {
 
             MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
             miniTaskView.setModel(taskMap.get(i).getModel());
+
+            taskMap.get(i).validateUpdateLabel();
             view.addTaskToView(miniTaskView);
             this.addMiniTaskView(taskMap.get(i).getMiniView());
+            
         }
         addMiniTaskstoView();
         view.revalidate();
         view.repaint();
-
+ 
     }
 
     /**
@@ -139,6 +109,49 @@ public class BucketPresenter {
     private void registerCallbacks() {
         /* Add a handler to let the user drag tasks into this bucket */
         this.view.setTransferHandler(new TransferHandler() {
+            /**
+             * @return {@link TransferHandler#MOVE}.
+             */
+            @Override
+            public int getSourceActions(JComponent c) {
+                return MOVE;
+            }
+            
+            /**
+             * @return A transferable for the bucket presenter. Buckets can
+             * be converted into HTML tables, allowing them to be dropped into
+             * spreadsheets.
+             */
+            @Override
+            protected Transferable createTransferable(JComponent c) {
+                return new Transferable() {
+
+                    /** {@inheritDoc} */
+                    @Override
+                    public DataFlavor[] getTransferDataFlavors() {
+                        return new DataFlavor[] { DataFlavor.fragmentHtmlFlavor };
+                    }
+
+                    /** {@inheritDoc} */
+                    @Override
+                    public boolean isDataFlavorSupported(DataFlavor flavor) {
+                        return flavor == DataFlavor.fragmentHtmlFlavor;
+                    }
+
+
+                    /** {@inheritDoc} */
+                    @Override
+                    public Object getTransferData(DataFlavor flavor)
+                            throws UnsupportedFlavorException, IOException {
+                        if (!isDataFlavorSupported(flavor)) {
+                            throw new UnsupportedFlavorException(flavor);
+                        } else {
+                            return BucketPresenter.this.toHtml();
+                        }
+                    }
+                };
+            }
+            
             /**
              * @return true if it's a task being transfered
              */
@@ -151,7 +164,7 @@ public class BucketPresenter {
                     /* The task can be imported into this bucket if it's not
                      * already in it.
                      */
-                    return taskPresenter.getBucket() != BucketPresenter.this;
+                    return true;
                 } catch (UnsupportedFlavorException | IOException e) {
                     return false;
                 }                
@@ -165,8 +178,16 @@ public class BucketPresenter {
                 try {
                     TaskPresenter taskPresenter =
                             (TaskPresenter) support.getTransferable().getTransferData(TaskPresenter.TASK_DATA_FLAVOR);
+                    boolean flag = taskPresenter.getBucket().getModel()
+                            .getTitle().equals(model.getTitle());
+                    Point point = MainView.getInstance().getGlassPane()
+                            .getPoint();
+                    point = SwingUtilities.convertPoint(MainView.getInstance()
+                            .getGlassPane(), point, BucketPresenter.this.getView());
                     
-                    BucketPresenter.this.addTask(taskPresenter.getModel().getId(), taskPresenter);
+                    BucketPresenter.this.insertTask(taskPresenter.getModel().getId(),
+                            taskPresenter,
+                            BucketPresenter.this.getView().getInsertionIndex(point, flag));
                     
                     return true;
                 } catch (UnsupportedFlavorException | IOException e) {
@@ -177,6 +198,87 @@ public class BucketPresenter {
                 return false;
             }
         });
+        
+        /* Allows clicking of the bucket's title to open
+         * the change view. Which will allow users to change the
+         * title of the bucket.
+         */
+        view.addChangeBucketNameListener(new MouseAdapter(){
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                view.setChangeTitlePanel();
+                view.revalidate();
+                view.repaint();
+            }
+        });
+        
+        /* Allows the OK button to revert the Title Panel of the
+         * bucket. Also saves the new label to the model for load.
+         */
+        view.addOkButtonListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String title = view.getChangeTextField().getText();
+                if(title.trim().equals("")){
+                    view.getTaskNameLabel().setText(view.getChangeTextField().getPrompt());
+                } else {
+                    view.getTaskNameLabel().setText(title.trim());
+                    model.setTitle(title.trim());
+                }
+                view.setStaticTitlePanel();
+                updateInDatabase();
+                view.revalidate();
+                view.repaint();
+            }
+        });
+        
+        /* Allows the Cancel button to revert the Title Panel of the
+         * bucket. 
+         */
+        view.addCancelButtonListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.setStaticTitlePanel();
+                view.revalidate();
+                view.repaint();
+            }
+        });
+    }
+    
+    /**
+     * @return A representation of the key information in this bucket as an
+     * HTML table
+     */
+    protected String toHtml() {
+        String str = "<table>";
+
+        str += "<tr><td><b>" + this.model.getTitle() + "</b></tr>";
+        str += "<tr><td><b>Task<td><b>Due Date<td><b>Actual Effort<td><b>Estimated Effort<td><b>Category</tr>";
+
+        for (Integer taskId : this.model.getTaskIds()) {
+            TaskPresenter taskPresenter = this.taskMap.get(taskId);
+            TaskModel taskModel = taskPresenter.getModel();
+
+            str += "<tr>";
+            str += "<td>" + taskModel.getTitle();
+            str += "<td>" + taskModel.getDueDate();
+            str += "<td>" + taskModel.getActualEffort();
+            str += "<td>" + taskModel.getEstimatedEffort();
+            if (taskModel.getLabelColor() == null) {
+                str += "<td><i>None";
+            } else {
+                str += "<td bgcolor=\"#"
+                        + Integer.toHexString(
+                                taskModel.getLabelColor().getRGB())
+                                .substring(2) + "\">&nbsp";
+            }
+            str += "</tr>";
+        }
+
+        return str;
     }
 
     /**
@@ -225,14 +327,45 @@ public class BucketPresenter {
      *            taskPresenter associated with the task
      */
     public void addTask(int id, TaskPresenter taskPresenter) {
+        taskPresenter.getBucket().removeTask(id);
+        taskPresenter.setBucket(this);
         model.addTaskID(id);
         if (!taskMap.containsKey(id)) {
             taskMap.put(id, taskPresenter);
         }
         
-        if (taskPresenter.getBucket() != this) {
-            taskPresenter.getBucket().removeTask(id);
-            taskPresenter.setBucket(this);
+        taskPresenter.getModel().setStatus(this.getModel().getId());
+        taskPresenter.updateView();
+        
+        /* Immediately add the view for instant feedback to the user */
+        if (taskPresenter.getMiniView() != null) {
+            this.view.addTaskToView(taskPresenter.getMiniView());
+        }
+        
+        view.setModel(model);
+        view.revalidate();
+        view.repaint();
+        
+        updateInDatabase();
+    }
+    
+    /**
+     * Adds a task ID to the list of taskIDs in the bucket model. Sends an async
+     * update to the database.
+     * 
+     * @param id
+     *            ID of the existing task.
+     * @param taskPresenter
+     *            taskPresenter associated with the task
+     * @param index
+     *            the index to add the given task in the list
+     */
+    public void insertTask(int id, TaskPresenter taskPresenter, int index) {
+        taskPresenter.getBucket().removeTask(id);
+        taskPresenter.setBucket(this);
+        model.addTaskID(index, id);
+        if (!taskMap.containsKey(id)) {
+            taskMap.put(id, taskPresenter);
         }
         
         taskPresenter.getModel().setStatus(this.getModel().getId());
@@ -267,10 +400,8 @@ public class BucketPresenter {
      * @param models
      *            The models sent from the network
      */
-    public void responseGet(BucketModel[] models) {
-        if (models[0].getId() == 0)
-            return;
-        this.model = models[0];
+    public void responseGet(BucketModel models) {
+        this.model = models;
         writeModelToView();
     }
 
@@ -291,8 +422,6 @@ public class BucketPresenter {
      *            The model sent from the network
      */
     public void responsePut(BucketModel model) {
-        this.model = model;
-        writeModelToView();
     }
 
     /**
@@ -317,15 +446,6 @@ public class BucketPresenter {
      */
     public BucketModel getModel() {
         return model;
-    }
-
-    /**
-     * @param model
-     *            THe model of the presenter to be set
-     */
-    public void setModel(BucketModel model) {
-        this.model = model;
-        this.writeModelToView();
     }
 
     /**
@@ -383,5 +503,47 @@ public class BucketPresenter {
         request.send();
         updateInDatabase();
 
+    }
+    
+    /*
+     * The ideas for the following functions comes from reading code and using implementations found at 
+     * https://github.com/dcpounds/wpi-suite/tree/dev-gradle/TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/controller/stage
+     * Team 4 of year B2014's implementation 
+     */
+    
+    /**
+     * Saves the 4 preset stages. Should only happen if db is empty.
+     */
+    public static final void saveBaseBuckets(){
+        BucketModel newStage = new BucketModel(1, "New");
+        BucketModel scheduledStage = new BucketModel(2, "Scheduled");
+        BucketModel inProgressStage = new BucketModel(3, "In Progress");
+        BucketModel completedStage = new BucketModel(4, "Completed");
+        
+        try {
+            sendAddBucketRequest(new BucketPresenter(1), newStage);
+            Thread.sleep(1000);
+            sendAddBucketRequest(new BucketPresenter(2), scheduledStage);
+            Thread.sleep(1000);
+            sendAddBucketRequest(new BucketPresenter(3), inProgressStage);
+            Thread.sleep(1000);
+            sendAddBucketRequest(new BucketPresenter(4), completedStage);
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            System.err.println("Sleep Exception: " + e.getStackTrace().toString());
+        }
+
+    }
+    
+    /**
+     * Adds a bucket model to the DB.
+     * @param bucket Bucket to add to the DB
+     */
+    private static final void sendAddBucketRequest(BucketPresenter presenter, BucketModel bucket){
+        final Request request = Network.getInstance().makeRequest("taskmanager/bucket", HttpMethod.PUT);
+        System.out.println("Send Bucket Put Request: " + bucket.toJson().toString());
+        request.setBody(bucket.toJson());
+        request.addObserver(new BucketObserver(presenter, HttpMethod.PUT));
+        request.send();
     }
 }

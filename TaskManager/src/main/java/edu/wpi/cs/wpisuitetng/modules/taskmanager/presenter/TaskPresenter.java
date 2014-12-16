@@ -11,7 +11,6 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import java.awt.Color;
 import java.awt.Dialog;
-import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -24,12 +23,14 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.swing.JTabbedPane;
+
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JComponent;
@@ -37,13 +38,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.TransferHandler;
 
-import edu.wpi.cs.wpisuitetng.Session;
-import edu.wpi.cs.wpisuitetng.exceptions.SessionException;
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Notification;
-import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.Requirement;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.RequirementModel;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.view.ViewEventController;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ColorRenderer;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.GhostGlassPane;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
@@ -72,19 +74,33 @@ public class TaskPresenter {
     private ViewMode viewMode;
     private User[] allUserArray = {};
     private List<Integer> assignedUserList;
+    private Map<Integer, Requirement> reqMap = new HashMap<Integer, Requirement>();
     /** Dialog variables for use */
     private VerifyActionDialog cancelDialog = new VerifyActionDialog();
     private VerifyActionDialog undoDialog = new VerifyActionDialog();
     private VerifyActionDialog deleteDialog = new VerifyActionDialog();
     private boolean cancelDialogConfirmed = false;
     private boolean undoDialogConfirmed = false;
-    private boolean deleteDialogConfirmed = false;
+    private boolean deleteDialogConfirmed = true;
     private boolean allowCancelDialog = false;
 
     private BucketPresenter bucket;
     private List<ActivityPresenter> activityPresenters;
     
     public final static DataFlavor TASK_DATA_FLAVOR = new DataFlavor(TaskPresenter.class, "Task");
+
+    /**
+     * Constructor for testing methods without creating View, or
+     * Buckets/Workflow Presenters PURELY TO TEST METHODS THAT ONLY OPERATE ON
+     * TASKMODELS
+     * 
+     * @param model
+     *            the model associated with this presenter
+     */
+    public TaskPresenter(TaskModel model) {
+        this.model = new TaskModel();
+        this.model.copyFrom(model);
+    }
 
     /**
      * Constructs a TaskPresenter for the given model. Constructs the view
@@ -103,14 +119,15 @@ public class TaskPresenter {
         this.model = new TaskModel();
         this.model.setId(id);
         this.model.setTitle("New Task");
-        assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
+        this.assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         this.view = new TaskView(model, viewMode, this);
         this.miniView = new MiniTaskView(model);
         this.miniView.setCollapsedView();
-        final Request request = Network.getInstance().makeRequest("core/user",
+        final Request userRequest = Network.getInstance().makeRequest("core/user",
                 HttpMethod.GET);
-        request.addObserver(new UsersObserver(this));
-        request.send();
+        userRequest.addObserver(new UsersObserver(this));
+        userRequest.send();
+        getRequirements();
         this.activityPresenters = new ArrayList<ActivityPresenter>();
         registerCallbacks();
 
@@ -144,6 +161,8 @@ public class TaskPresenter {
         miniView.addOnClickEditButton(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
+                getRequirements();
+                updateView();
                 MainView.getInstance().addTab(model.getShortTitle(),
                         Icons.TASKEDIT, view);// this line chooses tab title
                 if(model.getIsArchived()){
@@ -182,6 +201,36 @@ public class TaskPresenter {
              */
             @Override
             public boolean canImport(TransferSupport support) {
+                return true;
+            }
+            
+            /**
+             * Add the task to this bucket
+             */
+            @Override
+            public boolean importData(TransferSupport support) {
+                try {
+                    TaskPresenter taskPresenter =
+                            (TaskPresenter) support.getTransferable().getTransferData(TaskPresenter.TASK_DATA_FLAVOR);
+                    if(taskPresenter.getModel().getId() == model.getId())
+                        return false;
+                    boolean flag = taskPresenter.getBucket().getModel()
+                            .getTitle().equals(bucket.getModel().getTitle());
+                    Point point = MainView.getInstance().getGlassPane()
+                            .getPoint();
+                    point = SwingUtilities.convertPoint(MainView.getInstance()
+                            .getGlassPane(), point, bucket.getView());
+
+                    bucket.insertTask(taskPresenter.getModel().getId(),
+                            taskPresenter,
+                            bucket.getView().getInsertionIndex(point, flag));
+
+                    return true;
+                } catch (UnsupportedFlavorException | IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                
                 return false;
             }
             
@@ -245,40 +294,20 @@ public class TaskPresenter {
                     updateModel();
                     createInDatabase(); // is calling "PUT" in task observer
                     view.setViewMode(ViewMode.EDITING);
-                    MainView.getInstance().remove(index);
-                    MainView.getInstance().setSelectedIndex(0);
-
-                }
-
-                else {
-
-     if(viewMode == ViewMode.ARCHIVING){
-                        int newIndex = MainView.getInstance().indexOfComponent(view);
-                        MainView.getInstance().remove(newIndex);
+                } else if(viewMode == ViewMode.ARCHIVING){
                         model.setIsArchived(false);
-                        saveView();
-                        updateView();
                         view.enableEdits();
-
-                    }
-                    else{
-                     
-                    }
-                    updateBeforeModel();
-                    saveView();
-                    updateView();
-                    MainView.getInstance().setTitleAt(index,
-                            model.getShortTitle());
-                    MainView.getInstance().setToolTipTextAt(index, model.getTitle());
-                    addHistory(beforeModel, model);
                 }
-
+                updateBeforeModel();
+                MainView.getInstance().remove(index);
+                MainView.getInstance().setSelectedIndex(0);
+                saveView();
+                updateView();
+                addHistory(beforeModel, model);
                 MainView.getInstance().resetAllBuckets();
-
                 miniView.setModel(model);
                 miniView.revalidate();
                 miniView.repaint();
-
             }
         });
 
@@ -307,6 +336,7 @@ public class TaskPresenter {
                 if(cancelDialogConfirmed) {
                     int index = MainView.getInstance().indexOfComponent(view);
                     MainView.getInstance().remove(index);
+                    MainView.getInstance().setSelectedIndex(0);
                     updateView();
                     view.revalidate();
                     view.repaint();
@@ -353,12 +383,6 @@ public class TaskPresenter {
             @Override
             public void actionPerformed(ActionEvent e) {
                 deleteDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-                if(viewMode == ViewMode.ARCHIVING){
-                    deleteDialog.setCommentLabelText("Are you sure you want to delete this task?");
-                }
-                else{
-                    deleteDialog.setCommentLabelText("Are you sure you want to archive this task?");
-                }
                 deleteDialog.addConfirmButtonListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -373,10 +397,14 @@ public class TaskPresenter {
                         deleteDialog.setVisible(false);
                     }
                 });
-                deleteDialog.setVisible(true);
+                if(viewMode == ViewMode.ARCHIVING){
+                    deleteDialog.setCommentLabelText("Are you sure you want to delete this task?");
+                    deleteDialog.setVisible(true);
+                }
                 if(deleteDialogConfirmed) {//delete has been confirmed
                     int index = MainView.getInstance().indexOfComponent(view);
                     MainView.getInstance().remove(index);
+                    MainView.getInstance().setSelectedIndex(0);
                     if(viewMode == ViewMode.ARCHIVING){//delete task
                         
                         TaskPresenter taskPresenter = bucket.getTask(model.getId());
@@ -401,6 +429,162 @@ public class TaskPresenter {
             }
 
         });
+        
+        view.addRequirementButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                if (reqMap.get(view.getRequirementIndex()-1) != null) {
+                    JTabbedPane janeway = (JTabbedPane)MainView.getInstance().getParent().getParent();
+                    int index = janeway.indexOfTab("Requirement Manager");
+                    janeway.setSelectedIndex(index);
+                    
+                    ViewEventController.getInstance().editRequirement(reqMap.get(view.getRequirementIndex()-1));
+                }
+
+            }
+            
+        });
+    }
+    
+    /**
+     * Sends a network request to query all of the available requirements
+     */
+    public void getRequirements() {
+        final Request requirementRequest = Network.getInstance().makeRequest("requirementmanager/requirement", 
+                HttpMethod.GET);
+        requirementRequest.addObserver(new RequirementsObserver(this));
+        requirementRequest.send();
+        
+        ViewEventController.getInstance().getOverviewTable().initialize();
+    }
+
+    /**
+     * Compares the task models before and after it is updated and makes a
+     * string that contains all the user changes
+     * 
+     * @param before
+     *            the task model before it was updated.
+     * @param after
+     *            the task model after it was updated.
+     * @return summary the message which shows what has changed.
+     */
+    public String compareTasks(TaskModel before, TaskModel after) {
+        boolean flag = false;// flag to tell if first print or not.
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        String summary = "";
+        if (before.getTitle().compareTo(after.getTitle()) != 0) {
+            summary = "Title was changed from " + before.getTitle() + " to "
+                    + after.getTitle();
+            flag = true;
+        }
+        if (before.getActualEffort() != after.getActualEffort()) {
+            if (flag)
+                summary += "\n";
+            summary += "Actual Effort was changed from "
+                    + before.getActualEffort() + " to "
+                    + after.getActualEffort();
+            flag = true;
+        } else if (!flag)
+            flag = false;
+        if (before.getEstimatedEffort() != after.getEstimatedEffort()) {
+            if (flag)
+                summary += "\n";
+            summary += "Estimated Effort was changed from "
+                    + before.getEstimatedEffort() + " to "
+                    + after.getEstimatedEffort();
+            flag = true;
+        } else if (!flag)
+            flag = false;
+        if (before.getDueDate().compareTo(after.getDueDate()) != 0) {
+            if (flag)
+                summary += "\n";
+            summary += "Due Date was changed from "
+                    + dateFormat.format(before.getDueDate()) + " to "
+                    + dateFormat.format(after.getDueDate());
+            flag = true;
+        } else if (!flag)
+            flag = false;
+        if (before.getDescription().compareTo(after.getDescription()) != 0) {
+            if (flag)
+                summary += "\n";
+            summary += "Description was changed.";
+            flag = true;
+
+        } else if (!flag)
+            flag = false;
+        if (before.getRequirement() != after.getRequirement()) {
+            if (flag)
+                summary += "\n";
+            summary += "Associated requirement was changed from "
+                    + (before.getRequirement() == 0 ? "none" : RequirementModel.getInstance().getRequirement(before.getRequirement()-1).getName()) + " to "
+                    + (after.getRequirement() == 0 ? "none" : RequirementModel.getInstance().getRequirement(after.getRequirement()-1).getName());
+        }
+        if (!before.getAssignedTo().equals(after.getAssignedTo())) {
+            ArrayList<Integer> beforeTemp = new ArrayList<Integer>(
+                    before.getAssignedTo());
+            ArrayList<Integer> afterTemp = new ArrayList<Integer>(
+                    after.getAssignedTo());
+            if (flag)
+                summary += "\n";
+            if (before.getAssignedTo().size() > after.getAssignedTo().size()) {
+                beforeTemp.removeAll(afterTemp);
+                // find difference between the before and after IDs
+                for (int i = 0; i < beforeTemp.size(); i++) {
+                    summary += idToUsername(beforeTemp.get(i))
+                            + " was removed.";
+                    if (i < beforeTemp.size() - 1)
+                        summary += "\n";
+                }
+
+            } else {
+                afterTemp.removeAll(beforeTemp);
+                for (int i = 0; i < afterTemp.size(); i++) {
+                    summary += idToUsername(afterTemp.get(i)) + " was added.";
+                    if (i < afterTemp.size() - 1)
+                        summary += "\n";
+                }
+            }
+            flag = true;
+
+        } else if (!flag)
+            flag = false;
+        if (before.getStatus() != after.getStatus()) {
+            if (flag)
+                summary += "\n";
+            summary += "Task was moved from " + intToStatus(before.getStatus())
+                    + " to " + intToStatus(after.getStatus());
+            
+            flag = true;
+        }
+        if(before.getLabelColor()!=null){
+            if (!before.getLabelColor().equals(after.getLabelColor())) {
+                if (flag)
+                    summary += "\n";
+                summary += "Label was changed from " + ColorRenderer.evaluateColor(before.getLabelColor().toString())
+                        + " to " + ColorRenderer.evaluateColor(after.getLabelColor().toString());
+            }
+        }
+        return summary;
+    }
+
+    /**
+     * returns the bucket name with the given ID hard coded at the moment.
+     * 
+     * @param bucket
+     *            the bucket's ID
+     * @return String the name of the bucket
+     */
+    private String intToStatus(int bucket) {
+        if (bucket == 1) 
+            return "New";
+        else if (bucket == 2)
+            return "Selected";
+        else if (bucket == 3)
+            return "In Progress";
+        else if (bucket == 4)
+            return "Completed";
+        else
+            return "Archive";
     }
 
     /**
@@ -410,11 +594,13 @@ public class TaskPresenter {
         beforeModel.setTitle(model.getTitle());
         beforeModel.setDescription(model.getDescription());
         beforeModel.setEstimatedEffort(model.getEstimatedEffort());
+        beforeModel.setAssignedTo(model.getAssignedTo());
         beforeModel.setActualEffort(model.getActualEffort());
         beforeModel.setDueDate(model.getDueDate());
         beforeModel.setStatus(model.getStatus());
         beforeModel.setAssignedTo(new ArrayList<>(model.getAssignedTo()));
         beforeModel.setActivityIds(new ArrayList<>(model.getActivityIds()));
+        beforeModel.setLabelColor(model.getLabelColor());
     }
 
     /**
@@ -452,7 +638,7 @@ public class TaskPresenter {
         String activity = username + " has updated tasks on "
                 + dateFormat.format(cal.getTime()) + ":\n";
 
-        activity += before.compareTo(after);
+        activity += compareTasks(before, after);
         ActivityPresenter activityPresenter = new ActivityPresenter(this,
                 activity, true);
         view.getCommentView().postHistory(activityPresenter.getView());
@@ -503,10 +689,6 @@ public class TaskPresenter {
         switch (type) {
         case "Create":
             activity = user + " has created a task on "
-                    + dateFormat.format(cal.getTime());
-            break;
-        case "Move":
-            activity = user + " has moved a task from x to y on "
                     + dateFormat.format(cal.getTime());
             break;
         case "Archive":
@@ -561,7 +743,8 @@ public class TaskPresenter {
     }
 
     /**
-     * @param users User array of all users in the database
+     * @param users 
+     *          User array of all users in the database
      */
     public void addUsersToAllUserList(User[] users) {
         this.allUserArray = users;
@@ -580,6 +763,17 @@ public class TaskPresenter {
             } else {
                 this.view.getUserListPanel().addUserToList(user, false);
             }
+        }
+    }
+    
+    /**
+     * put requirements into a hashmap, the requirement id is the key
+     * @param reqs 
+     *          Requirement array of all requirement in the database
+     */
+    public void mapReqs(Requirement[] reqs) {
+        for (int i = 0; i < reqs.length; i++) {
+            reqMap.put(reqs[i].getId(), reqs[i]);
         }
     }
 
@@ -604,18 +798,20 @@ public class TaskPresenter {
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
         model.setAssignedTo(assignedUserList);
+        model.setRequirement(view.getRequirementIndex());
+        model.setLabelColor(view.getLabelColor());
     }
 
     /**
      * Update the view with data from the model
      */
     public void updateView() {
+        view.setRequirement(model.getRequirement());
         view.setModel(model);
         miniView.setModel(model);
         updateCommentView();
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         addUsersToView();
-        
         this.setIconForMinitaskView();
 
         if(model.getIsArchived()) {
@@ -629,8 +825,9 @@ public class TaskPresenter {
 
         miniView.setModel(model);
         miniView.setToolTipText(model.getTitle());
+        miniView.updateLabel();
     }
-
+    
     /**
      * takes the current comment view, clears the posts, and puts each comment,
      * one by one back on to the current view.
@@ -726,23 +923,25 @@ public class TaskPresenter {
 
     /**
      * Removes a user from the assignedTo list
-     * @param user User to remove from assignedTo
+     * @param user 
+     *          User to remove from assignedTo
      */
     public void removeUserFromAssignedTo(User user) {
         this.assignedUserList.remove((Object)user.getIdNum());
     }
 
     /**
-     * Add a user from the assignedTo list
-     * @param user User to add to assignedTo 
+     * Add a user to the assignedTo list
+     * @param user 
+     *          User to add to assignedTo 
      */
     public void addUserToAssignedTo(User user) {
         this.assignedUserList.add(user.getIdNum());
         this.view.validateFields();
     }
-
+    
     /**
-     * @return assigned users list
+     * @return A shallow copy of the temporary assigned users list, not the model's user list
      */
     public List<Integer> getAssignedUserList() {
         return this.assignedUserList;
@@ -754,6 +953,21 @@ public class TaskPresenter {
     public void setAllowCancelDialogEnabled(boolean enable) {
         this.allowCancelDialog = enable;
         this.cancelDialogConfirmed = !enable; // if the dialog is enabled, the confirmation of the dialog box is opposite
+    }
+    
+    /**
+     * returns the Username with the given ID, otherwise blank.
+     * 
+     * @param id
+     *            the user's ID
+     * @return username the Username
+     */
+    public String idToUsername(int id) {
+        for (User u : this.allUserArray) {
+            if (u.getIdNum() == id)
+                return u.getUsername();
+        }
+        return "";
     }
     
     /**
@@ -780,6 +994,15 @@ public class TaskPresenter {
             else if (leftInHours < 48){ //In progress
             	this.miniView.setTaskNameLabelIcon(Icons.TASKSTART);
             }
+            else if (dueDate.getMonth() + 1 == 12 && dueDate.getDate() == 25) {
+                this.miniView.setTaskNameLabelIcon(Icons.TASKCHRISTMAS);
+            }
+            else if (dueDate.getMonth() + 1 == 4 && dueDate.getDate() == 20) {
+                this.miniView.setTaskNameLabelIcon(Icons.TASKSNOOPDOGG);
+            }
+            else if (dueDate.getMonth() + 1 == 10 && dueDate.getDate() == 31) {
+                this.miniView.setTaskNameLabelIcon(Icons.TASKHALLOWEEN);
+            }
             else { //New
             	this.miniView.setTaskNameLabelIcon(Icons.TASKNEW);
             }
@@ -798,4 +1021,41 @@ public class TaskPresenter {
         }
         miniView.addUsersToUserPanel(userNames);
     }
+    
+    /**
+     * check if the label is null, 
+     * then if it is not, then update the miniview to the color of the task's colorLabel
+     * @param model taskModel containing a colorLabel
+     */
+    public void validateUpdateLabel() {
+        // white does no setBackground to panel.
+        if (this.getModel().getLabelColor() != null) {
+            if (!this.getModel().getLabelColor()
+                    .equals(new Color(255, 255, 255))){
+                this.getMiniView().getColorLabel().setBackground(
+                        this.getModel().getLabelColor());
+            }
+        }        
+    }
+    
+    /**
+     * 
+     * @return beforeModel, TaskModel before updateBeforeModel() is called.
+     */
+    public TaskModel getBeforeModel() {
+        return beforeModel;
+    }
+    
+    /**
+     * Set the model for this class.
+     * EXCEPT does not update any Views.
+     * 
+     * @param model
+     *            This provider's model.
+     */
+    public void setModelNoView(TaskModel other){
+        this.model = other;
+    }
+    
+    
 }
