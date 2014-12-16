@@ -10,6 +10,7 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.dnd.DragSource;
@@ -55,27 +56,33 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 
 /**
- * This is the TaskView shown inside of buckets to reduce the amount of clutter on screen
+ * This is the TaskView shown inside of buckets to reduce the amount of clutter
+ * on screen
  */
 public class MiniTaskView extends JPanel {
-    
+
+    private JPanel colorPanel = new JPanel();
     private static final long serialVersionUID = -5428820718299212324L;
     private JLabel taskNameLabel = new JLabel();
     private JButton editButton = new JButton("Edit");
     private JPanel userPanel = new JPanel();
     private JLabel dueDateLabel = new JLabel();
+    private JPanel holderPanel = new JPanel();
     private boolean expanded = false;
     private final JScrollPane userScrollPane = new JScrollPane();
     private TaskModel model;
-    
+
     /**
      * Create the panel. Initially in collapsed view.
      * @param model The model to render in this view
      */
     public MiniTaskView(TaskModel model) {
-        setLayout(new MigLayout("fill"));
+        setLayout(new MigLayout("", "[grow][30px]", "[grow]"));
+        this.holderPanel.setLayout(new MigLayout("fill"));
+        this.holderPanel.setMinimumSize(new Dimension(50,10));
+        this.colorPanel.setMinimumSize(new Dimension(10,15));
+        this.holderPanel.add(colorPanel, "dock north");
         taskNameLabel.setBorder(new EmptyBorder(8, 8, 8, 8));
-        this.add(taskNameLabel, "dock west");
         this.taskNameLabel.setIcon(Icons.TASKNEW);
         this.setBorder(new CompoundBorder(new LineBorder(Color.LIGHT_GRAY, 1), new EmptyBorder(0, 8, 0, 8)));
         this.setExpandedView();
@@ -116,7 +123,6 @@ public class MiniTaskView extends JPanel {
                 glassPane.repaint();
             }
         });
-
         this.addMouseMotionListener(dragAdapter);
         this.taskNameLabel.addMouseMotionListener(dragAdapter);
 
@@ -142,6 +148,7 @@ public class MiniTaskView extends JPanel {
         }
         
         this.setBackground(background);
+        this.holderPanel.setBackground(background);
         this.userPanel.setBackground(background);     
         this.userScrollPane.setBackground(background);
     }
@@ -160,6 +167,7 @@ public class MiniTaskView extends JPanel {
         }
         
         this.setBackground(background);
+        this.holderPanel.setBackground(background);
         this.userPanel.setBackground(background);     
         this.userScrollPane.setBackground(background);
     }
@@ -170,8 +178,10 @@ public class MiniTaskView extends JPanel {
      */
     public void setCollapsedView(){
         this.removeAll();
-        this.setLayout(new MigLayout("fill"));
-        this.add(taskNameLabel, "dock west");
+        this.setLayout(new MigLayout("", "0[grow][]", "-1[grow]"));
+        this.add(taskNameLabel, "cell 0 0,grow");
+        this.add(holderPanel, "cell 1 0,grow");
+        this.holderPanel.setBorder(null);
         this.expanded = false;
         this.revalidate();
         this.repaint();
@@ -185,10 +195,12 @@ public class MiniTaskView extends JPanel {
     public void setExpandedView(){
         this.removeAll();
 
-        this.setLayout(new MigLayout("", "0[grow][grow]", "0[][][][]"));
-        this.add(taskNameLabel, "cell 0 0 2 1");
+        this.setLayout(new MigLayout("", "0[grow][grow][]", "-1[][][][]"));
+        this.add(taskNameLabel, "cell 0 0 2 1, grow");
         this.add(dueDateLabel, "cell 0 1");
-        this.add(userScrollPane, "cell 0 2 2 1,grow");
+        this.add(userScrollPane, "cell 0 2 3 1,grow");
+        this.add(holderPanel, "cell 2 0,grow");
+        this.holderPanel.setBorder(null);
         this.expanded = true;
         this.add(editButton, "cell 0 3,alignx left,aligny bottom");
         this.revalidate();
@@ -227,7 +239,21 @@ public class MiniTaskView extends JPanel {
     }
 
     /**
-     * @param model The model to render in this view
+     * updates this miniTaskView's color label with the color from this MiniTaskView's Model.
+     * paints null if the user selected no label.
+     */
+    public void updateLabel() {
+        if (model.getLabelColor() != null) {
+            if (!model.getLabelColor().equals(new Color(255, 255, 255)))
+                colorPanel.setBackground(model.getLabelColor());
+            else
+                colorPanel.setBackground(null);
+        }
+    }
+
+    /**
+     * @param model
+     *            The model to render in this view
      */
     public void setModel(TaskModel model) {
         DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd, yyyy");
@@ -259,6 +285,13 @@ public class MiniTaskView extends JPanel {
      */
     public TaskModel getModel() {
         return this.model;
+    }
+    
+    /**
+     * @return the panel to be filled with color
+     */
+    public JPanel getColorLabel() {
+        return colorPanel;
     }
 
     /**

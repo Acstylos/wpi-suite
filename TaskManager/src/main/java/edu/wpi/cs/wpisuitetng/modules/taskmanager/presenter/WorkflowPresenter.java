@@ -12,7 +12,6 @@ import java.util.Map;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.WorkflowView;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
@@ -44,27 +43,44 @@ public class WorkflowPresenter {
     }
 
     /**
-     * Request the server for a new bucker or the bucket corresponding to the
+     * Request the server for a new workflow or the workflow corresponding to the
      * current ID
      */
     public void load() {
-        HttpMethod method;
-        String id = "/" + model.getId();
-        if (model.getId() == 0) {// Put = create a new model
-            method = HttpMethod.PUT;
-            id = "";
-        } else {// Retrieve a model
-            method = HttpMethod.GET;
-        }
-
         // Sends a request for the TaskViews associated with the BucketView
         final Request request = Network.getInstance().makeRequest(
-                "taskmanager/workflow" + id, method);
-        if (method == HttpMethod.PUT) {
-            request.setBody(model.toJson());
-        }
-        request.addObserver(new WorkflowObserver(this, method));
-
+                "taskmanager/workflow", HttpMethod.GET);
+        request.addObserver(new WorkflowObserver(this, HttpMethod.GET));
+        request.send();
+    }
+    
+    /**
+     * Initializes the workflow and stores it to the DB.
+     * @param presenter Presenter to associate the workflow with.
+     */
+    public void initWorkflow(WorkflowPresenter presenter){
+        saveBaseWorkflow(presenter);
+        BucketPresenter.saveBaseBuckets();
+        writeModelToView();
+    }
+    
+    /**
+     * Adds in a default workflow with id=1 to the DB
+     * @param presenter Presenter to associate the workflow with.
+     */
+    private void saveBaseWorkflow(WorkflowPresenter presenter){
+        WorkflowModel workflow = new WorkflowModel(1, "Workflow");
+        ArrayList<Integer> baseBucketList = new ArrayList<Integer>();
+        baseBucketList.add(1);
+        baseBucketList.add(2);
+        baseBucketList.add(3);
+        baseBucketList.add(4);
+        workflow.setBucketIds(baseBucketList);
+        presenter.setModel(workflow);
+        final Request request = Network.getInstance().makeRequest("taskmanager/workflow", HttpMethod.PUT);
+        System.out.println("Workflow JSON: " + workflow.toJson().toString());
+        request.setBody(workflow.toJson());
+        request.addObserver(new WorkflowObserver(presenter, HttpMethod.PUT));
         request.send();
     }
 
@@ -72,29 +88,16 @@ public class WorkflowPresenter {
      * Set the view of the model
      */
     public void writeModelToView() {
-        while (model.getBucketIds().size() < 4) {
-            ArrayList<Integer> bucketIds = model.getBucketIds();
-            bucketIds.add(0);
-            model.setBucketIds(bucketIds);
-        }
-
-        int hardCodedId = 1;
-
-        ArrayList<Integer> newBuckets = new ArrayList<Integer>();
-        view.setTitle(model.getTitle());
+        ArrayList<Integer> buckets = model.getBucketIds();
+        System.out.println("Buckets in the Workflow: " + buckets.toString());
         ArrayList<BucketView> bucketViews = new ArrayList<BucketView>();
-        for (int i : model.getBucketIds()) {
-            BucketPresenter bucketPresenter = new BucketPresenter(i, this);
-            bucketPresenter = new BucketPresenter(hardCodedId, this);
-            bucketPresenters.put(hardCodedId, bucketPresenter);
-            hardCodedId++;
-
-            newBuckets.add(bucketPresenter.getModel().getId());
+        for(int bucketId: buckets){
+            BucketPresenter bucketPresenter = new BucketPresenter(bucketId);
+            bucketPresenters.put(bucketId, bucketPresenter);
+            bucketPresenter.load();
             bucketViews.add(bucketPresenter.getView());
         }
-
         view.setBucketViews(bucketViews);
-        model.setBucketIds(newBuckets);
         view.revalidate();
         view.repaint();
         saveModel();
@@ -117,10 +120,8 @@ public class WorkflowPresenter {
      * @param models
      *            The models sent from the network
      */
-    public void responseGet(WorkflowModel[] models) {
-        if (models[0].getId() == 0)
-            return;
-        this.model = models[0];
+    public void responseGet(WorkflowModel model) {
+        this.model = model;
         writeModelToView();
     }
 
@@ -141,8 +142,6 @@ public class WorkflowPresenter {
      *            The model sent from the network
      */
     public void responsePut(WorkflowModel model) {
-        this.model = model;
-        writeModelToView();
     }
 
     /**
@@ -160,6 +159,13 @@ public class WorkflowPresenter {
      */
     public WorkflowView getView() {
         return view;
+    }
+    
+    /**
+     * @param model The model this workflow presenter represents.
+     */
+    public void setModel(WorkflowModel model){
+        this.model = model;
     }
 
     /**

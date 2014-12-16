@@ -57,15 +57,18 @@ public class TaskView extends JPanel {
     
     private int index;
     private ViewMode viewMode;
-    
+
     private JComboBox<Requirement> requirementComboBox = new JComboBox<Requirement>();
-    
+    private JComboBox<BucketView> statusComboBox = new JComboBox<BucketView>();
+    private Color colorsOptions[] = { Color.WHITE, Color.YELLOW, Color.RED, Color.GREEN, Color.MAGENTA, Color.GRAY};
+    private JComboBox<Color> colorComboBox = new JComboBox <Color>(colorsOptions);
     private JLabel taskNameLabel = new JLabel("Task Name:");
     private JLabel dateLabel = new JLabel("Due Date:");
     private JLabel actualEffortLabel = new JLabel("Actual Effort:");
     private JLabel estEffortLabel = new JLabel("Estimated Effort:");
     private JLabel requirementLabel = new JLabel("Related Requirement:");
     private final JButton requirementButton = new JButton("View Requirement");
+    private JLabel changeColorLabel = new JLabel ("Category:"); 
     private TaskButtonsPanel buttonPanel;
     private JTabbedPane commentPanel = new CommentView(this.viewMode);
     private JPanel descriptionPanel = new JPanel();
@@ -107,7 +110,6 @@ public class TaskView extends JPanel {
      *            The TaskPresenter that is responsible for this view
      */
     public TaskView(TaskModel model, ViewMode viewMode, TaskPresenter presenter) {
-        this.setBorder(null);
         this.presenter = presenter;
         this.usersPanel = new UserListsView(presenter);
         // Set layouts for all panels
@@ -123,7 +125,7 @@ public class TaskView extends JPanel {
         this.descriptionPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
         this.detailsPanel.setLayout(new MigLayout("", "[grow]",
                 "[][20%,grow][30%]"));
-        this.infoPanel.setLayout(new MigLayout("", "[][][grow]", "[][][][][]"));
+        this.infoPanel.setLayout(new MigLayout("", "[][][grow]", "[][][][][][]"));  
         this.splitPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
 
         this.buttonPanel = new TaskButtonsPanel(viewMode);
@@ -153,13 +155,16 @@ public class TaskView extends JPanel {
         this.infoPanel.add(requirementButton, "cell 2 2");
         this.infoPanel.add(actualEffortLabel, "cell 0 3");
         this.infoPanel.add(actualEffortSpinner, "cell 1 3");
-        this.actualEffortSpinner
-        .setModel(new SpinnerNumberModel(0, 0, 99999, 1));
+        this.actualEffortSpinner.setModel(new SpinnerNumberModel(0, 0, 99999, 1));
 
         this.infoPanel.add(estEffortLabel, "cell 0 4");
         this.infoPanel.add(estEffortSpinner, "cell 1 4");
         this.estEffortSpinner.setModel(new SpinnerNumberModel(0, 0, 99999, 1));
-
+        this.colorComboBox.setRenderer(new ColorRenderer());
+        this.colorComboBox.setSelectedIndex(0);
+        this.colorComboBox.setSize(statusComboBox.getSize());
+        this.infoPanel.add(changeColorLabel, "cell 0 6");
+        this.infoPanel.add(colorComboBox, "cell 1 6");  
         // Format the descriptionPanel layout with components
         this.descriptionPanel.add(scrollPane, "cell 0 0,grow");
         this.scrollPane
@@ -171,7 +176,6 @@ public class TaskView extends JPanel {
         this.viewMode = viewMode;
         //if you are in create mode, then comments are disabled.
         ((CommentView) this.commentPanel).toggleTextField(this.viewMode) ;
-        
         DocumentListener validateListener = new DocumentListener() {
             /** {@inheritDoc} */
             @Override
@@ -195,7 +199,7 @@ public class TaskView extends JPanel {
         ChangeListener changeListener = (ChangeEvent) -> {
             validateFields();
         };
-        
+
         ItemListener itemListener = (ItemListener) -> {
             validateFields();
         };
@@ -212,6 +216,7 @@ public class TaskView extends JPanel {
         this.descriptionMessage.getDocument().addDocumentListener(
                 validateListener);
         this.requirementComboBox.addItemListener(itemListener);
+        this.colorComboBox.addItemListener(itemListener);   
         setModel(model);
     }
 
@@ -271,7 +276,15 @@ public class TaskView extends JPanel {
     public void setRequirementButtonEnable(boolean enable) {
         this.requirementButton.setEnabled(enable);
     }
-
+    
+    /*
+     * adds an action listener to the colorComboBox
+     * @param listener The listener to be added to the ComboBox
+     */
+    public void addChangeColorListener(ActionListener listener) {
+        this.colorComboBox.addActionListener(listener);
+    }
+    
     /**
      * Set all of the fields in the view from the data in the model
      * 
@@ -285,6 +298,9 @@ public class TaskView extends JPanel {
         this.estEffortSpinner.setValue(model.getEstimatedEffort());
         this.descriptionMessage.setText(model.getDescription());
         this.datePicker.setDate(model.getDueDate());
+        if(model.getLabelColor()==null);
+        else
+               this.colorComboBox.setSelectedItem(model.getLabelColor());
         validateFields();
     }
 
@@ -484,6 +500,19 @@ public class TaskView extends JPanel {
             isModified = true;
         }
 
+        if(this.model.getLabelColor()==null){
+            if(this.colorComboBox.getSelectedItem().equals(new Color(255,255,255))){
+                this.changeColorLabel.setForeground(unmodifiedColor);
+            }
+            else
+                this.changeColorLabel.setForeground(modifiedColor);              
+        }
+        else if (this.model.getLabelColor().equals(this.colorComboBox.getSelectedItem())) {
+            this.changeColorLabel.setForeground(unmodifiedColor);
+        } else {
+            this.changeColorLabel.setForeground(modifiedColor);
+            isModified = true;
+        }
         /* The date value might be null */
         boolean datesAreEqual;
         if (this.getDueDate() == null && this.model.getDueDate() == null) {
@@ -534,6 +563,13 @@ public class TaskView extends JPanel {
     public UserListsView getUserListPanel() {
         this.validateFields();
         return this.usersPanel;
+    }
+
+    /**
+     * @return the color of the current label.
+     */
+    public Color getLabelColor() {
+        return (Color) colorComboBox.getSelectedItem();
     }
 
     /**

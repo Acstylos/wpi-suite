@@ -11,8 +11,6 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.Color;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -24,7 +22,6 @@ import javax.swing.event.DocumentListener;
 
 import org.jdesktop.swingx.JXTextArea;
 
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.ActivityPresenter;
 import net.miginfocom.swing.MigLayout;
 
 /*
@@ -45,8 +42,6 @@ public class CommentView extends JTabbedPane {
             Color.GRAY);
     private JButton postCommentButton = new JButton("Post");
     private JButton clearCommentButton = new JButton("Clear");
-
-    private List<ActivityPresenter> activityPresenters = new ArrayList<ActivityPresenter>();
 
     /**
      * Constructor sets up Comments and History
@@ -74,7 +69,7 @@ public class CommentView extends JTabbedPane {
         this.commentText.setLineWrap(true);
 
         this.historyPanel.add(historyScroll, "cell 0 0,grow");
-
+        
         // Set scrollpane viewports
         this.commentScroll.setViewportView(postedCommentPanel);
         this.editCommentScroll.setViewportView(commentText);
@@ -85,7 +80,7 @@ public class CommentView extends JTabbedPane {
         this.clearCommentButton.setIcon(Icons.CLEAR);
         this.setupListeners();
     }
-
+    
     /**
      * If the current ViewMode is CREATING,
      * then we disable the post and clear comment buttons, and replace the background text for JTextBox.
