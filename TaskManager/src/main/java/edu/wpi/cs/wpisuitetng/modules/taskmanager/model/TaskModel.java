@@ -315,6 +315,24 @@ public class TaskModel extends AbstractModel {
             return title;
         }
     }
+    
+    /**
+     * Gets a csv entry for various calendar formats.
+     *
+     * @return CSV entry, with a newline.
+     */
+    public String getCsv() {
+        SimpleDateFormat dfdate = new SimpleDateFormat("MM/dd/yy");
+        SimpleDateFormat dftime = new SimpleDateFormat("hh:mm:ss a");
+        StringBuilder tmp = new StringBuilder();
+
+        tmp.append(title).append(',');
+        tmp.append(dfdate.format(dueDate)).append(',');
+        tmp.append(description).append(',');
+        tmp.append('\n');
+        
+        return tmp.toString();
+    }
 
     /**
      * Will implement later
