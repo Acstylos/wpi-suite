@@ -534,16 +534,9 @@ public class TaskView extends JPanel {
          * Allow the user to save the task if something is modified and
          * everything is still valid.
          */
-        if (this.viewMode == viewMode.ARCHIVING){ 
-        this.buttonPanel.setOkEnabledStatus(true);
-        }
-        else{
         this.buttonPanel.setOkEnabledStatus(isValid && isModified);
-
-        }
         /* Allow the user to reset the fields if something is modified. */
         this.buttonPanel.setClearEnabledStatus(isModified);
-
         /* Don't show cancel dialog if something hasn't been modified. */
         this.presenter.setAllowCancelDialogEnabled(isModified);
     }

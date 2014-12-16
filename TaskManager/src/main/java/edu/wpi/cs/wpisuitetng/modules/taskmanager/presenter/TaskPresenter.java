@@ -170,11 +170,9 @@ public class TaskPresenter {
                 if(model.getIsArchived()){
                     view.setViewMode(ViewMode.ARCHIVING);
                     view.getCommentView().toggleTextField(ViewMode.ARCHIVING);
-                    view.disableEdits();
                 }
                 else{
                     view.setViewMode(ViewMode.EDITING);
-                    view.enableEdits();
                 }
                 viewMode = view.getViewMode();
                 int tabCount = MainView.getInstance().getTabCount();
@@ -266,9 +264,6 @@ public class TaskPresenter {
                     updateModel();
                     createInDatabase(); // is calling "PUT" in task observer
                     view.setViewMode(ViewMode.EDITING);
-                } else if(viewMode == ViewMode.ARCHIVING){
-                        model.setIsArchived(false);
-                        view.enableEdits();
                 }
                 updateBeforeModel();
                 MainView.getInstance().remove(index);
@@ -322,31 +317,43 @@ public class TaskPresenter {
         view.addClearOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                undoDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-                undoDialog.setCommentLabelText("Are you sure you want to undo your changes?");
-                undoDialog.addConfirmButtonListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        undoDialogConfirmed = true;
-                        undoDialog.setVisible(false);
-                    }
-                });
-                undoDialog.addCancelButtonListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        undoDialogConfirmed = false;
-                        undoDialog.setVisible(false);
-                    }
-                });
-                undoDialog.setVisible(true);
-                if(undoDialogConfirmed) {
+                //change clear button to restore button if task is archived.
+                int index = MainView.getInstance().indexOfComponent(view);
+                if(viewMode == ViewMode.ARCHIVING){
+                    model.setIsArchived(false);
+                    MainView.getInstance().remove(index);
+                    MainView.getInstance().setSelectedIndex(0);
+                    saveView();
                     updateView();
-                    view.revalidate();
-                    view.repaint();
-                    miniView.revalidate();
-                    miniView.repaint();
-                    MainView.getInstance().setTitleAt(view.getIndex(),
-                            model.getShortTitle());
+                    MainView.getInstance().resetAllBuckets();
+                }
+                else {
+                    undoDialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+                    undoDialog.setCommentLabelText("Are you sure you want to undo your changes?");
+                    undoDialog.addConfirmButtonListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            undoDialogConfirmed = true;
+                            undoDialog.setVisible(false);
+                        }
+                    });
+                    undoDialog.addCancelButtonListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            undoDialogConfirmed = false;
+                            undoDialog.setVisible(false);
+                        }
+                    });
+                    undoDialog.setVisible(true);
+                    if(undoDialogConfirmed) {
+                        updateView();
+                        view.revalidate();
+                        view.repaint();
+                        miniView.revalidate();
+                        miniView.repaint();
+                        MainView.getInstance().setTitleAt(view.getIndex(),
+                                model.getShortTitle());
+                    }
                 }
             }
         });
@@ -387,7 +394,6 @@ public class TaskPresenter {
                         model.setIsArchived(true);
                         saveView();
                         updateView();
-                        view.disableEdits();
                         MainView.getInstance().resetAllBuckets();
                     }
                 }
