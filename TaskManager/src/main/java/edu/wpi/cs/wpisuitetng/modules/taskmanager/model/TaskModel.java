@@ -121,6 +121,69 @@ public class TaskModel extends AbstractModel {
             return false;
         }
     }
+    
+    /**
+     * Get a formatted HTML string containing the list of changes between this
+     * task and another.  This is used for generating email reports.
+     * 
+     * @param other
+     *            Another task
+     * @return An HTML string containing a difference between this task and the
+     *         other task
+     */
+    public String compareToHtml(TaskModel other) {
+        String str = "";
+        str += "<h2>Changes</h2>";
+        str += "<ul>";
+        
+        if (!this.getTitle().equals(other.getTitle())) {
+            str += "<li>The <b>title</b> was changed from \"" + this.getTitle()
+                    + "\" to \"" + other.getTitle() + "\".</li>";
+        }
+        
+        if (!this.getDescription().equals(other.getDescription())) {
+            str += "<li>The <b>description</b> was changed from \"" + this.getDescription()
+                    + "\" to \"" + other.getDescription() + "\".</li>";
+        }
+        
+        if (!this.getAssignedTo().containsAll(other.getAssignedTo())
+                || !other.getAssignedTo().containsAll(this.getAssignedTo())) {
+            str += "<li>The list of <b>assigned users</b> was changed.</li>";
+            System.out.println("Old: " + this.getAssignedTo());
+            System.out.println("New: " + other.getAssignedTo());
+        }
+        
+        if (this.getActivityIds().size() != other.getActivityIds().size()) {
+            str += "<li>A comment was added</li>";
+        }
+        
+        if (this.getEstimatedEffort() != other.getEstimatedEffort()) {
+            str += "<li>The <b>estimated effort</b> was changed from "
+                    + this.getEstimatedEffort() + " to "
+                    + other.getEstimatedEffort() + ".</li>";
+        }
+        
+        if (this.getActualEffort() != other.getActualEffort()) {
+            str += "<li>The <b>actual effort</b> was changed from "
+                    + this.getActualEffort() + " to "
+                    + other.getActualEffort() + ".</li>";
+        }
+        
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        if (!this.getDueDate().equals(other.getDueDate())) {
+            str += "<li>The <b>due date</b> was changed from "
+                    + dateFormat.format(this.getDueDate()) + " to "
+                    + dateFormat.format(other.getDueDate()) + ".</li>";
+        }
+        
+        if (this.getIsArchived() && !other.getIsArchived()) {
+            str += "<li>It was archived</li>";
+        } else if (other.getIsArchived() && !this.getIsArchived()) {
+            str += "<li>It was un-archived</li>";
+        }
+        
+        return str;
+    }
 
     /**
      * @return The ID of the task. Returns -1 by default

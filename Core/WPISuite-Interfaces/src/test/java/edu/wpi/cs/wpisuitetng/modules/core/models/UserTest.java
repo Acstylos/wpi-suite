@@ -33,7 +33,7 @@ public class UserTest {
 	@Before
 	public void setUp()
 	{
-		u1 = new User("James Bond", "jbond", null, 7);
+		u1 = new User("James Bond", "jbond", "user@example.edu", null, 7);
 		u2 = new User("Money Penny", "mpenny", null, 2);
 		u3 = new User("Q", "q", "secret", 1);
 		u4 = new User("M", "m", null, 0);
@@ -119,6 +119,18 @@ public class UserTest {
 		u3.setUserName(newUser);
 		
 		assertTrue(u3.getUsername().equals(newUser));
+	}
+	
+	@Test
+	public void testSetEmailAddress()
+	{
+	    String newEmailAddress = "jimmyb1920@aol.com";
+	    
+	    assertNotEquals(newEmailAddress, u1.getEmailAddress());
+	    
+	    u1.setEmailAddress(newEmailAddress);
+	    
+	    assertEquals(newEmailAddress, u1.getEmailAddress());
 	}
 	
 	@Test

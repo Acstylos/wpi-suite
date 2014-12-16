@@ -32,4 +32,6 @@ dependencies {
     compile project(':PostBoard')
     compile project(':RequirementManager')
     compile project(':TaskManager')
+
+    compile ('org.apache.commons:commons-email:1.3.3')
 }
