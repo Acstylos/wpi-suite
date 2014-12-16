@@ -210,7 +210,20 @@ public class WorkflowPresenter {
      * @param id the id of the bucket to be retrieved
      * @return the bucket model from the hashmap
      */
-	public BucketPresenter getBucket(int id) {
-		return bucketPresenters.get(id);
-	}
+    public BucketPresenter getBucket(int id) {
+        return bucketPresenters.get(id);
+    }
+
+    /**
+     * Gets a csv representation for various calendar formats.
+     *
+     * @return CSV entry, with a newline.
+     */
+    public String getCSV() {
+        String t = "Subject,Start Date, Description\n";
+        for (BucketPresenter i : bucketPresenters.values()) {
+            t = t + i.getCSV();
+        }
+        return t;
+    }
 }

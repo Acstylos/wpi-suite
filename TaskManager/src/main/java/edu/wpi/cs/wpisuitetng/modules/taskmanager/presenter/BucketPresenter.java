@@ -426,4 +426,18 @@ public class BucketPresenter {
         request.addObserver(new BucketObserver(presenter, HttpMethod.PUT));
         request.send();
     }
+
+    /**
+     * Gets the csv entries for all tasks in this bucket.
+     *
+     * @return CSV entries, ends in newline.
+     */
+    public String getCSV() {
+        String t = new String();
+        for (TaskPresenter i : taskMap.values()) {
+            t = t + i.getModel().getCSV();
+        }
+        return t;
+    }
+
 }
