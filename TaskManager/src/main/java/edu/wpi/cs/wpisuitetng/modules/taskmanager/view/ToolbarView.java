@@ -9,14 +9,14 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.event.ActionListener;
@@ -31,6 +31,7 @@ import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JFileChooser;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
 
 /**
  * Sets up upper toolbar of TaskManager tab
@@ -50,7 +51,7 @@ public class ToolbarView extends JPanel
         
         JButton createNewTaskButton = new JButton("<html>Create<br/>Task</html>");
         createNewTaskButton.setIcon(Icons.CREATE_TASK_LARGE);
-        
+        add(createNewTaskButton, "flowx,cell 0 0");        
         
         /**
          * Adds a new TaskView Tab into the MainView
@@ -58,19 +59,32 @@ public class ToolbarView extends JPanel
         createNewTaskButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // get instance of the New-Bucket Presenter to add new tasks into
-                TaskPresenter taskPresenter = new TaskPresenter(0, MainView.getInstance().getWorkflowPresenter().getBucketPresenterById(1), ViewMode.CREATING);
+                int firstBucketId = MainView.getInstance().getWorkflowPresenter().getModel().getBucketIds().get(0);
+                TaskPresenter taskPresenter = new TaskPresenter(0, MainView.getInstance().getWorkflowPresenter().getBucketPresenterById(firstBucketId), ViewMode.CREATING);
                 MainView.getInstance().addTab(taskPresenter.getModel().getTitle(), Icons.CREATE_TASK, taskPresenter.getView());
                 int tabCount = MainView.getInstance().getTabCount();
                 taskPresenter.getView().setIndex(tabCount-1);
                 MainView.getInstance().setSelectedIndex(tabCount-1);
             }
         });
-
-        add(createNewTaskButton, "cell 0 0");
+        
+        JButton manageBuckets = new JButton("<html>Manage<br/>Stages</html>");
+        add(manageBuckets, "cell 0 0");
+        
+        manageBuckets.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                // get instance of the New-Bucket Presenter to add new tasks into
+                MainView.getInstance().getWorkflowPresenter().updateManageWorkflowView();
+                MainView.getInstance().addTab("Manage Workflow", Icons.CREATE_TASK, MainView.getInstance().getWorkflowPresenter().getManageWorkflowView());
+                int tabCount = MainView.getInstance().getTabCount();
+                MainView.getInstance().setSelectedIndex(tabCount-1);
+            }
+        });
         
         JToggleButton tglbtnArchive = new JToggleButton("<html>Hide<br/>Archived</html>");
         tglbtnArchive.setIcon(Icons.HIDE_ARCHIVE_LARGE);
         tglbtnArchive.setSelected(true);
+        add(tglbtnArchive, "cell 0 0");
 
         tglbtnArchive.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
@@ -90,11 +104,10 @@ public class ToolbarView extends JPanel
             }
         });
 
-        add(tglbtnArchive, "cell 0 0");
-        
         JButton saveCSV = new JButton("<html>Export<br/>csv</html>");
         saveCSV.setIcon(Icons.EXPORT_CALENDAR);
         JFileChooser fc = new JFileChooser();
+        add(saveCSV, "cell 0 0");
         
         /**
          * Adds a new TaskView Tab into the MainView
@@ -123,7 +136,6 @@ public class ToolbarView extends JPanel
             }
         });
         
-        add(saveCSV, "cell 0 0");
     }
     
 }

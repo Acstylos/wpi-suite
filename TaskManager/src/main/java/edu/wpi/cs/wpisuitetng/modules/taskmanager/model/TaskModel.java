@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.RequirementModel;
 
 /**
  * The model end of the Task object
@@ -33,6 +34,7 @@ public class TaskModel extends AbstractModel {
     private String description;
     private List<Integer> assignedTo;
     private List<Integer> activityIds;
+    private int requirement;
     private int estimatedEffort;
     private int actualEffort;
     private Date dueDate;
@@ -52,6 +54,7 @@ public class TaskModel extends AbstractModel {
         description = "";
         assignedTo = new ArrayList<Integer>();
         activityIds = new ArrayList<Integer>();
+        requirement = 0;
         estimatedEffort = 0;
         actualEffort = 0;
         status = 1;
@@ -117,6 +120,69 @@ public class TaskModel extends AbstractModel {
         catch (Exception e){
             return false;
         }
+    }
+    
+    /**
+     * Get a formatted HTML string containing the list of changes between this
+     * task and another.  This is used for generating email reports.
+     * 
+     * @param other
+     *            Another task
+     * @return An HTML string containing a difference between this task and the
+     *         other task
+     */
+    public String compareToHtml(TaskModel other) {
+        String str = "";
+        str += "<h2>Changes</h2>";
+        str += "<ul>";
+        
+        if (!this.getTitle().equals(other.getTitle())) {
+            str += "<li>The <b>title</b> was changed from \"" + this.getTitle()
+                    + "\" to \"" + other.getTitle() + "\".</li>";
+        }
+        
+        if (!this.getDescription().equals(other.getDescription())) {
+            str += "<li>The <b>description</b> was changed from \"" + this.getDescription()
+                    + "\" to \"" + other.getDescription() + "\".</li>";
+        }
+        
+        if (!this.getAssignedTo().containsAll(other.getAssignedTo())
+                || !other.getAssignedTo().containsAll(this.getAssignedTo())) {
+            str += "<li>The list of <b>assigned users</b> was changed.</li>";
+            System.out.println("Old: " + this.getAssignedTo());
+            System.out.println("New: " + other.getAssignedTo());
+        }
+        
+        if (this.getActivityIds().size() != other.getActivityIds().size()) {
+            str += "<li>A comment was added</li>";
+        }
+        
+        if (this.getEstimatedEffort() != other.getEstimatedEffort()) {
+            str += "<li>The <b>estimated effort</b> was changed from "
+                    + this.getEstimatedEffort() + " to "
+                    + other.getEstimatedEffort() + ".</li>";
+        }
+        
+        if (this.getActualEffort() != other.getActualEffort()) {
+            str += "<li>The <b>actual effort</b> was changed from "
+                    + this.getActualEffort() + " to "
+                    + other.getActualEffort() + ".</li>";
+        }
+        
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        if (!this.getDueDate().equals(other.getDueDate())) {
+            str += "<li>The <b>due date</b> was changed from "
+                    + dateFormat.format(this.getDueDate()) + " to "
+                    + dateFormat.format(other.getDueDate()) + ".</li>";
+        }
+        
+        if (this.getIsArchived() && !other.getIsArchived()) {
+            str += "<li>It was archived</li>";
+        } else if (other.getIsArchived() && !this.getIsArchived()) {
+            str += "<li>It was un-archived</li>";
+        }
+        
+        return str;
     }
 
     /**
@@ -197,6 +263,24 @@ public class TaskModel extends AbstractModel {
     }
 
     /**
+     * add requirement Id to the list of requirement Ids
+     * 
+     * @param req
+     *          the requirement that needs to be added
+     */
+    public void setRequirement(int req) {
+        this.requirement = req;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public int getRequirement() {
+        return this.requirement;
+    }
+    
+    /**
      * @return The due date of this task
      */
     public Date getDueDate() {
@@ -228,6 +312,7 @@ public class TaskModel extends AbstractModel {
         this.actualEffort = other.getActualEffort();
         this.status = other.getStatus();
         this.activityIds = other.getActivityIds();
+        this.requirement = other.getRequirement();
         this.labelColor=other.getLabelColor();
         this.isArchived = other.getIsArchived();
     }

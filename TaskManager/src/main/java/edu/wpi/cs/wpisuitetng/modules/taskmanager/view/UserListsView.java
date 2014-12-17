@@ -40,16 +40,16 @@ public class UserListsView extends JPanel {
         this.setLayout(new MigLayout("", "[grow][grow]", "[][grow]"));
         this.presenter = presenter;
         
-        this.add(assignedUsersLabel, "cell 0 0,alignx center");        
-        this.add(unassignedUsersLabel, "cell 1 0,alignx center");
+        this.add(assignedUsersLabel, "cell 1 0,alignx center");        
+        this.add(unassignedUsersLabel, "cell 0 0,alignx center");
         
         this.assignedScrollPane.setViewportBorder(null);
-        this.add(assignedScrollPane, "cell 0 1,grow");
+        this.add(assignedScrollPane, "cell 1 1,grow");
         this.assignedScrollPane.setViewportView(assignedUsersPanel);
         this.assignedUsersPanel.setLayout(new MigLayout("fill"));
         
         this.unassignedScrollPane.setViewportBorder(null);
-        this.add(unassignedScrollPane, "cell 1 1,grow");
+        this.add(unassignedScrollPane, "cell 0 1,grow");
         this.unassignedScrollPane.setViewportView(unassignedUsersPanel);
         this.unassignedUsersPanel.setLayout(new MigLayout("fill"));
     }
