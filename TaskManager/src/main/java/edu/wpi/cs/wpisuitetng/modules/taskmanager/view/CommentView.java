@@ -208,6 +208,11 @@ public class CommentView extends JTabbedPane {
         return this.commentText;
     }
 
+    
+    public void revalidateHistoryPanel(){
+        this.postedHistoryPanel.revalidate();
+        this.postedHistoryPanel.repaint();
+    }
     /**
      * Clears the posts in the view
      */

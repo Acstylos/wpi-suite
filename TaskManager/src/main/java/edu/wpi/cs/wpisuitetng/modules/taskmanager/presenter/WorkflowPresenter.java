@@ -53,6 +53,11 @@ public class WorkflowPresenter {
         registerCallbacks();
     }
 
+    
+    public String idToBucketName(int id){
+        return this.bucketPresenters.get(id).getModel().getTitle();
+    }
+    
     /**
      * Request the server for a new workflow or the workflow corresponding to the
      * current ID

@@ -22,7 +22,6 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
-import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.RequirementModel;
 
 /**
  * The model end of the Task object
@@ -503,7 +502,7 @@ public class TaskModel extends AbstractModel {
      * @return activityIds linked list of activity ids
      */
     public List<Integer> getActivityIds() {
-        return activityIds;
+        return new ArrayList<Integer> (activityIds);
     }
 
     /**
