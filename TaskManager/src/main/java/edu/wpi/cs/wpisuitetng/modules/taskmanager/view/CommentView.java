@@ -10,7 +10,6 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
@@ -216,34 +215,4 @@ public class CommentView extends JTabbedPane {
         postedHistoryPanel.removeAll();
     }
 
-    /**
-     * @return the posted comment panel for testing
-     */
-    public JPanel getPostedCommentPanel() {
-        return this.postedCommentPanel;
-    }
-
-    /**
-     * @return the posted history panel for testing
-     */
-    public JPanel getPostedHistoryPanel() {
-        return this.postedHistoryPanel;
-    }
-
-    /**
-     * Sets the comment text to a specified string, for testing
-     * 
-     * @param string
-     *            the string to put into the comment text
-     */
-    public void setCommentText(String string) {
-        this.commentText.setText(string);
-    }
-
-    /**
-     * @return the clear button for testing
-     */
-    public JButton getClearButton() {
-        return this.clearCommentButton;
-    }
 }

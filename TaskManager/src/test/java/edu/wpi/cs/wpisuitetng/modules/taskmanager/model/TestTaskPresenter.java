@@ -1,13 +1,4 @@
-/*******************************************************************************
- * Copyright (c) 2014 -- WPI Suite
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
-
-package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
+package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
 
 import static org.junit.Assert.*;
 
@@ -19,7 +10,6 @@ import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.view.requirements.ViewMode;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
