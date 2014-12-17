@@ -55,4 +55,5 @@ public class Icons {
     
     public final static Icon HELP = new ImageIcon(Icons.class.getResource("help.png")); 
     public final static Icon HELP_LARGE = new ImageIcon(Icons.class.getResource("help-medium.png")); 
+    public final static Icon FILTER = new ImageIcon(Icons.class.getResource("filter.png"));
 }

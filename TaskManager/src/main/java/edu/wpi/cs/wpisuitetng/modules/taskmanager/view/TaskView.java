@@ -91,14 +91,6 @@ public class TaskView extends JPanel {
     private final static Color modifiedColor = Color.BLACK;
     private final static Color unmodifiedColor = Color.GRAY;
 
-    
-    static {
-        /* Change the default icons for JXDatePicker. */
-        UIManager.put("JXDatePicker.arrowIcon", Icons.CALENDAR);
-        UIManager.put("JXMonthView.monthDownFileName", Icons.LEFT_ARROW);
-        UIManager.put("JXMonthView.monthUpFileName", Icons.RIGHT_ARROW);
-    }
-
     /**
      * Create a new TaskView with the specified default values.
      *
@@ -297,9 +289,8 @@ public class TaskView extends JPanel {
         this.estEffortSpinner.setValue(model.getEstimatedEffort());
         this.descriptionMessage.setText(model.getDescription());
         this.datePicker.setDate(model.getDueDate());
-        if(model.getLabelColor()==null);
-        else
-               this.colorComboBox.setSelectedItem(model.getLabelColor());
+        if (model.getLabelColor() != null)
+            this.colorComboBox.setSelectedItem(model.getLabelColor());
         validateFields();
     }
 

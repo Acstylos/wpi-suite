@@ -54,6 +54,16 @@ public class WorkflowPresenter {
     }
 
     /**
+     * Returns the name of the bucket with the given ID
+     * 
+     * @param id of the bucket
+     * @return name of the bucket
+     */
+    public String idToBucketName(int id){
+        return this.bucketPresenters.get(id).getModel().getTitle();
+    }
+    
+    /**
      * Request the server for a new workflow or the workflow corresponding to the
      * current ID
      */
@@ -296,6 +306,13 @@ public class WorkflowPresenter {
             view.addBucketToView(bucketView);
         }
     }
+    
+    /**
+     * @return The index for which bucket is designated for new tasks.
+     */
+    public int getDefaultBucketIndex(){
+        return model.getDefaultBucketIndex();
+    }
 
     /**
      * Registers all listeners for all views related to workflow.
@@ -324,6 +341,7 @@ public class WorkflowPresenter {
                 bucketPresenter.getModel().setTitle(manageView.getNewBucketTitle());
                 bucketPresenter.createInDatabase();
                 view.addBucketToView(bucketPresenter.getView());
+                manageView.clearAddBucketField();
                 try {
                     Thread.sleep(500); // needed to make sure the ManageWorkflowPanel reflects changes in time.
                     updateManageWorkflowView();
@@ -341,11 +359,17 @@ public class WorkflowPresenter {
         this.manageView.addDeleteBucketButtonListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                int id = model.getBucketIds().get(manageView.getBucketListIndex()); //getBucketIdFromList(mapPositionToId);
+                int currentIndex = manageView.getBucketListIndex();
+                int id = model.getBucketIds().get(currentIndex); //getBucketIdFromList(mapPositionToId);
                 if(bucketPresenters.size() > 1){
                     if(bucketPresenters.get(id).getModel().getTaskIds().isEmpty()){
                         removeBucket(id);
                         updateManageWorkflowView();
+                        if(currentIndex < model.getBucketIds().size()){
+                            manageView.setSelectedBucket(currentIndex);
+                        } else {
+                            manageView.setSelectedBucket(currentIndex-1);
+                        }
                     }
                 }
             }
@@ -364,10 +388,11 @@ public class WorkflowPresenter {
                 if(currentIndex > 0){ // if current index is 0, we can't move it more left.
                     int  leftId = model.getBucketIds().get(currentIndex-1);
                     model.swapBucketIds(currentId, leftId);
+                    updateManageWorkflowView();
+                    manageView.setSelectedBucket(currentIndex-1);
+                    addAllBucketsToView();
+                    saveModel();
                 }
-                updateManageWorkflowView();
-                addAllBucketsToView();
-                saveModel();
             }
         });
 
@@ -383,9 +408,24 @@ public class WorkflowPresenter {
                 if(currentIndex < model.getBucketIds().size()){ // if current index is > total indexes, we can't move it more right.
                     int  leftId = model.getBucketIds().get(currentIndex+1);
                     model.swapBucketIds(currentId, leftId);
+                    updateManageWorkflowView();
+                    manageView.setSelectedBucket(currentIndex+1);
+                    addAllBucketsToView();
+                    saveModel();
                 }
+            }
+        });
+        
+        /*
+         * Sets an index to be the default bucket for new tasks.
+         */
+        this.manageView.addSetInitBucketButtonListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int currentIndex = manageView.getBucketListIndex();
+                model.setDefaultBucketIndex(currentIndex);
                 updateManageWorkflowView();
-                addAllBucketsToView();
+                manageView.setSelectedBucket(currentIndex);
                 saveModel();
             }
         });
