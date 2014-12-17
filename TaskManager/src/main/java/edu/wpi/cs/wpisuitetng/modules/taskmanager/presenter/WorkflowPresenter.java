@@ -225,6 +225,19 @@ public class WorkflowPresenter {
     }
 
     /**
+     * Gets a csv representation for various calendar formats.
+     *
+     * @return CSV entry, with a newline.
+     */
+    public String getCsv() {
+        String t = "Subject,Start Date, Description\n";
+        for (BucketPresenter i : bucketPresenters.values()) {
+            t = t + i.getCsv();
+        }
+       return t;
+    }
+    
+    /*
      * Adds a bucket ID to the list of bucketIDs in the workflow model. Sends an async
      * update to the database.
      * 
