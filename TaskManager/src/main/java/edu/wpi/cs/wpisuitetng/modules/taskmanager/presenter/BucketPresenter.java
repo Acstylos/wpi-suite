@@ -16,7 +16,6 @@ import java.util.Map;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.updater.Updater;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
@@ -120,7 +119,6 @@ public class BucketPresenter {
             model.setTitle(name);
         }
 
-        this.view.resetTaskList();
         this.view.setModel(this.model);
         List<Integer> taskIds = model.getTaskIds();
         for (int i : taskIds) {
@@ -207,7 +205,6 @@ public class BucketPresenter {
         if (models[0].getId() == 0)
             return;
         this.model = models[0];
-        Updater.getInstance().registerBucket(this);
         writeModelToView();
     }
 

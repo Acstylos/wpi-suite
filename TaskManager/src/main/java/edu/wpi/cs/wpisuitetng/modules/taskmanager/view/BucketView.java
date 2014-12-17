@@ -101,11 +101,4 @@ public class BucketView extends JPanel
         Component spacerStrut = Box.createVerticalStrut(5);
         this.taskViewHolderPanel.add(spacerStrut, "dock north");
     }
-
-    /**
-     * Clear the items in the holder panel. Used when removing tasks.
-     */
-    public void resetTaskList() {
-        this.taskViewHolderPanel.removeAll();
-    }
 }

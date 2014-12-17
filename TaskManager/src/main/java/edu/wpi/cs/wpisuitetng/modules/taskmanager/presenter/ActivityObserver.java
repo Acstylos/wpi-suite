@@ -50,8 +50,9 @@ public class ActivityObserver implements RequestObserver {
         ActivityModel model = new ActivityModel();
         switch (iReq.getHttpMethod()) {
         case GET:
-            this.presenter.responseGet(ActivityModel
-                    .fromJsonArray(json));
+            model = ActivityModel.fromJsonArray(json)[0];
+            this.presenter.setModel(model);
+            this.presenter.updateView();
             this.presenter.getTask().updateCommentView();
             break;
         case PUT:

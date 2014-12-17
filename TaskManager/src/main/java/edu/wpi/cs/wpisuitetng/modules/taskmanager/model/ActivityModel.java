@@ -24,7 +24,6 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 public class ActivityModel extends AbstractModel {
 
     private int id;
-    private int taskId;
     private int userId;
     private Date date;
     private String activity;
@@ -36,7 +35,6 @@ public class ActivityModel extends AbstractModel {
     public ActivityModel() {
         this.id = -1;
         this.userId = -1;
-        this.taskId = -1;
         this.activity = "";
         this.date = new Date();
         this.isAutogen = false;
@@ -46,9 +44,7 @@ public class ActivityModel extends AbstractModel {
     /**
      * Constructor for a activity with specific properties. Other properties are
      * the same as the default constructor
-     *
-     * @param taskId
-     *            the id of the parent task for this activity.
+     * 
      * @param id
      *            the id of the activity
      * @param user
@@ -60,9 +56,8 @@ public class ActivityModel extends AbstractModel {
      * @param date
      * 			  The date of activity
      */
-    public ActivityModel(int taskId, int id, User user, String activity, Date date,
+    public ActivityModel(int id, User user, String activity, Date date,
             boolean isAutogen) {
-        this.taskId = taskId;
         this.id = id;
         this.userId = user.getIdNum();
         this.activity = activity;
@@ -97,21 +92,6 @@ public class ActivityModel extends AbstractModel {
      */
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    /**
-     * @return Id of the parent task.
-     */
-    public int getTaskId() {
-        return taskId;
-    }
-
-    /**
-     * @param taskId
-     *            New id of the parent task.
-     */
-    public void setTaskId(int taskId) {
-        this.taskId = taskId;
     }
 
     /**
@@ -163,12 +143,11 @@ public class ActivityModel extends AbstractModel {
 
     /**
      * Copy all of the fields from another ActivityModel
-     *
+     * 
      * @param other
      *            the ActivtyModel to be copied
      */
     public void copyFrom(ActivityModel other) {
-        this.taskId = other.getTaskId();
         this.activity = other.getActivity();
         this.id = other.getId();
         this.userId = other.getUser();
@@ -177,10 +156,9 @@ public class ActivityModel extends AbstractModel {
 
     /**
      * Converts this activity object to a JSON string
-     *
+     * 
      * @return A string in JSON representing this activity
      */
-    @Override
     public String toJson() {
         String json;
         Gson gson = new Gson();
@@ -190,7 +168,7 @@ public class ActivityModel extends AbstractModel {
 
     /**
      * Converts the given list of activities to a JSON string
-     *
+     * 
      * @param alist
      *            A list of activities
      * 
@@ -205,9 +183,10 @@ public class ActivityModel extends AbstractModel {
 
     /**
      * Convert the given JSON string to a ActivityModel instance
-     *
+     * 
      * @param json
      * 			String to be converted
+     * 
      * @return The JSON string representing the object
      */
     public static ActivityModel fromJson(String json) {
@@ -218,9 +197,10 @@ public class ActivityModel extends AbstractModel {
     /**
      * Convert the given JSON string with a JSON array of activities into an
      * array of activities
-     *
+     * 
      * @param json
      * 			String to be converted
+     * 
      * @return ActivityModel array
      */
     public static ActivityModel[] fromJsonArray(String json) {
