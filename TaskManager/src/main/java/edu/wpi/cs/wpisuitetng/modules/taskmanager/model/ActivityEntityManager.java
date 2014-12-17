@@ -22,7 +22,7 @@ import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 
 /**
- * @author 
+ * @author thefloorisjava
  *
  */
 public class ActivityEntityManager implements EntityManager<ActivityModel> {

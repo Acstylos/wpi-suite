@@ -2,6 +2,7 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
 
 import static org.junit.Assert.*;
 
+import java.util.Date;
 import java.util.HashSet;
 
 import org.junit.Before;
@@ -10,7 +11,6 @@ import org.junit.Test;
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
-import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
@@ -18,16 +18,16 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.MockData;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketEntityManager;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 
-public class TestWorkflowModelEntityManager {
+public class TestTaskEntityManager {
     MockData db;
     Session defaultSession;
     Project testProject;
     User testUser;
     String mockSsid;
-    WorkflowModel wkm;
-    WorkflowEntityManager manager;
+    TaskModel tskm;
+    TaskEntityManager manager;
 
     @Before
     public void setUp() {
@@ -37,24 +37,20 @@ public class TestWorkflowModelEntityManager {
         testProject = new Project("test", "1");
         mockSsid = "abc123";
         defaultSession = new Session(testUser, testProject, mockSsid);
-        wkm = new WorkflowModel();
-        manager = new WorkflowEntityManager(db);
+        tskm = new TaskModel();
+        manager = new TaskEntityManager(db);
         db.save(testUser);
     }
 
     /**
      * Test manager
-     * 
-     * @throws WPISuiteException
-     * @throws ConflictException
-     * @throws BadRequestException
+     * @throws WPISuiteException 
      */
     @Test
-    public void testMakeWorkflowEntity() throws BadRequestException,
-            ConflictException, WPISuiteException {
-        WorkflowModel test1 = new WorkflowModel(1, "dummyTitle");
+    public void testMakeTaskEntity() throws WPISuiteException {
+        TaskModel test1 = new TaskModel(1, "title1", "desc1", 2, new Date(), 1);
         test1.setProject(testProject);
-
+        
         assertNotNull(manager.makeEntity(defaultSession, test1.toJson()));
     }
 
@@ -65,7 +61,7 @@ public class TestWorkflowModelEntityManager {
      */
     @Test
     public void testSave() throws WPISuiteException {
-        manager.save(defaultSession, new WorkflowModel());
+        manager.save(defaultSession, new TaskModel());
     }
 
     /**
@@ -77,11 +73,11 @@ public class TestWorkflowModelEntityManager {
     @Test
     public void testCount() throws WPISuiteException {
         assertEquals(0, manager.Count());
-        manager.save(defaultSession, new WorkflowModel());
+        manager.save(defaultSession, new TaskModel());
         assertEquals(1, manager.Count());
-        manager.save(defaultSession, new WorkflowModel());
+        manager.save(defaultSession, new TaskModel());
         assertEquals(2, manager.Count());
-        manager.save(defaultSession, new WorkflowModel());
+        manager.save(defaultSession, new TaskModel());
         assertEquals(3, manager.Count());
     }
 
@@ -93,11 +89,11 @@ public class TestWorkflowModelEntityManager {
      */
     @Test
     public void testDeleteAllAndEnsureRole() throws WPISuiteException {
-        WorkflowModel test1 = new WorkflowModel();
+        TaskModel test1 = new TaskModel(1, "title1", "desc1", 2, new Date(), 1);
+        TaskModel test2 = new TaskModel(2, "title2", "desc2", 2, new Date(), 1);
+        TaskModel test3 = new TaskModel(3, "title3", "desc3", 3, new Date(), 1);
         test1.setProject(testProject);
-        WorkflowModel test2 = new WorkflowModel();
         test2.setProject(testProject);
-        WorkflowModel test3 = new WorkflowModel();
         test3.setProject(testProject);
         manager.save(defaultSession, test1);
         manager.save(defaultSession, test2);
@@ -114,17 +110,17 @@ public class TestWorkflowModelEntityManager {
      */
     @Test
     public void testGetAll() throws WPISuiteException {
-        WorkflowModel test1 = new WorkflowModel();
+        TaskModel test1 = new TaskModel(1, "title1", "desc1", 2, new Date(), 1);
+        TaskModel test2 = new TaskModel(2, "title2", "desc2", 2, new Date(), 1);
+        TaskModel test3 = new TaskModel(3, "title3", "desc3", 3, new Date(), 1);
         test1.setProject(testProject);
-        WorkflowModel test2 = new WorkflowModel();
         test2.setProject(testProject);
-        WorkflowModel test3 = new WorkflowModel();
         test3.setProject(testProject);
         manager.save(defaultSession, test1);
         manager.save(defaultSession, test2);
         manager.save(defaultSession, test3);
-        WorkflowModel wkmList[] = manager.getAll(defaultSession);
-        assertEquals(3, wkmList.length);
+        TaskModel tskmList[] = manager.getAll(defaultSession);
+        assertEquals(3, tskmList.length);
     }
 
     /**
@@ -134,20 +130,20 @@ public class TestWorkflowModelEntityManager {
      */
     @Test
     public void testGetEntity() throws WPISuiteException {
-        WorkflowModel test1 = new WorkflowModel(1, "title1");
+        TaskModel test1 = new TaskModel(1, "title1", "desc1", 2, new Date(), 1);
+        TaskModel test2 = new TaskModel(2, "title2", "desc2", 2, new Date(), 1);
+        TaskModel test3 = new TaskModel(3, "title3", "desc3", 3, new Date(), 1);
         test1.setProject(testProject);
-        WorkflowModel test2 = new WorkflowModel(2, "title2");
         test2.setProject(testProject);
-        WorkflowModel test3 = new WorkflowModel(3, "title3");
         test3.setProject(testProject);
         manager.save(defaultSession, test1);
         manager.save(defaultSession, test2);
         manager.save(defaultSession, test3);
-        WorkflowModel wkmList[] = manager.getEntity(defaultSession, "3");
+        TaskModel tskmList[] = manager.getEntity(defaultSession, "2");
 
-        assertEquals(1, wkmList.length);
-        assertEquals(3, wkmList[0].getId());
-        assertEquals("title3", wkmList[0].getTitle());
+        assertEquals(1, tskmList.length);
+        assertEquals(2, tskmList[0].getId());
+        assertEquals("title2", tskmList[0].getTitle());
     }
 
     /**
@@ -169,9 +165,14 @@ public class TestWorkflowModelEntityManager {
     @Test
     public void testGetEntityForBucketNotFound() throws WPISuiteException {
         boolean exceptionThrown = false;
-        manager.save(defaultSession, new WorkflowModel(3, "test 3"));
-        manager.save(defaultSession, new WorkflowModel(4, "test 4"));
-        manager.save(defaultSession, new WorkflowModel(5, "test 5"));
+        TaskModel test1 = new TaskModel(1, "title1", "desc1", 2, new Date(), 1);
+        TaskModel test2 = new TaskModel(2, "title2", "desc2", 2, new Date(), 1);
+        TaskModel test3 = new TaskModel(3, "title3", "desc3", 3, new Date(), 1);
+        test1.setProject(testProject);
+        test2.setProject(testProject);
+        test3.setProject(testProject);
+        manager.save(defaultSession, test1);
+        manager.save(defaultSession, test2);
         try {
             manager.getEntity(defaultSession, "6");
         } catch (NotFoundException e) {
@@ -188,12 +189,18 @@ public class TestWorkflowModelEntityManager {
      */
     @Test
     public void testDeleteEntity() throws WPISuiteException {
-        WorkflowModel test3 = new WorkflowModel(3, "test3");
+        TaskModel test1 = new TaskModel(1, "title1", "desc1", 2, new Date(), 1);
+        TaskModel test2 = new TaskModel(2, "title2", "desc2", 2, new Date(), 1);
+        TaskModel test3 = new TaskModel(3, "title3", "desc3", 3, new Date(), 1);
+        test1.setProject(testProject);
+        test2.setProject(testProject);
         test3.setProject(testProject);
+        manager.save(defaultSession, test1);
+        manager.save(defaultSession, test2);
         manager.save(defaultSession, test3);
-        assertEquals(1, manager.Count());
+        assertEquals(3, manager.Count());
         assertTrue(manager.deleteEntity(defaultSession, "3"));
-        assertEquals(0, manager.Count());
+        assertEquals(2, manager.Count());
         boolean exceptionThrown = false;
         try {
             manager.deleteEntity(defaultSession, "3");
@@ -211,24 +218,24 @@ public class TestWorkflowModelEntityManager {
      */
     @Test
     public void testUpdatingAnInteration() throws WPISuiteException {
-        WorkflowModel test3 = new WorkflowModel(3, "test 3");
-        test3.setProject(testProject);
-        manager.save(defaultSession, test3);
+        TaskModel test1 = new TaskModel(1, "title1", "desc1", 2, new Date(), 1);
+        test1.setProject(testProject);
+        manager.save(defaultSession, test1);
         assertEquals(1, manager.Count());
-        assertEquals(3, manager.getEntity(defaultSession, "3")[0].getId());
-        assertEquals("test 3",
-                manager.getEntity(defaultSession, "3")[0].getTitle());
-
-        manager.update(defaultSession, new WorkflowModel(3, "changed").toJson());
+        assertEquals(1, manager.getEntity(defaultSession, "1")[0].getId());
+        assertEquals("title1",
+                manager.getEntity(defaultSession, "1")[0].getTitle());        
+        manager.update(defaultSession,  new TaskModel(1, "changed", "desc", 23,
+                new Date(), 2).toJson());
         assertEquals(1, manager.Count());
         assertEquals("changed",
-                manager.getEntity(defaultSession, "3")[0].getTitle());
+                manager.getEntity(defaultSession, "1")[0].getTitle());
 
         boolean exceptionThrown = false;
         try {
             // this bucketModel is not saved yet , so will cause error
-            manager.update(defaultSession,
-                    new WorkflowModel(4, "change Id 4").toJson());
+            manager.update(defaultSession, new TaskModel(4, "change Id 4",
+                    "desc", 23, new Date(), 2).toJson());
         } catch (WPISuiteException e) {
             exceptionThrown = true;
         }

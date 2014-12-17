@@ -17,6 +17,8 @@ import java.awt.event.ItemListener;
 import java.text.ParseException;
 import java.util.Date;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -40,6 +42,7 @@ import org.jdesktop.swingx.JXDatePicker;
 import org.jdesktop.swingx.JXTextArea;
 import org.jdesktop.swingx.JXTextField;
 
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.Requirement;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
@@ -51,8 +54,11 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
 public class TaskView extends JPanel {
     private static final long serialVersionUID = -997563229078386090L;
 
+    
     private int index;
     private ViewMode viewMode;
+
+    private JComboBox<Requirement> requirementComboBox = new JComboBox<Requirement>();
     private JComboBox<BucketView> statusComboBox = new JComboBox<BucketView>();
     private Color colorsOptions[] = { Color.WHITE, Color.YELLOW, Color.RED, Color.GREEN, Color.MAGENTA, Color.GRAY};
     private JComboBox<Color> colorComboBox = new JComboBox <Color>(colorsOptions);
@@ -60,6 +66,8 @@ public class TaskView extends JPanel {
     private JLabel dateLabel = new JLabel("Due Date:");
     private JLabel actualEffortLabel = new JLabel("Actual Effort:");
     private JLabel estEffortLabel = new JLabel("Estimated Effort:");
+    private JLabel requirementLabel = new JLabel("Related Requirement:");
+    private final JButton requirementButton = new JButton("View Requirement");
     private JLabel changeColorLabel = new JLabel ("Category:"); 
     private TaskButtonsPanel buttonPanel;
     private JTabbedPane commentPanel = new CommentView(this.viewMode);
@@ -131,17 +139,24 @@ public class TaskView extends JPanel {
         this.infoPanel.add(taskNameField, "cell 1 0 2 1, grow");
         this.infoPanel.add(dateLabel, "cell 0 1");
         this.infoPanel.add(datePicker, "cell 1 1, grow");
-        this.colorComboBox.setRenderer(new ColorRenderer());
-        this.colorComboBox.setSelectedIndex(0);
-        this.colorComboBox.setSize(statusComboBox.getSize());
-        this.infoPanel.add(actualEffortLabel, "cell 0 2");
-        this.infoPanel.add(actualEffortSpinner, "cell 1 2");
+        requirementLabel.setForeground(unmodifiedColor);
+        this.infoPanel.add(requirementLabel, "cell 0 2");
+        this.infoPanel.add(requirementComboBox, "cell 1 2");
+        this.requirementComboBox.setModel(new DefaultComboBoxModel(new String[] {
+        "None" }));
+        this.infoPanel.add(requirementButton, "cell 2 2");
+        this.infoPanel.add(actualEffortLabel, "cell 0 4");
+        this.infoPanel.add(actualEffortSpinner, "cell 1 4");
         this.actualEffortSpinner.setModel(new SpinnerNumberModel(0, 0, 99999, 1));
+
         this.infoPanel.add(estEffortLabel, "cell 0 3");
         this.infoPanel.add(estEffortSpinner, "cell 1 3");
         this.estEffortSpinner.setModel(new SpinnerNumberModel(0, 0, 99999, 1));
-        this.infoPanel.add(changeColorLabel, "cell 0 5");
-        this.infoPanel.add(colorComboBox, "cell 1 5");  
+        this.colorComboBox.setRenderer(new ColorRenderer());
+        this.colorComboBox.setSelectedIndex(0);
+        this.colorComboBox.setSize(statusComboBox.getSize());
+        this.infoPanel.add(changeColorLabel, "cell 0 6");
+        this.infoPanel.add(colorComboBox, "cell 1 6");  
         // Format the descriptionPanel layout with components
         this.descriptionPanel.add(scrollPane, "cell 0 0,grow");
         this.scrollPane
@@ -176,6 +191,7 @@ public class TaskView extends JPanel {
         ChangeListener changeListener = (ChangeEvent) -> {
             validateFields();
         };
+
         ItemListener itemListener = (ItemListener) -> {
             validateFields();
         };
@@ -191,12 +207,13 @@ public class TaskView extends JPanel {
         .addDocumentListener(validateListener);
         this.descriptionMessage.getDocument().addDocumentListener(
                 validateListener);
+        this.requirementComboBox.addItemListener(itemListener);
         this.colorComboBox.addItemListener(itemListener);   
         setModel(model);
     }
 
     /**
-     * This should call something to save task to the model
+     * makes a call to save task to the model
      * @param listener listen to click
      */
     public void addOkOnClickListener(ActionListener listener) {
@@ -204,7 +221,7 @@ public class TaskView extends JPanel {
     }
 
     /**
-     * This should call something to refresh the view with the model
+     * makes a call to refresh the view with the model
      * @param listener listen to click
      */
     public void addCancelOnClickListener(ActionListener listener) {
@@ -212,7 +229,7 @@ public class TaskView extends JPanel {
     }
 
     /**
-     * This calls something to refresh, and closes the tab this view is open in
+     * makes a call to refresh, and closes the tab this view is open in
      * @param listener listen to click
      */
     public void addClearOnClickListener(ActionListener listener) {
@@ -220,7 +237,7 @@ public class TaskView extends JPanel {
     }
 
     /**
-     * This calls something to move the task to the archive
+     * makes a call to move the task to the archive
      * @param listener listen to click
      */
     public void addDeleteOnClickListener(ActionListener listener) {
@@ -228,6 +245,31 @@ public class TaskView extends JPanel {
     }
 
     /**
+     * makes a call to add requirement to the related requirement field
+     * @param listener  The listener to be added to the ComboBox
+     */
+    public void addChangeRequirementListener(ActionListener listener) {
+        this.requirementComboBox.addActionListener(listener);
+    }
+
+    /**
+     * makes a call to open the requirement tab
+     * @param listener  The listener to open the requirement tab
+     */
+    public void addRequirementButtonListener(ActionListener listener) {
+        this.requirementButton.addActionListener(listener);
+    }
+
+    /**
+     * set the requirement button to enable or disenable
+     * @param enable
+     *              the boolean value to set the button either enable or disenable
+     */
+    public void setRequirementButtonEnable(boolean enable) {
+        this.requirementButton.setEnabled(enable);
+    }
+    
+    /*
      * adds an action listener to the colorComboBox
      * @param listener The listener to be added to the ComboBox
      */
@@ -318,6 +360,33 @@ public class TaskView extends JPanel {
      */
     public ViewMode getViewMode(){
         return this.viewMode;
+    }
+
+    /**
+     * @return  Index of requirements in the requirementComboBox
+     */
+    public int getRequirementIndex() {
+        return requirementComboBox.getSelectedIndex();
+    }
+
+    /**
+     * @param requirementIndex   the Index of the requirement in the requirementComboBox
+     */
+    public void setRequirement(int requirementIndex) {
+        requirementComboBox.setSelectedIndex(requirementIndex);
+    }
+
+    /**
+     * add a requirement to the reuqirementComboBox
+     * @param   req
+     *              the requirement item
+     */
+    public void addRequirementsToComboBox(Requirement[] reqs){
+        this.requirementComboBox.setModel(new DefaultComboBoxModel(new String[] {
+        "None" }));
+        for (int i = 0; i < reqs.length; i++) {
+            requirementComboBox.addItem(reqs[i]);
+        }
     }
 
     /**
@@ -416,6 +485,13 @@ public class TaskView extends JPanel {
             isModified = true;
         }
 
+        if (this.getRequirementIndex() == this.model.getRequirement()) {
+            this.requirementLabel.setForeground(unmodifiedColor);
+        } else {
+            this.requirementLabel.setForeground(modifiedColor);
+            isModified = true;
+        }
+
         if(this.model.getLabelColor()==null){
             if(this.colorComboBox.getSelectedItem().equals(new Color(255,255,255))){
                 this.changeColorLabel.setForeground(unmodifiedColor);
@@ -491,45 +567,5 @@ public class TaskView extends JPanel {
     /**
      * disable editing of task fields within taskView
      */
-    public void disableEdits() {
-        buttonPanel.setOkEnabledStatus(true);
-        this.taskNameField.setEditable(false);
-        this.descriptionMessage.setEditable(false);
-        this.actualEffortSpinner.setEnabled(false);
-        this.estEffortSpinner.setEnabled(false);
-        this.datePicker.setEditable(false);
-        this.getCommentView().getCommentText().setEditable(false);
-        this.taskNameField.setEditable(false);
-       
-        
-        for (Component button : this.getUserListPanel().getAssignedUserListPanel().getComponents()){
-            System.out.println("assingedButton" + button);
-           button.setEnabled(false);   
-        }
-        for (Component button : this.getUserListPanel().getUnassignedUserListPanel().getComponents()){
-            System.out.println("unassignedButton" + button);
-            button.setEnabled(false);   
-         }
-        
-    }
-    
-    /**
-     * re-enable editing of task fields within a taskView
-     */
-    public void enableEdits() {
-        this.taskNameField.setEditable(true);
-        this.descriptionMessage.setEditable(true);
-        this.actualEffortSpinner.setEnabled(true);
-        this.estEffortSpinner.setEnabled(true);
-        this.datePicker.setEditable(true);
-        this.getCommentView().getCommentText().setEditable(true);
-        this.taskNameField.setEditable(true);
-        
-        for (Component button : this.getUserListPanel().getAssignedUserListPanel().getComponents()){
-            button.setEnabled(true);   
-         }
-         for (Component button : this.getUserListPanel().getUnassignedUserListPanel().getComponents()){
-             button.setEnabled(true);   
-          }
-    }
+ 
 }

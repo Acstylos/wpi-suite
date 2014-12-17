@@ -50,8 +50,9 @@ public class BucketObserver implements RequestObserver {
         switch (iReq.getHttpMethod()) {
         case GET:
             // Parse the message
-            model = BucketModel.fromJsonArray(response.getBody())[0];
-            this.presenter.setModel(model);
+            System.out.println("Bucket GET response: " + response.getBody().toString());
+            model = BucketModel.fromJsonArray(response.getBody())[presenter.getModel().getId()-1];
+            this.presenter.responseGet(model);
             break;
         case POST:
             // Parse the message
@@ -62,6 +63,7 @@ public class BucketObserver implements RequestObserver {
             // Parse the message
             model = BucketModel.fromJson(response.getBody());
             this.presenter.responsePut(model);
+            this.presenter.getWorkflow().addBucket(model.getId(), this.presenter);
             break;
         case DELETE:
             // Parse the message

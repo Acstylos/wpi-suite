@@ -86,15 +86,14 @@ public class TaskButtonsPanel extends JPanel {
             this.okButton.setVisible(true);
             this.clearButton.setVisible(true);
             this.cancelButton.setVisible(true);
-            this.deleteButton.setVisible(true);
+            this.deleteButton.setVisible(false);
         } else if (viewMode == ViewMode.ARCHIVING) {
-            okString = "Restore";
-            clearString = "";
+            okString = "Update";
+            clearString = "Undo Changes";
             cancelString = "Close";
             deleteString = "Delete";
             this.okButton.setVisible(true);
-            this.okButton.setEnabled(true);
-            this.clearButton.setVisible(false);
+            this.clearButton.setVisible(true);
             this.cancelButton.setVisible(true);
             this.deleteButton.setVisible(true);
         }

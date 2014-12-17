@@ -33,7 +33,7 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
 public class MainView extends JTabbedPane {
     private static final long serialVersionUID = -346061317795260862L;
     private JScrollPane workflowScrollPane = new JScrollPane();
-    private WorkflowPresenter workflowPresenter = new WorkflowPresenter(0);
+    private WorkflowPresenter workflowPresenter = new WorkflowPresenter(1);
     private GhostGlassPane glassPane = new GhostGlassPane();
     private static final MainView mainView = new MainView();
 

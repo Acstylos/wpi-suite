@@ -52,12 +52,7 @@ public class ToolbarView extends JPanel
         add(createNewTaskButton, "cell 0 0");
         
         add(tglbtnArchive, "cell 1 0");
-        tglbtnArchive.setSelected(false);
-        
-        JLabel filterLabel = new JLabel("F I L T E R");
-        filterLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        add(filterLabel, "cell 2 0");
-        
+        tglbtnArchive.setSelected(false);        
         
         add(filterPanel, "cell 3 0,grow");
         registerCallbacks();
@@ -71,10 +66,25 @@ public class ToolbarView extends JPanel
         createNewTaskButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // get instance of the New-Bucket Presenter to add new tasks into
-                TaskPresenter taskPresenter = new TaskPresenter(0, MainView.getInstance().getWorkflowPresenter().getBucketPresenterById(1), ViewMode.CREATING);
+                int firstBucketId = MainView.getInstance().getWorkflowPresenter().getModel().getBucketIds().get(0);
+                TaskPresenter taskPresenter = new TaskPresenter(0, MainView.getInstance().getWorkflowPresenter().getBucketPresenterById(firstBucketId), ViewMode.CREATING);
                 MainView.getInstance().addTab(taskPresenter.getModel().getTitle(), Icons.CREATE_TASK, taskPresenter.getView());
                 int tabCount = MainView.getInstance().getTabCount();
                 taskPresenter.getView().setIndex(tabCount-1);
+                MainView.getInstance().setSelectedIndex(tabCount-1);
+            }
+        });
+
+        add(createNewTaskButton, "flowx,cell 0 0");        
+        
+        JButton manageBuckets = new JButton("<html>Manage<br/>Stages</html>");
+        add(manageBuckets, "cell 0 0");
+        manageBuckets.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                // get instance of the New-Bucket Presenter to add new tasks into
+                MainView.getInstance().getWorkflowPresenter().updateManageWorkflowView();
+                MainView.getInstance().addTab("Manage Workflow", Icons.CREATE_TASK, MainView.getInstance().getWorkflowPresenter().getManageWorkflowView());
+                int tabCount = MainView.getInstance().getTabCount();
                 MainView.getInstance().setSelectedIndex(tabCount-1);
             }
         });
