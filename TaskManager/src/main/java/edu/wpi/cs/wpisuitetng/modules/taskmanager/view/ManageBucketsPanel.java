@@ -9,6 +9,8 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
+import java.awt.Color;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +18,17 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import net.miginfocom.swing.MigLayout;
+
+import org.jdesktop.swingx.JXTextField;
+
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowModel;
+
+import javax.swing.JScrollPane;
 
 public class ManageBucketsPanel extends JPanel {
 
@@ -31,10 +40,12 @@ public class ManageBucketsPanel extends JPanel {
     private JButton deleteBucketButton = new JButton("Delete");
     private JButton moveBucketDownButton = new JButton("Down");
     private JButton addBucketButton = new JButton("Add Stage");
-    private JTextField newBucketField = new JTextField();
+    private JXTextField newBucketField = new JXTextField("Write a Stage Title...", Color.GRAY);
     private JPanel addStagePanel = new JPanel();
     private JPanel buttonPanel = new JPanel();
     private JList<String> bucketList = new JList<String>();
+    private final JButton setInitBucketButton = new JButton("Set Default");
+    private final JScrollPane scrollPane = new JScrollPane();
 
     /**
      * Create the panel.
@@ -42,26 +53,31 @@ public class ManageBucketsPanel extends JPanel {
      */
     public ManageBucketsPanel(WorkflowModel model) {
         this.bucketIds = new ArrayList<Integer>(model.getBucketIds());
-        this.setLayout(new MigLayout("", "[grow][50%,grow]", "[][grow]"));
+        this.setLayout(new MigLayout("", "[50%][50%]", "[][grow][]"));
         
         add(addStagePanel, "cell 0 0,grow");
         addStagePanel.setLayout(new MigLayout("", "[grow][]", "[]"));
         addStagePanel.add(newBucketField, "cell 0 0,growx");
-        newBucketField.setColumns(10);
         addStagePanel.add(addBucketButton, "cell 1 0");
         
-        add(buttonPanel, "flowx,cell 0 1");
+        add(buttonPanel, "flowx,cell 0 1,aligny top");
         buttonPanel.setLayout(new MigLayout("", "[]", "[]"));
-        buttonPanel.add(moveBucketUpButton, "flowy,cell 0 0");
-        buttonPanel.add(deleteBucketButton, "cell 0 0");
-        buttonPanel.add(moveBucketDownButton, "cell 0 0");
-        buttonPanel.add(closeButton, "cell 0 0");
-        this.bucketListPanel.setLayout(new MigLayout("fill", "[grow]", "[grow]"));
-        
+        buttonPanel.add(moveBucketUpButton, "flowy,cell 0 0,growx");
+        buttonPanel.add(deleteBucketButton, "cell 0 0,growx");
+        buttonPanel.add(moveBucketDownButton, "cell 0 0,growx");
+        buttonPanel.add(setInitBucketButton, "cell 0 0,growx");
+        bucketListPanel.setLayout(new MigLayout("fill", "[grow]", "[grow]"));
         
         add(bucketListPanel, "cell 0 1,grow");
         
-        bucketListPanel.add(bucketList, "cell 0 0,grow");
+        bucketListPanel.add(scrollPane, "cell 0 0,grow");
+        scrollPane.setViewportView(bucketList);
+        
+        bucketList.setCellRenderer(new BucketListItemRenderer());
+        bucketList.setBorder(new LineBorder(Color.LIGHT_GRAY));
+        add(closeButton, "cell 0 2,alignx left,aligny center");
+        
+        newBucketField.getDocument().addDocumentListener(validateTitleField);
     }
     
     /**
@@ -128,12 +144,68 @@ public class ManageBucketsPanel extends JPanel {
     public void addMoveBucketDownButtonListener(ActionListener listener){
         this.moveBucketDownButton.addActionListener(listener);
     }
+    
+    
+    /**
+     * @param listener The listener to determine how setInitBucketButton will function.
+     */
+    public void addSetInitBucketButtonListener(ActionListener listener){
+        this.setInitBucketButton.addActionListener(listener);
+    }
 
     /**
      * @return the index of the selected item in the Jlist
      */
     public int getBucketListIndex() {
         return this.bucketList.getSelectedIndex();
+    }
+    
+    /**
+     * @param index The index of the list to select.
+     */
+    public void setSelectedBucket(int index){
+        this.bucketList.setSelectedIndex(index);
+    }
+    
+    /**
+     * Clears the add bucket field.
+     */
+    public void clearAddBucketField(){
+        this.newBucketField.setText("");
+    }
+    
+    private DocumentListener validateTitleField = new DocumentListener(){
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            validateField();
+            
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            validateField();
+            
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            validateField();
+            
+        }
+        
+    };
+    
+    /**
+     * Validates the title text field.
+     */
+    private void validateField(){
+        boolean isTitleInvalid = newBucketField.getText().trim().isEmpty();
+        if(isTitleInvalid){
+            addBucketButton.setEnabled(false);
+        } else {
+            addBucketButton.setEnabled(true);
+        }
     }
 
 }
