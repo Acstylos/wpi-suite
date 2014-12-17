@@ -197,6 +197,15 @@ public class OverviewTable extends JTable {
      */
     @Override
     public void paintComponent(Graphics g) {
+        this.initialize();
+
+        super.paintComponent(g);
+    }
+    
+    /**
+     * Retrieves the requirements and iterations if they weren't initialized already. 
+     */
+    public void initialize(){
         if (!initialized) {
             try {
                 GetRequirementsController.getInstance().retrieveRequirements();
@@ -207,8 +216,7 @@ public class OverviewTable extends JTable {
                 e.printStackTrace();
             }
         }
-
-        super.paintComponent(g);
+        
     }
 
     /**

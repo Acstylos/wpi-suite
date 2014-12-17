@@ -44,6 +44,13 @@ public class WorkflowView extends JPanel
          * of each other.
          */
         this.setLayout(new MigLayout("fill"));
+        addSpacers();
+    }
+    
+    /**
+     * Adds layout spacers to the view. 
+     */
+    public void addSpacers(){
         Component topSpacerStrut = Box.createVerticalStrut(5);
         Component bottomSpacerStrut = Box.createVerticalStrut(5);
         Component leftSpacerStrut = Box.createHorizontalStrut(5);
@@ -75,11 +82,18 @@ public class WorkflowView extends JPanel
         this.bucketViews = buckets;
         this.removeAll();
         for (BucketView bucket : bucketViews) {
-            this.add(bucket, "dock west");
-            Component spacerStrut = Box.createHorizontalStrut(5);
-            this.add(spacerStrut, "dock west");
+            addBucketToView(bucket);
         }
-        
+    }
+    
+    /**
+     * Adds a single bucket to the workflow.
+     * @param bucket BucketView to add to the workflow.
+     */
+    public void addBucketToView(BucketView bucket){
+        this.add(bucket, "dock west");
+        Component spacerStrut = Box.createHorizontalStrut(5);
+        this.add(spacerStrut, "dock west");
     }
 
     /**
@@ -90,5 +104,4 @@ public class WorkflowView extends JPanel
         this.setBorder(new TitledBorder(null, title, TitledBorder.LEADING,
                 TitledBorder.TOP, null, null));
     }
-
 }

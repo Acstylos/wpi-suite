@@ -34,6 +34,8 @@ public class User extends AbstractModel {
     @Expose
     private String name;
     @Expose
+    private String emailAddress;
+    @Expose
     private Role role;
 
     transient private String password; // excluded from serialization, still
@@ -50,10 +52,28 @@ public class User extends AbstractModel {
      *            User's ID number
      */
     public User(String name, String username, String password, int idNum) {
+        this(name, username, null, password, idNum);
+    }
+    
+    /**
+     * The primary constructor for a User
+     * 
+     * @param name
+     *            User's full name
+     * @param username
+     *            User's username (nickname)
+     * @aram emailAddress
+     *            User's email address.  This is optional, since users are
+     *            not required to reveal their email address to use WPI Suite.
+     * @param idNum
+     *            User's ID number
+     */
+    public User(String name, String username, String emailAddress, String password, int idNum) {
         this.name = name;
         this.username = username;
         this.password = password;
         this.idNum = idNum;
+        this.emailAddress = emailAddress;
         this.role = Role.USER;
     }
 
@@ -93,6 +113,10 @@ public class User extends AbstractModel {
 
     public String getUsername() {
         return username;
+    }
+    
+    public String getEmailAddress() {
+        return emailAddress;
     }
 
     /* Serializing */
@@ -177,6 +201,11 @@ public class User extends AbstractModel {
         this.username = newUserName;
         return this;
     }
+    
+    public User setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+        return this;
+    }
 
     public User setIdNum(int newidNum) {
         this.idNum = newidNum;
@@ -218,6 +247,8 @@ public class User extends AbstractModel {
                 + ((this.role == null) ? 0 : this.role.hashCode());
         result = prime * result
                 + ((this.username == null) ? 0 : this.username.hashCode());
+        result = prime * result
+                + ((this.emailAddress == null) ? 0 : this.emailAddress.hashCode());
         return result;
     }
 
@@ -256,6 +287,13 @@ public class User extends AbstractModel {
                 return false;
             }
         } else if (!this.username.equals(other.username)) {
+            return false;
+        }
+        if (this.emailAddress == null) {
+            if (other.emailAddress != null) {
+                return false;
+            }
+        } else if (!this.emailAddress.equals(other.emailAddress)) {
             return false;
         }
         return true;
