@@ -328,5 +328,13 @@ public class MiniTaskView extends JPanel {
     public JButton getArchiveButton() {
         return archiveButton;
     }
+    
+    /**
+     * @return the userPanel of the miniTaskView
+     */
+    public JPanel getUserPanel() {
+        return this.userPanel;
+    }
+
 
 }
