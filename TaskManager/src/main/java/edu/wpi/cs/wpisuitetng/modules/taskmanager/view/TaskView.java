@@ -372,7 +372,9 @@ public class TaskView extends JPanel {
      * @param requirementIndex   the Index of the requirement in the requirementComboBox
      */
     public void setRequirement(int requirementIndex) {
-        requirementComboBox.setSelectedIndex(requirementIndex);
+        if(requirementIndex < requirementComboBox.getItemCount()){
+            requirementComboBox.setSelectedIndex(requirementIndex);
+        }
     }
 
     /**
