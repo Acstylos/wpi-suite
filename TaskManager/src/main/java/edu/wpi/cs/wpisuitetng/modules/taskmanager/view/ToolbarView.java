@@ -23,6 +23,7 @@ import javax.swing.UIManager;
 
 import net.miginfocom.swing.MigLayout;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.HelpPresenter;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
 
 /**
@@ -142,6 +143,24 @@ public class ToolbarView extends JPanel
                 System.out.println(MainView.getInstance().getWorkflowPresenter().getCsv());
             }
         });
+        
+        /**
+         * Adds a help Tab into the MainView
+         */
+        JButton btnHelp = new JButton("<html>Help</html>");
+        btnHelp.setIcon(Icons.HELP_LARGE);
+        add(btnHelp, "cell 0 0");
+
+        btnHelp.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                HelpPresenter helpPresenter = new HelpPresenter();
+                MainView.getInstance().addTab("Help", Icons.HELP, helpPresenter.getView());
+                int tabCount = MainView.getInstance().getTabCount();
+                MainView.getInstance().setSelectedIndex(tabCount - 1);         
+            }
+        }); 
+        
+        
         
     }
     

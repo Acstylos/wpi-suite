@@ -53,4 +53,8 @@ public class Icons {
     public final static Icon TASKDUE = new ImageIcon(Icons.class.getResource("task-overdue.png"));
     public final static Icon TASKEDIT = new ImageIcon(Icons.class.getResource("task-edit.png"));  
     public final static Icon FILTER = new ImageIcon(Icons.class.getResource("filter.png"));
+    public final static Icon HELP = new ImageIcon(Icons.class.getResource("help.png"));
+    public final static Icon HELP_LARGE = new ImageIcon(Icons.class.getResource("help-medium.png"));
+    
+    
 }
