@@ -19,6 +19,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,7 @@ public class BucketPresenter {
     private BucketView view;
     private BucketModel model;
     private WorkflowPresenter workflow;
+    private static Filter taskFilter = new Filter();
     private Map<Integer, TaskPresenter> taskMap = new HashMap<Integer, TaskPresenter>();
 
     /**
@@ -227,6 +229,7 @@ public class BucketPresenter {
                     model.setTitle(title.trim());
                 }
                 view.setStaticTitlePanel();
+                workflow.updateManageWorkflowView();
                 updateInDatabase();
                 view.revalidate();
                 view.repaint();
@@ -489,16 +492,17 @@ public class BucketPresenter {
     public void addMiniTaskstoView() {
         List<Integer> taskIds = model.getTaskIds();
         this.view.resetTaskList();
+
         for (int i : taskIds) {
             MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
-            if (MainView.getInstance().getShowArchived()) {
+            if (taskFilter.matches(taskMap.get(i))) {
+
                 view.addTaskToView(miniTaskView);
-            } else {
-                if (!taskMap.get(i).getModel().getIsArchived()) {
-                    view.addTaskToView(miniTaskView);
-                }
+
             }
         }
+        view.revalidate();
+        view.repaint();
     }
 
     /*
@@ -546,6 +550,25 @@ public class BucketPresenter {
             System.err.println("Sleep Exception: " + e.getStackTrace().toString());
         }
 
+    }
+
+    /**
+     * this function sets the filter to be used by the bucket presenter.
+     * 
+     * @param taskFilter
+     *            the new Filter to be used by the bucket presenter
+     */
+    public static void setTaskFilter(Filter taskFilter) {
+        taskFilter = taskFilter;
+    }
+
+    /**
+     * This function gets the current filter being used by the bucket presenter.
+     * 
+     * @return the current taskFileter being used by the bucket presenter.
+     */
+    public static Filter getTaskFilter() {
+        return taskFilter;
     }
     
     /**
