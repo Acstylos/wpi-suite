@@ -81,7 +81,9 @@ public class ColorRenderer extends JButton implements ListCellRenderer {
             return "yellow";
         case "java.awt.Color[r=0,g=255,b=0]":
             return "green";
-
+        case "java.awt.Color[r=238,g=238,b=238]":
+            return "No Color Filtering";
+            
         default:
             return "No Label";
 
