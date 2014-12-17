@@ -558,6 +558,20 @@ public class BucketPresenter {
         request.addObserver(new BucketObserver(presenter, HttpMethod.PUT));
         request.send();
     }
+
+    /**
+     * Gets the csv entries for all tasks in this bucket.
+     *
+     * @return CSV entries, ends in newline.
+     */
+    public String getCsv() {
+        String t = new String();
+        for (TaskPresenter i : taskMap.values()) {
+            t = t + i.getModel().getCsv();
+        }
+        return t;
+    }
+
     
     /**
      * Create a new bucket in the database. Initializes an async network request

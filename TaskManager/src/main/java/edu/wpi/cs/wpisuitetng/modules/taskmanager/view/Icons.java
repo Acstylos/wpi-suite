@@ -28,6 +28,7 @@ public class Icons {
     public final static Icon CREATE_TASK = new ImageIcon(Icons.class.getResource("create-task.png"));
     public final static Icon ERROR = new ImageIcon(Icons.class.getResource("error.png"));
     public final static Icon ERROR_LARGE = new ImageIcon(Icons.class.getResource("error-large.png"));
+    public final static Icon EXPORT_CALENDAR = new ImageIcon(Icons.class.getResource("export-calendar.png"));
     public final static Icon HIDE_ARCHIVE_LARGE = new ImageIcon(Icons.class.getResource("hide-archive-large.png"));
     public final static Icon HISTORY = new ImageIcon(Icons.class.getResource("history.png"));
     public final static Icon OK = new ImageIcon(Icons.class.getResource("okay.png"));
