@@ -303,26 +303,28 @@ public class TaskPresenter {
         view.addOkOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                updateBeforeModel();
                 int index = MainView.getInstance().indexOfComponent(view);
                 if (viewMode == ViewMode.CREATING) {
                     // CREATING MODE
                     updateModel();
                     createInDatabase(); // is calling "PUT" in task observer
                     view.setViewMode(ViewMode.EDITING);
+                    addHistory("Create");
                 }
-                updateBeforeModel();
                 MainView.getInstance().remove(index);
                 MainView.getInstance().setSelectedIndex(0);
                 saveView();
+                if (viewMode == ViewMode.EDITING) {
+                    addHistory(beforeModel, model);
+                }
                 updateView();
-                addHistory(beforeModel, model);
                 MainView.getInstance().resetAllBuckets();
                 miniView.setModel(model);
                 miniView.revalidate();
                 miniView.repaint();
             }
         });
-
         view.addCancelOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -574,23 +576,14 @@ public class TaskPresenter {
     }
 
     /**
-     * returns the bucket name with the given ID hard coded at the moment.
+     * returns the bucket name with the given ID.
      * 
      * @param bucket
      *            the bucket's ID
      * @return String the name of the bucket
      */
     private String intToStatus(int bucket) {
-        if (bucket == 1) 
-            return "New";
-        else if (bucket == 2)
-            return "Selected";
-        else if (bucket == 3)
-            return "In Progress";
-        else if (bucket == 4)
-            return "Completed";
-        else
-            return "Archive";
+        return this.bucket.getWorkflow().idToBucketName(bucket);
     }
 
     /**
@@ -977,6 +970,21 @@ public class TaskPresenter {
     }
     
     /**
+     * returns the Name with the given ID, otherwise blank.
+     * 
+     * @param id
+     *            the user's ID
+     * @return name the Name
+     */
+    public String idToName(int id) {
+        for (User u : this.allUserArray) {
+            if (u.getIdNum() == id)
+                return u.getName();
+        }
+        return "";
+    }
+    
+    /**
      * set icon for the task in update view
      */
     public void setIconForMinitaskView(){
@@ -1063,5 +1071,30 @@ public class TaskPresenter {
         this.model = other;
     }
     
+    /**
+     * Posts in the History Panel any task movement from Drag and Drop.
+     * 
+     * @param statusBefore
+     *            the bucketID before drag and drop.
+     * @param statusAfter
+     *            the bucketID after drag and drop
+     */
+    public void dragDropHistory(int statusBefore, int statusAfter) {
+        String activity = "";
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+        Calendar cal = Calendar.getInstance();
+        String user = ConfigManager.getConfig().getUserName();
+        activity = user + " has moved this task from "
+                + this.bucket.getWorkflow().idToBucketName(statusBefore)
+                + " to "
+                + this.bucket.getWorkflow().idToBucketName(statusAfter)
+                + " on " + dateFormat.format(cal.getTime());
+
+        ActivityPresenter activityPresenter = new ActivityPresenter(this,
+                activity, true);
+        view.getCommentView().postHistory(activityPresenter.getView());
+        activityPresenter.createInDatabase();
+        activityPresenters.add(activityPresenter);
+    }
     
 }

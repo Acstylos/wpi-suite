@@ -22,7 +22,6 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
-import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.RequirementModel;
 
 /**
  * The model end of the Task object
@@ -400,6 +399,24 @@ public class TaskModel extends AbstractModel {
             return title;
         }
     }
+    
+    /**
+     * Gets a csv entry for various calendar formats.
+     *
+     * @return CSV entry, with a newline.
+     */
+    public String getCsv() {
+        SimpleDateFormat dfdate = new SimpleDateFormat("MM/dd/yy");
+        SimpleDateFormat dftime = new SimpleDateFormat("hh:mm:ss a");
+        StringBuilder tmp = new StringBuilder();
+
+        tmp.append(title).append(',');
+        tmp.append(dfdate.format(dueDate)).append(',');
+        tmp.append(description).append(',');
+        tmp.append('\n');
+        
+        return tmp.toString();
+    }
 
     /**
      * Will implement later
@@ -485,7 +502,7 @@ public class TaskModel extends AbstractModel {
      * @return activityIds linked list of activity ids
      */
     public List<Integer> getActivityIds() {
-        return activityIds;
+        return new ArrayList<Integer> (activityIds);
     }
 
     /**
