@@ -36,6 +36,8 @@ public class Project extends AbstractModel {
     private String[] supportedModules;
     private User owner;
     protected LinkedHashSet<User> team;
+    private String automaticEmailAddress;
+    private String automaticEmailPassword;
 
     /**
      * Primary constructor for a Project
@@ -51,6 +53,8 @@ public class Project extends AbstractModel {
         this.idNum = idNum;
         this.owner = owner;
         this.supportedModules = supportedModules;
+        this.automaticEmailAddress = "";
+        this.automaticEmailPassword = "";
 
         if (team != null) {
             this.team = new LinkedHashSet<User>(Arrays.asList(team));
@@ -79,6 +83,14 @@ public class Project extends AbstractModel {
     public String getIdNum() {
         return idNum;
     }
+    
+    public void setAutomaticEmailAddress(String automaticEmailAddress) {
+        this.automaticEmailAddress = automaticEmailAddress;
+    }
+    
+    public void setAutomaticEmailPasswowrd(String automaticEmailPassword) {
+        this.automaticEmailPassword = automaticEmailPassword;
+    }
 
     /* Mutators */
     public void setName(String newName) {
@@ -87,6 +99,14 @@ public class Project extends AbstractModel {
 
     protected void setIdNum(String newId) {
         this.idNum = newId;
+    }
+    
+    public String getAutomaticEmailAddress() {
+        return this.automaticEmailAddress;
+    }
+
+    public String getAutomaticEmailPassword() {
+        return this.automaticEmailPassword;
     }
 
     /* database interaction */
@@ -149,6 +169,11 @@ public class Project extends AbstractModel {
             json = json.substring(0, json.length() - 1);
             json += "]";
         }
+        
+        if (this.automaticEmailAddress != null) {
+            json += ",\"automaticEmailAddress\":\"" + automaticEmailAddress + "\"";
+        }
+        
         json += "}";
         return json;
     }

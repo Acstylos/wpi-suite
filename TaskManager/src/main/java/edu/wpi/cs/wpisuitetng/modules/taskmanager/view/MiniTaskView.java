@@ -65,6 +65,7 @@ public class MiniTaskView extends JPanel {
     private static final long serialVersionUID = -5428820718299212324L;
     private JLabel taskNameLabel = new JLabel();
     private JButton editButton = new JButton("Edit");
+    private JButton archiveButton = new JButton("");
     private JPanel userPanel = new JPanel();
     private JLabel dueDateLabel = new JLabel();
     private JPanel holderPanel = new JPanel();
@@ -202,7 +203,12 @@ public class MiniTaskView extends JPanel {
         this.add(holderPanel, "cell 2 0,grow");
         this.holderPanel.setBorder(null);
         this.expanded = true;
-        this.add(editButton, "cell 0 3,alignx left,aligny bottom");
+        this.add(editButton, "flowx,cell 0 3,alignx left,aligny bottom");
+        this.add(getArchiveButton(), "cell 0 3,alignx left,aligny bottom");
+        if (this.getModel().getIsArchived()){
+            archiveButton.setText("Restore");
+        }
+        else archiveButton.setText("Archive");
         this.revalidate();
         this.repaint();
     }
@@ -238,6 +244,13 @@ public class MiniTaskView extends JPanel {
         this.editButton.addActionListener(listener);
     }
 
+    /**
+     * Adds the listener for archiving a task 
+     * @param listener the listener that reacts on button click
+     */
+    public void addOnClickArchiveButton(ActionListener listener){
+        this.getArchiveButton().addActionListener(listener);
+    }
     /**
      * updates this miniTaskView's color label with the color from this MiniTaskView's Model.
      * paints null if the user selected no label.
@@ -308,4 +321,12 @@ public class MiniTaskView extends JPanel {
     public JLabel getTaskNameLabel() {
         return this.taskNameLabel;
     }
+
+    /**
+     * @return the archive button of the miniTaskView
+     */
+    public JButton getArchiveButton() {
+        return archiveButton;
+    }
+
 }

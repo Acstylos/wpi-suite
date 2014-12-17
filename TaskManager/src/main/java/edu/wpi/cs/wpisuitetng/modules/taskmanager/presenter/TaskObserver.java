@@ -65,8 +65,6 @@ public class TaskObserver implements RequestObserver {
              * returns the task stored in the database and PUT returns the same
              * task but with a new ID assigned.
              */
-            this.presenter.addHistory("Create");
-
             this.presenter.setModel(model);
 
             /*

@@ -35,11 +35,11 @@ public class ManageBucketsPanel extends JPanel {
     static final long serialVersionUID = 3826396045506177079L;
     private List<Integer> bucketIds = new ArrayList<Integer>();
     private JPanel bucketListPanel = new JPanel();
-    private JButton closeButton = new JButton("Close");
-    private JButton moveBucketUpButton = new JButton("Up");
-    private JButton deleteBucketButton = new JButton("Delete");
-    private JButton moveBucketDownButton = new JButton("Down");
-    private JButton addBucketButton = new JButton("Add Stage");
+    private JButton closeButton = new JButton("Close", Icons.CANCEL);
+    private JButton moveBucketUpButton = new JButton("Up", Icons.MOVE_UP);
+    private JButton deleteBucketButton = new JButton("Delete", Icons.DELETE);
+    private JButton moveBucketDownButton = new JButton("Down", Icons.MOVE_DOWN);
+    private JButton addBucketButton = new JButton("Add Stage", Icons.ADD);
     private JXTextField newBucketField = new JXTextField("Write a Stage Title...", Color.GRAY);
     private JPanel addStagePanel = new JPanel();
     private JPanel buttonPanel = new JPanel();
@@ -61,6 +61,7 @@ public class ManageBucketsPanel extends JPanel {
         addStagePanel.add(addBucketButton, "cell 1 0");
         
         add(buttonPanel, "flowx,cell 0 1,aligny top");
+        
         buttonPanel.setLayout(new MigLayout("", "[]", "[]"));
         buttonPanel.add(moveBucketUpButton, "flowy,cell 0 0,growx");
         buttonPanel.add(deleteBucketButton, "cell 0 0,growx");
