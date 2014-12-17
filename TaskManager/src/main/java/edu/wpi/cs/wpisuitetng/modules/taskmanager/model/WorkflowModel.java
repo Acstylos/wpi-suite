@@ -24,6 +24,7 @@ import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 public class WorkflowModel extends AbstractModel {
 
     private int id;
+    private int defaultBucketIndex;
     private String title;
     private ArrayList<Integer> bucketIds;
 
@@ -44,6 +45,7 @@ public class WorkflowModel extends AbstractModel {
         this.id = ID;
         this.title = title;
         this.bucketIds = new ArrayList<>();
+        this.defaultBucketIndex = 0;
     }
 
     /**
@@ -218,5 +220,20 @@ public class WorkflowModel extends AbstractModel {
         this.id = toCopyFrom.id;
         this.title = toCopyFrom.title;
         this.bucketIds = toCopyFrom.bucketIds;
+        this.defaultBucketIndex = toCopyFrom.defaultBucketIndex;
+    }
+
+    /**
+     * @return Gets the bucket which is designated for new tasks.
+     */
+    public int getDefaultBucketIndex() {
+        return defaultBucketIndex;
+    }
+
+    /**
+     * @param defaultBucketIndex The bucket that wil be designated for new tasks.
+     */
+    public void setDefaultBucketIndex(int defaultBucketIndex) {
+        this.defaultBucketIndex = defaultBucketIndex;
     }
 }

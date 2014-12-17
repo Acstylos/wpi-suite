@@ -134,7 +134,7 @@ public class FilterView extends JPanel{
      */
     public void setExpanded(){
         removeAll();
-        setMinimumSize(new Dimension(375, 100));
+        setMinimumSize(new Dimension(400, 100));
         setMaximumSize(new Dimension(3000, 100));
         setLayout(new MigLayout("", "[]-1px[grow]", "[grow]"));
         add(titleHolderPanel, "cell 0 0,grow");
