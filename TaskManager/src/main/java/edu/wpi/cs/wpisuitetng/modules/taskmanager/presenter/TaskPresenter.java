@@ -126,6 +126,7 @@ public class TaskPresenter {
         userRequest.addObserver(new UsersObserver(this));
         userRequest.send();
         getRequirements();
+        mapReqs();
         this.activityPresenters = new ArrayList<ActivityPresenter>();
         registerCallbacks();
 
@@ -159,7 +160,7 @@ public class TaskPresenter {
         miniView.addOnClickEditButton(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                getRequirements();
+                mapReqs();
                 updateView();
                 MainView.getInstance().addTab(model.getShortTitle(),
                         Icons.TASKEDIT, view);// this line chooses tab title
@@ -458,11 +459,6 @@ public class TaskPresenter {
      * Sends a network request to query all of the available requirements
      */
     public void getRequirements() {
-        final Request requirementRequest = Network.getInstance().makeRequest("requirementmanager/requirement", 
-                HttpMethod.GET);
-        requirementRequest.addObserver(new RequirementsObserver(this));
-        requirementRequest.send();
-        
         ViewEventController.getInstance().getOverviewTable().initialize();
     }
 
@@ -777,10 +773,12 @@ public class TaskPresenter {
      * @param reqs 
      *          Requirement array of all requirement in the database
      */
-    public void mapReqs(Requirement[] reqs) {
-        for (int i = 0; i < reqs.length; i++) {
-            reqMap.put(reqs[i].getId(), reqs[i]);
+    public void mapReqs() {
+        List<Requirement> reqs =  RequirementModel.getInstance().getRequirements();
+        for (Requirement r: reqs) {
+            reqMap.put(r.getId(), r);
         }
+        view.addRequirementsToComboBox(reqs);
     }
 
     /**
@@ -812,6 +810,7 @@ public class TaskPresenter {
      * Update the view with data from the model
      */
     public void updateView() {
+        mapReqs();
         view.setRequirement(model.getRequirement());
         view.setModel(model);
         miniView.setModel(model);

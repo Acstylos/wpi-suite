@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -372,7 +373,9 @@ public class TaskView extends JPanel {
      * @param requirementIndex   the Index of the requirement in the requirementComboBox
      */
     public void setRequirement(int requirementIndex) {
-        requirementComboBox.setSelectedIndex(requirementIndex);
+        if(requirementIndex < requirementComboBox.getItemCount()){
+            requirementComboBox.setSelectedIndex(requirementIndex);
+        }
     }
 
     /**
@@ -380,11 +383,11 @@ public class TaskView extends JPanel {
      * @param   req
      *              the requirement item
      */
-    public void addRequirementsToComboBox(Requirement[] reqs){
+    public void addRequirementsToComboBox(List<Requirement> reqs){
         this.requirementComboBox.setModel(new DefaultComboBoxModel(new String[] {
         "None" }));
-        for (int i = 0; i < reqs.length; i++) {
-            requirementComboBox.addItem(reqs[i]);
+        for (Requirement r: reqs) {
+            requirementComboBox.addItem(r);
         }
     }
 
