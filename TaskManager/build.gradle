@@ -5,4 +5,5 @@ dependencies{
     compile project(':RequirementManager')
     compile ('com.miglayout:miglayout:3.7.4')
     compile ('org.swinglabs:swingx:1.6.1')
+    testCompile ('org.easytesting:fest:1.0.16')
 }
