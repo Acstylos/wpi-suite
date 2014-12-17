@@ -186,7 +186,6 @@ public class TaskView extends JPanel {
             /** {@inheritDoc} */
             @Override
             public void insertUpdate(DocumentEvent e) {
-                validateFields();
             }
 
             /** {@inheritDoc} */

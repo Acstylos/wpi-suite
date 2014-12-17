@@ -755,6 +755,13 @@ public class TaskPresenter {
     public void addUsersToAllUserList(User[] users) {
         this.allUserArray = users;
     }
+    
+    /**
+     * Sets the assigned user list to a new list
+     */
+    public void setAssignedUserList() {
+        this.assignedUserList = new ArrayList<Integer>();
+    }
 
     /**
      * Takes the allUsers array, and checks users with assigned users list
