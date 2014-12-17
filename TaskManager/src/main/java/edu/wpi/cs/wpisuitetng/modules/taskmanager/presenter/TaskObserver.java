@@ -41,8 +41,6 @@ public class TaskObserver implements RequestObserver {
      * @see edu.wpi.cs.wpisuitetng.network.RequestObserver#responseSuccess(IRequest)
      */
     public void responseSuccess(IRequest iReq) {
-        System.out
-        .println("Received response: " + iReq.getResponse().getBody());
 
         /*
          * Take the appropriate action based on what the method of the request
