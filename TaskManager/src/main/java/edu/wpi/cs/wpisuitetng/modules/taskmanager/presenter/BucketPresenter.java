@@ -23,6 +23,7 @@ import javax.swing.TransferHandler;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.updater.Updater;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
@@ -76,6 +77,7 @@ public class BucketPresenter {
      */
     public void writeModelToView() {
 
+        this.view.resetTaskList();
         this.view.setModel(this.model);
         for (int i : model.getTaskIds()) {
             if (!taskMap.containsKey(i)) {
@@ -248,8 +250,9 @@ public class BucketPresenter {
             taskPresenter.setBucket(this);
         }
         
-        taskPresenter.getModel().setStatus(this.getModel().getId());
+        taskPresenter.getModel().setBucketId(this.getModel().getId());
         taskPresenter.updateView();
+        taskPresenter.saveView();
         
         /* Immediately add the view for instant feedback to the user */
         if (taskPresenter.getMiniView() != null) {
@@ -384,7 +387,55 @@ public class BucketPresenter {
         updateInDatabase();
 
     }
-    
+
+    /**
+     * Remove a task ID from the list of taskIDs in the model, update the
+     * view to not have that task, but don't update the server.
+     * 
+     * @param rmid
+     *            ID of the existing task to be removed
+     */
+    public void removeTaskLocal(int rmid) {
+        model.removeTaskId(rmid);
+        
+        view.setModel(model);
+        view.revalidate();
+        view.repaint();
+        
+        taskMap.remove(rmid);
+    }
+
+    /**
+     * Adds a task ID to the list of taskIDs in the bucket model. Do not
+     * update server.
+     * 
+     * @param id
+     *            ID of the existing task.
+     * @param taskPresenter
+     *            taskPresenter associated with the task
+     */
+    public void addTaskLocal(int id, TaskPresenter taskPresenter) {
+        model.addTaskID(id);
+        
+        if (taskPresenter.getBucket() != this) {
+            taskPresenter.getBucket().removeTaskLocal(id);
+            taskPresenter.setBucket(this);
+        }
+        
+        taskPresenter.getModel().setStatus(this.getModel().getId());
+        taskPresenter.updateView();
+        
+        /* Immediately add the view for instant feedback to the user */
+        if (taskPresenter.getMiniView() != null) {
+            this.view.addTaskToView(taskPresenter.getMiniView());
+        }
+        
+        this.writeModelToView();
+        view.setModel(model);
+        view.revalidate();
+        view.repaint();
+    }
+
     /*
      * The ideas for the following functions comes from reading code and using implementations found at 
      * https://github.com/dcpounds/wpi-suite/tree/dev-gradle/TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/controller/stage

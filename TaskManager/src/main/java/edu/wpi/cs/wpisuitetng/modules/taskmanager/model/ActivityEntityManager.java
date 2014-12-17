@@ -20,6 +20,9 @@ import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.updater.UpdateEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.updater.ChangeModel;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 /**
  * @author 
@@ -34,7 +37,7 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
      * {@link edu.wpi.cs.wpisuitetng.ManagerLayer#ManagerLayer()}. To make sure
      * this happens, be sure to place add this entity manager to the map in the
      * ManagerLayer file.
-     * 
+     *
      * @param db
      *            a reference to the persistent database
      */
@@ -44,7 +47,7 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
 
     /**
      * Saves a Activity when it is received from a client
-     * 
+     *
      * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#makeEntity(edu.wpi.cs.wpisuitetng.Session,
      *      java.lang.String)
      */
@@ -69,17 +72,23 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
             throw new WPISuiteException("Error saving Activity to database");
         }
 
+        /* Register this change with the UpdateEntityManager. */
+        UpdateEntityManager
+        .registerChange(new ChangeModel(HttpMethod.PUT,
+                ChangeModel.ChangeObjectType.ACTION, activityModel
+                .getTaskId()));
+
         return activityModel;
     }
 
     /**
      * Retrieves a single Activity from the database with the ID
-     * 
+     *
      * @param s
      *            the session
      * @param id
      *            the id number of the Activity to retrieve
-     * 
+     *
      * @return the Activity matching the given id
      * @throws NotFoundException
      * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getEntity(Session,
@@ -123,7 +132,7 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
 
     /**
      * Updates the given Activities in the database
-     * 
+     *
      * @param session
      *            the session the Activity to be updated is in
      * @param content
@@ -168,7 +177,7 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
 
     /**
      * Saves a data model to the database
-     * 
+     *
      * @param s
      *            the session
      * @param model
@@ -185,7 +194,7 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
     /**
      * a method ensures users need to be added!!! Deletes a Activity from the
      * database
-     * 
+     *
      * @param s
      *            the session
      * @param id
@@ -210,7 +219,7 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
     /**
      * a method ensures users need to be added!!! Deletes all Activities from
      * the database
-     * 
+     *
      * @param s
      *            the session
      * @throws WPISuiteException
@@ -230,7 +239,7 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
 
     /**
      * Returns the number of Activities in the database
-     * 
+     *
      * @return number of Activities stored
      * @throws WPISuiteException
      * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#Count()
@@ -242,7 +251,7 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
 
     /**
      * Method advancedGet.
-     * 
+     *
      * @param arg0
      *            Session
      * @param arg1
@@ -260,7 +269,7 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
 
     /**
      * Method advancedPut.
-     * 
+     *
      * @param s
      *            Session
      * @param args
@@ -280,7 +289,7 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
 
     /**
      * Method advancedPost.
-     * 
+     *
      * @param s
      *            Session
      * @param string
@@ -297,5 +306,4 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
             throws NotImplementedException {
         throw new NotImplementedException();
     }
-
 }

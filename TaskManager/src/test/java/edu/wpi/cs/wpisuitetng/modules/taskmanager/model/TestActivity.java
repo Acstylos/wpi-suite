@@ -22,7 +22,7 @@ public class TestActivity {
     @Test
     public void testCreateNonNullActivity() {
         assertNotNull(new ActivityModel());
-        ActivityModel actMod = new ActivityModel(1, new User(null, null, null,
+        ActivityModel actMod = new ActivityModel(1, 1, new User(null, null, null,
                 1), "Activity", new Date(), true);
     }
 
@@ -68,7 +68,7 @@ public class TestActivity {
 
     @Test
     public void testCopyFrom() {
-        ActivityModel actMod1 = new ActivityModel(1, new User(null, null, null,
+        ActivityModel actMod1 = new ActivityModel(1, 1, new User(null, null, null,
                 1), "Activity", new Date(), true);
         ActivityModel actMod2 = new ActivityModel();
         actMod2.copyFrom(actMod1);

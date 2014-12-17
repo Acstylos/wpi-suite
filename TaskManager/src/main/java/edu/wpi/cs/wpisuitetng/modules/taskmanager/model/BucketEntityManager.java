@@ -20,6 +20,9 @@ import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.updater.ChangeModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.updater.UpdateEntityManager;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 /**
  * This is the entity manager for the Bucket
@@ -149,6 +152,11 @@ public class BucketEntityManager implements EntityManager<BucketModel> {
 		} else{
         	System.out.println("Sucessfully saved");
 		}
+		
+		// Update other clients.
+		UpdateEntityManager.registerChange(new ChangeModel(HttpMethod.POST,
+	                ChangeModel.ChangeObjectType.BUCKET, newBucketModel.getId()));
+		
 		
 		return currentModel;
 	}

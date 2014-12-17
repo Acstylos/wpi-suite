@@ -27,8 +27,8 @@ public class TestTaskPresenter {
         TaskPresenter test = new TaskPresenter(new TaskModel());
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
-        TaskModel before = new TaskModel (1, "before", "bDes", 0 , new Date(2014,03,20), 1);
-        TaskModel after = new TaskModel (1, "after", "aDes", 2 , new Date(2014,03,22), 2);
+        TaskModel before = new TaskModel (1, 1, "before", "bDes", 0 , new Date(2014,03,20), 1);
+        TaskModel after = new TaskModel (1, 1, "after", "aDes", 2 , new Date(2014,03,22), 2);
         assertEquals(test.compareTasks(before, after),
                 "Title was changed from before to after"
                 + "\n" +"Estimated Effort was changed from 0 to 2"
@@ -42,7 +42,7 @@ public class TestTaskPresenter {
     @Test
     public final void testUpdateBeforeModel() {
         TaskPresenter test = new TaskPresenter(new TaskModel());
-        test.setModelNoView(new TaskModel(2, "beforeModel", "Descrip", 23, new Date(2014, 12, 10), 1));
+        test.setModelNoView(new TaskModel(1, 2, "beforeModel", "Descrip", 23, new Date(2014, 12, 10), 1));
         test.updateBeforeModel();
         assertTrue(test.getModel().equals(test.getBeforeModel()));
     }

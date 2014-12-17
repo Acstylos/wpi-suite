@@ -50,6 +50,7 @@ public class TaskObserver implements RequestObserver {
         switch (iReq.getHttpMethod()) {
         case GET:
             model = TaskModel.fromJsonArray(json)[0];
+            System.out.println("Received task: " + model.getId());
             this.presenter.setModel(model);
             break;
 

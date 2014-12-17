@@ -114,7 +114,6 @@ public class BucketView extends JPanel
         task.getTaskNameLabel().setMaximumSize(maxView);
     }
 
-    
     /**
      * resets the task list by removing all from view
      */
@@ -229,5 +228,4 @@ public class BucketView extends JPanel
             validateField();
         }
     };
-
 }

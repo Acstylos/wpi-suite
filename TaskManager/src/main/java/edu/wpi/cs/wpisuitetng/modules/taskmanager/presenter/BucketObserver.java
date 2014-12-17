@@ -10,6 +10,7 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.updater.Updater;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 import edu.wpi.cs.wpisuitetng.network.models.IRequest;
@@ -53,6 +54,7 @@ public class BucketObserver implements RequestObserver {
             System.out.println("Bucket GET response: " + response.getBody().toString());
             model = BucketModel.fromJsonArray(response.getBody())[presenter.getModel().getId()-1];
             this.presenter.responseGet(model);
+            Updater.getInstance().registerBucket(presenter);
             break;
         case POST:
             // Parse the message

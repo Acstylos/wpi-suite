@@ -40,11 +40,10 @@ public class TestTask {
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         Date date1 = new Date(1, 1, 2000);
         Date date2 = new Date(2, 2, 2000);
-
-        TaskModel before = new TaskModel(1, "Title1", "description2", 1, date1,
+        TaskModel before = new TaskModel(1, 1, "Title1", "description2", 1, date1,
                 1);
         before.setActualEffort(1);
-        TaskModel after = new TaskModel(1, "Title2", "description2", 1, date1,
+        TaskModel after = new TaskModel(1, 1, "Title2", "description2", 1, date1,
                 1);
         TaskPresenter test = new TaskPresenter (before);
         after.setActualEffort(1);

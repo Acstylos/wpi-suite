@@ -39,6 +39,8 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.ActivityEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.updater.UpdateEntityManager;
+
 
 /**
  * This singleton class responds to API requests directed at 
@@ -83,6 +85,7 @@ public class ManagerLayer {
 		map.put("taskmanager" + "workflow", new WorkflowEntityManager(data));
 		map.put("taskmanager" + "bucket", new BucketEntityManager(data));
 		map.put("taskmanager" + "activity", new ActivityEntityManager(data));
+		map.put("taskmanager" + "updates", new UpdateEntityManager(data));
 
 		//add just your module to this list
 		String[] fullModuleList = {"core","defecttracker","postboard","requirementmanager","taskmanager"};

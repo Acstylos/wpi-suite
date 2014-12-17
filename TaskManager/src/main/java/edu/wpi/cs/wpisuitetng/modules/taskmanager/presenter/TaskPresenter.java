@@ -42,6 +42,7 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ColorRenderer;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.GhostGlassPane;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.updater.Updater;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ReturnToOrigin;
@@ -113,6 +114,7 @@ public class TaskPresenter {
         this.model.setId(id);
         this.model.setTitle("New Task");
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
+        this.model.setBucketId(bucket.getModel().getId());
         this.view = new TaskView(model, viewMode, this);
         this.miniView = new MiniTaskView(model);
         this.miniView.setCollapsedView();
@@ -122,14 +124,10 @@ public class TaskPresenter {
         request.send();
         this.activityPresenters = new ArrayList<ActivityPresenter>();
         registerCallbacks();
-
     }
 
     /**
      * Register callbacks with the local view.
-     */
-    /**
-     * 
      */
     private void registerCallbacks() {
         // onclick listener to expand minitaskview when clicked
@@ -261,6 +259,7 @@ public class TaskPresenter {
                 updateBeforeModel();
                 MainView.getInstance().remove(index);
                 MainView.getInstance().setSelectedIndex(0);
+                view.setIndex(-1);
                 saveView();
                 updateView();
                 addHistory(beforeModel, model);
@@ -627,7 +626,7 @@ public class TaskPresenter {
     /**
      * Save the fields entered in the view.
      */
-    private void saveView() {
+    public void saveView() {
         updateModel();
 
         Request request = Network.getInstance().makeRequest("taskmanager/task",
@@ -664,6 +663,7 @@ public class TaskPresenter {
      * Have the presenter reload the view from the model.
      */
     public void updateFromDatabase() {
+        System.out.println("Loading task: " + model.getId());
         Request request = Network.getInstance().makeRequest(
                 "taskmanager/task/" + this.model.getId(), HttpMethod.GET);
         request.addObserver(new TaskObserver(this));
@@ -691,8 +691,12 @@ public class TaskPresenter {
         view.setModel(model);
         miniView.setModel(model);
         updateCommentView();
+        int index = MainView.getInstance().indexOfComponent(view);
+        if (index > 0)
+            MainView.getInstance().setTitleAt(index, model.getShortTitle());
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         addUsersToView();
+
         this.setIconForMinitaskView();
 
         if(model.getIsArchived()) {
@@ -701,12 +705,22 @@ public class TaskPresenter {
         else {
             miniView.setColorArchived(false);
         }
+
+        List<String> t = new ArrayList<String>();
+        for (User user : allUserArray) {
+            if (model.getAssignedTo().contains(user.getIdNum()))
+                t.add(user.getName());
+        }
+        miniView.addUsersToUserPanel(t);
+        
         view.revalidate();
         view.repaint();
 
         miniView.setModel(model);
         miniView.setToolTipText(model.getTitle());
         miniView.updateLabel();
+        miniView.revalidate();
+        miniView.repaint();
     }
     
     /**
@@ -783,6 +797,13 @@ public class TaskPresenter {
             p.load();
             activityPresenters.add(p);
         }
+        if (model.getBucketId() != bucket.getModel().getId()) {
+            BucketPresenter t = MainView.getInstance().getWorkflowPresenter()
+                    .getBucket(model.getBucketId());
+            if (t != null)
+                t.addTaskLocal(model.getId(),  this);
+        }
+        Updater.getInstance().registerTask(this);
         this.updateView();
     }
 

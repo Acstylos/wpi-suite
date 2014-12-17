@@ -123,11 +123,11 @@ public class TestActivityEntityManager {
     public void testGetEntity() throws WPISuiteException {
         testUser = new User("joe", "joe", "1234", 2);
         testUser.setRole(Role.ADMIN);
-        manager.save(defaultSession, new ActivityModel(2, testUser, "comment1",
+        manager.save(defaultSession, new ActivityModel(1, 2, testUser, "comment1",
                 new Date(4, 12, 2014), false));
-        manager.save(defaultSession, new ActivityModel(3, testUser, "comment2",
+        manager.save(defaultSession, new ActivityModel(1, 3, testUser, "comment2",
                 new Date(), false));
-        manager.save(defaultSession, new ActivityModel(4, testUser, "comment3",
+        manager.save(defaultSession, new ActivityModel(1, 4, testUser, "comment3",
                 new Date(), false));
         ActivityModel actvList[] = manager.getEntity(defaultSession, "4");
 
@@ -157,11 +157,11 @@ public class TestActivityEntityManager {
         boolean exceptionThrown = false;
         testUser = new User("joe", "joe", "1234", 2);
         testUser.setRole(Role.ADMIN);
-        manager.save(defaultSession, new ActivityModel(3, testUser, "test 3",
+        manager.save(defaultSession, new ActivityModel(1, 3, testUser, "test 3",
                 new Date(), false));
-        manager.save(defaultSession, new ActivityModel(4, testUser, "test 4",
+        manager.save(defaultSession, new ActivityModel(1, 4, testUser, "test 4",
                 new Date(), false));
-        manager.save(defaultSession, new ActivityModel(5, testUser, "test 5",
+        manager.save(defaultSession, new ActivityModel(1, 5, testUser, "test 5",
                 new Date(), false));
         try {
             manager.getEntity(defaultSession, "6");
@@ -179,7 +179,7 @@ public class TestActivityEntityManager {
      */
     @Test
     public void testDeleteEntity() throws WPISuiteException {
-        manager.save(defaultSession, new ActivityModel(3, new User(
+        manager.save(defaultSession, new ActivityModel(1, 3, new User(
                 "willisthebest", "willisthebest", "101", 3), "test 3",
                 new Date(), false));
         assertEquals(1, manager.Count());
@@ -202,7 +202,7 @@ public class TestActivityEntityManager {
      */
     @Test
     public void testUpdatingAnActivity() throws WPISuiteException {
-        manager.save(defaultSession, new ActivityModel(3, new User(
+        manager.save(defaultSession, new ActivityModel(1, 3, new User(
                 "willisthebest", "willisthebest", "101", 3), "test 3",
                 new Date(), false));
         assertEquals(1, manager.Count());
@@ -211,7 +211,7 @@ public class TestActivityEntityManager {
         assertEquals("test 3",
                 manager.getEntity(defaultSession, "3")[0].getActivity());
 
-        manager.update(defaultSession, new ActivityModel(3, new User("Iagree",
+        manager.update(defaultSession, new ActivityModel(1, 3, new User("Iagree",
                 "Iagree", "10", 4), "i like it", new Date(), false).toJson());
 
         assertEquals(1, manager.Count());
@@ -227,7 +227,7 @@ public class TestActivityEntityManager {
     public void testUpdatingAnActivityException() throws WPISuiteException {
         boolean exceptionThrown = false;
         try {
-            manager.update(defaultSession, new ActivityModel(3, new User(
+            manager.update(defaultSession, new ActivityModel(1, 3, new User(
                     "asdf", "asdf", "11", 5), "change Id 5", new Date(), false)
                     .toJson());
         } catch (BadRequestException e) {
