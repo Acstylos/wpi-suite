@@ -360,6 +360,8 @@ public class BucketPresenter {
      *            the index to add the given task in the list
      */
     public void insertTask(int id, TaskPresenter taskPresenter, int index) {
+        int before = taskPresenter.getModel().getStatus();
+        int after = this.getModel().getId();
         taskPresenter.getBucket().removeTask(id);
         taskPresenter.setBucket(this);
         model.addTaskID(index, id);
@@ -380,6 +382,9 @@ public class BucketPresenter {
         view.repaint();
         
         updateInDatabase();
+        taskPresenter.dragDropHistory(before, after);
+        taskPresenter.getView().getCommentView().revalidateHistoryPanel();
+
     }
 
     /**
