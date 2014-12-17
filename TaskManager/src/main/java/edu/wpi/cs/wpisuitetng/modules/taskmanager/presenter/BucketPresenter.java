@@ -595,7 +595,11 @@ public class BucketPresenter {
     public String getCsv() {
         String t = new String();
         for (TaskPresenter i : taskMap.values()) {
-            t = t + i.getModel().getCsv();
+            if (taskFilter == null)
+                t = t + i.getModel().getCsv();
+            else
+                if (taskFilter.matches(i))
+                    t = t + i.getModel().getCsv();
         }
         return t;
     }

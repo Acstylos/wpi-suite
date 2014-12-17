@@ -111,7 +111,7 @@ public class ToolbarView extends JPanel
             }
         });
 
-        JButton saveCSV = new JButton("<html>Export<br/>csv</html>");
+        JButton saveCSV = new JButton("<html>Export<br/>Calendar</html>");
         saveCSV.setIcon(Icons.EXPORT_CALENDAR);
         JFileChooser fc = new JFileChooser();
         add(saveCSV, "cell 0 0");
