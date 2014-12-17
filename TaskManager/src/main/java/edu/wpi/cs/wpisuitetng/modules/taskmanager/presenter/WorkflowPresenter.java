@@ -54,6 +54,16 @@ public class WorkflowPresenter {
     }
 
     /**
+     * Returns the name of the bucket with the given ID
+     * 
+     * @param id of the bucket
+     * @return name of the bucket
+     */
+    public String idToBucketName(int id){
+        return this.bucketPresenters.get(id).getModel().getTitle();
+    }
+    
+    /**
      * Request the server for a new workflow or the workflow corresponding to the
      * current ID
      */
@@ -225,6 +235,19 @@ public class WorkflowPresenter {
     }
 
     /**
+     * Gets a csv representation for various calendar formats.
+     *
+     * @return CSV entry, with a newline.
+     */
+    public String getCsv() {
+        String t = "Subject,Start Date, Description\n";
+        for (BucketPresenter i : bucketPresenters.values()) {
+            t = t + i.getCsv();
+        }
+       return t;
+    }
+    
+    /*
      * Adds a bucket ID to the list of bucketIDs in the workflow model. Sends an async
      * update to the database.
      * 

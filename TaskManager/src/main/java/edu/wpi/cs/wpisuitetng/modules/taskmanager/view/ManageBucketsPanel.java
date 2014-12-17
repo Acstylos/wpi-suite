@@ -61,6 +61,11 @@ public class ManageBucketsPanel extends JPanel {
         addStagePanel.add(addBucketButton, "cell 1 0");
         
         add(buttonPanel, "flowx,cell 0 1,aligny top");
+        deleteBucketButton.setIcon(Icons.DELETE);
+        moveBucketDownButton.setIcon(Icons.MOVE_DOWN);
+        addBucketButton.setIcon(Icons.ADD);
+        closeButton.setIcon(Icons.CANCEL);
+        
         buttonPanel.setLayout(new MigLayout("", "[]", "[]"));
         buttonPanel.add(moveBucketUpButton, "flowy,cell 0 0,growx");
         buttonPanel.add(deleteBucketButton, "cell 0 0,growx");

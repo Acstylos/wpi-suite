@@ -77,6 +77,15 @@ public class ProjectDeserializer implements JsonDeserializer<Project> {
                 inflated.addTeamMember(User.fromJSON(member.toString()));
             }
         }
+        
+        if (deflated.has("automaticEmailAddress")) {
+            inflated.setAutomaticEmailAddress(deflated.get("automaticEmailAddress").getAsString());
+        }
+        
+        if (deflated.has("automaticEmailPassword")) {
+            inflated.setAutomaticEmailPasswowrd(deflated.get("automaticEmailPassword").getAsString());
+        }
+        
         return inflated;
     }
 }
