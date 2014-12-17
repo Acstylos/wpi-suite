@@ -54,6 +54,16 @@ public class WorkflowPresenter {
     }
 
     /**
+     * Returns the name of the bucket with the given ID
+     * 
+     * @param id of the bucket
+     * @return name of the bucket
+     */
+    public String idToBucketName(int id){
+        return this.bucketPresenters.get(id).getModel().getTitle();
+    }
+    
+    /**
      * Request the server for a new workflow or the workflow corresponding to the
      * current ID
      */
