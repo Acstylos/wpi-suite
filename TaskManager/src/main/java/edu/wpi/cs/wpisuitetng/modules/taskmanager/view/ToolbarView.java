@@ -18,6 +18,19 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
 import net.miginfocom.swing.MigLayout;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Map;
+
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import javax.swing.JFileChooser;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
 
 /**
@@ -38,7 +51,7 @@ public class ToolbarView extends JPanel
         
         JButton createNewTaskButton = new JButton("<html>Create<br/>Task</html>");
         createNewTaskButton.setIcon(Icons.CREATE_TASK_LARGE);
-        
+        add(createNewTaskButton, "flowx,cell 0 0");        
         
         /**
          * Adds a new TaskView Tab into the MainView
@@ -54,11 +67,10 @@ public class ToolbarView extends JPanel
                 MainView.getInstance().setSelectedIndex(tabCount-1);
             }
         });
-
-        add(createNewTaskButton, "flowx,cell 0 0");        
         
         JButton manageBuckets = new JButton("<html>Manage<br/>Stages</html>");
         add(manageBuckets, "cell 0 0");
+        
         manageBuckets.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 // get instance of the New-Bucket Presenter to add new tasks into
@@ -91,8 +103,39 @@ public class ToolbarView extends JPanel
                 MainView.getInstance().resetAllBuckets();
             }
         });
-    }
-    
 
+        JButton saveCSV = new JButton("<html>Export<br/>csv</html>");
+        saveCSV.setIcon(Icons.EXPORT_CALENDAR);
+        JFileChooser fc = new JFileChooser();
+        add(saveCSV, "cell 0 0");
+        
+        /**
+         * Adds a new TaskView Tab into the MainView
+         */
+        saveCSV.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Get where to print to.
+                int retval = fc.showSaveDialog(MainView.getInstance());
+
+                // If not fail, attempt to write.
+                if (retval == JFileChooser.APPROVE_OPTION) {
+                    File f = fc.getSelectedFile();
+                    String csv = MainView.getInstance().getWorkflowPresenter().getCsv();
+
+                    try {
+                        FileWriter file = new FileWriter(f);
+                        file.write(csv);
+                        file.close();
+                        System.out.println("Succeeded in writing CSV file. Path: " + f.getPath());
+                    } catch (Exception e1) {
+                        System.out.println("Failed to write to file: " + e1.getMessage());
+                    }
+                }
+                // Print CSV to console.
+                System.out.println(MainView.getInstance().getWorkflowPresenter().getCsv());
+            }
+        });
+        
+    }
     
 }
