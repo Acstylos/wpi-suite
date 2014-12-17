@@ -11,31 +11,19 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 
 import net.miginfocom.swing.MigLayout;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Date;
-import java.util.Map;
-
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.JFileChooser;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
-import java.awt.Font;
 
 /**
  * Sets up upper toolbar of TaskManager tab
@@ -79,8 +67,8 @@ public class ToolbarView extends JPanel
         createNewTaskButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // get instance of the New-Bucket Presenter to add new tasks into
-                int firstBucketId = MainView.getInstance().getWorkflowPresenter().getModel().getBucketIds().get(0);
-                TaskPresenter taskPresenter = new TaskPresenter(0, MainView.getInstance().getWorkflowPresenter().getBucketPresenterById(firstBucketId), ViewMode.CREATING);
+                int defaultBucketId = MainView.getInstance().getWorkflowPresenter().getModel().getBucketIds().get(MainView.getInstance().getWorkflowPresenter().getDefaultBucketIndex());
+                TaskPresenter taskPresenter = new TaskPresenter(0, MainView.getInstance().getWorkflowPresenter().getBucketPresenterById(defaultBucketId), ViewMode.CREATING);
                 MainView.getInstance().addTab(taskPresenter.getModel().getTitle(), Icons.CREATE_TASK, taskPresenter.getView());
                 int tabCount = MainView.getInstance().getTabCount();
                 taskPresenter.getView().setIndex(tabCount-1);
