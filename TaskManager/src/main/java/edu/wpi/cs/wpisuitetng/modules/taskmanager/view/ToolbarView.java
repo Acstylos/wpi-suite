@@ -68,14 +68,15 @@ public class ToolbarView extends JPanel
             }
         });
         
-        JButton manageBuckets = new JButton("<html>Manage<br/>Stages</html>");
+        JButton manageBuckets = new JButton("<html>Manage<br/>Workflow</html>");
+        manageBuckets.setIcon(Icons.EDIT_WORKFLOW_LARGE);
         add(manageBuckets, "cell 0 0");
         
         manageBuckets.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 // get instance of the New-Bucket Presenter to add new tasks into
                 MainView.getInstance().getWorkflowPresenter().updateManageWorkflowView();
-                MainView.getInstance().addTab("Manage Workflow", Icons.CREATE_TASK, MainView.getInstance().getWorkflowPresenter().getManageWorkflowView());
+                MainView.getInstance().addTab("Manage Workflow", Icons.EDIT_WORKFLOW, MainView.getInstance().getWorkflowPresenter().getManageWorkflowView());
                 int tabCount = MainView.getInstance().getTabCount();
                 MainView.getInstance().setSelectedIndex(tabCount-1);
             }
