@@ -25,7 +25,6 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  * The model end of the Task object
  */
 public class TaskModel extends AbstractModel {
-    private int bucketId;
     private int id;
     private String title;
     private String shortTitle;
@@ -39,10 +38,9 @@ public class TaskModel extends AbstractModel {
 
     /**
      * Constructor for a default Task object
-     *
+     * 
      */
     public TaskModel() {
-        bucketId = -1;
         id = -1;
         title = "New Task";
         shortTitle = this.shortenString(this.title);
@@ -57,9 +55,7 @@ public class TaskModel extends AbstractModel {
     /**
      * Constructor for a task with specific properties. Other properties are the
      * same as the default constructor
-     *
-     * @param bucketId
-     *            The ID of this task's bucket.
+     * 
      * @param id
      *            The unique id of the task
      * @param title
@@ -73,10 +69,9 @@ public class TaskModel extends AbstractModel {
      * @param status
      *             the bucket the task belongs in
      */
-    public TaskModel(int bucketId, int id, String title, String description,
+    public TaskModel(int id, String title, String description,
             int estimatedEffort, Date dueDate, int status) {
         this();
-        this.bucketId = bucketId;
         this.id = id;
         this.title = title;
         this.shortTitle = this.shortenString(this.title);
@@ -137,22 +132,7 @@ public class TaskModel extends AbstractModel {
 
         // will implement "assigned to" changes and "status" from int to enum
     }
-
-    /**
-     * @return The Id of the parent bucket. -1 by default.
-     */
-    public int getBucketId() {
-        return bucketId;
-    }
-
-    /**
-     * @param bucketId
-     *            The ID of the parent bucket.
-     */
-    public void setBucketId(int bucketId) {
-        this.bucketId = bucketId;
-    }
-
+    
     /**
      * @return The ID of the task. Returns -1 by default
      */
@@ -246,7 +226,7 @@ public class TaskModel extends AbstractModel {
 
     /**
      * Copy all of the fields from another TaskModel
-     *
+     * 
      * @param other
      *            The TaskModel to be copied
      */
@@ -260,24 +240,23 @@ public class TaskModel extends AbstractModel {
         this.actualEffort = other.getActualEffort();
         this.status = other.getStatus();
         this.activityIds = other.getActivityIds();
-        this.bucketId = other.getBucketId();
     }
 
     /**
      * Converts this task object to a JSON string
-     *
+     * 
      * @return A string in JSON representing this Task
      */
-    @Override
     public String toJson() {
+        String json;
         Gson gson = new Gson();
-        String json = gson.toJson(this, TaskModel.class);
+        json = gson.toJson(this, TaskModel.class);
         return json;
     }
 
     /**
      * Converts the given list of tasks to a JSON string
-     *
+     * 
      * @param tlist
      *            A list of Tasks
      * @return A string in JSON representing the list of tasks
@@ -291,9 +270,10 @@ public class TaskModel extends AbstractModel {
 
     /**
      * Convert the given JSON string to a TaskModel instance
-     *
+     * 
      * @param json
      * 			String to be converted
+     * 
      * @return The JSON string representing the object
      */
     public static TaskModel fromJson(String json) {
@@ -304,9 +284,10 @@ public class TaskModel extends AbstractModel {
     /**
      * Convert the given JSON string with a JSON array of tasks into an array of
      * tasks
-     *
+     * 
      * @param json
      * 			String to be converted
+     * 
      * @return TaskModel array
      */
     public static TaskModel[] fromJsonArray(String json) {
@@ -316,12 +297,11 @@ public class TaskModel extends AbstractModel {
 
     /**
      * Checks if a given object is a TaskModel object
-     *
+     * 
      * @param o Object to check
      * @return true if TaskModel, otherwise false
      * @see edu.wpi.cs.wpisuitetng.modules.Model#identify(java.lang.Object)
      */
-    @Override
     public Boolean identify(Object o) {
         Boolean returnValue = false;
         if (o instanceof TaskModel && id == ((TaskModel) o).getId()) {
@@ -353,7 +333,6 @@ public class TaskModel extends AbstractModel {
     /**
      * Will implement later
      */
-    @Override
     public void save() {
         // TODO Auto-generated method stub
     }
@@ -361,7 +340,6 @@ public class TaskModel extends AbstractModel {
     /**
      * Will implement later
      */
-    @Override
     public void delete() {
         // TODO Auto-generated method stub
     }

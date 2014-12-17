@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.WorkflowModel;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.updater.Updater;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.BucketView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.WorkflowView;
@@ -122,7 +121,6 @@ public class WorkflowPresenter {
         if (models[0].getId() == 0)
             return;
         this.model = models[0];
-        Updater.getInstance().registerWorkflow(this);
         writeModelToView();
     }
 
