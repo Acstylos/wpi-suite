@@ -412,7 +412,7 @@ public class TaskModel extends AbstractModel {
 
         tmp.append(title).append(',');
         tmp.append(dfdate.format(dueDate)).append(',');
-        tmp.append(description).append(',');
+        tmp.append(description);
         tmp.append('\n');
         
         return tmp.toString();
