@@ -63,23 +63,6 @@ public class ActivityView extends JPanel {
     }
 
     /**
-     * sets the message within a MessageView and sets it up
-     * 
-     * @param message
-     *            : message within MessageView
-     */
-    public void setMessage(String message) {
-        this.pastActivityText.setText(message);
-    }
-
-    /**
-     * @return the string on the Comment JTextField
-     */
-    public String getMessage() {
-        return this.pastActivityText.getText();
-    }
-
-    /**
      * @param activity set to this text
      */
     public void setActivity(String activity) {
@@ -87,43 +70,9 @@ public class ActivityView extends JPanel {
     }
 
     /**
-     * @param user set to this user
-     */
-    public void setUser(User user) {
-        // TODO Auto-generated method stub
-
-    }
-
-    /**
-     * @param date set to this date
-     */
-    public void setDate(Date date) {
-        // TODO Auto-generated method stub
-
-    }
-
-    /**
      * @return Activity Text
      */
     public String getActivity() {
         return this.pastActivityText.getText();
-    }
-
-    /**
-     * 
-     * @return current Date and Time
-     */
-    public Date getDate() {
-        // TODO Auto-generated method stub
-        return new Date();
-    }
-
-    /**
-     * 
-     * @return User with name, username, password, id
-     */
-    public User getUser() {
-        // TODO Auto-generated method stub
-        return new User("Will", "Will", "Will", 0);
     }
 }
