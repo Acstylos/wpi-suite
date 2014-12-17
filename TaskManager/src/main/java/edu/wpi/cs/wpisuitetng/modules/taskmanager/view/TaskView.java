@@ -290,9 +290,8 @@ public class TaskView extends JPanel {
         this.estEffortSpinner.setValue(model.getEstimatedEffort());
         this.descriptionMessage.setText(model.getDescription());
         this.datePicker.setDate(model.getDueDate());
-        if(model.getLabelColor()==null);
-        else
-               this.colorComboBox.setSelectedItem(model.getLabelColor());
+        if (model.getLabelColor() != null)
+            this.colorComboBox.setSelectedItem(model.getLabelColor());
         validateFields();
     }
 
