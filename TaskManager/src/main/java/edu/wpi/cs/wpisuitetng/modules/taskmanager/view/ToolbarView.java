@@ -9,11 +9,14 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -23,7 +26,6 @@ import javax.swing.UIManager;
 
 import net.miginfocom.swing.MigLayout;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.HelpPresenter;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
 
 /**
@@ -53,7 +55,7 @@ public class ToolbarView extends JPanel
 
         add(createNewTaskButton, "cell 0 0");
         
-        add(tglbtnArchive, "cell 1 0");
+        add(tglbtnArchive, "cell 0 0");
         tglbtnArchive.setSelected(false);        
         
         add(filterPanel, "cell 3 0,grow");
@@ -144,24 +146,21 @@ public class ToolbarView extends JPanel
             }
         });
         
-        /**
-         * Adds a help Tab into the MainView
-         */
+        /* Add a button to open the online help documentation */
         JButton btnHelp = new JButton("<html>Help</html>");
         btnHelp.setIcon(Icons.HELP_LARGE);
         add(btnHelp, "cell 0 0");
 
         btnHelp.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                HelpPresenter helpPresenter = new HelpPresenter();
-                MainView.getInstance().addTab("Help", Icons.HELP, helpPresenter.getView());
-                int tabCount = MainView.getInstance().getTabCount();
-                MainView.getInstance().setSelectedIndex(tabCount - 1);         
+                try {
+                    URI helpUri = new URI("http://www.scribd.com/doc/250401475/Help-PDF");
+                    Desktop.getDesktop().browse(helpUri);
+                } catch (IOException | URISyntaxException e1) {
+                    e1.printStackTrace();
+                }
             }
-        }); 
-        
-        
-        
+        });
     }
     
 }
