@@ -42,10 +42,10 @@ public class WorkflowModel extends AbstractModel {
      * @param ID
      */
     public WorkflowModel(int ID, String title) {
-        this.id = ID;
+        id = ID;
         this.title = title;
-        this.bucketIds = new ArrayList<>();
-        this.defaultBucketIndex = 0;
+        bucketIds = new ArrayList<>();
+        defaultBucketIndex = 0;
     }
 
     /**
@@ -71,7 +71,7 @@ public class WorkflowModel extends AbstractModel {
      */
     @Override
     public String toJson() {
-        Gson gson = new Gson();
+        final Gson gson = new Gson();
         return gson.toJson(this, WorkflowModel.class);
     }
 
@@ -101,20 +101,22 @@ public class WorkflowModel extends AbstractModel {
 
     /**
      * determines if the other object is of class WorkFlowModel
-     * @param o other object
+     * 
+     * @param o
+     *            other object
      * 
      * @see edu.wpi.cs.wpisuitetng.modules.Model#identify(java.lang.Object)
      */
     @Override
     public Boolean identify(Object o) {
-        try{
-            if(this.getClass().equals(((WorkflowModel) o).getClass()))
-                    return true;
-        }
-        catch (Exception e){
+        try {
+            if (this.getClass().equals(((WorkflowModel) o).getClass())) {
+                return true;
+            }
+        } catch (Exception e) {
             return false;
         }
-       return null;
+        return null;
     }
 
     /**
@@ -123,7 +125,7 @@ public class WorkflowModel extends AbstractModel {
      * @return the List of bucket IDs
      */
     public ArrayList<Integer> getBucketIds() {
-        return this.bucketIds;
+        return bucketIds;
     }
 
     /**
@@ -135,45 +137,52 @@ public class WorkflowModel extends AbstractModel {
     public void setBucketIds(ArrayList<Integer> bucketIds) {
         this.bucketIds = bucketIds;
     }
-    
+
     /**
      * Adds a single ID to the bucketId list.
-     * @param id ID of the bucket to add to the list.
+     * 
+     * @param id
+     *            ID of the bucket to add to the list.
      */
-    public void addBucketId(int id){
-        if(!this.bucketIds.contains(id)){
-            this.bucketIds.add(id);
+    public void addBucketId(int id) {
+        if (!bucketIds.contains(id)) {
+            bucketIds.add(id);
         }
     }
-    
+
     /**
      * Deletes a single bucket from the list of buckets.
-     * @param id Id of the bucket to remove.
+     * 
+     * @param id
+     *            Id of the bucket to remove.
      */
-    public void deleteBucketId(int id){
-        if(this.bucketIds.contains(id)){
-            this.bucketIds.remove((Object)id);
+    public void deleteBucketId(int id) {
+        if (bucketIds.contains(id)) {
+            bucketIds.remove((Object) id);
         }
     }
-    
+
     /**
      * Swaps two bucektId's in the BucketId's list.
-     * @param id1 The first bucketId
-     * @param id2 The second bucketId
+     * 
+     * @param id1
+     *            The first bucketId
+     * @param id2
+     *            The second bucketId
      */
-    public void swapBucketIds(int id1, int id2){
-        int index1 = this.bucketIds.indexOf(id1);
-        int index2 = this.bucketIds.indexOf(id2);
-        int temp = this.bucketIds.get(index1);
-        this.bucketIds.set(index1, this.bucketIds.get(index2));
-        this.bucketIds.set(index2, temp);
+    public void swapBucketIds(int id1, int id2) {
+        final int index1 = bucketIds.indexOf(id1);
+        final int index2 = bucketIds.indexOf(id2);
+        final int temp = bucketIds.get(index1);
+        bucketIds.set(index1, bucketIds.get(index2));
+        bucketIds.set(index2, temp);
     }
 
     /**
      * @return The title of the workflow
      */
     public String getTitle() {
-        return this.title;
+        return title;
     }
 
     /**
@@ -186,11 +195,14 @@ public class WorkflowModel extends AbstractModel {
 
     /**
      * Determines if this WorkflowModel is equal to that WorkflowModel
-     * @param that the other workflowModel
-     * @return boolean, true if the id, title, and bucketIds are equal. otherwise false
+     * 
+     * @param that
+     *            the other workflowModel
+     * @return boolean, true if the id, title, and bucketIds are equal.
+     *         otherwise false
      */
     public boolean equals(WorkflowModel that) {
-        return (this.id == that.id && this.title.equals(that.title) && this.bucketIds
+        return (id == that.id && title.equals(that.title) && bucketIds
                 .equals(that.bucketIds));
     }
 
@@ -198,7 +210,7 @@ public class WorkflowModel extends AbstractModel {
      * @return The ID of the workflow
      */
     public int getId() {
-        return this.id;
+        return id;
     }
 
     /**
@@ -217,10 +229,10 @@ public class WorkflowModel extends AbstractModel {
      *            the BucketModel to copy from.
      */
     public void copyFrom(WorkflowModel toCopyFrom) {
-        this.id = toCopyFrom.id;
-        this.title = toCopyFrom.title;
-        this.bucketIds = toCopyFrom.bucketIds;
-        this.defaultBucketIndex = toCopyFrom.defaultBucketIndex;
+        id = toCopyFrom.id;
+        title = toCopyFrom.title;
+        bucketIds = toCopyFrom.bucketIds;
+        defaultBucketIndex = toCopyFrom.defaultBucketIndex;
     }
 
     /**
@@ -231,7 +243,8 @@ public class WorkflowModel extends AbstractModel {
     }
 
     /**
-     * @param defaultBucketIndex The bucket that wil be designated for new tasks.
+     * @param defaultBucketIndex
+     *            The bucket that wil be designated for new tasks.
      */
     public void setDefaultBucketIndex(int defaultBucketIndex) {
         this.defaultBucketIndex = defaultBucketIndex;

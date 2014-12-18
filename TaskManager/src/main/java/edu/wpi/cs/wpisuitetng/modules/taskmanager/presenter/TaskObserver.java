@@ -52,7 +52,7 @@ public class TaskObserver implements RequestObserver {
         switch (iReq.getHttpMethod()) {
         case GET:
             model = TaskModel.fromJsonArray(json)[0];
-            this.presenter.setModel(model);
+            presenter.setModel(model);
             break;
 
         case PUT:
@@ -63,13 +63,13 @@ public class TaskObserver implements RequestObserver {
              * returns the task stored in the database and PUT returns the same
              * task but with a new ID assigned.
              */
-            this.presenter.setModel(model);
+            presenter.setModel(model);
 
             /*
              * Update the list of tasks in the bucket now that we know that it
              * is in the database and we have the ID.
              */
-            this.presenter.getBucket().addTask(model.getId(), this.presenter);
+            presenter.getBucket().addTask(model.getId(), presenter);
 
             break;
 
@@ -85,7 +85,8 @@ public class TaskObserver implements RequestObserver {
      * Takes an action if the response results in an error. Specifically,
      * outputs that the request failed.
      * 
-     * @param iReq Request to the server
+     * @param iReq
+     *            Request to the server
      * @see edu.wpi.cs.wpisuitetng.network.RequestObserver#responseError(edu.wpi.cs.wpisuitetng.network.models.IRequest)
      */
     public void responseError(IRequest iReq) {

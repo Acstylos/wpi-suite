@@ -9,6 +9,7 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -27,16 +28,20 @@ public class UserListItem extends JButton {
 
     /**
      * Construct the UserListItem
-     * @param presenter task presenter
-     * @param user	user
-     * @param assigned True if assigned to task, false if not
+     * 
+     * @param presenter
+     *            task presenter
+     * @param user
+     *            user
+     * @param assigned
+     *            True if assigned to task, false if not
      */
     public UserListItem(TaskPresenter presenter, User user, boolean assigned) {
         this.setText(user.getName());
         this.user = user;
         this.presenter = presenter;
-        
-        if(assigned) {
+
+        if (assigned) {
             this.setAsAssignedUser();
         } else {
             this.setAsUnassignedUser();
@@ -44,7 +49,8 @@ public class UserListItem extends JButton {
     }
 
     /**
-     * @param name Name of the User
+     * @param name
+     *            Name of the User
      */
     public void setUserNameLabel(String name) {
         this.setText(name);
@@ -58,51 +64,48 @@ public class UserListItem extends JButton {
     }
 
     /**
-     * Sets the user to be assigned type, so that button 
-     * shows an "add" icon
+     * Sets the user to be assigned type, so that button shows an "add" icon
      */
     public void setAsAssignedUser() {
         this.setIcon(Icons.REMOVE_USER);
         this.setHorizontalTextPosition(SwingConstants.LEFT);
         this.setAlignmentX(0.0f);
     }
-    
+
     /**
-     * Sets the user to be unassigned type, so that button 
-     * shows a "remove" icon
+     * Sets the user to be unassigned type, so that button shows a "remove" icon
      */
     public void setAsUnassignedUser() {
         this.setIcon(Icons.ADD_USER);
         this.setHorizontalTextPosition(SwingConstants.RIGHT);
     }
-    
+
     /**
      * Adds a listener based on which list the user is in.
      * 
-     * @param assigned True if assigned to task, false if not
+     * @param assigned
+     *            True if assigned to task, false if not
      */
     public void addChangeListButtonListener(boolean assigned) {
-        if(assigned) {
+        if (assigned) {
             this.addActionListener(assignedListListener);
         } else {
-            this.addActionListener(unassignedListListener);  
+            this.addActionListener(unassignedListListener);
         }
     }
-    
+
     /**
-     * Listener for assigned users button.
-     * Remove from assignedTo list in model.
+     * Listener for assigned users button. Remove from assignedTo list in model.
      * Add users to view again.
      */
     private ActionListener assignedListListener = (ActionEvent e) -> {
         presenter.removeUserFromAssignedTo(user);
         presenter.addUsersToView();
     };
-    
+
     /**
-     * Listener for unassigned users button
-     * Add to assignedTo list in model.
-     * Add users to view again.
+     * Listener for unassigned users button Add to assignedTo list in model. Add
+     * users to view again.
      */
     private ActionListener unassignedListListener = (ActionEvent e) -> {
         presenter.addUserToAssignedTo(user);

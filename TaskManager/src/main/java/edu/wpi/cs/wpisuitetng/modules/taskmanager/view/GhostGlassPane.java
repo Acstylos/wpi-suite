@@ -42,9 +42,8 @@ public class GhostGlassPane extends JPanel {
      * Construct the glass pane
      */
     public GhostGlassPane() {
-        this.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-                0.5f);
-        this.point = null;
+        composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
+        point = null;
 
         /*
          * Make this panel transparent so we can render it over the rest of the
@@ -60,10 +59,10 @@ public class GhostGlassPane extends JPanel {
      *            The initial position of the cursor, relative to the component
      */
     public void setGhostComponent(Component c, Point startDrag) {
-        this.image = new BufferedImage(c.getWidth() + 2, c.getHeight() + 2,
+        image = new BufferedImage(c.getWidth() + 2, c.getHeight() + 2,
                 BufferedImage.TYPE_INT_ARGB);
 
-        Graphics2D g2d = (Graphics2D) this.image.getGraphics();
+        Graphics2D g2d = (Graphics2D) image.getGraphics();
         g2d.translate(1.0, 1.0);
         c.paint(g2d);
 
@@ -84,14 +83,14 @@ public class GhostGlassPane extends JPanel {
      * @return The location of the cursor
      */
     public Point getPoint() {
-        return this.point;
+        return point;
     }
 
     /**
      * @return The position of where the cursor started dragging
      */
     public Point getStartDragPoint() {
-        return this.startDrag;
+        return startDrag;
     }
 
     @Override
@@ -99,17 +98,18 @@ public class GhostGlassPane extends JPanel {
         if (isVisible()) {
             Graphics2D g2d = (Graphics2D) g;
 
-            if (this.image != null && this.point != null) {
+            if (image != null && point != null) {
                 g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                         RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-                g2d.rotate(rotation, this.point.x, this.point.y);
-                g2d.setComposite(this.composite);
-                g2d.drawImage(this.image, this.point.x - this.startDrag.x,
-                        this.point.y - this.startDrag.y, null);
+                g2d.rotate(rotation, point.x, point.y);
+                g2d.setComposite(composite);
+                g2d.drawImage(image, point.x - startDrag.x, point.y
+                        - startDrag.y, null);
 
                 /* Gradually approach the maximum rotation as the user drags */
-                if (rotation < MAX_ROTATION)
+                if (rotation < MAX_ROTATION) {
                     rotation += MAX_ROTATION / 10.0;
+                }
             }
         }
     }
@@ -120,7 +120,7 @@ public class GhostGlassPane extends JPanel {
 
         /* Don't save the position of the ghost object between drags */
         if (!visible) {
-            this.point = null;
+            point = null;
         }
     }
 }

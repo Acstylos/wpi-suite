@@ -18,8 +18,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 /**
- * This class returns the GhostPane back its original location
- * Adapted Code from Romain Guy
+ * This class returns the GhostPane back its original location Adapted Code from
+ * Romain Guy
  */
 public class ReturnToOrigin implements ActionListener {
     private boolean isInit;
@@ -44,8 +44,8 @@ public class ReturnToOrigin implements ActionListener {
      */
     public ReturnToOrigin(GhostGlassPane glassPane, Point start, Point end) {
         this.glassPane = glassPane;
-        this.startPoint = start;
-        this.endPoint = end;
+        startPoint = start;
+        endPoint = end;
         isInit = false;
     }
 
@@ -80,7 +80,7 @@ public class ReturnToOrigin implements ActionListener {
         /* Animation travel speed for the y direction */
         int travelY = (int) ((startPoint.x + travelX) * a + b);
         /* Distance remaining from the original location */
-        int distanceX = (int) Math.abs(startPoint.x - endPoint.x);
+        int distanceX = Math.abs(startPoint.x - endPoint.x);
 
         if (Math.abs(travelX) >= distanceX) {
             ((Timer) e.getSource()).stop();

@@ -37,22 +37,26 @@ public class TestTaskPresenter {
         TaskPresenter test = new TaskPresenter(new TaskModel());
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
-        TaskModel before = new TaskModel (1, "before", "bDes", 0 , new Date(2014,03,20), 1);
-        TaskModel after = new TaskModel (1, "after", "aDes", 2 , new Date(2014,03,22), 2);
-        assertEquals(test.compareTasks(before, after),
-                "Title was changed from before to after"
-                + "\n" +"Estimated Effort was changed from 0 to 2"
-                        +"\n"+ "Due Date was changed from "
-                +dateFormat.format(before.getDueDate()) + " to " +
-                dateFormat.format(after.getDueDate()) +"\n"
-                        + "Description was changed." + "\n" +
-                        "Task was moved from New to Selected");
+        TaskModel before = new TaskModel(1, "before", "bDes", 0, new Date(2014,
+                03, 20), 1);
+        TaskModel after = new TaskModel(1, "after", "aDes", 2, new Date(2014,
+                03, 22), 2);
+        assertEquals(
+                test.compareTasks(before, after),
+                "Title was changed from before to after" + "\n"
+                        + "Estimated Effort was changed from 0 to 2" + "\n"
+                        + "Due Date was changed from "
+                        + dateFormat.format(before.getDueDate()) + " to "
+                        + dateFormat.format(after.getDueDate()) + "\n"
+                        + "Description was changed." + "\n"
+                        + "Task was moved from New to Selected");
     }
 
     @Test
     public final void testUpdateBeforeModel() {
         TaskPresenter test = new TaskPresenter(new TaskModel());
-        test.setModelNoView(new TaskModel(2, "beforeModel", "Descrip", 23, new Date(2014, 12, 10), 1));
+        test.setModelNoView(new TaskModel(2, "beforeModel", "Descrip", 23,
+                new Date(2014, 12, 10), 1));
         test.updateBeforeModel();
         assertTrue(test.getModel().equals(test.getBeforeModel()));
     }
@@ -175,13 +179,13 @@ public class TestTaskPresenter {
     @Test
     public final void testIdToUsername() {
         TaskPresenter test = new TaskPresenter(new TaskModel());
-        User [] currentUsers = {new User("bob", "dbob" , "password", 1) , 
-                new User ("john", "jmoney", "whatsapassword", 2)};
-      
+        User[] currentUsers = { new User("bob", "dbob", "password", 1),
+                new User("john", "jmoney", "whatsapassword", 2) };
+
         test.addUsersToAllUserList(currentUsers);
-        assertEquals(test.idToUsername(1) ,"dbob");
-        assertEquals(test.idToUsername(2) ,"jmoney");
-        assertEquals(test.idToUsername(3) ,"");
+        assertEquals(test.idToUsername(1), "dbob");
+        assertEquals(test.idToUsername(2), "jmoney");
+        assertEquals(test.idToUsername(3), "");
 
     }
 

@@ -22,17 +22,16 @@ import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 
 /**
  * Tests methods in iteration.java and tests the creation of variants of Bucket
+ * 
  * @author ChandlerWu
  *
  */
 
 public class TestBucket {
-	
-	
-	
-	@Test
+
+    @Test
     public void createNonNullIteration() {
-        assertNotNull(new BucketModel());    
+        assertNotNull(new BucketModel());
     }
-	
+
 }

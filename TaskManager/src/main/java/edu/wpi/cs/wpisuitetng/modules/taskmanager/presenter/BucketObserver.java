@@ -17,20 +17,22 @@ import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 
 /**
  * Observes the network response for buckets
+ * 
  * @author TheFloorIsJava
  *
  */
 public class BucketObserver implements RequestObserver {
 
-    private BucketPresenter presenter;
-    private HttpMethod method;
+    private final BucketPresenter presenter;
+    private final HttpMethod method;
 
-    
-    /** Construct the observer
+    /**
+     * Construct the observer
+     * 
      * @param presenter
-     * 				The presenter that make requests
+     *            The presenter that make requests
      * @param method
-     * 				method to talk to network
+     *            method to talk to network
      */
     public BucketObserver(BucketPresenter presenter, HttpMethod method) {
         this.presenter = presenter;
@@ -50,25 +52,27 @@ public class BucketObserver implements RequestObserver {
         switch (iReq.getHttpMethod()) {
         case GET:
             // Parse the message
-            System.out.println("Bucket GET response: " + response.getBody().toString());
-            model = BucketModel.fromJsonArray(response.getBody())[presenter.getModel().getId()-1];
-            this.presenter.responseGet(model);
+            System.out.println("Bucket GET response: "
+                    + response.getBody().toString());
+            model = BucketModel.fromJsonArray(response.getBody())[presenter
+                    .getModel().getId() - 1];
+            presenter.responseGet(model);
             break;
         case POST:
             // Parse the message
             model = BucketModel.fromJson(response.getBody());
-            this.presenter.responsePost(model);
+            presenter.responsePost(model);
             break;
         case PUT:
             // Parse the message
             model = BucketModel.fromJson(response.getBody());
-            this.presenter.responsePut(model);
-            this.presenter.getWorkflow().addBucket(model.getId(), this.presenter);
+            presenter.responsePut(model);
+            presenter.getWorkflow().addBucket(model.getId(), presenter);
             break;
         case DELETE:
             // Parse the message
             model = BucketModel.fromJson(response.getBody());
-            this.presenter.responseDelete(model);
+            presenter.responseDelete(model);
             break;
         }
     }
@@ -92,7 +96,8 @@ public class BucketObserver implements RequestObserver {
     }
 
     /**
-     * @param method_ The HttpMethod related to the request
+     * @param method_
+     *            The HttpMethod related to the request
      * @return The string corresponding to the specified HttpMethod
      */
     private static String httpMethodToString(HttpMethod method_) {
@@ -118,6 +123,6 @@ public class BucketObserver implements RequestObserver {
      * @return The presenter
      */
     public BucketPresenter getPresenter() {
-        return this.presenter;
+        return presenter;
     }
 }
