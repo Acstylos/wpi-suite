@@ -36,7 +36,7 @@ public class ToolbarView extends JPanel
     private static final long serialVersionUID = 5489162021821230861L;
     
     private JButton createNewTaskButton = new JButton("<html>Create<br/>Task</html>", Icons.CREATE_TASK_LARGE);
-    private JToggleButton tglbtnArchive = new JToggleButton("<html>Hide<br/>Archived</html>", Icons.HIDE_ARCHIVE_LARGE);
+    private JToggleButton tglbtnArchive = new JToggleButton("<html>Show<br/>Archived</html>", Icons.SHOW_ARCHIVE_LARGE);
     private FilterView filterPanel = new FilterView();
     
     static {

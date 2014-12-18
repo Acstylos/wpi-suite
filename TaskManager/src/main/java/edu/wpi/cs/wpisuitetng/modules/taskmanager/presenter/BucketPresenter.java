@@ -97,7 +97,7 @@ public class BucketPresenter {
             miniTaskView.setModel(taskMap.get(i).getModel());
 
             taskMap.get(i).validateUpdateLabel();
-            view.addTaskToView(miniTaskView);
+            view.addTaskToView(miniTaskView);    
         }
         addMiniTaskstoView();
         view.revalidate();
@@ -492,18 +492,18 @@ public class BucketPresenter {
     }
 
     /**
-     * removes all tasks from view and only adds back based on archive options
+     * removes all tasks from view and only adds back based on filter options
      */
     public void addMiniTaskstoView() {
         List<Integer> taskIds = model.getTaskIds();
         this.view.resetTaskList();
-
+        
         for (int i : taskIds) {
             MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
             if (taskFilter.matches(taskMap.get(i))) {
-
+                
                 view.addTaskToView(miniTaskView);
-
+            
             }
         }
         view.revalidate();
