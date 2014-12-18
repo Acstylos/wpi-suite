@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.regex.Pattern;
 
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
+
 
 /**
  * The purpose of this class is to handle filtering for the fields that tasks
@@ -25,18 +25,13 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
  */
 public class Filter {
 
-
-
     private Date filterStartDate = null;
     private Date filterEndDate = null;
     private String filterText = null;
     private String filterUser = null;
     private boolean includeArchives = false;
-    private Color noFilterColor = new Color(238,238,238);
+    private Color noFilterColor = new Color(238, 238, 238);
     private Color filterColor = noFilterColor;
-    public Filter() {
-
-    }
 
     /**
      * this function sets the color to filter by.
@@ -60,6 +55,7 @@ public class Filter {
 
     /**
      * this function sets the end date to filter by
+     * 
      * @param filterEndDate
      *            the date the filter ends at
      */
@@ -94,9 +90,9 @@ public class Filter {
      *            whether or not archived task should be shown.
      */
     public void setIncludeArchived(boolean includeArchived) {
-        this.includeArchives = includeArchived;
+        includeArchives = includeArchived;
     }
-    
+
     /**
      * This function tests if a task should be shown in the main view after
      * being filtered.
@@ -116,8 +112,8 @@ public class Filter {
                 .before(filterEndDate) || taskDueDate.equals(filterEndDate))))) {
             return false;
         }
-        if (!(filterColor
-                .equals(noFilterColor)||filterColor.equals(task.getModel().getLabelColor()) )) {
+        if (!(filterColor.equals(noFilterColor) || filterColor.equals(task
+                .getModel().getLabelColor()))) {
             return false;
         }
         if (!(filterText == null

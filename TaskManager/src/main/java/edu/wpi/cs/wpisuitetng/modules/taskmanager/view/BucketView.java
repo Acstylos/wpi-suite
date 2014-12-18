@@ -38,14 +38,14 @@ import org.jdesktop.swingx.JXTextField;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketModel;
 
 /**
- * BucketView is the view that displays a list of tasks. These tasks are
- * sorted by the title that is on the bucket. The default titles for the
- * 4 default buckets "New", "Scheduled", "In Progress", and "Completed".
+ * BucketView is the view that displays a list of tasks. These tasks are sorted
+ * by the title that is on the bucket. The default titles for the 4 default
+ * buckets "New", "Scheduled", "In Progress", and "Completed".
+ * 
  * @author Thefloorisjava
  *
  */
-public class BucketView extends JPanel
-{
+public class BucketView extends JPanel {
 
     private static final long serialVersionUID = -5937582878085666950L;
     private List<MiniTaskView> taskViews = new ArrayList<MiniTaskView>();
@@ -62,7 +62,9 @@ public class BucketView extends JPanel
 
     /**
      * Constructor for BucketViews.
-     * @param title Temporary constructor that will title the buckets
+     * 
+     * @param title
+     *            Temporary constructor that will title the buckets
      */
     public BucketView(BucketModel model) {
         // Ensure the layout and properties of this panel is correct
@@ -72,24 +74,25 @@ public class BucketView extends JPanel
         this.setBackground(Color.LIGHT_GRAY);
         this.setBorder(new EmptyBorder(0, 5, 5, 5));
         this.setLayout(new MigLayout("fill"));
-        this.titleLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        titleLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
         // Start by adding the changeable title to the top of the view
         this.add(titlePanel, "dock north");
-        this.titlePanel.setBackground(Color.LIGHT_GRAY);
-        this.titlePanel.setBorder(null);
-        this.titlePanel.setMinimumSize(new Dimension(10, 40));
+        titlePanel.setBackground(Color.LIGHT_GRAY);
+        titlePanel.setBorder(null);
+        titlePanel.setMinimumSize(new Dimension(10, 40));
         this.setStaticTitlePanel();
-        this.taskScrollPane.setBorder(null);
+        taskScrollPane.setBorder(null);
 
-        // Need a scroll pane to allow us to scroll through all tasks in the bucketView. 
+        // Need a scroll pane to allow us to scroll through all tasks in the
+        // bucketView.
         this.add(taskScrollPane, "dock north");
         taskViewHolderPanel.setBorder(null);
-        this.taskViewHolderPanel.setBackground(Color.LIGHT_GRAY);
-        this.taskViewHolderPanel.setLayout(new MigLayout("fill"));
-        this.taskScrollPane.setViewportView(taskViewHolderPanel);   
-        
+        taskViewHolderPanel.setBackground(Color.LIGHT_GRAY);
+        taskViewHolderPanel.setLayout(new MigLayout("fill"));
+        taskScrollPane.setViewportView(taskViewHolderPanel);
+
         this.setModel(model);
-        
+
         MouseAdapter dragAdapter = new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
@@ -97,7 +100,7 @@ public class BucketView extends JPanel
                 handler.exportAsDrag(BucketView.this, e, TransferHandler.MOVE);
             }
         };
-        
+
         this.addMouseMotionListener(dragAdapter);
     }
 
@@ -105,26 +108,30 @@ public class BucketView extends JPanel
      * @return Returns a list of TaskViews
      */
     public List<MiniTaskView> getTaskViews() {
-        return this.taskViews;
+        return taskViews;
     }
 
     /**
-     * @param model The model of the bucket to render in this view
+     * @param model
+     *            The model of the bucket to render in this view
      */
     public void setModel(BucketModel model) {
         this.model = model;
-        this.titleLabel.setText(this.model.getTitle());
+        titleLabel.setText(this.model.getTitle());
     }
 
     /**
      * Adds a single MiniTaskView to the bucket, with spacers
-     * @param task The MiniTaskView to be added to the bucket
+     * 
+     * @param task
+     *            The MiniTaskView to be added to the bucket
      */
-    public void addTaskToView(MiniTaskView task){
-        this.taskViews.add(task);
-        this.taskViewHolderPanel.add(task, "dock north");
-        Dimension maxView = new Dimension((int) this.getPreferredSize().getWidth()-32, (int) this.getMaximumSize().getHeight());
-        task.setMaximumSize(maxView);//prevent horizontal scroll
+    public void addTaskToView(MiniTaskView task) {
+        taskViews.add(task);
+        taskViewHolderPanel.add(task, "dock north");
+        Dimension maxView = new Dimension((int) this.getPreferredSize()
+                .getWidth() - 32, (int) this.getMaximumSize().getHeight());
+        task.setMaximumSize(maxView);// prevent horizontal scroll
         task.getTaskNameLabel().setMaximumSize(maxView);
     }
 
@@ -139,121 +146,133 @@ public class BucketView extends JPanel
      * @return the index relating to its position in the bucket
      */
     public int getInsertionIndex(Point point, boolean flag) {
-        for (MiniTaskView miniTaskView : this.taskViews) {
-            Point center = new Point(0, miniTaskView.getY() + miniTaskView.getHeight() / 2);
-            center = SwingUtilities.convertPoint(this.taskViewHolderPanel, center, this);
+        for (MiniTaskView miniTaskView : taskViews) {
+            Point center = new Point(0, miniTaskView.getY()
+                    + miniTaskView.getHeight() / 2);
+            center = SwingUtilities.convertPoint(taskViewHolderPanel, center,
+                    this);
 
             if (point.y < center.y) {
-                return this.model.getTaskIds().indexOf(miniTaskView.getModel().getId());
+                return model.getTaskIds().indexOf(
+                        miniTaskView.getModel().getId());
             }
         }
 
-        if(this.taskViews.size() == 0)
-            return this.taskViews.size();
-        else if (flag)
-            return this.taskViews.size()-1;
-        else
-            return this.taskViews.size();
+        if (taskViews.size() == 0) {
+            return taskViews.size();
+        } else if (flag) {
+            return taskViews.size() - 1;
+        } else {
+            return taskViews.size();
+        }
     }
-    
+
     /**
      * resets the task list by removing all from view
      */
-    public void resetTaskList(){
-        this.taskViewHolderPanel.removeAll();
-        this.taskViews.clear();
+    public void resetTaskList() {
+        taskViewHolderPanel.removeAll();
+        taskViews.clear();
     }
-
 
     /**
      * Removes miniTaskView from BucketView
-     * @param miniTaskView miniTaskView to be removed
+     * 
+     * @param miniTaskView
+     *            miniTaskView to be removed
      */
-    public void removeTaskView(MiniTaskView miniTaskView){
-        this.taskViews.remove(miniTaskView);
+    public void removeTaskView(MiniTaskView miniTaskView) {
+        taskViews.remove(miniTaskView);
     }
-    
+
     /**
      * Adds a listener to change the text on the Buckets title field.
-     * @param listener The mouse listener that provides the effect for the label.
+     * 
+     * @param listener
+     *            The mouse listener that provides the effect for the label.
      */
-    public void addChangeBucketNameListener(MouseListener listener){
-        this.titleLabel.addMouseListener(listener);
+    public void addChangeBucketNameListener(MouseListener listener) {
+        titleLabel.addMouseListener(listener);
     }
-    
+
     /**
-     * Adds a listener to the OK button. Should set the view back to 
-     * static view.
-     * @param listener ActionListener that will determine how the button acts.
+     * Adds a listener to the OK button. Should set the view back to static
+     * view.
+     * 
+     * @param listener
+     *            ActionListener that will determine how the button acts.
      */
-    public void addOkButtonListener(ActionListener listener){
-        this.okButton.addActionListener(listener);
+    public void addOkButtonListener(ActionListener listener) {
+        okButton.addActionListener(listener);
     }
-    
+
     /**
-     * Adds a listener to the Cancel button. Should set the view back to 
-     * static view, without changing the title.
-     * @param listener ActionListener that will determine how the button acts.
+     * Adds a listener to the Cancel button. Should set the view back to static
+     * view, without changing the title.
+     * 
+     * @param listener
+     *            ActionListener that will determine how the button acts.
      */
-    public void addCancelButtonListener(ActionListener listener){
-        this.cancelButton.addActionListener(listener);
+    public void addCancelButtonListener(ActionListener listener) {
+        cancelButton.addActionListener(listener);
     }
-    
+
     /**
      * Sets the layout of the title panel to allow for editing the label name.
      */
-    public void setChangeTitlePanel(){
-        this.titlePanel.removeAll();
-        
-        this.titlePanel.setLayout(new MigLayout("", "[grow][min]", "[grow]"));
-        this.titlePanel.add(changeTitleField, "cell 0 0,grow");
-        this.titlePanel.add(okButton, "flowx,cell 1 0,alignx center,growy");
-        this.changeTitleField.setDocument(new PlainDocument());
-        this.changeTitleField.setPrompt(this.titleLabel.getText());
-        
+    public void setChangeTitlePanel() {
+        titlePanel.removeAll();
+
+        titlePanel.setLayout(new MigLayout("", "[grow][min]", "[grow]"));
+        titlePanel.add(changeTitleField, "cell 0 0,grow");
+        titlePanel.add(okButton, "flowx,cell 1 0,alignx center,growy");
+        changeTitleField.setDocument(new PlainDocument());
+        changeTitleField.setPrompt(titleLabel.getText());
+
         titlePanel.add(cancelButton, "cell 2 0,alignx center,growy");
-        
-        this.changeTitleField.getDocument().addDocumentListener(changedTaskNameListener);
+
+        changeTitleField.getDocument().addDocumentListener(
+                changedTaskNameListener);
     }
-    
+
     /**
      * Sets the layout of the title panel to be unchangable.
      */
-    public void setStaticTitlePanel(){
-        this.titlePanel.removeAll();
-        
-        this.titlePanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
-        this.titlePanel.add(titleLabel, "cell 0 0, alignx center, aligny center");
+    public void setStaticTitlePanel() {
+        titlePanel.removeAll();
+
+        titlePanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
+        titlePanel.add(titleLabel, "cell 0 0, alignx center, aligny center");
     }
-    
+
     /**
      * @return The task name label, so that it can be edited
      */
-    public JLabel getBucketNameLabel(){
-        return this.titleLabel;
+    public JLabel getBucketNameLabel() {
+        return titleLabel;
     }
-    
+
     /**
      * @return The changed text field, so we can see what was edited.
      */
-    public JXTextField getChangeTextField(){
-        return this.changeTitleField;
+    public JXTextField getChangeTextField() {
+        return changeTitleField;
     }
-    
+
     /**
      * Enable or disable the post and reset buttons depending of if there's
      * something entered in the comment box.
      */
     private void validateField() {
         if (changeTitleField.getText().trim().isEmpty()) {
-            this.okButton.setEnabled(false);
-            this.changeTitleField.setBorder(invalidBorder);
+            okButton.setEnabled(false);
+            changeTitleField.setBorder(invalidBorder);
         } else {
-            this.okButton.setEnabled(true);
-            this.changeTitleField.setBorder(validBorder);
+            okButton.setEnabled(true);
+            changeTitleField.setBorder(validBorder);
         }
     }
-    
+
     private final DocumentListener changedTaskNameListener = new DocumentListener() {
 
         @Override

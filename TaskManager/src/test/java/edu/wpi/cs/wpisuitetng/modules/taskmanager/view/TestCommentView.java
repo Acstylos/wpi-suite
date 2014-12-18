@@ -35,7 +35,7 @@ public class TestCommentView {
         cView.postHistory(aView);
         assertEquals(cView.getPostedHistoryPanel().getComponent(0), aView);
     }
-    
+
     @Test
     public void testClearButton() {
         CommentView cView = new CommentView(ViewMode.EDITING);
@@ -44,7 +44,7 @@ public class TestCommentView {
         cView.getClearButton().doClick();
         assertEquals("", cView.getCommentText().getText());
     }
-    
+
     @Test
     public void testToggleTextField() {
         CommentView cView = new CommentView(ViewMode.EDITING);
@@ -53,19 +53,19 @@ public class TestCommentView {
         assertEquals("test", cView.getCommentText().getText());
         cView.getClearButton().doClick();
         assertEquals("", cView.getCommentText().getText());
-        
+
         cView.setCommentText("test");
         cView.toggleTextField(ViewMode.ARCHIVING);
         cView.getClearButton().doClick();
         assertEquals("test", cView.getCommentText().getText());
-        
+
         cView.toggleTextField(ViewMode.CREATING);
         assertEquals("test", cView.getCommentText().getText());
-        
+
         cView.toggleTextField(null);
         assertEquals("test", cView.getCommentText().getText());
     }
-    
+
     @Test
     public void testClearPosts() {
         CommentView cView = new CommentView(ViewMode.EDITING);
@@ -75,7 +75,7 @@ public class TestCommentView {
         cView.postActivity(aView2);
         assertEquals(cView.getPostedHistoryPanel().getComponent(0), aView);
         assertEquals(cView.getPostedCommentPanel().getComponent(0), aView2);
-        
+
         cView.clearPosts();
         cView.postHistory(aView2);
         cView.postActivity(aView);

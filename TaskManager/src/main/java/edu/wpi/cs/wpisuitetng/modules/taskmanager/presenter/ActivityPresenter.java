@@ -42,7 +42,7 @@ public class ActivityPresenter {
      */
     public ActivityPresenter(int id, TaskPresenter task) {
         this(task, "", false);
-        this.model.setId(id);
+        model.setId(id);
     }
 
     /**
@@ -58,12 +58,12 @@ public class ActivityPresenter {
      */
     public ActivityPresenter(TaskPresenter task, String activity,
             boolean isAutogen) {
-        this.parentTask = task;
-        this.model = new ActivityModel();
-        this.commentView = task.getView().getCommentView();
-        this.model.setActivity(activity);
-        this.model.setIsAutogen(isAutogen);
-        this.view = new ActivityView(this.model.getActivity());
+        parentTask = task;
+        model = new ActivityModel();
+        commentView = task.getView().getCommentView();
+        model.setActivity(activity);
+        model.setIsAutogen(isAutogen);
+        view = new ActivityView(model.getActivity());
     }
 
     /**
@@ -73,9 +73,9 @@ public class ActivityPresenter {
      *            the typed comment
      */
     public ActivityPresenter(String text) {
-        this.model = new ActivityModel();
-        this.view = new ActivityView();
-        this.model.setActivity(text);
+        model = new ActivityModel();
+        view = new ActivityView();
+        model.setActivity(text);
 
     }
 
@@ -84,9 +84,9 @@ public class ActivityPresenter {
      * request with an observer.
      */
     public void createInDatabase() {
-        Request request = Network.getInstance().makeRequest(
+        final Request request = Network.getInstance().makeRequest(
                 "taskmanager/activity", HttpMethod.PUT);
-        request.setBody(this.model.toJson());
+        request.setBody(model.toJson());
         request.addObserver(new ActivityObserver(this));
         request.send();
     }
@@ -96,10 +96,11 @@ public class ActivityPresenter {
      */
     public void updateView() {
         view.setActivity(model.getActivity());
-        if (model.getIsAutogen())
+        if (model.getIsAutogen()) {
             commentView.postHistory(view);
-        else
+        } else {
             commentView.postActivity(view);
+        }
     }
 
     /**
@@ -127,9 +128,10 @@ public class ActivityPresenter {
      *            The models sent from the network
      */
     public void responseGet(ActivityModel[] models) {
-        if (models[0].getId() == 0)
+        if (models[0].getId() == 0) {
             return;
-        this.model = models[0];
+        }
+        model = models[0];
     }
 
     /**

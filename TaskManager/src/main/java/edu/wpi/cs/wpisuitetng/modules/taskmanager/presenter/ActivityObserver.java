@@ -46,14 +46,14 @@ public class ActivityObserver implements RequestObserver {
          * was.
          */
 
-        String json = iReq.getResponse().getBody();
+        final String json = iReq.getResponse().getBody();
         ActivityModel model = new ActivityModel();
         switch (iReq.getHttpMethod()) {
         case GET:
             model = ActivityModel.fromJsonArray(json)[0];
-            this.presenter.setModel(model);
-            this.presenter.updateView();
-            this.presenter.getTask().updateCommentView();
+            presenter.setModel(model);
+            presenter.updateView();
+            presenter.getTask().updateCommentView();
             break;
         case PUT:
             model = ActivityModel.fromJson(json);
@@ -63,9 +63,9 @@ public class ActivityObserver implements RequestObserver {
              * returns the task stored in the database and PUT returns the same
              * task but with a new ID assigned.
              */
-            this.presenter.setModel(model);
-            this.presenter.updateView();
-            this.presenter.getTask().saveActivityId(model.getId());
+            presenter.setModel(model);
+            presenter.updateView();
+            presenter.getTask().saveActivityId(model.getId());
 
             break;
         case POST:
@@ -80,7 +80,8 @@ public class ActivityObserver implements RequestObserver {
      * Takes an action if the response results in an error. Specifically,
      * outputs that the request failed.
      * 
-     * @param iReq Request to the server
+     * @param iReq
+     *            Request to the server
      * @see edu.wpi.cs.wpisuitetng.network.RequestObserver#responseError(edu.wpi.cs.wpisuitetng.network.models.IRequest)
      */
     public void responseError(IRequest iReq) {

@@ -32,6 +32,7 @@ public class WorkflowEntityManager implements EntityManager<WorkflowModel> {
     /**
      * Construct the entity manager. This is called by
      * {@link edu.wpi.cs.wpisuitetng.ManagerLayer#ManagerLayer()}.
+     * 
      * @param db
      */
     public WorkflowEntityManager(Data db) {
@@ -43,19 +44,19 @@ public class WorkflowEntityManager implements EntityManager<WorkflowModel> {
     public WorkflowModel makeEntity(Session s, String content)
             throws BadRequestException, ConflictException, WPISuiteException {
         System.out.println("Make Workflow: " + content);
-    	// Make a new Workflow corresponding to the JSON data
-        WorkflowModel workflowModel = WorkflowModel.fromJson(content);
-        
+        // Make a new Workflow corresponding to the JSON data
+        final WorkflowModel workflowModel = WorkflowModel.fromJson(content);
+
         // Find the highest ID and assign the next ID to this workflow
         int id = 1;
-        for (WorkflowModel model : getAll(s)){
-            if(model.getId() >= id) {
+        for (WorkflowModel model : getAll(s)) {
+            if (model.getId() >= id) {
                 id = model.getId() + 1;
             }
         }
 
         workflowModel.setId(id);
-        
+
         /* Save it to the database */
         if (!db.save(workflowModel, s.getProject())) {
             throw new WPISuiteException("Error saving Workflow to database");
@@ -71,23 +72,24 @@ public class WorkflowEntityManager implements EntityManager<WorkflowModel> {
         System.out.println("Get Workflow ID: " + id);
         // Retrieve the workflow model(s) with the given ID
         final int intId = Integer.parseInt(id);
-        
-        if(intId < 1){
-        	throw new NotFoundException();
+
+        if (intId < 1) {
+            throw new NotFoundException();
         }
         WorkflowModel[] models = null;
-        try{
-        	models = db.retrieve(WorkflowModel.class,  "id", intId,  s.getProject()).toArray(new WorkflowModel[0]);
+        try {
+            models = db.retrieve(WorkflowModel.class, "id", intId,
+                    s.getProject()).toArray(new WorkflowModel[0]);
         } catch (WPISuiteException e) {
-        	e.printStackTrace();
+            e.printStackTrace();
         }
-        
-        if(models.length < 1 || models[0] == null) {
-        	throw new NotFoundException();
+
+        if (models.length < 1 || models[0] == null) {
+            throw new NotFoundException();
         }
-        
+
         System.out.println("Got: " + models[0].toJson());
-        
+
         return models;
     }
 
@@ -96,7 +98,8 @@ public class WorkflowEntityManager implements EntityManager<WorkflowModel> {
     public WorkflowModel[] getAll(Session s) throws WPISuiteException {
         System.out.println("Get All Workflows");
         /* Get all of the WorkflowModel objects */
-        List<Model> Workflows = db.retrieveAll(new WorkflowModel(), s.getProject());
+        final List<Model> Workflows = db.retrieveAll(new WorkflowModel(),
+                s.getProject());
         return Workflows.toArray(new WorkflowModel[0]);
     }
 
@@ -104,27 +107,27 @@ public class WorkflowEntityManager implements EntityManager<WorkflowModel> {
     public WorkflowModel update(Session s, String content)
             throws WPISuiteException {
         System.out.println("Update Workflow: " + content);
-        WorkflowModel newWorkflowModel = WorkflowModel.fromJson(content);
+        final WorkflowModel newWorkflowModel = WorkflowModel.fromJson(content);
 
         /* Retrieve the Workflow model(s) with the given ID */
-        List<Model> models = db.retrieve(WorkflowModel.class, "id",
+        final List<Model> models = db.retrieve(WorkflowModel.class, "id",
                 newWorkflowModel.getId(), s.getProject());
-        
+
         if (models.size() == 0) {
             throw new NotFoundException();
         }
 
         /* Update the records to the new model */
-        WorkflowModel currentModel = (WorkflowModel)models.get(0);
+        final WorkflowModel currentModel = (WorkflowModel) models.get(0);
         System.out.println("Old Workflow: " + currentModel.toJson());
         currentModel.copyFrom(newWorkflowModel);
 
-        if(db.save(currentModel, s.getProject())){
-        	System.out.println("Sucessfully saved");
+        if (db.save(currentModel, s.getProject())) {
+            System.out.println("Sucessfully saved");
         } else {
-			throw new WPISuiteException();
-		} 
-        
+            throw new WPISuiteException();
+        }
+
         return currentModel;
     }
 

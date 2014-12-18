@@ -75,7 +75,7 @@ public class TestBucketView {
         assertEquals(1, bView.getInsertionIndex(new Point(0, 0), false));
         assertEquals(0, bView.getInsertionIndex(new Point(0, 0), true));
     }
-    
+
     @Test
     public void testGetBucketNameLabel() {
         BucketView bView = new BucketView(bModel);

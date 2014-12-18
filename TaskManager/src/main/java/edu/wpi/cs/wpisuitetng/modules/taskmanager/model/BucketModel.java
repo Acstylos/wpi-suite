@@ -42,8 +42,8 @@ public class BucketModel extends AbstractModel {
      */
     public BucketModel(int id, String title) {
         this.id = id;
-        this.title=title;
-        this.taskIds = new ArrayList <Integer>();
+        this.title = title;
+        taskIds = new ArrayList<Integer>();
     }
 
     /**
@@ -124,32 +124,38 @@ public class BucketModel extends AbstractModel {
 
     /**
      * Add a task to the model.
-     * @param id ID of the task you're adding.
+     * 
+     * @param id
+     *            ID of the task you're adding.
      */
     public void addTaskID(int id) {
-       taskIds.add(id);
+        taskIds.add(id);
     }
-    
+
     /**
      * Add a task to the model at the index.
-     * @param index the position where the task will be added
-     * @param id ID of the task you're adding.
+     * 
+     * @param index
+     *            the position where the task will be added
+     * @param id
+     *            ID of the task you're adding.
      */
     public void addTaskID(int index, int id) {
-       taskIds.add(index, id);
+        taskIds.add(index, id);
     }
 
     /**
      * remove the task id from the list of taskIds
      * 
-     * @param rmid ID of task to be removed
+     * @param rmid
+     *            ID of task to be removed
      */
     public void removeTaskId(Integer rmid) {
-    	for(int i = 0; i < taskIds.size(); i++){
-    		if(taskIds.get(i) == rmid) {
-    			taskIds.remove(i);
-    		}
-    	}
+        for (int i = 0; i < taskIds.size(); i++) {
+            if (taskIds.get(i) == rmid) {
+                taskIds.remove(i);
+            }
+        }
     }
 
     /**
@@ -179,14 +185,14 @@ public class BucketModel extends AbstractModel {
      *            The list of task IDs to be set
      */
     public void setTaskIds(List<Integer> list) {
-        this.taskIds = list;
+        taskIds = list;
     }
 
     /**
      * @return The list of task IDs
      */
     public List<Integer> getTaskIds() {
-        return this.taskIds;
+        return taskIds;
     }
 
     /**
@@ -197,8 +203,8 @@ public class BucketModel extends AbstractModel {
      *            the BucketModel to copy from.
      */
     public void copyFrom(BucketModel toCopyFrom) {
-        this.title = toCopyFrom.title;
-        this.taskIds = toCopyFrom.taskIds;
+        title = toCopyFrom.title;
+        taskIds = toCopyFrom.taskIds;
     }
-    
+
 }

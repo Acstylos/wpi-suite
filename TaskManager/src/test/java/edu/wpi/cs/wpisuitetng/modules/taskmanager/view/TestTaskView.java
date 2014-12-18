@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2014 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import static org.junit.Assert.*;
@@ -24,7 +33,7 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
 
 public class TestTaskView {
-  
+
     @Test
     public void testCreateNonNullTaskView() {
         TaskModel tModel = new TaskModel(1, "", "", 0, new Date(), 0);
@@ -36,7 +45,7 @@ public class TestTaskView {
         tPresenter.getAssignedUserList().add(1);
         assertNotNull(new TaskView(tModel, ViewMode.EDITING, tPresenter));
     }
-    
+
     @Test
     public void testSettersGetters() {
         TaskModel tModel = new TaskModel(1, "", "", 0, new Date(), 0);
@@ -56,8 +65,7 @@ public class TestTaskView {
         assertNotNull(view.getUserListPanel());
         assertNotNull(view.getCommentView());
         assertNotNull(view.getLabelColor());
-        
+
     }
-    
-    
+
 }
