@@ -91,8 +91,8 @@ public class TestActivity {
     public void testFromJson() {
         ActivityModel actMod1 = new ActivityModel();
         ActivityModel actMod2 = new ActivityModel();
-        actMod1.setDate(new Date(12,10,2014));
-        actMod2.setDate(new Date(12,10,2014));
+        actMod1.setDate(new Date(12, 10, 2014));
+        actMod2.setDate(new Date(12, 10, 2014));
         String json = "{\"id\":-1,\"userId\":-1,\"date\":\"May 7, 1918 12:00:00 AM\",\"activity\":\"\",\"isAutogen\":false,\"permissionMap\":{}}";
         assertTrue(actMod1.fromJson(json).isEqual(actMod2.fromJson(json)));
     }

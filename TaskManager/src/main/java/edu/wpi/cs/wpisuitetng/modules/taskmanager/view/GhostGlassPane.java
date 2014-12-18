@@ -108,8 +108,9 @@ public class GhostGlassPane extends JPanel {
                         this.point.y - this.startDrag.y, null);
 
                 /* Gradually approach the maximum rotation as the user drags */
-                if (rotation < MAX_ROTATION)
+                if (rotation < MAX_ROTATION) {
                     rotation += MAX_ROTATION / 10.0;
+                }
             }
         }
     }

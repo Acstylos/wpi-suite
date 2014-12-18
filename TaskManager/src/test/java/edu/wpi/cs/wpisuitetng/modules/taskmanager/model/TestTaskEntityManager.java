@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2014 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.model;
 
 import static org.junit.Assert.*;
@@ -17,8 +26,6 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Role;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.MockData;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.BucketEntityManager;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 
 public class TestTaskEntityManager {
     MockData db;
@@ -44,13 +51,14 @@ public class TestTaskEntityManager {
 
     /**
      * Test manager
-     * @throws WPISuiteException 
+     * 
+     * @throws WPISuiteException
      */
     @Test
     public void testMakeTaskEntity() throws WPISuiteException {
         TaskModel test1 = new TaskModel(1, "title1", "desc1", 2, new Date(), 1);
         test1.setProject(testProject);
-        
+
         assertNotNull(manager.makeEntity(defaultSession, test1.toJson()));
     }
 
@@ -224,8 +232,8 @@ public class TestTaskEntityManager {
         assertEquals(1, manager.Count());
         assertEquals(1, manager.getEntity(defaultSession, "1")[0].getId());
         assertEquals("title1",
-                manager.getEntity(defaultSession, "1")[0].getTitle());        
-        manager.update(defaultSession,  new TaskModel(1, "changed", "desc", 23,
+                manager.getEntity(defaultSession, "1")[0].getTitle());
+        manager.update(defaultSession, new TaskModel(1, "changed", "desc", 23,
                 new Date(), 2).toJson());
         assertEquals(1, manager.Count());
         assertEquals("changed",

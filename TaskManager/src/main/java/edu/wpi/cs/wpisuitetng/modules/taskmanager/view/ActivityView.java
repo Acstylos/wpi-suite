@@ -10,16 +10,15 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.Color;
-import java.util.Date;
 
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import net.miginfocom.swing.MigLayout;
 
-/*constructs message view for comments and history of tasks
- * message: message within comment box
+/**
+ * constructs message view for comments and history of tasks message: message
+ * within comment box
  * 
  */
 public class ActivityView extends JPanel {
@@ -48,8 +47,9 @@ public class ActivityView extends JPanel {
 
     /**
      * Constructor sets up panel and colors
+     * 
      * @param text
-     * 			
+     * 
      */
     public ActivityView(String text) {
         this.setLayout(new MigLayout("", "[grow]", "[grow]"));
@@ -63,7 +63,8 @@ public class ActivityView extends JPanel {
     }
 
     /**
-     * @param activity set to this text
+     * @param activity
+     *            set to this text
      */
     public void setActivity(String activity) {
         this.pastActivityText.setText(activity);

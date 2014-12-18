@@ -48,16 +48,16 @@ public class MainView extends JTabbedPane {
             this.workflowPresenter.load();
         });
     }
-    
+
     /**
      * Sets the glass pane when the main view is added to the window
      */
     public void addNotify() {
         super.addNotify();
-        
+
         this.getRootPane().setGlassPane(this.glassPane);
     }
-    
+
     /**
      * @return The glass pane for this component
      */
@@ -93,14 +93,14 @@ public class MainView extends JTabbedPane {
         this.workflowScrollPane.setViewportView(workflowPresenter.getView());
     }
 
-
     /**
      * resets and reloads all buckets
      */
-    public void resetAllBuckets(){
-        for(Map.Entry<Integer, BucketPresenter> bucketEntry: getWorkflowPresenter().getBucketPresenters().entrySet()){
-            BucketPresenter bucket = bucketEntry.getValue();                    
+    public void resetAllBuckets() {
+        for (Map.Entry<Integer, BucketPresenter> bucketEntry : getWorkflowPresenter()
+                .getBucketPresenters().entrySet()) {
+            BucketPresenter bucket = bucketEntry.getValue();
             bucket.addMiniTaskstoView();
-        }    
+        }
     }
 }

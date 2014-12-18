@@ -96,10 +96,11 @@ public class ActivityPresenter {
      */
     public void updateView() {
         view.setActivity(model.getActivity());
-        if (model.getIsAutogen())
+        if (model.getIsAutogen()) {
             commentView.postHistory(view);
-        else
+        } else {
             commentView.postActivity(view);
+        }
     }
 
     /**
@@ -127,8 +128,9 @@ public class ActivityPresenter {
      *            The models sent from the network
      */
     public void responseGet(ActivityModel[] models) {
-        if (models[0].getId() == 0)
+        if (models[0].getId() == 0) {
             return;
+        }
         this.model = models[0];
     }
 

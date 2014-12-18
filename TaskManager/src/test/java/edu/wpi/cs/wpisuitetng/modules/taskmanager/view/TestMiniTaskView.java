@@ -26,8 +26,9 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 
 public class TestMiniTaskView {
     @SuppressWarnings("deprecation")
-    TaskModel tModel = new TaskModel(1, "test", "test discription", 10, new Date(2014, 12, 16), 1);
-    
+    TaskModel tModel = new TaskModel(1, "test", "test discription", 10,
+            new Date(2014, 12, 16), 1);
+
     @Test
     public void testCreateNonNullMiniTaskView() {
         assertNotNull(new MiniTaskView(tModel));
@@ -37,7 +38,8 @@ public class TestMiniTaskView {
     public void testSetColorHighlighted() {
         MiniTaskView mtView = new MiniTaskView(tModel);
         mtView.setColorHighlighted(true);
-        assertEquals(UIManager.getColor("textHighlight"), mtView.getBackground());
+        assertEquals(UIManager.getColor("textHighlight"),
+                mtView.getBackground());
         mtView.setColorHighlighted(false);
         assertEquals(UIManager.getColor("menu"), mtView.getBackground());
     }
@@ -72,7 +74,8 @@ public class TestMiniTaskView {
         userlist.add("a");
         userlist.add("b");
         mtView.addUsersToUserPanel(userlist);
-        assertEquals(userPanel.getComponent(1).getName(), mtView.getUserPanel().getComponent(1).getName());
+        assertEquals(userPanel.getComponent(1).getName(), mtView.getUserPanel()
+                .getComponent(1).getName());
     }
 
     @Test
@@ -80,10 +83,12 @@ public class TestMiniTaskView {
         tModel.setLabelColor(new Color(255, 255, 255));
         MiniTaskView mtView = new MiniTaskView(tModel);
         mtView.updateLabel();
-        assertEquals(new Color(255, 255, 255), mtView.getColorLabel().getBackground());
+        assertEquals(new Color(255, 255, 255), mtView.getColorLabel()
+                .getBackground());
         tModel.setLabelColor(new Color(100, 100, 100));
         MiniTaskView mtView2 = new MiniTaskView(tModel);
         mtView2.updateLabel();
-        assertEquals(new Color(100, 100, 100), mtView2.getColorLabel().getBackground());
+        assertEquals(new Color(100, 100, 100), mtView2.getColorLabel()
+                .getBackground());
     }
 }

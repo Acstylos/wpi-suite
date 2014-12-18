@@ -15,8 +15,10 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import org.junit.Test;
+
 /**
  * test workflowModel's methods
+ * 
  * @author theFloorIsJava
  *
  */
@@ -41,12 +43,14 @@ public class TestWorkflowModel {
     @Test
     public final void testToJson() {
         WorkflowModel test = new WorkflowModel(10, "Due Soon");
-        assertEquals("{\"id\":10,\"defaultBucketIndex\":0,\"title\":\"Due Soon\",\"bucketIds\":[],\"permissionMap\":{}}" ,test.toJson());
+        assertEquals(
+                "{\"id\":10,\"defaultBucketIndex\":0,\"title\":\"Due Soon\",\"bucketIds\":[],\"permissionMap\":{}}",
+                test.toJson());
     }
 
     @Test
     public final void testFromJson() {
-        String json="{\"id\":10,\"title\":\"Due Soon\",\"bucketIds\":[],\"permissionMap\":{}}";
+        String json = "{\"id\":10,\"title\":\"Due Soon\",\"bucketIds\":[],\"permissionMap\":{}}";
         WorkflowModel test = new WorkflowModel(10, "Due Soon");
         WorkflowModel test2 = new WorkflowModel(10, "Due Soon");
         assertTrue(test.fromJson(json).equals(test2.fromJson(json)));
@@ -56,24 +60,24 @@ public class TestWorkflowModel {
     public final void testIdentify() {
         WorkflowModel test = new WorkflowModel(10, "Due Soon");
         WorkflowModel test2 = new WorkflowModel(20, "also a workflowmodel obj");
-        assertTrue(test.identify(test) );
-        assertFalse(test.identify(new Color ( 0,0,0)));
+        assertTrue(test.identify(test));
+        assertFalse(test.identify(new Color(0, 0, 0)));
     }
 
     @Test
     public final void testGetBucketIds() {
         WorkflowModel test = new WorkflowModel(10, "Due Soon");
         test.getBucketIds().add(4);
-        ArrayList <Integer> list = new ArrayList<Integer>();
+        ArrayList<Integer> list = new ArrayList<Integer>();
         list.add(4);
-        
-        assertEquals(test.getBucketIds(),list );
+
+        assertEquals(test.getBucketIds(), list);
     }
 
     @Test
     public final void testSetBucketIds() {
         WorkflowModel test = new WorkflowModel(10, "Due Soon");
-        ArrayList <Integer> list = new ArrayList<Integer>();
+        ArrayList<Integer> list = new ArrayList<Integer>();
         list.add(4);
         test.setBucketIds(list);
         assertEquals(test.getBucketIds(), list);
@@ -108,11 +112,11 @@ public class TestWorkflowModel {
     @Test
     public final void testCopyFrom() {
         WorkflowModel empty = new WorkflowModel();
-        WorkflowModel copy=new WorkflowModel(99, "copied from");
+        WorkflowModel copy = new WorkflowModel(99, "copied from");
         empty.copyFrom(copy);
         assertEquals(empty.getId(), 99);
         assertEquals(empty.getTitle(), "copied from");
-        assertEquals(empty.getBucketIds(), new ArrayList<>());        
+        assertEquals(empty.getBucketIds(), new ArrayList<>());
     }
 
 }
