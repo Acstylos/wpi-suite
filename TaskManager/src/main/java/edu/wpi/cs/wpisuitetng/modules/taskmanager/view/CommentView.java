@@ -10,7 +10,7 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.Color;
-import java.awt.Container;
+
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
@@ -25,7 +25,7 @@ import org.jdesktop.swingx.JXTextArea;
 
 import net.miginfocom.swing.MigLayout;
 
-/*
+/**
  * Part of Task editor containing comments and history
  */
 public class CommentView extends JTabbedPane {
@@ -39,14 +39,16 @@ public class CommentView extends JTabbedPane {
     private JScrollPane commentScroll = new JScrollPane();
     private JPanel postedCommentPanel = new JPanel();
     private JScrollPane editCommentScroll = new JScrollPane();
-    private JXTextArea commentText = new JXTextArea("",
-            Color.GRAY);
+    private JXTextArea commentText = new JXTextArea("", Color.GRAY);
     private JButton postCommentButton = new JButton("Post");
     private JButton clearCommentButton = new JButton("Clear");
 
     /**
      * Constructor sets up Comments and History
-     * @param currentView the currentView of the Task. Either Editing, Creating, or Deleting.
+     * 
+     * @param currentView
+     *            the currentView of the Task. Either Editing, Creating, or
+     *            Deleting.
      */
     public CommentView(ViewMode currentView) {
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -55,76 +57,78 @@ public class CommentView extends JTabbedPane {
         this.addTab("History", Icons.HISTORY, historyPanel, null);
 
         // Set layouts
-        this.commentPanel.setLayout(new MigLayout("", "[grow]",
+        commentPanel.setLayout(new MigLayout("", "[grow]",
                 "[grow][50px:n][min]"));
-        this.historyPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
-        this.postedCommentPanel.setLayout(new MigLayout("fill"));
-        this.postedHistoryPanel.setLayout(new MigLayout("fill"));
+        historyPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
+        postedCommentPanel.setLayout(new MigLayout("fill"));
+        postedHistoryPanel.setLayout(new MigLayout("fill"));
 
         // Add components to commentPanel
-        this.commentPanel.add(commentScroll, "cell 0 0,grow");
-        this.commentPanel.add(editCommentScroll, "cell 0 1,grow");
-        this.commentPanel.add(postCommentButton, "cell 0 2,alignx left,growy");
-        this.commentPanel.add(clearCommentButton, "cell 0 2,alignx left,growy");
-        this.commentText.setWrapStyleWord(true);
-        this.commentText.setLineWrap(true);
+        commentPanel.add(commentScroll, "cell 0 0,grow");
+        commentPanel.add(editCommentScroll, "cell 0 1,grow");
+        commentPanel.add(postCommentButton, "cell 0 2,alignx left,growy");
+        commentPanel.add(clearCommentButton, "cell 0 2,alignx left,growy");
+        commentText.setWrapStyleWord(true);
+        commentText.setLineWrap(true);
 
-        this.historyPanel.add(historyScroll, "cell 0 0,grow");
-        
+        historyPanel.add(historyScroll, "cell 0 0,grow");
+
         // Set scrollpane viewports
-        this.commentScroll.setViewportView(postedCommentPanel);
-        this.editCommentScroll.setViewportView(commentText);
-        this.historyScroll.setViewportView(postedHistoryPanel);
-        this.postCommentButton.setEnabled(false);
-        this.postCommentButton.setIcon(Icons.COMMENT);
-        this.clearCommentButton.setEnabled(false);
-        this.clearCommentButton.setIcon(Icons.CLEAR);
+        commentScroll.setViewportView(postedCommentPanel);
+        editCommentScroll.setViewportView(commentText);
+        historyScroll.setViewportView(postedHistoryPanel);
+        postCommentButton.setEnabled(false);
+        postCommentButton.setIcon(Icons.COMMENT);
+        clearCommentButton.setEnabled(false);
+        clearCommentButton.setIcon(Icons.CLEAR);
         this.setupListeners();
     }
-    
+
     /**
-     * If the current ViewMode is CREATING,
-     * then we disable the post and clear comment buttons, and replace the background text for JTextBox.
-     * Otherwise, We enable the buttons
-     * @param currentView the current ViewMode
+     * If the current ViewMode is CREATING, then we disable the post and clear
+     * comment buttons, and replace the background text for JTextBox. Otherwise,
+     * We enable the buttons
+     * 
+     * @param currentView
+     *            the current ViewMode
      */
-    public void toggleTextField(ViewMode currentView){
-        if(currentView!=null){
-            if(currentView.equals(ViewMode.CREATING)){
-                this.commentText.setEditable(false);
-                this.commentText.setPrompt("Comments unavailable until task created.");
-                this.commentText.setPromptForeground(Color.GRAY);
-                this.postCommentButton.setEnabled(false);
-                this.clearCommentButton.setEnabled(false);
-            }
-            else if(currentView.equals(ViewMode.ARCHIVING)){
-                this.commentText.setEditable(false);
-                this.commentText.setPrompt("Comments unavailable because task is Archived.");
-                this.commentText.setPromptForeground(Color.GRAY);
-                this.postCommentButton.setEnabled(false);
-                this.clearCommentButton.setEnabled(false);
-            }
-            else{
-                this.commentText.setEditable(true);
-                this.commentText.setPrompt("Write a comment...");
-                this.commentText.setPromptForeground(Color.GRAY);
-                this.postCommentButton.setEnabled(true);
-                this.clearCommentButton.setEnabled(true);
+    public void toggleTextField(ViewMode currentView) {
+        if (currentView != null) {
+            if (currentView.equals(ViewMode.CREATING)) {
+                commentText.setEditable(false);
+                commentText
+                        .setPrompt("Comments unavailable until task created.");
+                commentText.setPromptForeground(Color.GRAY);
+                postCommentButton.setEnabled(false);
+                clearCommentButton.setEnabled(false);
+            } else if (currentView.equals(ViewMode.ARCHIVING)) {
+                commentText.setEditable(false);
+                commentText
+                        .setPrompt("Comments unavailable because task is Archived.");
+                commentText.setPromptForeground(Color.GRAY);
+                postCommentButton.setEnabled(false);
+                clearCommentButton.setEnabled(false);
+            } else {
+                commentText.setEditable(true);
+                commentText.setPrompt("Write a comment...");
+                commentText.setPromptForeground(Color.GRAY);
+                postCommentButton.setEnabled(true);
+                clearCommentButton.setEnabled(true);
             }
         }
     }
-    
+
     /**
      * Enable or disable the post and reset buttons depending of if there's
      * something entered in the comment box.
      */
     private void validateFields() {
         if (commentText.getText().trim().isEmpty()) {
-            this.postCommentButton.setEnabled(false);
-            this.clearCommentButton.setEnabled(false);
+            postCommentButton.setEnabled(false);
+            clearCommentButton.setEnabled(false);
         } else {
-            this.postCommentButton.setEnabled(true);
-            this.clearCommentButton.setEnabled(true);
+            postCommentButton.setEnabled(true);
+            clearCommentButton.setEnabled(true);
         }
     }
 
@@ -168,53 +172,55 @@ public class CommentView extends JTabbedPane {
      */
     private void setupListeners() {
         // Clear button (resets comment)
-        this.clearCommentButton.addActionListener((ActionEvent) -> {
+        clearCommentButton.addActionListener((ActionEvent) -> {
             commentText.setText("");
             validateFields();
         });
 
-        this.commentText.getDocument().addDocumentListener(
-                new DocumentListener() {
+        commentText.getDocument().addDocumentListener(new DocumentListener() {
 
-                    @Override
-                    public void removeUpdate(DocumentEvent e) {
-                        validateFields();
-                    }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                validateFields();
+            }
 
-                    @Override
-                    public void insertUpdate(DocumentEvent e) {
-                        validateFields();
-                    }
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                validateFields();
+            }
 
-                    @Override
-                    public void changedUpdate(DocumentEvent arg0) {
-                        validateFields();
-                    }
-                });
+            @Override
+            public void changedUpdate(DocumentEvent arg0) {
+                validateFields();
+            }
+        });
     }
 
     /**
      * Adds ActionListener to post comment button
-     * @param listener triggers post
+     * 
+     * @param listener
+     *            triggers post
      */
     public void addOnPostListener(ActionListener listener) {
-        this.postCommentButton.addActionListener(listener);
+        postCommentButton.addActionListener(listener);
     }
 
     /**
      * @return the commentText
      */
     public JXTextArea getCommentText() {
-        return this.commentText;
+        return commentText;
     }
 
     /**
      * revalidates and repaints the history Panel
      */
-    public void revalidateHistoryPanel(){
-        this.postedHistoryPanel.revalidate();
-        this.postedHistoryPanel.repaint();
+    public void revalidateHistoryPanel() {
+        postedHistoryPanel.revalidate();
+        postedHistoryPanel.repaint();
     }
+
     /**
      * Clears the posts in the view
      */
@@ -227,14 +233,14 @@ public class CommentView extends JTabbedPane {
      * @return the posted comment panel for testing
      */
     public JPanel getPostedCommentPanel() {
-        return this.postedCommentPanel;
+        return postedCommentPanel;
     }
 
     /**
      * @return the posted history panel for testing
      */
     public JPanel getPostedHistoryPanel() {
-        return this.postedHistoryPanel;
+        return postedHistoryPanel;
     }
 
     /**
@@ -244,13 +250,13 @@ public class CommentView extends JTabbedPane {
      *            the string to put into the comment text
      */
     public void setCommentText(String string) {
-        this.commentText.setText(string);
+        commentText.setText(string);
     }
 
     /**
      * @return the clear button for testing
      */
     public JButton getClearButton() {
-        return this.clearCommentButton;
+        return clearCommentButton;
     }
 }

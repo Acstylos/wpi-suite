@@ -27,7 +27,7 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
  */
 public class ActivityEntityManager implements EntityManager<ActivityModel> {
 
-    private Data db;
+    private final Data db;
 
     /**
      * Constructs the entity manager. This constructor is called by
@@ -53,7 +53,7 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
             throws BadRequestException, ConflictException, WPISuiteException {
         System.out.println("Make Activity: " + content);
         /* Make a new Activity corresponding to the JSON data */
-        ActivityModel activityModel = ActivityModel.fromJson(content);
+        final ActivityModel activityModel = ActivityModel.fromJson(content);
 
         int id = 1;
         for (ActivityModel model : getAll(s)) {
@@ -136,21 +136,21 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
     public ActivityModel update(Session s, String content)
             throws WPISuiteException {
         System.out.println("Update Activity: " + content);
-        ActivityModel newActivityModel = ActivityModel.fromJson(content);
+        final ActivityModel newActivityModel = ActivityModel.fromJson(content);
         /*
          * Because of the disconnected objects problem in db4o, we can't just
          * save updatedActivityModel. We have to get the original ActivityModel
          * from db4o, copy properties from updatedActivityModel, then save the
          * original ActivityModel again.
          */
-        List<Model> models = db.retrieve(ActivityModel.class, "id",
+        final List<Model> models = db.retrieve(ActivityModel.class, "id",
                 newActivityModel.getId(), s.getProject());
 
         if (models.size() == 0) {
             throw new NotFoundException();
         }
 
-        ActivityModel currentModel = (ActivityModel) models.get(0);
+        final ActivityModel currentModel = (ActivityModel) models.get(0);
         System.out.println("Old Activity: " + currentModel.toJson());
 
         // copy values to old ActivityModel and fill in our changeset
@@ -201,8 +201,7 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
         System.out.println("Delete Activity ID: " + id);
         if (db.delete(getEntity(s, id)[0]) != null) {
             return true;
-        }
-        else {
+        } else {
             throw new WPISuiteException("Problem Deleting Activity");
         }
     }
@@ -222,8 +221,7 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
         System.out.println("Delet All Activities");
         if (db.deleteAll(new ActivityModel(), s.getProject()) != null) {
             return;
-        }
-        else {
+        } else {
             throw new WPISuiteException("Problem Deleting Activities.");
         }
     }

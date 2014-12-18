@@ -13,7 +13,5 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
  * Used to determine if you are Creating a task or Editing a task.
  */
 public enum ViewMode {
-    EDITING,
-    CREATING,
-    ARCHIVING;
+    EDITING, CREATING, ARCHIVING;
 }

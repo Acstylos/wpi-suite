@@ -28,12 +28,14 @@ public class WorkflowObserver implements RequestObserver {
 
     private WorkflowPresenter presenter;
     private HttpMethod method;
-    
-    /** Construct the observer
+
+    /**
+     * Construct the observer
+     * 
      * @param presenter
-     * 				The presenter that make requests
+     *            The presenter that make requests
      * @param method
-     * 				method to talk to network
+     *            method to talk to network
      */
     public WorkflowObserver(WorkflowPresenter presenter, HttpMethod method) {
         this.presenter = presenter;
@@ -48,36 +50,39 @@ public class WorkflowObserver implements RequestObserver {
     public void responseSuccess(IRequest iReq) {
         // Store the response
         final ResponseModel response = iReq.getResponse();
-        
+
         final WorkflowModel model;
-        
+
         switch (iReq.getHttpMethod()) {
         case GET:
             // Parse the message
-            WorkflowModel workflows[] = WorkflowModel.fromJSONArray(response.getBody());
-            ArrayList<WorkflowModel> workflowArrayList = new ArrayList<WorkflowModel>(Arrays.asList(workflows));
-            if(workflowArrayList.size() == 0){
-                this.presenter.initWorkflow(this.presenter);
+            WorkflowModel workflows[] = WorkflowModel.fromJSONArray(response
+                    .getBody());
+            ArrayList<WorkflowModel> workflowArrayList = new ArrayList<WorkflowModel>(
+                    Arrays.asList(workflows));
+            if (workflowArrayList.size() == 0) {
+                presenter.initWorkflow(presenter);
             } else {
-                System.out.println("GET Response Body: " + response.getBody().toString());
+                System.out.println("GET Response Body: "
+                        + response.getBody().toString());
                 model = WorkflowModel.fromJSONArray(response.getBody())[0];
-                this.presenter.responseGet(model);
+                presenter.responseGet(model);
             }
             break;
         case POST:
             // Parse the message
             model = WorkflowModel.fromJson(response.getBody());
-            this.presenter.responsePost(model);
+            presenter.responsePost(model);
             break;
         case PUT:
             // Parse the message
             model = WorkflowModel.fromJson(response.getBody());
-            this.presenter.responsePut(model);
+            presenter.responsePut(model);
             break;
         case DELETE:
             // Parse the message
             model = WorkflowModel.fromJson(response.getBody());
-            this.presenter.responseDelete(model);
+            presenter.responseDelete(model);
             break;
         }
     }
@@ -105,7 +110,7 @@ public class WorkflowObserver implements RequestObserver {
      * @return The presenter
      */
     public WorkflowPresenter getPresenter() {
-        return this.presenter;
+        return presenter;
     }
 
     private static String httpMethodToString(HttpMethod method_) {
