@@ -37,23 +37,38 @@ public class TestFilter {
         pres1.addUsersToAllUserList(allUsers);
         pres1.setAssignedUserList();
         try {
-            pres1.addUserToAssignedTo(rob);
+            // add bob to task1's assigned users
             pres1.addUserToAssignedTo(bob);
         } catch (NullPointerException e) {
             // this is because there is no View in Task Presenter.
             // We do not need to call validate Fields in Task View.
+            System.out.println(pres1.getAssignedUserList());
             TaskPresenter pres2 = new TaskPresenter(task2);
             pres2.addUsersToAllUserList(allUsers);
             pres2.setAssignedUserList();
             test.setFilterUser("bob");
-            assertFalse(test.matches(pres1));
+            assertTrue(test.matches(pres1));
             assertFalse(test.matches(pres2));
             test.setFilterUser("BOB");
-            assertFalse(test.matches(pres1));
+            assertTrue(test.matches(pres1));
             assertFalse(test.matches(pres2));
         }
     }
 
+    public final void testMatchesMultiple(){
+        Filter test = new Filter();
+        TaskModel task1 = new TaskModel(1, "sample forget", "short description", 50,
+                new Date(2014, 12, 18), 1);
+        task1.setLabelColor(new Color (0,0,0));
+        TaskModel task2 = new TaskModel(1, "brush teeth",
+                "dont forget to floss", 1, new Date(2014, 12, 01), 1);
+        task2.setLabelColor(new Color (0,1,0));
+        test.setFilterText("forget");
+        test.setFilterColor(new Color (0,0,0));
+        assertTrue(test.matches(new TaskPresenter(task1)));
+        assertFalse(test.matches(new TaskPresenter(task2)));
+
+    }
     @Test
     public final void testMatchesText() {
         Filter test = new Filter();
