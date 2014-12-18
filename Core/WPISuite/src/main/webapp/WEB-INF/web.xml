@@ -50,4 +50,12 @@
   	<servlet-name>AdvancedAPI</servlet-name>
   	<url-pattern>/API/Advanced/*</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>Notification</servlet-name>
+    <servlet-class>edu.wpi.cs.wpisuitetng.WPINotificationServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Notification</servlet-name>
+    <url-pattern>/API/Notification/*</url-pattern>
+  </servlet-mapping>
 </web-app>

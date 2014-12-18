@@ -92,6 +92,7 @@ public class ActivityPresenter {
                 "taskmanager/activity", HttpMethod.PUT);
         request.setBody(this.model.toJson());
         request.addObserver(new ActivityObserver(this));
+        request.setConnectTimeout(10000);
         request.send();
     }
 
