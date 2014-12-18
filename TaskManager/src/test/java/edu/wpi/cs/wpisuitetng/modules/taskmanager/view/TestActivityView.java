@@ -19,17 +19,17 @@ public class TestActivityView {
     public void TestCreateNotNullActivityView1() {
         assertNotNull(new ActivityView());
     }
-    
+
     @Test
     public void TestCreateNotNullActivityView2() {
         assertNotNull(new ActivityView("Activity"));
     }
-    
+
     @Test
     public void TestMessage() {
         ActivityView aView = new ActivityView();
         assertEquals("", aView.getActivity());
         aView.setActivity("test message");
         assertEquals("test message", aView.getActivity());
-    }  
+    }
 }

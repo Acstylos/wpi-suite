@@ -40,7 +40,8 @@ public class ManageBucketsPanel extends JPanel {
     private JButton deleteBucketButton = new JButton("Delete", Icons.DELETE);
     private JButton moveBucketDownButton = new JButton("Down", Icons.MOVE_DOWN);
     private JButton addBucketButton = new JButton("Add Stage", Icons.ADD);
-    private JXTextField newBucketField = new JXTextField("Write a Stage Title...", Color.GRAY);
+    private JXTextField newBucketField = new JXTextField(
+            "Write a Stage Title...", Color.GRAY);
     private JPanel addStagePanel = new JPanel();
     private JPanel buttonPanel = new JPanel();
     private JList<String> bucketList = new JList<String>();
@@ -49,161 +50,177 @@ public class ManageBucketsPanel extends JPanel {
 
     /**
      * Create the panel.
-     * @param model The workflow model this panel will take information from. 
+     * 
+     * @param model
+     *            The workflow model this panel will take information from.
      */
     public ManageBucketsPanel(WorkflowModel model) {
-        this.bucketIds = new ArrayList<Integer>(model.getBucketIds());
+        bucketIds = new ArrayList<Integer>(model.getBucketIds());
         this.setLayout(new MigLayout("", "[50%][50%]", "[][grow][]"));
-        
+
         add(addStagePanel, "cell 0 0,grow");
         addStagePanel.setLayout(new MigLayout("", "[grow][]", "[]"));
         addStagePanel.add(newBucketField, "cell 0 0,growx");
         addStagePanel.add(addBucketButton, "cell 1 0");
-        
+
         add(buttonPanel, "flowx,cell 0 1,aligny top");
-        
+
         buttonPanel.setLayout(new MigLayout("", "[]", "[]"));
         buttonPanel.add(moveBucketUpButton, "flowy,cell 0 0,growx");
         buttonPanel.add(deleteBucketButton, "cell 0 0,growx");
         buttonPanel.add(moveBucketDownButton, "cell 0 0,growx");
         buttonPanel.add(setInitBucketButton, "cell 0 0,growx");
         bucketListPanel.setLayout(new MigLayout("fill", "[grow]", "[grow]"));
-        
+
         add(bucketListPanel, "cell 0 1,grow");
-        
+
         bucketListPanel.add(scrollPane, "cell 0 0,grow");
         scrollPane.setViewportView(bucketList);
-        
+
         bucketList.setCellRenderer(new BucketListItemRenderer());
         bucketList.setBorder(new LineBorder(Color.LIGHT_GRAY));
         add(closeButton, "cell 0 2,alignx left,aligny center");
-        
+
         newBucketField.getDocument().addDocumentListener(validateTitleField);
         validateField();
     }
-    
+
     /**
-     * Sets bucketIds to the given List.  
-     * @param bucketIds List of bucketIds to set in this view.
+     * Sets bucketIds to the given List.
+     * 
+     * @param bucketIds
+     *            List of bucketIds to set in this view.
      */
-    public void setBucketIds(List<Integer> bucketIds){
+    public void setBucketIds(List<Integer> bucketIds) {
         this.bucketIds = new ArrayList<Integer>(bucketIds);
     }
-    
+
     /**
      * @return The list of BucketIds in this view.
      */
-    public List<Integer> getBucketIds(){
-        return this.bucketIds;
+    public List<Integer> getBucketIds() {
+        return bucketIds;
     }
-    
+
     /**
      * @return The string in the newBucketField.
      */
-    public String getNewBucketTitle(){
-        return this.newBucketField.getText().trim();
+    public String getNewBucketTitle() {
+        return newBucketField.getText().trim();
     }
-    
+
     /**
      * Adds a single bucket to the bucketList to be displayed.
-     * @param bucket BucketModel to be added to the list.
+     * 
+     * @param bucket
+     *            BucketModel to be added to the list.
      */
-    public void addBucketNameArrayToList(String[] bucketNames){
-        this.bucketList.setListData(bucketNames);
+    public void addBucketNameArrayToList(String[] bucketNames) {
+        bucketList.setListData(bucketNames);
     }
-    
+
     /**
-     * @param listener The listener to determine how closeButton will function.
+     * @param listener
+     *            The listener to determine how closeButton will function.
      */
-    public void addCloseButtonListener(ActionListener listener){
-        this.closeButton.addActionListener(listener);
+    public void addCloseButtonListener(ActionListener listener) {
+        closeButton.addActionListener(listener);
     }
-    
+
     /**
-     * @param listener The listener to determine how addBucketButton will function.
+     * @param listener
+     *            The listener to determine how addBucketButton will function.
      */
-    public void addAddBucketButtonListener(ActionListener listener){
-        this.addBucketButton.addActionListener(listener);
+    public void addAddBucketButtonListener(ActionListener listener) {
+        addBucketButton.addActionListener(listener);
     }
-    
+
     /**
-     * @param listener The listener to determine how deleteBucketButton will function.
+     * @param listener
+     *            The listener to determine how deleteBucketButton will
+     *            function.
      */
-    public void addDeleteBucketButtonListener(ActionListener listener){
-        this.deleteBucketButton.addActionListener(listener);
+    public void addDeleteBucketButtonListener(ActionListener listener) {
+        deleteBucketButton.addActionListener(listener);
     }
-    
+
     /**
-     * @param listener The listener to determine how moveBucketUpButton will function.
+     * @param listener
+     *            The listener to determine how moveBucketUpButton will
+     *            function.
      */
-    public void addMoveBucketUpButtonListener(ActionListener listener){
-        this.moveBucketUpButton.addActionListener(listener);
+    public void addMoveBucketUpButtonListener(ActionListener listener) {
+        moveBucketUpButton.addActionListener(listener);
     }
-    
+
     /**
-     * @param listener The listener to determine how moveBucketDownButton will function.
+     * @param listener
+     *            The listener to determine how moveBucketDownButton will
+     *            function.
      */
-    public void addMoveBucketDownButtonListener(ActionListener listener){
-        this.moveBucketDownButton.addActionListener(listener);
+    public void addMoveBucketDownButtonListener(ActionListener listener) {
+        moveBucketDownButton.addActionListener(listener);
     }
-    
-    
+
     /**
-     * @param listener The listener to determine how setInitBucketButton will function.
+     * @param listener
+     *            The listener to determine how setInitBucketButton will
+     *            function.
      */
-    public void addSetInitBucketButtonListener(ActionListener listener){
-        this.setInitBucketButton.addActionListener(listener);
+    public void addSetInitBucketButtonListener(ActionListener listener) {
+        setInitBucketButton.addActionListener(listener);
     }
 
     /**
      * @return the index of the selected item in the Jlist
      */
     public int getBucketListIndex() {
-        return this.bucketList.getSelectedIndex();
+        return bucketList.getSelectedIndex();
     }
-    
+
     /**
-     * @param index The index of the list to select.
+     * @param index
+     *            The index of the list to select.
      */
-    public void setSelectedBucket(int index){
-        this.bucketList.setSelectedIndex(index);
+    public void setSelectedBucket(int index) {
+        bucketList.setSelectedIndex(index);
     }
-    
+
     /**
      * Clears the add bucket field.
      */
-    public void clearAddBucketField(){
-        this.newBucketField.setText("");
+    public void clearAddBucketField() {
+        newBucketField.setText("");
     }
-    
-    private DocumentListener validateTitleField = new DocumentListener(){
+
+    private DocumentListener validateTitleField = new DocumentListener() {
 
         @Override
         public void insertUpdate(DocumentEvent e) {
             validateField();
-            
+
         }
 
         @Override
         public void removeUpdate(DocumentEvent e) {
             validateField();
-            
+
         }
 
         @Override
         public void changedUpdate(DocumentEvent e) {
             validateField();
-            
+
         }
-        
+
     };
-    
+
     /**
      * Validates the title text field.
      */
-    private void validateField(){
+    private void validateField() {
         boolean isTitleInvalid = newBucketField.getText().trim().isEmpty();
-        if(isTitleInvalid){
+        if (isTitleInvalid) {
             addBucketButton.setEnabled(false);
         } else {
             addBucketButton.setEnabled(true);

@@ -33,11 +33,11 @@ public class ActivityModel extends AbstractModel {
      * Default constructor for a default ActivityModel
      */
     public ActivityModel() {
-        this.id = -1;
-        this.userId = -1;
-        this.activity = "";
-        this.date = new Date();
-        this.isAutogen = false;
+        id = -1;
+        userId = -1;
+        activity = "";
+        date = new Date();
+        isAutogen = false;
 
     }
 
@@ -54,12 +54,12 @@ public class ActivityModel extends AbstractModel {
      * @param isAutogen
      *            either auto-generated or manually added
      * @param date
-     * 			  The date of activity
+     *            The date of activity
      */
     public ActivityModel(int id, User user, String activity, Date date,
             boolean isAutogen) {
         this.id = id;
-        this.userId = user.getIdNum();
+        userId = user.getIdNum();
         this.activity = activity;
         this.date = date;
         this.isAutogen = isAutogen;
@@ -73,12 +73,13 @@ public class ActivityModel extends AbstractModel {
     }
 
     /**
-     * @param isAutogen true or false if auto-generated comment
+     * @param isAutogen
+     *            true or false if auto-generated comment
      */
     public void setIsAutogen(boolean isAutogen) {
         this.isAutogen = isAutogen;
     }
-    
+
     /**
      * @return the date of the activity
      */
@@ -122,7 +123,7 @@ public class ActivityModel extends AbstractModel {
      *            the user to be set
      */
     public void setUser(User user) {
-        this.userId = user.getIdNum();
+        userId = user.getIdNum();
 
     }
 
@@ -148,10 +149,10 @@ public class ActivityModel extends AbstractModel {
      *            the ActivtyModel to be copied
      */
     public void copyFrom(ActivityModel other) {
-        this.activity = other.getActivity();
-        this.id = other.getId();
-        this.userId = other.getUser();
-        this.isAutogen = other.getIsAutogen(); 
+        activity = other.getActivity();
+        id = other.getId();
+        userId = other.getUser();
+        isAutogen = other.getIsAutogen();
     }
 
     /**
@@ -160,8 +161,8 @@ public class ActivityModel extends AbstractModel {
      * @return A string in JSON representing this activity
      */
     public String toJson() {
-        String json;
-        Gson gson = new Gson();
+        final String json;
+        final Gson gson = new Gson();
         json = gson.toJson(this, ActivityModel.class);
         return json;
     }
@@ -175,8 +176,8 @@ public class ActivityModel extends AbstractModel {
      * @return A string in JSON representing the list of activities
      */
     public static String toJson(ActivityModel[] alist) {
-        String json;
-        Gson gson = new Gson();
+        final String json;
+        final Gson gson = new Gson();
         json = gson.toJson(alist, ActivityModel.class);
         return json;
     }
@@ -185,7 +186,7 @@ public class ActivityModel extends AbstractModel {
      * Convert the given JSON string to a ActivityModel instance
      * 
      * @param json
-     * 			String to be converted
+     *            String to be converted
      * 
      * @return The JSON string representing the object
      */
@@ -199,7 +200,7 @@ public class ActivityModel extends AbstractModel {
      * array of activities
      * 
      * @param json
-     * 			String to be converted
+     *            String to be converted
      * 
      * @return ActivityModel array
      */
@@ -225,7 +226,7 @@ public class ActivityModel extends AbstractModel {
         // TODO Auto-generated method stub
         return null;
     }
-    
+
     /**
      * Checks if two models are the same
      * 
@@ -234,10 +235,7 @@ public class ActivityModel extends AbstractModel {
      * @return if it is equal or not
      */
     public Boolean isEqual(ActivityModel that) {
-        return (this.isAutogen == that.isAutogen
-                && this.activity.equals(that.activity)
-                && this.date.equals(that.date)
-                && this.id == that.id
-                && this.userId == that.userId);
+        return (isAutogen == that.isAutogen && activity.equals(that.activity)
+                && date.equals(that.date) && id == that.id && userId == that.userId);
     }
 }

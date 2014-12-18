@@ -49,7 +49,7 @@ public class TaskModel extends AbstractModel {
     public TaskModel() {
         id = -1;
         title = "New Task";
-        shortTitle = this.shortenString(this.title);
+        shortTitle = this.shortenString(title);
         description = "";
         assignedTo = new ArrayList<Integer>();
         activityIds = new ArrayList<Integer>();
@@ -57,10 +57,10 @@ public class TaskModel extends AbstractModel {
         estimatedEffort = 0;
         actualEffort = 0;
         status = 1;
-        labelColor=null;
+        labelColor = null;
         isArchived = false;
         dueDate = null;
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         dateCreated = cal.getTime();
     }
 
@@ -86,44 +86,43 @@ public class TaskModel extends AbstractModel {
         this();
         this.id = id;
         this.title = title;
-        this.shortTitle = this.shortenString(this.title);
+        shortTitle = this.shortenString(this.title);
         this.description = description;
         this.estimatedEffort = estimatedEffort;
         this.dueDate = dueDate;
         this.status = status;
-        this.labelColor=null;
-        this.isArchived = false;
+        labelColor = null;
+        isArchived = false;
     }
+
     /**
      * determines if this taskModel is equal to that taskModel
      * 
-     * @param that the other TaskModel
+     * @param that
+     *            the other TaskModel
      * @return boolean, true if equal , false otherwise
      */
     @Override
-    public boolean equals(Object other){
-        try{
-            TaskModel that = (TaskModel) other;
-            if(this.title == that.title
-                    && this.shortTitle == that.shortTitle
-                    && this.description == that.description
-                    && this.estimatedEffort == that.estimatedEffort
-                    && this.dueDate == that.dueDate
-                    && this.status == that.status
-                    && this.labelColor == that.labelColor
-                    && this.isArchived == that.isArchived
-                    )
+    public boolean equals(Object other) {
+        try {
+            final TaskModel that = (TaskModel) other;
+            if (title == that.title && shortTitle == that.shortTitle
+                    && description == that.description
+                    && estimatedEffort == that.estimatedEffort
+                    && dueDate == that.dueDate && status == that.status
+                    && labelColor == that.labelColor
+                    && isArchived == that.isArchived) {
                 return true;
+            }
             return false;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
-    
+
     /**
      * Get a formatted HTML string containing the list of changes between this
-     * task and another.  This is used for generating email reports.
+     * task and another. This is used for generating email reports.
      * 
      * @param other
      *            Another task
@@ -134,53 +133,54 @@ public class TaskModel extends AbstractModel {
         String str = "";
         str += "<h2>Changes</h2>";
         str += "<ul>";
-        
+
         if (!this.getTitle().equals(other.getTitle())) {
             str += "<li>The <b>title</b> was changed from \"" + this.getTitle()
                     + "\" to \"" + other.getTitle() + "\".</li>";
         }
-        
+
         if (!this.getDescription().equals(other.getDescription())) {
-            str += "<li>The <b>description</b> was changed from \"" + this.getDescription()
-                    + "\" to \"" + other.getDescription() + "\".</li>";
+            str += "<li>The <b>description</b> was changed from \""
+                    + this.getDescription() + "\" to \""
+                    + other.getDescription() + "\".</li>";
         }
-        
+
         if (!this.getAssignedTo().containsAll(other.getAssignedTo())
                 || !other.getAssignedTo().containsAll(this.getAssignedTo())) {
             str += "<li>The list of <b>assigned users</b> was changed.</li>";
             System.out.println("Old: " + this.getAssignedTo());
             System.out.println("New: " + other.getAssignedTo());
         }
-        
+
         if (this.getActivityIds().size() != other.getActivityIds().size()) {
             str += "<li>A comment was added</li>";
         }
-        
+
         if (this.getEstimatedEffort() != other.getEstimatedEffort()) {
             str += "<li>The <b>estimated effort</b> was changed from "
                     + this.getEstimatedEffort() + " to "
                     + other.getEstimatedEffort() + ".</li>";
         }
-        
+
         if (this.getActualEffort() != other.getActualEffort()) {
             str += "<li>The <b>actual effort</b> was changed from "
-                    + this.getActualEffort() + " to "
-                    + other.getActualEffort() + ".</li>";
+                    + this.getActualEffort() + " to " + other.getActualEffort()
+                    + ".</li>";
         }
-        
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+
+        final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         if (!this.getDueDate().equals(other.getDueDate())) {
             str += "<li>The <b>due date</b> was changed from "
                     + dateFormat.format(this.getDueDate()) + " to "
                     + dateFormat.format(other.getDueDate()) + ".</li>";
         }
-        
+
         if (this.getIsArchived() && !other.getIsArchived()) {
             str += "<li>It was archived</li>";
         } else if (other.getIsArchived() && !this.getIsArchived()) {
             str += "<li>It was un-archived</li>";
         }
-        
+
         return str;
     }
 
@@ -212,7 +212,7 @@ public class TaskModel extends AbstractModel {
      */
     public void setTitle(String title) {
         this.title = title;
-        this.shortTitle = this.shortenString(title);
+        shortTitle = this.shortenString(title);
     }
 
     /**
@@ -235,14 +235,14 @@ public class TaskModel extends AbstractModel {
      *            The list of users assigned to this task
      */
     public void setAssignedTo(List<Integer> userList) {
-        this.assignedTo = new ArrayList<Integer>(userList);
+        assignedTo = new ArrayList<Integer>(userList);
     }
 
     /**
      * @return The list of users assigned to this task
      */
     public List<Integer> getAssignedTo() {
-        return this.assignedTo;
+        return assignedTo;
     }
 
     /**
@@ -250,7 +250,7 @@ public class TaskModel extends AbstractModel {
      *            Adds a user to the list of assigned users
      */
     public void addUserToAssignedTo(User user) {
-        this.assignedTo.add(user.getIdNum());
+        assignedTo.add(user.getIdNum());
     }
 
     /**
@@ -258,17 +258,17 @@ public class TaskModel extends AbstractModel {
      *            The user to be removed from the list of assigned users
      */
     public void removeUserFromAssignedTo(User user) {
-        this.assignedTo.remove((Object) user.getIdNum());
+        assignedTo.remove((Object) user.getIdNum());
     }
 
     /**
      * add requirement Id to the list of requirement Ids
      * 
      * @param req
-     *          the requirement that needs to be added
+     *            the requirement that needs to be added
      */
     public void setRequirement(int req) {
-        this.requirement = req;
+        requirement = req;
     }
 
     /**
@@ -276,9 +276,9 @@ public class TaskModel extends AbstractModel {
      * @return
      */
     public int getRequirement() {
-        return this.requirement;
+        return requirement;
     }
-    
+
     /**
      * @return The due date of this task
      */
@@ -301,19 +301,19 @@ public class TaskModel extends AbstractModel {
      *            The TaskModel to be copied
      */
     public void copyFrom(TaskModel other) {
-        this.title = other.getTitle();
-        this.description = other.getDescription();
+        title = other.getTitle();
+        description = other.getDescription();
         // Make sure we shallow-copy the array list, instead of pass references
         // to it.
-        this.assignedTo = new ArrayList<Integer>(other.getAssignedTo());
-        this.estimatedEffort = other.getEstimatedEffort();
-        this.dueDate = other.getDueDate();
-        this.actualEffort = other.getActualEffort();
-        this.status = other.getStatus();
-        this.activityIds = other.getActivityIds();
-        this.requirement = other.getRequirement();
-        this.labelColor=other.getLabelColor();
-        this.isArchived = other.getIsArchived();
+        assignedTo = new ArrayList<Integer>(other.getAssignedTo());
+        estimatedEffort = other.getEstimatedEffort();
+        dueDate = other.getDueDate();
+        actualEffort = other.getActualEffort();
+        status = other.getStatus();
+        activityIds = other.getActivityIds();
+        requirement = other.getRequirement();
+        labelColor = other.getLabelColor();
+        isArchived = other.getIsArchived();
     }
 
     /**
@@ -322,8 +322,8 @@ public class TaskModel extends AbstractModel {
      * @return A string in JSON representing this Task
      */
     public String toJson() {
-        String json;
-        Gson gson = new Gson();
+        final String json;
+        final Gson gson = new Gson();
         json = gson.toJson(this, TaskModel.class);
         return json;
     }
@@ -336,15 +336,17 @@ public class TaskModel extends AbstractModel {
      * @return A string in JSON representing the list of tasks
      */
     public static String toJson(TaskModel[] tlist) {
-        String json;
-        Gson gson = new Gson();
+        final String json;
+        final Gson gson = new Gson();
         json = gson.toJson(tlist, TaskModel.class);
         return json;
     }
 
     /**
      * Convert the given JSON string to a TaskModel instance
-     * @param json string to be converted
+     * 
+     * @param json
+     *            string to be converted
      * @return The JSON string representing the object
      */
     public static TaskModel fromJson(String json) {
@@ -390,7 +392,7 @@ public class TaskModel extends AbstractModel {
      * @return String representing shortened title
      */
     private String shortenString(String title) {
-        int maxLength = 12;
+        final int maxLength = 12;
         if (title.length() <= maxLength) {
             return title;
         } else {
@@ -399,22 +401,22 @@ public class TaskModel extends AbstractModel {
             return title;
         }
     }
-    
+
     /**
      * Gets a csv entry for various calendar formats.
      *
      * @return CSV entry, with a newline.
      */
     public String getCsv() {
-        SimpleDateFormat dfdate = new SimpleDateFormat("MM/dd/yy");
-        SimpleDateFormat dftime = new SimpleDateFormat("hh:mm:ss a");
-        StringBuilder tmp = new StringBuilder();
+        final SimpleDateFormat dfdate = new SimpleDateFormat("MM/dd/yy");
+        final SimpleDateFormat dftime = new SimpleDateFormat("hh:mm:ss a");
+        final StringBuilder tmp = new StringBuilder();
 
         tmp.append(title).append(',');
         tmp.append(dfdate.format(dueDate)).append(',');
         tmp.append(description);
         tmp.append('\n');
-        
+
         return tmp.toString();
     }
 
@@ -461,7 +463,7 @@ public class TaskModel extends AbstractModel {
     public void setActualEffort(int actualEffort) {
         this.actualEffort = actualEffort;
     }
-    
+
     /**
      * 
      * @return labelColor color of label
@@ -469,12 +471,14 @@ public class TaskModel extends AbstractModel {
     public Color getLabelColor() {
         return labelColor;
     }
+
     /**
      * 
-     * @param labelColor color for the label to be
+     * @param labelColor
+     *            color for the label to be
      */
     public void setLabelColor(Color labelColor) {
-        this.labelColor = labelColor; 
+        this.labelColor = labelColor;
     }
 
     /**
@@ -502,14 +506,14 @@ public class TaskModel extends AbstractModel {
      * @return activityIds linked list of activity ids
      */
     public List<Integer> getActivityIds() {
-        return new ArrayList<Integer> (activityIds);
+        return new ArrayList<Integer>(activityIds);
     }
 
     /**
      * @return shortTitle shortened title for tabs and MiniTaskView
      */
     public String getShortTitle() {
-        return this.shortenString(this.title);
+        return this.shortenString(title);
     }
 
     /**
@@ -531,14 +535,13 @@ public class TaskModel extends AbstractModel {
     public void addActivityID(int id) {
         activityIds.add(id);
     }
-    
-    
+
     /**
      * @return the date task was created
      */
     public Date getDateCreated() {
-		return dateCreated;
-	}
+        return dateCreated;
+    }
 
     /**
      * @return if task is archived
@@ -548,7 +551,8 @@ public class TaskModel extends AbstractModel {
     }
 
     /**
-     * @param isArchived boolean indicating if task is archived
+     * @param isArchived
+     *            boolean indicating if task is archived
      */
     public void setIsArchived(boolean isArchived) {
         this.isArchived = isArchived;
