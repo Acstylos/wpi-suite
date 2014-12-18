@@ -28,7 +28,6 @@ public class UsersObserver implements RequestObserver {
 
     @Override
     public void responseSuccess(IRequest iReq) {
-        System.out.println(User.fromJsonToArray(iReq.getResponse().getBody()));
         User[] coreUsers = User.fromJsonToArray(iReq.getResponse().getBody());
         presenter.addUsersToAllUserList(coreUsers);
         presenter.addUsersToView();
