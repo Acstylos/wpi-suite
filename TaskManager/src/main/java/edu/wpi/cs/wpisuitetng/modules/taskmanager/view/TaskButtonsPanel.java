@@ -20,10 +20,9 @@ import javax.swing.JLabel;
 import java.awt.Color;
 
 /**
- * This Panel is placed at the bottom of the TaskView.
- * The buttons become active based on TaskView's requirements
- * and the buttons change titles based on if you are 
- * creating the task or editing the task.
+ * This Panel is placed at the bottom of the TaskView. The buttons become active
+ * based on TaskView's requirements and the buttons change titles based on if
+ * you are creating the task or editing the task.
  */
 public class TaskButtonsPanel extends JPanel {
 
@@ -33,43 +32,47 @@ public class TaskButtonsPanel extends JPanel {
     private final JButton clearButton = new JButton();
     private final JButton deleteButton = new JButton("Delete");
     private String okString;
-    private String clearString; 
-    private String deleteString;// going to use this later for actual cancel, instead of close
-    private String cancelString; // going to use this later for actual cancel, instead of close
+    private String clearString;
+    private String deleteString;// going to use this later for actual cancel,
+                                // instead of close
+    private String cancelString; // going to use this later for actual cancel,
+                                 // instead of close
     private final JLabel errorLabel = new JLabel();
-
 
     /**
      * Create the panel.
-     * @param viewMode 
-     *        the currently enabled view
+     * 
+     * @param viewMode
+     *            the currently enabled view
      */
     public TaskButtonsPanel(ViewMode viewMode) {
-        this.setLayout(new MigLayout("", "[0%,min][0%,min][0%,min][0%,min][0%,grow]", "[]"));
+        this.setLayout(new MigLayout("",
+                "[0%,min][0%,min][0%,min][0%,min][0%,grow]", "[]"));
         this.add(okButton, "cell 0 0");
         this.add(clearButton, "cell 1 0");
         this.add(cancelButton, "cell 2 0");
         this.add(deleteButton, "cell 3 0");
         this.add(errorLabel, "cell 4 0");
         validateButtons(viewMode);
-        this.errorLabel.setIcon(new ImageIcon(TaskButtonsPanel.class.getResource("error.png")));
+        this.errorLabel.setIcon(new ImageIcon(TaskButtonsPanel.class
+                .getResource("error.png")));
         this.errorLabel.setForeground(Color.RED);
         this.errorLabel.setVisible(false);
-        
-        
+
         this.okButton.setIcon(Icons.OK);
         this.clearButton.setIcon(Icons.CLEAR);
         this.cancelButton.setIcon(Icons.CANCEL);
         this.deleteButton.setIcon(Icons.TRASH);
     }
-    
+
     /**
      * Assign a viewMode and ensure that all buttons are labeled correctly
-     * @param viewMode 
+     * 
+     * @param viewMode
      *            the currently enabled viewMode
      */
-    public void validateButtons(ViewMode viewMode){
-        if(viewMode == ViewMode.CREATING) {
+    public void validateButtons(ViewMode viewMode) {
+        if (viewMode == ViewMode.CREATING) {
             okString = "Create";
             clearString = "Clear";
             cancelString = "Cancel";
@@ -102,56 +105,63 @@ public class TaskButtonsPanel extends JPanel {
         this.cancelButton.setText(cancelString);
         this.deleteButton.setText(deleteString);
     }
-    
+
     /**
      * Add the listener for the ok Button
+     * 
      * @param listener
-     *   The action that calls the listener
+     *            The action that calls the listener
      */
-    public void addOkOnClickListener(ActionListener listener){
+    public void addOkOnClickListener(ActionListener listener) {
         this.okButton.addActionListener(listener);
     }
-    
-    /** 
+
+    /**
      * Add the listener for the cancel Button
-     * @param listener 
-     *        The action that calls the listener
+     * 
+     * @param listener
+     *            The action that calls the listener
      */
-    public void addCancelOnClickListener(ActionListener listener){
+    public void addCancelOnClickListener(ActionListener listener) {
         this.cancelButton.addActionListener(listener);
     }
-    
+
     /**
      * Add the listener for the clear button
+     * 
      * @param listener
-     *        The action that calls the listener
+     *            The action that calls the listener
      */
-    public void addClearOnClickListener(ActionListener listener){
+    public void addClearOnClickListener(ActionListener listener) {
         this.clearButton.addActionListener(listener);
     }
-    
+
     /**
      * Add the listener for the delete button
+     * 
      * @param listener
-     *   The action that calls the listener
+     *            The action that calls the listener
      */
-    public void addDeleteOnClickListener(ActionListener listener){
+    public void addDeleteOnClickListener(ActionListener listener) {
         this.deleteButton.addActionListener(listener);
     }
-    
+
     /**
      * Set an error to display next to the buttons, to provide feedback about
      * why one or more of them is disabled.
-     * @param error String representing error
+     * 
+     * @param error
+     *            String representing error
      */
     public void setError(String error) {
         this.errorLabel.setText(error);
         this.errorLabel.setVisible(true);
         this.errorLabel.repaint();
     }
-    
+
     /**
      * Hide the error label.
+     * 
      * @see #setError(String)
      */
     public void clearError() {
@@ -161,7 +171,9 @@ public class TaskButtonsPanel extends JPanel {
 
     /**
      * sets the okButton to be enabled or disabled based on status.
-     * @param status True if the button is active, False otherwise
+     * 
+     * @param status
+     *            True if the button is active, False otherwise
      */
     public void setOkEnabledStatus(boolean status) {
         this.okButton.setEnabled(status);
@@ -169,7 +181,9 @@ public class TaskButtonsPanel extends JPanel {
 
     /**
      * sets the clearButton to be enabled or disabled based on status.
-     * @param status True if the button is active, False otherwise
+     * 
+     * @param status
+     *            True if the button is active, False otherwise
      */
     public void setClearEnabledStatus(boolean status) {
         this.clearButton.setEnabled(status);
@@ -177,7 +191,9 @@ public class TaskButtonsPanel extends JPanel {
 
     /**
      * sets the cancelButton to be enabled or disabled based on status.
-     * @param status True if the button is active, False otherwise
+     * 
+     * @param status
+     *            True if the button is active, False otherwise
      */
     public void setCancelEnabledStatus(boolean status) {
         this.cancelButton.setEnabled(status);
@@ -185,7 +201,9 @@ public class TaskButtonsPanel extends JPanel {
 
     /**
      * sets the deleteButton to be enabled or disabled based on status.
-     * @param status True if the button is active, False otherwise
+     * 
+     * @param status
+     *            True if the button is active, False otherwise
      */
     public void setDeleteEnabledStatus(boolean status) {
         this.deleteButton.setEnabled(status);

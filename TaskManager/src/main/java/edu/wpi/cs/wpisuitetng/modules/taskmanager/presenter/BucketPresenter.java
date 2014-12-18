@@ -58,8 +58,10 @@ public class BucketPresenter {
     /**
      * Constructor for a bucket presenter
      * 
-     * @param bucketId Id of the bucket associated with this presenter
-     * @param workflow Workflow that contains this bucket.
+     * @param bucketId
+     *            Id of the bucket associated with this presenter
+     * @param workflow
+     *            Workflow that contains this bucket.
      */
     public BucketPresenter(int bucketId, WorkflowPresenter workflow) {
         this.workflow = workflow;
@@ -73,7 +75,7 @@ public class BucketPresenter {
      * Requests the server for a new bucket or the bucket corresponding to the
      * current ID
      */
-    public void load() {;
+    public void load() {
         // Sends a request for the TaskViews associated with the BucketView
         final Request request = Network.getInstance().makeRequest(
                 "taskmanager/bucket", HttpMethod.GET);
@@ -97,7 +99,7 @@ public class BucketPresenter {
             miniTaskView.setModel(taskMap.get(i).getModel());
 
             taskMap.get(i).validateUpdateLabel();
-            view.addTaskToView(miniTaskView);    
+            view.addTaskToView(miniTaskView);
         }
         addMiniTaskstoView();
         view.revalidate();
@@ -117,11 +119,11 @@ public class BucketPresenter {
             public int getSourceActions(JComponent c) {
                 return MOVE;
             }
-            
+
             /**
-             * @return A transferable for the bucket presenter. Buckets can
-             * be converted into HTML tables, allowing them to be dropped into
-             * spreadsheets.
+             * @return A transferable for the bucket presenter. Buckets can be
+             *         converted into HTML tables, allowing them to be dropped
+             *         into spreadsheets.
              */
             @Override
             protected Transferable createTransferable(JComponent c) {
@@ -139,7 +141,6 @@ public class BucketPresenter {
                         return flavor == DataFlavor.fragmentHtmlFlavor;
                     }
 
-
                     /** {@inheritDoc} */
                     @Override
                     public Object getTransferData(DataFlavor flavor)
@@ -152,59 +153,63 @@ public class BucketPresenter {
                     }
                 };
             }
-            
+
             /**
              * @return true if it's a task being transfered
              */
             @Override
             public boolean canImport(TransferHandler.TransferSupport support) {
                 try {
-                    TaskPresenter taskPresenter =
-                            (TaskPresenter) support.getTransferable().getTransferData(TaskPresenter.TASK_DATA_FLAVOR);
-                    
-                    /* The task can be imported into this bucket if it's not
+                    TaskPresenter taskPresenter = (TaskPresenter) support
+                            .getTransferable().getTransferData(
+                                    TaskPresenter.TASK_DATA_FLAVOR);
+
+                    /*
+                     * The task can be imported into this bucket if it's not
                      * already in it.
                      */
                     return true;
                 } catch (UnsupportedFlavorException | IOException e) {
                     return false;
-                }                
+                }
             }
-            
+
             /**
              * Add the task to this bucket
              */
             @Override
             public boolean importData(TransferSupport support) {
                 try {
-                    TaskPresenter taskPresenter =
-                            (TaskPresenter) support.getTransferable().getTransferData(TaskPresenter.TASK_DATA_FLAVOR);
+                    TaskPresenter taskPresenter = (TaskPresenter) support
+                            .getTransferable().getTransferData(
+                                    TaskPresenter.TASK_DATA_FLAVOR);
                     boolean flag = taskPresenter.getBucket().getModel()
                             .getTitle().equals(model.getTitle());
                     Point point = MainView.getInstance().getGlassPane()
                             .getPoint();
                     point = SwingUtilities.convertPoint(MainView.getInstance()
-                            .getGlassPane(), point, BucketPresenter.this.getView());
-                    
-                    BucketPresenter.this.insertTask(taskPresenter.getModel().getId(),
-                            taskPresenter,
-                            BucketPresenter.this.getView().getInsertionIndex(point, flag));
-                    
+                            .getGlassPane(), point, BucketPresenter.this
+                            .getView());
+
+                    BucketPresenter.this.insertTask(taskPresenter.getModel()
+                            .getId(), taskPresenter, BucketPresenter.this
+                            .getView().getInsertionIndex(point, flag));
+
                     return true;
                 } catch (UnsupportedFlavorException | IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                
+
                 return false;
             }
         });
-        
-        /* Allows clicking of the bucket's title to open
-         * the change view. Which will allow users to change the
-         * title of the bucket.
+
+        /*
+         * Allows clicking of the bucket's title to open the change view. Which
+         * will allow users to change the title of the bucket.
          */
-        view.addChangeBucketNameListener(new MouseAdapter(){
+        view.addChangeBucketNameListener(new MouseAdapter() {
 
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -213,17 +218,19 @@ public class BucketPresenter {
                 view.repaint();
             }
         });
-        
-        /* Allows the OK button to revert the Title Panel of the
-         * bucket. Also saves the new label to the model for load.
+
+        /*
+         * Allows the OK button to revert the Title Panel of the bucket. Also
+         * saves the new label to the model for load.
          */
-        view.addOkButtonListener(new ActionListener(){
+        view.addOkButtonListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 String title = view.getChangeTextField().getText();
-                if(title.trim().equals("")){
-                    view.getBucketNameLabel().setText(view.getChangeTextField().getPrompt());
+                if (title.trim().equals("")) {
+                    view.getBucketNameLabel().setText(
+                            view.getChangeTextField().getPrompt());
                 } else {
                     view.getBucketNameLabel().setText(title.trim());
                     model.setTitle(title.trim());
@@ -235,11 +242,11 @@ public class BucketPresenter {
                 view.repaint();
             }
         });
-        
-        /* Allows the Cancel button to revert the Title Panel of the
-         * bucket. 
+
+        /*
+         * Allows the Cancel button to revert the Title Panel of the bucket.
          */
-        view.addCancelButtonListener(new ActionListener(){
+        view.addCancelButtonListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -249,10 +256,10 @@ public class BucketPresenter {
             }
         });
     }
-    
+
     /**
-     * @return A representation of the key information in this bucket as an
-     * HTML table
+     * @return A representation of the key information in this bucket as an HTML
+     *         table
      */
     protected String toHtml() {
         String str = "<table>";
@@ -293,28 +300,28 @@ public class BucketPresenter {
         // taskPresenter.createInDatabase();
         TaskModel taskModel = taskPresenter.getModel();
         TaskView taskView = taskPresenter.getView();
-        MainView.getInstance().addTab(taskModel.getShortTitle(), Icons.TASKEDIT, taskView);
+        MainView.getInstance().addTab(taskModel.getShortTitle(),
+                Icons.TASKEDIT, taskView);
         int tabCount = MainView.getInstance().getTabCount();
         taskView.setIndex(tabCount - 1);
         MainView.getInstance().setSelectedIndex(tabCount - 1);
     }
 
-
     /**
-     * Remove a task ID from the list of taskIDs in the model, update the
-     * view to not have that task, and update the database to remove the task
-     * from this bucket
+     * Remove a task ID from the list of taskIDs in the model, update the view
+     * to not have that task, and update the database to remove the task from
+     * this bucket
      * 
      * @param rmid
      *            ID of the existing task to be removed
      */
     public void removeTask(int rmid) {
         model.removeTaskId(rmid);
-        
+
         view.setModel(model);
         view.revalidate();
         view.repaint();
-        
+
         taskMap.remove(rmid);
         updateInDatabase();
     }
@@ -335,22 +342,22 @@ public class BucketPresenter {
         if (!taskMap.containsKey(id)) {
             taskMap.put(id, taskPresenter);
         }
-        
+
         taskPresenter.getModel().setStatus(this.getModel().getId());
         taskPresenter.updateView();
-        
+
         /* Immediately add the view for instant feedback to the user */
         if (taskPresenter.getMiniView() != null) {
             this.view.addTaskToView(taskPresenter.getMiniView());
         }
-        
+
         view.setModel(model);
         view.revalidate();
         view.repaint();
-        
+
         updateInDatabase();
     }
-    
+
     /**
      * Adds a task ID to the list of taskIDs in the bucket model. Sends an async
      * update to the database.
@@ -371,19 +378,19 @@ public class BucketPresenter {
         if (!taskMap.containsKey(id)) {
             taskMap.put(id, taskPresenter);
         }
-        
+
         taskPresenter.getModel().setStatus(this.getModel().getId());
         taskPresenter.updateView();
-        
+
         /* Immediately add the view for instant feedback to the user */
         if (taskPresenter.getMiniView() != null) {
             this.view.addTaskToView(taskPresenter.getMiniView());
         }
-        
+
         view.setModel(model);
         view.revalidate();
         view.repaint();
-        
+
         updateInDatabase();
         taskPresenter.dragDropHistory(before, after);
         taskPresenter.getView().getCommentView().revalidateHistoryPanel();
@@ -462,11 +469,11 @@ public class BucketPresenter {
     public BucketModel getModel() {
         return model;
     }
-    
+
     /**
      * @return The workflow that contains this bucket
      */
-    public WorkflowPresenter getWorkflow(){
+    public WorkflowPresenter getWorkflow() {
         return workflow;
     }
 
@@ -497,23 +504,24 @@ public class BucketPresenter {
     public void addMiniTaskstoView() {
         List<Integer> taskIds = model.getTaskIds();
         this.view.resetTaskList();
-        
+
         for (int i : taskIds) {
             MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
             if (taskFilter.matches(taskMap.get(i))) {
-                
+
                 view.addTaskToView(miniTaskView);
-            
+
             }
         }
         view.revalidate();
         view.repaint();
     }
 
-    /*
+    /**
      * removes task from bucketView, presenter, and model
      * 
-     * @param task presenter of task to be moved
+     * @param task
+     *            presenter of task to be moved
      */
 
     public void removeTaskView(TaskPresenter taskPresenter) {
@@ -526,33 +534,41 @@ public class BucketPresenter {
         request.send();
         updateInDatabase();
     }
-    
+
     /*
-     * The ideas for the following functions comes from reading code and using implementations found at 
-     * https://github.com/dcpounds/wpi-suite/tree/dev-gradle/TaskManager/src/main/java/edu/wpi/cs/wpisuitetng/modules/taskmanager/controller/stage
-     * Team 4 of year B2014's implementation 
+     * The ideas for the following functions comes from reading code and using
+     * implementations found at
+     * https://github.com/dcpounds/wpi-suite/tree/dev-gradle
+     * /TaskManager/src/main
+     * /java/edu/wpi/cs/wpisuitetng/modules/taskmanager/controller/stage Team 4
+     * of year B2014's implementation
      */
-    
+
     /**
      * Saves the 4 preset stages. Should only happen if db is empty.
      */
-    public static final void saveBaseBuckets(){
+    public static final void saveBaseBuckets() {
         BucketModel newBucket = new BucketModel(1, "New");
         BucketModel scheduledBucket = new BucketModel(2, "Scheduled");
         BucketModel inProgressBucket = new BucketModel(3, "In Progress");
         BucketModel completedBucket = new BucketModel(4, "Completed");
-        
+
         try {
-            sendBaseBucketRequest(new BucketPresenter(1, MainView.getInstance().getWorkflowPresenter()), newBucket);
+            sendBaseBucketRequest(new BucketPresenter(1, MainView.getInstance()
+                    .getWorkflowPresenter()), newBucket);
             Thread.sleep(1000);
-            sendBaseBucketRequest(new BucketPresenter(2, MainView.getInstance().getWorkflowPresenter()), scheduledBucket);
+            sendBaseBucketRequest(new BucketPresenter(2, MainView.getInstance()
+                    .getWorkflowPresenter()), scheduledBucket);
             Thread.sleep(1000);
-            sendBaseBucketRequest(new BucketPresenter(3, MainView.getInstance().getWorkflowPresenter()), inProgressBucket);
+            sendBaseBucketRequest(new BucketPresenter(3, MainView.getInstance()
+                    .getWorkflowPresenter()), inProgressBucket);
             Thread.sleep(1000);
-            sendBaseBucketRequest(new BucketPresenter(4, MainView.getInstance().getWorkflowPresenter()), completedBucket);
+            sendBaseBucketRequest(new BucketPresenter(4, MainView.getInstance()
+                    .getWorkflowPresenter()), completedBucket);
             Thread.sleep(1000);
         } catch (InterruptedException e) {
-            System.err.println("Sleep Exception: " + e.getStackTrace().toString());
+            System.err.println("Sleep Exception: "
+                    + e.getStackTrace().toString());
         }
 
     }
@@ -563,8 +579,8 @@ public class BucketPresenter {
      * @param taskFilter
      *            the new Filter to be used by the bucket presenter
      */
-    public static void setTaskFilter(Filter taskFilter) {
-        taskFilter = taskFilter;
+    public static void setTaskFilter(Filter setTaskFilter) {
+        taskFilter = setTaskFilter;
     }
 
     /**
@@ -575,13 +591,17 @@ public class BucketPresenter {
     public static Filter getTaskFilter() {
         return taskFilter;
     }
-    
+
     /**
      * Adds a bucket model to the DB.
-     * @param bucket Bucket to add to the DB
+     * 
+     * @param bucket
+     *            Bucket to add to the DB
      */
-    private static final void sendBaseBucketRequest(BucketPresenter presenter, BucketModel bucket){
-        final Request request = Network.getInstance().makeRequest("taskmanager/bucket", HttpMethod.PUT);
+    private static final void sendBaseBucketRequest(BucketPresenter presenter,
+            BucketModel bucket) {
+        final Request request = Network.getInstance().makeRequest(
+                "taskmanager/bucket", HttpMethod.PUT);
         request.setBody(bucket.toJson());
         request.addObserver(new BucketObserver(presenter, HttpMethod.PUT));
         request.send();
@@ -595,22 +615,22 @@ public class BucketPresenter {
     public String getCsv() {
         String t = new String();
         for (TaskPresenter i : taskMap.values()) {
-            if (taskFilter == null)
+            if (taskFilter == null) {
                 t = t + i.getModel().getCsv();
-            else
-                if (taskFilter.matches(i))
-                    t = t + i.getModel().getCsv();
+            } else if (taskFilter.matches(i)) {
+                t = t + i.getModel().getCsv();
+            }
         }
         return t;
     }
 
-    
     /**
      * Create a new bucket in the database. Initializes an async network request
      * with an observer.
      */
     public void createInDatabase() {
-        Request request = Network.getInstance().makeRequest("taskmanager/bucket", HttpMethod.PUT);
+        Request request = Network.getInstance().makeRequest(
+                "taskmanager/bucket", HttpMethod.PUT);
         request.setBody(this.model.toJson());
         request.addObserver(new BucketObserver(this, HttpMethod.PUT));
         request.send();

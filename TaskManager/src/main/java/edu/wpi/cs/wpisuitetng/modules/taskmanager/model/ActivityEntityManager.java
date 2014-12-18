@@ -201,8 +201,7 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
         System.out.println("Delete Activity ID: " + id);
         if (db.delete(getEntity(s, id)[0]) != null) {
             return true;
-        }
-        else {
+        } else {
             throw new WPISuiteException("Problem Deleting Activity");
         }
     }
@@ -218,12 +217,10 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
      */
     @Override
     public void deleteAll(Session s) throws WPISuiteException {
-        // ensureRole(s, Role.ADMIN);
         System.out.println("Delet All Activities");
         if (db.deleteAll(new ActivityModel(), s.getProject()) != null) {
             return;
-        }
-        else {
+        } else {
             throw new WPISuiteException("Problem Deleting Activities.");
         }
     }

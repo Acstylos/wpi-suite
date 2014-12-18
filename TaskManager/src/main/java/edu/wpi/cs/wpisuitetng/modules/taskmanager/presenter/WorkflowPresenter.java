@@ -43,7 +43,7 @@ public class WorkflowPresenter {
      * Constructor does nothing for now
      *
      * @param workflowId
-     *            the id of the workflow 
+     *            the id of the workflow
      */
     public WorkflowPresenter(int workflowId) {
         this.model = new WorkflowModel();
@@ -56,16 +56,17 @@ public class WorkflowPresenter {
     /**
      * Returns the name of the bucket with the given ID
      * 
-     * @param id of the bucket
+     * @param id
+     *            of the bucket
      * @return name of the bucket
      */
-    public String idToBucketName(int id){
+    public String idToBucketName(int id) {
         return this.bucketPresenters.get(id).getModel().getTitle();
     }
-    
+
     /**
-     * Request the server for a new workflow or the workflow corresponding to the
-     * current ID
+     * Request the server for a new workflow or the workflow corresponding to
+     * the current ID
      */
     public void load() {
         // Sends a request for the TaskViews associated with the BucketView
@@ -77,9 +78,11 @@ public class WorkflowPresenter {
 
     /**
      * Initializes the workflow and stores it to the DB.
-     * @param presenter Presenter to associate the workflow with.
+     * 
+     * @param presenter
+     *            Presenter to associate the workflow with.
      */
-    public void initWorkflow(WorkflowPresenter presenter){
+    public void initWorkflow(WorkflowPresenter presenter) {
         saveBaseWorkflow(presenter);
         BucketPresenter.saveBaseBuckets();
         writeModelToView();
@@ -87,9 +90,11 @@ public class WorkflowPresenter {
 
     /**
      * Adds in a default workflow with id=1 to the DB
-     * @param presenter Presenter to associate the workflow with.
+     * 
+     * @param presenter
+     *            Presenter to associate the workflow with.
      */
-    private void saveBaseWorkflow(WorkflowPresenter presenter){
+    private void saveBaseWorkflow(WorkflowPresenter presenter) {
         WorkflowModel workflow = new WorkflowModel(1, "Workflow");
         ArrayList<Integer> baseBucketList = new ArrayList<Integer>();
         baseBucketList.add(1);
@@ -98,7 +103,8 @@ public class WorkflowPresenter {
         baseBucketList.add(4);
         workflow.setBucketIds(baseBucketList);
         presenter.setModel(workflow);
-        final Request request = Network.getInstance().makeRequest("taskmanager/workflow", HttpMethod.PUT);
+        final Request request = Network.getInstance().makeRequest(
+                "taskmanager/workflow", HttpMethod.PUT);
         request.setBody(workflow.toJson());
         request.addObserver(new WorkflowObserver(presenter, HttpMethod.PUT));
         request.send();
@@ -182,9 +188,10 @@ public class WorkflowPresenter {
     }
 
     /**
-     * @param model The model this workflow presenter represents.
+     * @param model
+     *            The model this workflow presenter represents.
      */
-    public void setModel(WorkflowModel model){
+    public void setModel(WorkflowModel model) {
         this.model = model;
     }
 
@@ -203,10 +210,11 @@ public class WorkflowPresenter {
     }
 
     /**
-     * @param id ID of bucket to return
+     * @param id
+     *            ID of bucket to return
      * @return a bucket with the corresponding ID
      */
-    public BucketPresenter getBucketPresenterById(int id){
+    public BucketPresenter getBucketPresenterById(int id) {
         return bucketPresenters.get(id);
     }
 
@@ -221,13 +229,16 @@ public class WorkflowPresenter {
      *            The id of the bucket task moved from
      */
     public void moveTask(int taskId, int toId, int fromId) {
-        bucketPresenters.get(toId).addTask(taskId, bucketPresenters.get(fromId).getTask(taskId));
+        bucketPresenters.get(toId).addTask(taskId,
+                bucketPresenters.get(fromId).getTask(taskId));
         bucketPresenters.get(fromId).removeTask(taskId);
     }
 
     /**
      * get the bucket id from the hashmap
-     * @param id the id of the bucket to be retrieved
+     * 
+     * @param id
+     *            the id of the bucket to be retrieved
      * @return the bucket model from the hashmap
      */
     public BucketPresenter getBucket(int id) {
@@ -244,29 +255,34 @@ public class WorkflowPresenter {
         for (BucketPresenter i : bucketPresenters.values()) {
             t = t + i.getCsv();
         }
-       return t;
+        return t;
     }
-    
-    /*
-     * Adds a bucket ID to the list of bucketIDs in the workflow model. Sends an async
-     * update to the database.
+
+    /**
+     * Adds a bucket ID to the list of bucketIDs in the workflow model. Sends an
+     * async update to the database.
      * 
-     * @param id ID of the existing bucket.
-     * @param bucket bucketPresenter associated with the task
+     * @param id
+     *            ID of the existing bucket.
+     * @param bucket
+     *            bucketPresenter associated with the task
      */
-    public void addBucket(int id, BucketPresenter bucket){
+    public void addBucket(int id, BucketPresenter bucket) {
         model.addBucketId(id);
         if (!bucketPresenters.containsKey(id)) {
             bucketPresenters.put(id, bucket);
-        }        
+        }
         saveModel();
     }
-    
+
     /**
-     * Removes a bucket from the presenters list, model list, view, and the database.
-     * @param id Id of the bucket to remove.
+     * Removes a bucket from the presenters list, model list, view, and the
+     * database.
+     * 
+     * @param id
+     *            Id of the bucket to remove.
      */
-    public void removeBucket(int id){
+    public void removeBucket(int id) {
         bucketPresenters.remove(id);
         model.deleteBucketId(id);
         saveModel();
@@ -277,51 +293,52 @@ public class WorkflowPresenter {
     /**
      * @return The ManageWorkflowPanel for this workflow.
      */
-    public ManageBucketsPanel getManageWorkflowView(){
+    public ManageBucketsPanel getManageWorkflowView() {
         return this.manageView;
     }
 
     /**
      * Updates the manageWorkflowView to reflect the buckets in the workflow.
      */
-    public void updateManageWorkflowView(){
+    public void updateManageWorkflowView() {
         List<String> bucketNamesList = new ArrayList<String>();
-        for(int id : model.getBucketIds()){
+        for (int id : model.getBucketIds()) {
             bucketNamesList.add(bucketPresenters.get(id).getModel().getTitle());
         }
         String[] bucketNamesArray = new String[bucketNamesList.size()];
         bucketNamesArray = bucketNamesList.toArray(bucketNamesArray);
         manageView.addBucketNameArrayToList(bucketNamesArray);
     }
-    
+
     /**
-     * Adds all buckets in the bucketPresenters map to the view.
-     * Takes into account the order mapping from mapPositionToId
+     * Adds all buckets in the bucketPresenters map to the view. Takes into
+     * account the order mapping from mapPositionToId
      */
-    public void addAllBucketsToView(){
+    public void addAllBucketsToView() {
         this.view.removeAll();
         this.view.addSpacers();
-        for(int id : model.getBucketIds()){
+        for (int id : model.getBucketIds()) {
             BucketView bucketView = bucketPresenters.get(id).getView();
             view.addBucketToView(bucketView);
         }
     }
-    
+
     /**
      * @return The index for which bucket is designated for new tasks.
      */
-    public int getDefaultBucketIndex(){
+    public int getDefaultBucketIndex() {
         return model.getDefaultBucketIndex();
     }
 
     /**
      * Registers all listeners for all views related to workflow.
      */
-    public void registerCallbacks(){
+    public void registerCallbacks() {
         /*
-         * Adds a close button to the managerView, so that you can close the tab.
+         * Adds a close button to the managerView, so that you can close the
+         * tab.
          */
-        this.manageView.addCloseButtonListener(new ActionListener(){
+        this.manageView.addCloseButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int index = MainView.getInstance().indexOfComponent(manageView);
@@ -332,64 +349,73 @@ public class WorkflowPresenter {
         });
 
         /*
-         * Creates a new bucket in the DB, and adds it to the workflowView. 
+         * Creates a new bucket in the DB, and adds it to the workflowView.
          */
-        this.manageView.addAddBucketButtonListener(new ActionListener(){
+        this.manageView.addAddBucketButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                BucketPresenter bucketPresenter = new BucketPresenter(0, MainView.getInstance().getWorkflowPresenter());
-                bucketPresenter.getModel().setTitle(manageView.getNewBucketTitle());
+                BucketPresenter bucketPresenter = new BucketPresenter(0,
+                        MainView.getInstance().getWorkflowPresenter());
+                bucketPresenter.getModel().setTitle(
+                        manageView.getNewBucketTitle());
                 bucketPresenter.createInDatabase();
                 view.addBucketToView(bucketPresenter.getView());
                 manageView.clearAddBucketField();
                 try {
-                    Thread.sleep(500); // needed to make sure the ManageWorkflowPanel reflects changes in time.
+                    Thread.sleep(500); // needed to make sure the
+                                       // ManageWorkflowPanel reflects changes
+                                       // in time.
                     updateManageWorkflowView();
                 } catch (InterruptedException e1) {
-                    System.err.println("addBucketButton: sleeping for 500 ms failed: " + e1.getStackTrace());
+                    System.err
+                            .println("addBucketButton: sleeping for 500 ms failed: "
+                                    + e1.getStackTrace());
                 }
             }
 
         });
 
         /*
-         * Deletes a bucket in the DB, and resets the workflow view.
-         * ONLY DELETES IF THERE ARE NO TASKS AND IT IS NOT THE LAST BUCKET IN ON THE SCREEN
+         * Deletes a bucket in the DB, and resets the workflow view. ONLY
+         * DELETES IF THERE ARE NO TASKS AND IT IS NOT THE LAST BUCKET IN ON THE
+         * SCREEN
          */
-        this.manageView.addDeleteBucketButtonListener(new ActionListener(){
+        this.manageView.addDeleteBucketButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int currentIndex = manageView.getBucketListIndex();
-                int id = model.getBucketIds().get(currentIndex); //getBucketIdFromList(mapPositionToId);
-                if(bucketPresenters.size() > 1){
-                    if(bucketPresenters.get(id).getModel().getTaskIds().isEmpty()){
+                int id = model.getBucketIds().get(currentIndex); // getBucketIdFromList(mapPositionToId);
+                if (bucketPresenters.size() > 1) {
+                    if (bucketPresenters.get(id).getModel().getTaskIds()
+                            .isEmpty()) {
                         removeBucket(id);
                         updateManageWorkflowView();
-                        if(currentIndex < model.getBucketIds().size()){
+                        if (currentIndex < model.getBucketIds().size()) {
                             manageView.setSelectedBucket(currentIndex);
                         } else {
-                            manageView.setSelectedBucket(currentIndex-1);
+                            manageView.setSelectedBucket(currentIndex - 1);
                         }
                     }
                 }
             }
 
         });
-        
+
         /*
-         * Moves buckets left in the workflow view. Up == left in the workflow view.
-         * Moves buckets up in the ManageWorkflow List.
+         * Moves buckets left in the workflow view. Up == left in the workflow
+         * view. Moves buckets up in the ManageWorkflow List.
          */
-        this.manageView.addMoveBucketUpButtonListener(new ActionListener(){
+        this.manageView.addMoveBucketUpButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int currentIndex = manageView.getBucketListIndex();
                 int currentId = model.getBucketIds().get(currentIndex);
-                if(currentIndex > 0){ // if current index is 0, we can't move it more left.
-                    int  leftId = model.getBucketIds().get(currentIndex-1);
+                if (currentIndex > 0) { // if current index is 0, we can't move
+                                        // it more left.
+                    int leftId = model.getBucketIds().get(currentIndex - 1);
                     model.swapBucketIds(currentId, leftId);
                     updateManageWorkflowView();
-                    manageView.setSelectedBucket(currentIndex-1);
+                    manageView.setSelectedBucket(currentIndex - 1);
                     addAllBucketsToView();
                     saveModel();
                 }
@@ -397,29 +423,35 @@ public class WorkflowPresenter {
         });
 
         /*
-         * Moves buckets right in the workflow view. Down == right in the workflow view.
-         * Moves buckets down in the ManageWorkflow List.
+         * Moves buckets right in the workflow view. Down == right in the
+         * workflow view. Moves buckets down in the ManageWorkflow List.
          */
-        this.manageView.addMoveBucketDownButtonListener(new ActionListener(){
+        this.manageView.addMoveBucketDownButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int currentIndex = manageView.getBucketListIndex();
                 int currentId = model.getBucketIds().get(currentIndex);
-                if(currentIndex < model.getBucketIds().size()){ // if current index is > total indexes, we can't move it more right.
-                    int  leftId = model.getBucketIds().get(currentIndex+1);
+                if (currentIndex < model.getBucketIds().size()) { // if current
+                                                                  // index is >
+                                                                  // total
+                                                                  // indexes, we
+                                                                  // can't move
+                                                                  // it more
+                                                                  // right.
+                    int leftId = model.getBucketIds().get(currentIndex + 1);
                     model.swapBucketIds(currentId, leftId);
                     updateManageWorkflowView();
-                    manageView.setSelectedBucket(currentIndex+1);
+                    manageView.setSelectedBucket(currentIndex + 1);
                     addAllBucketsToView();
                     saveModel();
                 }
             }
         });
-        
+
         /*
          * Sets an index to be the default bucket for new tasks.
          */
-        this.manageView.addSetInitBucketButtonListener(new ActionListener(){
+        this.manageView.addSetInitBucketButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int currentIndex = manageView.getBucketListIndex();

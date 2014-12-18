@@ -80,7 +80,8 @@ public class ActivityObserver implements RequestObserver {
      * Takes an action if the response results in an error. Specifically,
      * outputs that the request failed.
      * 
-     * @param iReq Request to the server
+     * @param iReq
+     *            Request to the server
      * @see edu.wpi.cs.wpisuitetng.network.RequestObserver#responseError(edu.wpi.cs.wpisuitetng.network.models.IRequest)
      */
     public void responseError(IRequest iReq) {

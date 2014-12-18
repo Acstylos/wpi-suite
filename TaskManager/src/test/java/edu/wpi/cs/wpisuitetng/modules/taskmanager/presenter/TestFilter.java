@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2014 -- WPI Suite
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import static org.junit.Assert.*;
@@ -55,20 +64,21 @@ public class TestFilter {
         }
     }
 
-    public final void testMatchesMultiple(){
+    public final void testMatchesMultiple() {
         Filter test = new Filter();
-        TaskModel task1 = new TaskModel(1, "sample forget", "short description", 50,
-                new Date(2014, 12, 18), 1);
-        task1.setLabelColor(new Color (0,0,0));
+        TaskModel task1 = new TaskModel(1, "sample forget",
+                "short description", 50, new Date(2014, 12, 18), 1);
+        task1.setLabelColor(new Color(0, 0, 0));
         TaskModel task2 = new TaskModel(1, "brush teeth",
                 "dont forget to floss", 1, new Date(2014, 12, 01), 1);
-        task2.setLabelColor(new Color (0,1,0));
+        task2.setLabelColor(new Color(0, 1, 0));
         test.setFilterText("forget");
-        test.setFilterColor(new Color (0,0,0));
+        test.setFilterColor(new Color(0, 0, 0));
         assertTrue(test.matches(new TaskPresenter(task1)));
         assertFalse(test.matches(new TaskPresenter(task2)));
 
     }
+
     @Test
     public final void testMatchesText() {
         Filter test = new Filter();

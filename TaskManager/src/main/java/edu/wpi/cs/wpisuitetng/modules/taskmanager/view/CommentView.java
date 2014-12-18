@@ -10,7 +10,7 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.Color;
-import java.awt.Container;
+
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
@@ -25,7 +25,7 @@ import org.jdesktop.swingx.JXTextArea;
 
 import net.miginfocom.swing.MigLayout;
 
-/*
+/**
  * Part of Task editor containing comments and history
  */
 public class CommentView extends JTabbedPane {
@@ -39,14 +39,16 @@ public class CommentView extends JTabbedPane {
     private JScrollPane commentScroll = new JScrollPane();
     private JPanel postedCommentPanel = new JPanel();
     private JScrollPane editCommentScroll = new JScrollPane();
-    private JXTextArea commentText = new JXTextArea("",
-            Color.GRAY);
+    private JXTextArea commentText = new JXTextArea("", Color.GRAY);
     private JButton postCommentButton = new JButton("Post");
     private JButton clearCommentButton = new JButton("Clear");
 
     /**
      * Constructor sets up Comments and History
-     * @param currentView the currentView of the Task. Either Editing, Creating, or Deleting.
+     * 
+     * @param currentView
+     *            the currentView of the Task. Either Editing, Creating, or
+     *            Deleting.
      */
     public CommentView(ViewMode currentView) {
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -70,7 +72,7 @@ public class CommentView extends JTabbedPane {
         this.commentText.setLineWrap(true);
 
         this.historyPanel.add(historyScroll, "cell 0 0,grow");
-        
+
         // Set scrollpane viewports
         this.commentScroll.setViewportView(postedCommentPanel);
         this.editCommentScroll.setViewportView(commentText);
@@ -81,30 +83,32 @@ public class CommentView extends JTabbedPane {
         this.clearCommentButton.setIcon(Icons.CLEAR);
         this.setupListeners();
     }
-    
+
     /**
-     * If the current ViewMode is CREATING,
-     * then we disable the post and clear comment buttons, and replace the background text for JTextBox.
-     * Otherwise, We enable the buttons
-     * @param currentView the current ViewMode
+     * If the current ViewMode is CREATING, then we disable the post and clear
+     * comment buttons, and replace the background text for JTextBox. Otherwise,
+     * We enable the buttons
+     * 
+     * @param currentView
+     *            the current ViewMode
      */
-    public void toggleTextField(ViewMode currentView){
-        if(currentView!=null){
-            if(currentView.equals(ViewMode.CREATING)){
+    public void toggleTextField(ViewMode currentView) {
+        if (currentView != null) {
+            if (currentView.equals(ViewMode.CREATING)) {
                 this.commentText.setEditable(false);
-                this.commentText.setPrompt("Comments unavailable until task created.");
+                this.commentText
+                        .setPrompt("Comments unavailable until task created.");
                 this.commentText.setPromptForeground(Color.GRAY);
                 this.postCommentButton.setEnabled(false);
                 this.clearCommentButton.setEnabled(false);
-            }
-            else if(currentView.equals(ViewMode.ARCHIVING)){
+            } else if (currentView.equals(ViewMode.ARCHIVING)) {
                 this.commentText.setEditable(false);
-                this.commentText.setPrompt("Comments unavailable because task is Archived.");
+                this.commentText
+                        .setPrompt("Comments unavailable because task is Archived.");
                 this.commentText.setPromptForeground(Color.GRAY);
                 this.postCommentButton.setEnabled(false);
                 this.clearCommentButton.setEnabled(false);
-            }
-            else{
+            } else {
                 this.commentText.setEditable(true);
                 this.commentText.setPrompt("Write a comment...");
                 this.commentText.setPromptForeground(Color.GRAY);
@@ -113,7 +117,7 @@ public class CommentView extends JTabbedPane {
             }
         }
     }
-    
+
     /**
      * Enable or disable the post and reset buttons depending of if there's
      * something entered in the comment box.
@@ -195,7 +199,9 @@ public class CommentView extends JTabbedPane {
 
     /**
      * Adds ActionListener to post comment button
-     * @param listener triggers post
+     * 
+     * @param listener
+     *            triggers post
      */
     public void addOnPostListener(ActionListener listener) {
         this.postCommentButton.addActionListener(listener);
@@ -211,10 +217,11 @@ public class CommentView extends JTabbedPane {
     /**
      * revalidates and repaints the history Panel
      */
-    public void revalidateHistoryPanel(){
+    public void revalidateHistoryPanel() {
         this.postedHistoryPanel.revalidate();
         this.postedHistoryPanel.repaint();
     }
+
     /**
      * Clears the posts in the view
      */
