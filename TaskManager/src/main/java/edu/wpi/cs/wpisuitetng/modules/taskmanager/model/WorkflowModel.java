@@ -24,6 +24,7 @@ import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 public class WorkflowModel extends AbstractModel {
 
     private int id;
+    private int defaultBucketIndex;
     private String title;
     private ArrayList<Integer> bucketIds;
 
@@ -44,6 +45,7 @@ public class WorkflowModel extends AbstractModel {
         this.id = ID;
         this.title = title;
         this.bucketIds = new ArrayList<>();
+        this.defaultBucketIndex = 0;
     }
 
     /**
@@ -133,6 +135,39 @@ public class WorkflowModel extends AbstractModel {
     public void setBucketIds(ArrayList<Integer> bucketIds) {
         this.bucketIds = bucketIds;
     }
+    
+    /**
+     * Adds a single ID to the bucketId list.
+     * @param id ID of the bucket to add to the list.
+     */
+    public void addBucketId(int id){
+        if(!this.bucketIds.contains(id)){
+            this.bucketIds.add(id);
+        }
+    }
+    
+    /**
+     * Deletes a single bucket from the list of buckets.
+     * @param id Id of the bucket to remove.
+     */
+    public void deleteBucketId(int id){
+        if(this.bucketIds.contains(id)){
+            this.bucketIds.remove((Object)id);
+        }
+    }
+    
+    /**
+     * Swaps two bucektId's in the BucketId's list.
+     * @param id1 The first bucketId
+     * @param id2 The second bucketId
+     */
+    public void swapBucketIds(int id1, int id2){
+        int index1 = this.bucketIds.indexOf(id1);
+        int index2 = this.bucketIds.indexOf(id2);
+        int temp = this.bucketIds.get(index1);
+        this.bucketIds.set(index1, this.bucketIds.get(index2));
+        this.bucketIds.set(index2, temp);
+    }
 
     /**
      * @return The title of the workflow
@@ -185,5 +220,20 @@ public class WorkflowModel extends AbstractModel {
         this.id = toCopyFrom.id;
         this.title = toCopyFrom.title;
         this.bucketIds = toCopyFrom.bucketIds;
+        this.defaultBucketIndex = toCopyFrom.defaultBucketIndex;
+    }
+
+    /**
+     * @return Gets the bucket which is designated for new tasks.
+     */
+    public int getDefaultBucketIndex() {
+        return defaultBucketIndex;
+    }
+
+    /**
+     * @param defaultBucketIndex The bucket that wil be designated for new tasks.
+     */
+    public void setDefaultBucketIndex(int defaultBucketIndex) {
+        this.defaultBucketIndex = defaultBucketIndex;
     }
 }

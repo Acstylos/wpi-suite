@@ -155,7 +155,7 @@ public class BucketEntityManager implements EntityManager<BucketModel> {
 		
 		// Update other clients.
 		UpdateEntityManager.registerChange(new ChangeModel(HttpMethod.POST,
-	                ChangeModel.ChangeObjectType.BUCKET, newBucketModel.getId()));
+	                ChangeModel.ChangeObjectType.BUCKET, newBucketModel.getId()), s);
 		
 		
 		return currentModel;

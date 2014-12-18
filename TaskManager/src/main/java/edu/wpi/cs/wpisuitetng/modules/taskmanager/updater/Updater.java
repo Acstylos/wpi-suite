@@ -254,7 +254,7 @@ public class Updater extends TimerTask implements RequestObserver {
         case GET:
             break; /* We don't care about reads. */
         case POST:
-            System.out.println("POST'd workflow. Updating. Bucket ID: " + id);
+            System.out.println("POST'd bucket. Updating. Bucket ID: " + id);
             this.buckets.get(id).load();
             break;
         case PUT:
@@ -283,7 +283,10 @@ public class Updater extends TimerTask implements RequestObserver {
             break; /* We don't care about reads, only writes. */
         case POST:
             System.out.println("POST'd task. Updating.");
-            this.tasks.get(id).updateFromDatabase();
+            if (this.tasks.get(id) != null)
+                this.tasks.get(id).updateFromDatabase();
+            else
+                System.out.println("Attempted to update nonexisting task. ID: " + id);
             break;
         case DELETE:
             System.out.println("DELETE'd task. Updating.");
