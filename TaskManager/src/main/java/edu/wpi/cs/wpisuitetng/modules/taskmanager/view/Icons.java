@@ -16,6 +16,7 @@ import javax.swing.ImageIcon;
  * Static instances of all of the {@link Icon}s used in the module.
  */
 public class Icons {
+    public final static Icon ADD = new ImageIcon(Icons.class.getResource("add.png"));
     public final static Icon ADD_USER = new ImageIcon(Icons.class.getResource("add-user.png"));
     public final static Icon LEFT_ARROW = new ImageIcon(Icons.class.getResource("arrow-left.png"));
     public final static Icon RIGHT_ARROW = new ImageIcon(Icons.class.getResource("arrow-right.png"));
@@ -26,10 +27,16 @@ public class Icons {
     public final static Icon COMMENTS = new ImageIcon(Icons.class.getResource("comments.png"));
     public final static Icon CREATE_TASK_LARGE = new ImageIcon(Icons.class.getResource("create-task-large.png"));
     public final static Icon CREATE_TASK = new ImageIcon(Icons.class.getResource("create-task.png"));
+    public final static Icon DELETE = new ImageIcon(Icons.class.getResource("delete.png"));
+    public final static Icon EDIT_WORKFLOW = new ImageIcon(Icons.class.getResource("edit-workflow.png"));
+    public final static Icon EDIT_WORKFLOW_LARGE = new ImageIcon(Icons.class.getResource("edit-workflow-large.png"));
     public final static Icon ERROR = new ImageIcon(Icons.class.getResource("error.png"));
     public final static Icon ERROR_LARGE = new ImageIcon(Icons.class.getResource("error-large.png"));
+    public final static Icon EXPORT_CALENDAR = new ImageIcon(Icons.class.getResource("export-calendar.png"));
     public final static Icon HIDE_ARCHIVE_LARGE = new ImageIcon(Icons.class.getResource("hide-archive-large.png"));
     public final static Icon HISTORY = new ImageIcon(Icons.class.getResource("history.png"));
+    public final static Icon MOVE_UP = new ImageIcon(Icons.class.getResource("move-up.png"));
+    public final static Icon MOVE_DOWN = new ImageIcon(Icons.class.getResource("move-down.png"));
     public final static Icon OK = new ImageIcon(Icons.class.getResource("okay.png"));
     public final static Icon REMOVE_USER = new ImageIcon(Icons.class.getResource("remove-user.png"));
     public final static Icon SHOW_ARCHIVE_LARGE = new ImageIcon(Icons.class.getResource("show-archive-large.png"));
@@ -45,4 +52,9 @@ public class Icons {
     public final static Icon TASKHALLOWEEN = new ImageIcon(Icons.class.getResource("task-due-halloween.png"));
     public final static Icon TASKDUE = new ImageIcon(Icons.class.getResource("task-overdue.png"));
     public final static Icon TASKEDIT = new ImageIcon(Icons.class.getResource("task-edit.png"));  
+    public final static Icon FILTER = new ImageIcon(Icons.class.getResource("filter.png"));
+    public final static Icon HELP = new ImageIcon(Icons.class.getResource("help.png"));
+    public final static Icon HELP_LARGE = new ImageIcon(Icons.class.getResource("help-medium.png"));
+    
+    
 }

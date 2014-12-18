@@ -64,8 +64,8 @@ public class TaskEntityManager implements EntityManager<TaskModel> {
             throw new WPISuiteException("Error saving task to database");
         }
 
-        UpdateEntityManager.registerChange(new ChangeModel(HttpMethod.PUT,
-                ChangeModel.ChangeObjectType.TASK, taskModel.getBucketId()));
+        //UpdateEntityManager.registerChange(new ChangeModel(HttpMethod.PUT,
+        //        ChangeModel.ChangeObjectType.TASK, taskModel.getBucketId()));
 
         return taskModel;
     }

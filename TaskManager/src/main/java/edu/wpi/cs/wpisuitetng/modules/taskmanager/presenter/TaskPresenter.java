@@ -11,7 +11,6 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import java.awt.Color;
 import java.awt.Dialog;
-import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -27,6 +26,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.swing.JTabbedPane;
+
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JComponent;
@@ -34,10 +38,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.TransferHandler;
 
-import javax.swing.JComboBox;
-
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Notification;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.Requirement;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.models.RequirementModel;
+import edu.wpi.cs.wpisuitetng.modules.requirementmanager.view.ViewEventController;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ColorRenderer;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.GhostGlassPane;
@@ -69,6 +75,7 @@ public class TaskPresenter {
     private ViewMode viewMode;
     private User[] allUserArray = {};
     private List<Integer> assignedUserList;
+    private Map<Integer, Requirement> reqMap = new HashMap<Integer, Requirement>();
     /** Dialog variables for use */
     private VerifyActionDialog cancelDialog = new VerifyActionDialog();
     private VerifyActionDialog undoDialog = new VerifyActionDialog();
@@ -112,16 +119,15 @@ public class TaskPresenter {
         this.viewMode = viewMode;
         this.model = new TaskModel();
         this.model.setId(id);
-        this.model.setTitle("New Task");
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         this.model.setBucketId(bucket.getModel().getId());
         this.view = new TaskView(model, viewMode, this);
         this.miniView = new MiniTaskView(model);
-        this.miniView.setCollapsedView();
-        final Request request = Network.getInstance().makeRequest("core/user",
+        final Request userRequest = Network.getInstance().makeRequest("core/user",
                 HttpMethod.GET);
-        request.addObserver(new UsersObserver(this));
-        request.send();
+        userRequest.addObserver(new UsersObserver(this));
+        userRequest.send();
+        getRequirements();
         this.activityPresenters = new ArrayList<ActivityPresenter>();
         registerCallbacks();
     }
@@ -151,16 +157,16 @@ public class TaskPresenter {
         miniView.addOnClickEditButton(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
+                getRequirements();
+                updateView();
                 MainView.getInstance().addTab(model.getShortTitle(),
                         Icons.TASKEDIT, view);// this line chooses tab title
                 if(model.getIsArchived()){
                     view.setViewMode(ViewMode.ARCHIVING);
                     view.getCommentView().toggleTextField(ViewMode.ARCHIVING);
-                    view.disableEdits();
                 }
                 else{
                     view.setViewMode(ViewMode.EDITING);
-                    view.enableEdits();
                 }
                 viewMode = view.getViewMode();
                 int tabCount = MainView.getInstance().getTabCount();
@@ -172,6 +178,25 @@ public class TaskPresenter {
                 miniView.setCollapsedView();
             }
         });
+        /*on click listener to restore or archive a task*/
+        miniView.addOnClickArchiveButton(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                if (miniView.getModel().getIsArchived()){
+                    miniView.getModel().setIsArchived(false);
+                    miniView.getArchiveButton().setText("Archive");
+                }
+                else {
+                    miniView.getModel().setIsArchived(true);
+                    miniView.getArchiveButton().setText("Restore");
+                }
+            saveView();
+            updateView();
+            MainView.getInstance().resetAllBuckets();
+            }
+        });
+        
+      
         
         /* Set a handler to move the task when it's dragged and dropped */ 
         miniView.setTransferHandler(new TransferHandler() {
@@ -189,6 +214,36 @@ public class TaskPresenter {
              */
             @Override
             public boolean canImport(TransferSupport support) {
+                return true;
+            }
+            
+            /**
+             * Add the task to this bucket
+             */
+            @Override
+            public boolean importData(TransferSupport support) {
+                try {
+                    TaskPresenter taskPresenter =
+                            (TaskPresenter) support.getTransferable().getTransferData(TaskPresenter.TASK_DATA_FLAVOR);
+                    if(taskPresenter.getModel().getId() == model.getId())
+                        return false;
+                    boolean flag = taskPresenter.getBucket().getModel()
+                            .getTitle().equals(bucket.getModel().getTitle());
+                    Point point = MainView.getInstance().getGlassPane()
+                            .getPoint();
+                    point = SwingUtilities.convertPoint(MainView.getInstance()
+                            .getGlassPane(), point, bucket.getView());
+
+                    bucket.insertTask(taskPresenter.getModel().getId(),
+                            taskPresenter,
+                            bucket.getView().getInsertionIndex(point, flag));
+
+                    return true;
+                } catch (UnsupportedFlavorException | IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                
                 return false;
             }
             
@@ -246,30 +301,28 @@ public class TaskPresenter {
         view.addOkOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                updateBeforeModel();
                 int index = MainView.getInstance().indexOfComponent(view);
                 if (viewMode == ViewMode.CREATING) {
                     // CREATING MODE
                     updateModel();
                     createInDatabase(); // is calling "PUT" in task observer
+                    addHistory("Create");
                     view.setViewMode(ViewMode.EDITING);
-                } else if(viewMode == ViewMode.ARCHIVING){
-                        model.setIsArchived(false);
-                        view.enableEdits();
                 }
-                updateBeforeModel();
                 MainView.getInstance().remove(index);
                 MainView.getInstance().setSelectedIndex(0);
                 view.setIndex(-1);
-                saveView();
-                updateView();
-                addHistory(beforeModel, model);
-                MainView.getInstance().resetAllBuckets();
+                if (viewMode == ViewMode.EDITING) {
+                    addHistory(beforeModel, model);
+                    saveView();
+                }
                 miniView.setModel(model);
                 miniView.revalidate();
                 miniView.repaint();
+                MainView.getInstance().resetAllBuckets();
             }
         });
-
         view.addCancelOnClickListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -370,13 +423,7 @@ public class TaskPresenter {
                         bucket.removeTaskView(taskPresenter);
                         
                     }
-                    else{
-                        model.setIsArchived(true);
-                        saveView();
-                        updateView();
-                        view.disableEdits();
-                        MainView.getInstance().resetAllBuckets();
-                    }
+                    
                 }
             }
         });
@@ -388,6 +435,33 @@ public class TaskPresenter {
             }
 
         });
+        
+        view.addRequirementButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                if (reqMap.get(view.getRequirementIndex()-1) != null) {
+                    JTabbedPane janeway = (JTabbedPane)MainView.getInstance().getParent().getParent();
+                    int index = janeway.indexOfTab("Requirement Manager");
+                    janeway.setSelectedIndex(index);
+                    
+                    ViewEventController.getInstance().editRequirement(reqMap.get(view.getRequirementIndex()-1));
+                }
+
+            }
+            
+        });
+    }
+    
+    /**
+     * Sends a network request to query all of the available requirements
+     */
+    public void getRequirements() {
+        final Request requirementRequest = Network.getInstance().makeRequest("requirementmanager/requirement", 
+                HttpMethod.GET);
+        requirementRequest.addObserver(new RequirementsObserver(this));
+        requirementRequest.send();
+        
+        ViewEventController.getInstance().getOverviewTable().initialize();
     }
 
     /**
@@ -444,6 +518,13 @@ public class TaskPresenter {
 
         } else if (!flag)
             flag = false;
+        if (before.getRequirement() != after.getRequirement()) {
+            if (flag)
+                summary += "\n";
+            summary += "Associated requirement was changed from "
+                    + (before.getRequirement() == 0 ? "none" : RequirementModel.getInstance().getRequirement(before.getRequirement()-1).getName()) + " to "
+                    + (after.getRequirement() == 0 ? "none" : RequirementModel.getInstance().getRequirement(after.getRequirement()-1).getName());
+        }
         if (!before.getAssignedTo().equals(after.getAssignedTo())) {
             ArrayList<Integer> beforeTemp = new ArrayList<Integer>(
                     before.getAssignedTo());
@@ -493,23 +574,14 @@ public class TaskPresenter {
     }
 
     /**
-     * returns the bucket name with the given ID hard coded at the moment.
+     * returns the bucket name with the given ID.
      * 
      * @param bucket
      *            the bucket's ID
      * @return String the name of the bucket
      */
     private String intToStatus(int bucket) {
-        if (bucket == 1) 
-            return "New";
-        else if (bucket == 2)
-            return "Selected";
-        else if (bucket == 3)
-            return "In Progress";
-        else if (bucket == 4)
-            return "Completed";
-        else
-            return "Archive";
+        return this.bucket.getWorkflow().idToBucketName(bucket);
     }
 
     /**
@@ -523,6 +595,8 @@ public class TaskPresenter {
         beforeModel.setActualEffort(model.getActualEffort());
         beforeModel.setDueDate(model.getDueDate());
         beforeModel.setStatus(model.getStatus());
+        beforeModel.setAssignedTo(new ArrayList<>(model.getAssignedTo()));
+        beforeModel.setActivityIds(new ArrayList<>(model.getActivityIds()));
         beforeModel.setLabelColor(model.getLabelColor());
     }
 
@@ -557,8 +631,8 @@ public class TaskPresenter {
     public void addHistory(TaskModel before, TaskModel after) {
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
         Calendar cal = Calendar.getInstance();
-        String user = ConfigManager.getConfig().getUserName();
-        String activity = user + " has updated tasks on "
+        String username = ConfigManager.getConfig().getUserName();
+        String activity = username + " has updated tasks on "
                 + dateFormat.format(cal.getTime()) + ":\n";
 
         activity += compareTasks(before, after);
@@ -567,6 +641,35 @@ public class TaskPresenter {
         view.getCommentView().postHistory(activityPresenter.getView());
         activityPresenter.createInDatabase();
         activityPresenters.add(activityPresenter);
+        
+        /*
+         * Send an email to any users assigned to this task (or who used to be
+         * assigned to this task) saying what just changed.
+         */
+        List<String> recipients = new ArrayList<>();
+        for (User user : this.allUserArray) {
+            if ((before.getAssignedTo().contains(user.getIdNum()) || after
+                    .getAssignedTo().contains(user.getIdNum()))
+                    && user.getEmailAddress() != null
+                    && !user.getEmailAddress().isEmpty()) {
+                if (!recipients.contains(user.getEmailAddress())) {
+                    recipients.add(user.getEmailAddress());
+                }
+            }
+        }
+
+        Notification notification = new Notification();
+        notification.setRecipients(recipients);
+        notification.setSubject(ConfigManager.getConfig().getUserName()
+                + " updated " + this.model.getTitle() + " in "
+                + ConfigManager.getConfig().getProjectName());
+        notification.setContent(before.compareToHtml(after));
+        notification.setProjectName(ConfigManager.getConfig().getProjectName());
+
+        Request request = Network.getInstance().makeRequest("Notification",
+                HttpMethod.POST);
+        request.setBody(notification.toJson());
+        request.send();
     }
 
     /**
@@ -637,10 +740,18 @@ public class TaskPresenter {
     }
 
     /**
-     * @param users User array of all users in the database
+     * @param users 
+     *          User array of all users in the database
      */
     public void addUsersToAllUserList(User[] users) {
         this.allUserArray = users;
+    }
+    
+    /**
+     * Sets the assigned user list to a new list
+     */
+    public void setAssignedUserList() {
+        this.assignedUserList = new ArrayList<Integer>();
     }
 
     /**
@@ -656,6 +767,17 @@ public class TaskPresenter {
             } else {
                 this.view.getUserListPanel().addUserToList(user, false);
             }
+        }
+    }
+    
+    /**
+     * put requirements into a hashmap, the requirement id is the key
+     * @param reqs 
+     *          Requirement array of all requirement in the database
+     */
+    public void mapReqs(Requirement[] reqs) {
+        for (int i = 0; i < reqs.length; i++) {
+            reqMap.put(reqs[i].getId(), reqs[i]);
         }
     }
 
@@ -681,6 +803,7 @@ public class TaskPresenter {
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
         model.setAssignedTo(assignedUserList);
+        model.setRequirement(view.getRequirementIndex());
         model.setLabelColor(view.getLabelColor());
     }
 
@@ -688,6 +811,7 @@ public class TaskPresenter {
      * Update the view with data from the model
      */
     public void updateView() {
+        view.setRequirement(model.getRequirement());
         view.setModel(model);
         miniView.setModel(model);
         updateCommentView();
@@ -803,6 +927,7 @@ public class TaskPresenter {
             if (t != null)
                 t.addTaskLocal(model.getId(),  this);
         }
+        this.bucket.writeModelToView();
         Updater.getInstance().registerTask(this);
         this.updateView();
     }
@@ -825,23 +950,25 @@ public class TaskPresenter {
 
     /**
      * Removes a user from the assignedTo list
-     * @param user User to remove from assignedTo
+     * @param user 
+     *          User to remove from assignedTo
      */
     public void removeUserFromAssignedTo(User user) {
         this.assignedUserList.remove((Object)user.getIdNum());
     }
 
     /**
-     * Add a user from the assignedTo list
-     * @param user User to add to assignedTo 
+     * Add a user to the assignedTo list
+     * @param user 
+     *          User to add to assignedTo 
      */
     public void addUserToAssignedTo(User user) {
         this.assignedUserList.add(user.getIdNum());
         this.view.validateFields();
     }
-
+    
     /**
-     * @return assigned users list
+     * @return A shallow copy of the temporary assigned users list, not the model's user list
      */
     public List<Integer> getAssignedUserList() {
         return this.assignedUserList;
@@ -866,6 +993,21 @@ public class TaskPresenter {
         for (User u : this.allUserArray) {
             if (u.getIdNum() == id)
                 return u.getUsername();
+        }
+        return "";
+    }
+    
+    /**
+     * returns the Name with the given ID, otherwise blank.
+     * 
+     * @param id
+     *            the user's ID
+     * @return name the Name
+     */
+    public String idToName(int id) {
+        for (User u : this.allUserArray) {
+            if (u.getIdNum() == id)
+                return u.getName();
         }
         return "";
     }
@@ -957,5 +1099,30 @@ public class TaskPresenter {
         this.model = other;
     }
     
+    /**
+     * Posts in the History Panel any task movement from Drag and Drop.
+     * 
+     * @param statusBefore
+     *            the bucketID before drag and drop.
+     * @param statusAfter
+     *            the bucketID after drag and drop
+     */
+    public void dragDropHistory(int statusBefore, int statusAfter) {
+        String activity = "";
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+        Calendar cal = Calendar.getInstance();
+        String user = ConfigManager.getConfig().getUserName();
+        activity = user + " has moved this task from "
+                + this.bucket.getWorkflow().idToBucketName(statusBefore)
+                + " to "
+                + this.bucket.getWorkflow().idToBucketName(statusAfter)
+                + " on " + dateFormat.format(cal.getTime());
+
+        ActivityPresenter activityPresenter = new ActivityPresenter(this,
+                activity, true);
+        view.getCommentView().postHistory(activityPresenter.getView());
+        activityPresenter.createInDatabase();
+        activityPresenters.add(activityPresenter);
+    }
     
 }
