@@ -908,6 +908,9 @@ public class TaskPresenter {
             p.load();
             activityPresenters.add(p);
         }
+        if(this.model.getIsArchived()){//if task is archived, will have to be removed from view
+            bucket.addMiniTaskstoView();
+        }
         this.updateView();
     }
 

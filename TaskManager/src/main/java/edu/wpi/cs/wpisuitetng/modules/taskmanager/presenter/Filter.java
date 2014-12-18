@@ -96,7 +96,7 @@ public class Filter {
     public void setIncludeArchived(boolean includeArchived) {
         this.includeArchives = includeArchived;
     }
-
+    
     /**
      * This function tests if a task should be shown in the main view after
      * being filtered.
