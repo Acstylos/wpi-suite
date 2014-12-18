@@ -227,8 +227,7 @@ public class Updater extends TimerTask implements RequestObserver {
     }
 
     /**
-     * Applies a change to a workflow. We don't currently
-     * change workflows, so this does nothing.
+     * Applies a change to a workflow.
      *
      * @param operation
      *            CRUD operation to apply.
@@ -236,13 +235,26 @@ public class Updater extends TimerTask implements RequestObserver {
      *            ID of the workflow to change.
      */
     public void changeWorkflow(HttpMethod operation, int id) {
-        /* When we need to manipulate workflows, add code here. */
+        switch (operation) {
+        case GET:
+            break; /* We don't care about reads. */
+        case POST:
+            System.out.println("POST'd workflow. Updating. Workflow ID: " + id);
+            MainView.getInstance().getWorkflowPresenter().load();
+            break;
+        case PUT:
+            System.out.println("PUT'd workflow. Reloading Workflow.");
+            MainView.getInstance().getWorkflowPresenter().load();
+            break;
+        case DELETE:
+            System.out.println("DELETE'd bucket. Uh....");
+            break;
+        }
         return;
     }
 
     /**
-     * Applies a change to a bucket. We don't currently
-     * change buckets, so this does nothing.
+     * Applies a change to a bucket.
      *
      * @param operation
      *            CRUD operation to apply.
@@ -254,13 +266,17 @@ public class Updater extends TimerTask implements RequestObserver {
         case GET:
             break; /* We don't care about reads. */
         case POST:
-            System.out.println("POST'd workflow. Updating. Bucket ID: " + id);
+            System.out.println("POST'd bucket. Updating. Bucket ID: " + id);
             this.buckets.get(id).load();
             break;
         case PUT:
-            break; /* We don't create yet. */
+            System.out.println("PUT'd bucket. Reloading Workflow.");
+            MainView.getInstance().getWorkflowPresenter().load();
+            break;
         case DELETE:
-            break; /* We don't delete yet. */
+            System.out.println("DELETE'd bucket. Reloading Workflow.");
+            MainView.getInstance().getWorkflowPresenter().load();
+            break;
         }
         return;
     }
@@ -283,7 +299,10 @@ public class Updater extends TimerTask implements RequestObserver {
             break; /* We don't care about reads, only writes. */
         case POST:
             System.out.println("POST'd task. Updating.");
-            this.tasks.get(id).updateFromDatabase();
+            if (this.tasks.get(id) != null)
+                this.tasks.get(id).updateFromDatabase();
+            else
+                System.out.println("Attempted to update nonexisting task. ID: " + id);
             break;
         case DELETE:
             System.out.println("DELETE'd task. Updating.");

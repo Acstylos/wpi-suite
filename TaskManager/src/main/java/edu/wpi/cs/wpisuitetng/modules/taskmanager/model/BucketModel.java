@@ -129,6 +129,15 @@ public class BucketModel extends AbstractModel {
     public void addTaskID(int id) {
        taskIds.add(id);
     }
+    
+    /**
+     * Add a task to the model at the index.
+     * @param index the position where the task will be added
+     * @param id ID of the task you're adding.
+     */
+    public void addTaskID(int index, int id) {
+       taskIds.add(index, id);
+    }
 
     /**
      * remove the task id from the list of taskIds
@@ -166,11 +175,11 @@ public class BucketModel extends AbstractModel {
     }
 
     /**
-     * @param newTaskIds
+     * @param list
      *            The list of task IDs to be set
      */
-    public void setTaskIds(ArrayList<Integer> newTaskIds) {
-        this.taskIds = newTaskIds;
+    public void setTaskIds(List<Integer> list) {
+        this.taskIds = list;
     }
 
     /**

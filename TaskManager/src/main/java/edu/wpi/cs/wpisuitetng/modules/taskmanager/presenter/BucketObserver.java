@@ -65,6 +65,7 @@ public class BucketObserver implements RequestObserver {
             // Parse the message
             model = BucketModel.fromJson(response.getBody());
             this.presenter.responsePut(model);
+            this.presenter.getWorkflow().addBucket(model.getId(), this.presenter);
             break;
         case DELETE:
             // Parse the message
