@@ -41,7 +41,7 @@ public class TestWorkflowModel {
     @Test
     public final void testToJson() {
         WorkflowModel test = new WorkflowModel(10, "Due Soon");
-        assertEquals("{\"id\":10,\"title\":\"Due Soon\",\"bucketIds\":[],\"permissionMap\":{}}" ,test.toJson());
+        assertEquals("{\"id\":10,\"defaultBucketIndex\":0,\"title\":\"Due Soon\",\"bucketIds\":[],\"permissionMap\":{}}" ,test.toJson());
     }
 
     @Test
