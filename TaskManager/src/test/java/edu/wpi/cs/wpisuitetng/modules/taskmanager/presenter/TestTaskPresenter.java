@@ -20,9 +20,9 @@ import org.junit.Test;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.requirementmanager.view.requirements.ViewMode;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.BucketPresenter;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.TaskPresenter;
-import edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter.WorkflowPresenter;
+
+
+
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
 
 public class TestTaskPresenter {

@@ -54,7 +54,7 @@ public class ActivityModel extends AbstractModel {
      * @param isAutogen
      *            either auto-generated or manually added
      * @param date
-     * 			  The date of activity
+     *            The date of activity
      */
     public ActivityModel(int id, User user, String activity, Date date,
             boolean isAutogen) {
@@ -73,12 +73,13 @@ public class ActivityModel extends AbstractModel {
     }
 
     /**
-     * @param isAutogen true or false if auto-generated comment
+     * @param isAutogen
+     *            true or false if auto-generated comment
      */
     public void setIsAutogen(boolean isAutogen) {
         this.isAutogen = isAutogen;
     }
-    
+
     /**
      * @return the date of the activity
      */
@@ -151,7 +152,7 @@ public class ActivityModel extends AbstractModel {
         this.activity = other.getActivity();
         this.id = other.getId();
         this.userId = other.getUser();
-        this.isAutogen = other.getIsAutogen(); 
+        this.isAutogen = other.getIsAutogen();
     }
 
     /**
@@ -185,7 +186,7 @@ public class ActivityModel extends AbstractModel {
      * Convert the given JSON string to a ActivityModel instance
      * 
      * @param json
-     * 			String to be converted
+     *            String to be converted
      * 
      * @return The JSON string representing the object
      */
@@ -199,7 +200,7 @@ public class ActivityModel extends AbstractModel {
      * array of activities
      * 
      * @param json
-     * 			String to be converted
+     *            String to be converted
      * 
      * @return ActivityModel array
      */
@@ -225,7 +226,7 @@ public class ActivityModel extends AbstractModel {
         // TODO Auto-generated method stub
         return null;
     }
-    
+
     /**
      * Checks if two models are the same
      * 
@@ -236,8 +237,6 @@ public class ActivityModel extends AbstractModel {
     public Boolean isEqual(ActivityModel that) {
         return (this.isAutogen == that.isAutogen
                 && this.activity.equals(that.activity)
-                && this.date.equals(that.date)
-                && this.id == that.id
-                && this.userId == that.userId);
+                && this.date.equals(that.date) && this.id == that.id && this.userId == that.userId);
     }
 }

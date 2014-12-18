@@ -28,12 +28,14 @@ public class WorkflowObserver implements RequestObserver {
 
     private WorkflowPresenter presenter;
     private HttpMethod method;
-    
-    /** Construct the observer
+
+    /**
+     * Construct the observer
+     * 
      * @param presenter
-     * 				The presenter that make requests
+     *            The presenter that make requests
      * @param method
-     * 				method to talk to network
+     *            method to talk to network
      */
     public WorkflowObserver(WorkflowPresenter presenter, HttpMethod method) {
         this.presenter = presenter;
@@ -48,18 +50,21 @@ public class WorkflowObserver implements RequestObserver {
     public void responseSuccess(IRequest iReq) {
         // Store the response
         final ResponseModel response = iReq.getResponse();
-        
+
         final WorkflowModel model;
-        
+
         switch (iReq.getHttpMethod()) {
         case GET:
             // Parse the message
-            WorkflowModel workflows[] = WorkflowModel.fromJSONArray(response.getBody());
-            ArrayList<WorkflowModel> workflowArrayList = new ArrayList<WorkflowModel>(Arrays.asList(workflows));
-            if(workflowArrayList.size() == 0){
+            WorkflowModel workflows[] = WorkflowModel.fromJSONArray(response
+                    .getBody());
+            ArrayList<WorkflowModel> workflowArrayList = new ArrayList<WorkflowModel>(
+                    Arrays.asList(workflows));
+            if (workflowArrayList.size() == 0) {
                 this.presenter.initWorkflow(this.presenter);
             } else {
-                System.out.println("GET Response Body: " + response.getBody().toString());
+                System.out.println("GET Response Body: "
+                        + response.getBody().toString());
                 model = WorkflowModel.fromJSONArray(response.getBody())[0];
                 this.presenter.responseGet(model);
             }

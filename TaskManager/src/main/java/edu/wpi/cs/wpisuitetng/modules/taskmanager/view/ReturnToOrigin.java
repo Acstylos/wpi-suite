@@ -18,8 +18,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 /**
- * This class returns the GhostPane back its original location
- * Adapted Code from Romain Guy
+ * This class returns the GhostPane back its original location Adapted Code from
+ * Romain Guy
  */
 public class ReturnToOrigin implements ActionListener {
     private boolean isInit;

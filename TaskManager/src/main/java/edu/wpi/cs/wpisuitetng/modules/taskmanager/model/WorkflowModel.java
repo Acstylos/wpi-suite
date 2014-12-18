@@ -101,20 +101,22 @@ public class WorkflowModel extends AbstractModel {
 
     /**
      * determines if the other object is of class WorkFlowModel
-     * @param o other object
+     * 
+     * @param o
+     *            other object
      * 
      * @see edu.wpi.cs.wpisuitetng.modules.Model#identify(java.lang.Object)
      */
     @Override
     public Boolean identify(Object o) {
-        try{
-            if(this.getClass().equals(((WorkflowModel) o).getClass()))
-                    return true;
-        }
-        catch (Exception e){
+        try {
+            if (this.getClass().equals(((WorkflowModel) o).getClass())) {
+                return true;
+            }
+        } catch (Exception e) {
             return false;
         }
-       return null;
+        return null;
     }
 
     /**
@@ -135,33 +137,40 @@ public class WorkflowModel extends AbstractModel {
     public void setBucketIds(ArrayList<Integer> bucketIds) {
         this.bucketIds = bucketIds;
     }
-    
+
     /**
      * Adds a single ID to the bucketId list.
-     * @param id ID of the bucket to add to the list.
+     * 
+     * @param id
+     *            ID of the bucket to add to the list.
      */
-    public void addBucketId(int id){
-        if(!this.bucketIds.contains(id)){
+    public void addBucketId(int id) {
+        if (!this.bucketIds.contains(id)) {
             this.bucketIds.add(id);
         }
     }
-    
+
     /**
      * Deletes a single bucket from the list of buckets.
-     * @param id Id of the bucket to remove.
+     * 
+     * @param id
+     *            Id of the bucket to remove.
      */
-    public void deleteBucketId(int id){
-        if(this.bucketIds.contains(id)){
-            this.bucketIds.remove((Object)id);
+    public void deleteBucketId(int id) {
+        if (this.bucketIds.contains(id)) {
+            this.bucketIds.remove((Object) id);
         }
     }
-    
+
     /**
      * Swaps two bucektId's in the BucketId's list.
-     * @param id1 The first bucketId
-     * @param id2 The second bucketId
+     * 
+     * @param id1
+     *            The first bucketId
+     * @param id2
+     *            The second bucketId
      */
-    public void swapBucketIds(int id1, int id2){
+    public void swapBucketIds(int id1, int id2) {
         int index1 = this.bucketIds.indexOf(id1);
         int index2 = this.bucketIds.indexOf(id2);
         int temp = this.bucketIds.get(index1);
@@ -186,8 +195,11 @@ public class WorkflowModel extends AbstractModel {
 
     /**
      * Determines if this WorkflowModel is equal to that WorkflowModel
-     * @param that the other workflowModel
-     * @return boolean, true if the id, title, and bucketIds are equal. otherwise false
+     * 
+     * @param that
+     *            the other workflowModel
+     * @return boolean, true if the id, title, and bucketIds are equal.
+     *         otherwise false
      */
     public boolean equals(WorkflowModel that) {
         return (this.id == that.id && this.title.equals(that.title) && this.bucketIds
@@ -231,7 +243,8 @@ public class WorkflowModel extends AbstractModel {
     }
 
     /**
-     * @param defaultBucketIndex The bucket that wil be designated for new tasks.
+     * @param defaultBucketIndex
+     *            The bucket that wil be designated for new tasks.
      */
     public void setDefaultBucketIndex(int defaultBucketIndex) {
         this.defaultBucketIndex = defaultBucketIndex;
