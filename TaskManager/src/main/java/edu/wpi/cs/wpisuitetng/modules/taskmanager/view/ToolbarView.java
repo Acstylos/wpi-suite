@@ -154,7 +154,7 @@ public class ToolbarView extends JPanel
         btnHelp.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    URI helpUri = new URI("http://www.scribd.com/doc/250401475/Help-PDF");
+                    URI helpUri = new URI("https://github.com/Acstylos/wpi-suite/wiki/Help-Documentation-for-WPI-Suite-Task-Manager-Module");
                     Desktop.getDesktop().browse(helpUri);
                 } catch (IOException | URISyntaxException e1) {
                     e1.printStackTrace();
