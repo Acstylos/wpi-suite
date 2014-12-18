@@ -25,7 +25,7 @@ import edu.wpi.cs.wpisuitetng.modules.taskmanager.updater.ChangeModel;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 /**
- * @author 
+ * @author thefloorisjava
  *
  */
 public class ActivityEntityManager implements EntityManager<ActivityModel> {
@@ -73,10 +73,11 @@ public class ActivityEntityManager implements EntityManager<ActivityModel> {
         }
 
         /* Register this change with the UpdateEntityManager. */
-        UpdateEntityManager
-        .registerChange(new ChangeModel(HttpMethod.PUT,
-                ChangeModel.ChangeObjectType.ACTION, activityModel
-                .getTaskId()));
+        if (!activityModel.getIsAutogen())
+            UpdateEntityManager
+            .registerChange(new ChangeModel(HttpMethod.PUT,
+                    ChangeModel.ChangeObjectType.ACTION, activityModel
+                    .getTaskId()), s);
 
         return activityModel;
     }

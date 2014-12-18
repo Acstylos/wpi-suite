@@ -54,16 +54,17 @@ public class UpdateEntityManager implements EntityManager<ChangeModel> {
      * @param change
      *            Change to add.
      */
-    public static void registerChange(ChangeModel change) {
+    public static void registerChange(ChangeModel change, Session s) {
 
         if (changes == null) {
             changes = new HashMap<>();
         }
-        for (List<ChangeModel> i : changes.values()) {
-            if (i == null) {
-                i = new ArrayList<ChangeModel>();
+        for (Session i : changes.keySet()) {
+            if (!changes.containsKey(i)) {
+                changes.put(s, new ArrayList<ChangeModel>());
             }
-            i.add(change);
+            if (i != s)
+                changes.get(i).add(change);
         }
     }
 

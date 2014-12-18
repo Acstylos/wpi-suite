@@ -64,9 +64,6 @@ public class TaskEntityManager implements EntityManager<TaskModel> {
             throw new WPISuiteException("Error saving task to database");
         }
 
-        UpdateEntityManager.registerChange(new ChangeModel(HttpMethod.PUT,
-                ChangeModel.ChangeObjectType.TASK, taskModel.getBucketId()));
-
         return taskModel;
     }
 
@@ -131,7 +128,7 @@ public class TaskEntityManager implements EntityManager<TaskModel> {
         }
 
         UpdateEntityManager.registerChange(new ChangeModel(HttpMethod.POST,
-                ChangeModel.ChangeObjectType.TASK, newTaskModel.getId()));
+                ChangeModel.ChangeObjectType.TASK, newTaskModel.getId()), s);
 
         return currentModel;
     }
@@ -150,7 +147,7 @@ public class TaskEntityManager implements EntityManager<TaskModel> {
         System.out.println("Delete Task ID: " + id);
 
         UpdateEntityManager.registerChange(new ChangeModel(HttpMethod.DELETE,
-                ChangeModel.ChangeObjectType.TASK, Integer.valueOf(id)));
+                ChangeModel.ChangeObjectType.TASK, Integer.valueOf(id)), s);
 
         // TODO Auto-generated method stub
         return (db.delete(getEntity(s, id)[0]) != null) ? true : false;

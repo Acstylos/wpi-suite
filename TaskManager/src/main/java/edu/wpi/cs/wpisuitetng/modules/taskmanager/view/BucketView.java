@@ -11,7 +11,10 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +23,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+import javax.swing.TransferHandler;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
@@ -84,6 +89,16 @@ public class BucketView extends JPanel
         this.taskScrollPane.setViewportView(taskViewHolderPanel);   
         
         this.setModel(model);
+        
+        MouseAdapter dragAdapter = new MouseAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                TransferHandler handler = getTransferHandler();
+                handler.exportAsDrag(BucketView.this, e, TransferHandler.MOVE);
+            }
+        };
+        
+        this.addMouseMotionListener(dragAdapter);
     }
 
     /**
@@ -108,10 +123,37 @@ public class BucketView extends JPanel
     public void addTaskToView(MiniTaskView task){
         this.taskViews.add(task);
         this.taskViewHolderPanel.add(task, "dock north");
-        
         Dimension maxView = new Dimension((int) this.getPreferredSize().getWidth()-32, (int) this.getMaximumSize().getHeight());
         task.setMaximumSize(maxView);//prevent horizontal scroll
         task.getTaskNameLabel().setMaximumSize(maxView);
+    }
+
+    /**
+     * Finds the index of where the task should be dropped in the bucket
+     * 
+     * @param point
+     *            the location of the dragged task
+     * @param flag
+     *            true or false if the task was dragged from within the bucket
+     *            or different bucket
+     * @return the index relating to its position in the bucket
+     */
+    public int getInsertionIndex(Point point, boolean flag) {
+        for (MiniTaskView miniTaskView : this.taskViews) {
+            Point center = new Point(0, miniTaskView.getY() + miniTaskView.getHeight() / 2);
+            center = SwingUtilities.convertPoint(this.taskViewHolderPanel, center, this);
+
+            if (point.y < center.y) {
+                return this.model.getTaskIds().indexOf(miniTaskView.getModel().getId());
+            }
+        }
+
+        if(this.taskViews.size() == 0)
+            return this.taskViews.size();
+        else if (flag)
+            return this.taskViews.size()-1;
+        else
+            return this.taskViews.size();
     }
 
     /**
@@ -119,6 +161,7 @@ public class BucketView extends JPanel
      */
     public void resetTaskList(){
         this.taskViewHolderPanel.removeAll();
+        this.taskViews.clear();
     }
 
 
@@ -186,7 +229,7 @@ public class BucketView extends JPanel
     /**
      * @return The task name label, so that it can be edited
      */
-    public JLabel getTaskNameLabel(){
+    public JLabel getBucketNameLabel(){
         return this.titleLabel;
     }
     

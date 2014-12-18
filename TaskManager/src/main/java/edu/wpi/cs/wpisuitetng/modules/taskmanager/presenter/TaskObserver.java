@@ -7,10 +7,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  ******************************************************************************/
+
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
+import edu.wpi.cs.wpisuitetng.network.Network;
+import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 import edu.wpi.cs.wpisuitetng.network.models.IRequest;
 
 /**
@@ -33,9 +37,12 @@ public class TaskObserver implements RequestObserver {
     }
 
     /**
-     * {@inheritDoc}
+     * Parse the TaskViews from the response received by the network
+     *
+     * @param iReq
+     *            IRequest Request to the server
+     * @see edu.wpi.cs.wpisuitetng.network.RequestObserver#responseSuccess(IRequest)
      */
-    @Override
     public void responseSuccess(IRequest iReq) {
         System.out
         .println("Received response: " + iReq.getResponse().getBody());
@@ -62,8 +69,6 @@ public class TaskObserver implements RequestObserver {
              * returns the task stored in the database and PUT returns the same
              * task but with a new ID assigned.
              */
-            this.presenter.addHistory("Create");
-
             this.presenter.setModel(model);
 
             /*
@@ -83,19 +88,34 @@ public class TaskObserver implements RequestObserver {
     }
 
     /**
-     * {@inheritDoc}
+     * Takes an action if the response results in an error. Specifically,
+     * outputs that the request failed.
+     * 
+     * @param iReq Request to the server
+     * @see edu.wpi.cs.wpisuitetng.network.RequestObserver#responseError(edu.wpi.cs.wpisuitetng.network.models.IRequest)
      */
-    @Override
     public void responseError(IRequest iReq) {
         System.err.println(iReq.getResponse());
+
     }
 
     /**
-     * {@inheritDoc}
+     * Takes an action if the response fails. Specifically, outputs that the
+     * request failed.
+     *
+     * @param iReq
+     * @param exception
+     * @see edu.wpi.cs.wpisuitetng.network.RequestObserver#fail(IRequest,
+     *      Exception)
      */
-    @Override
     public void fail(IRequest iReq, Exception exception) {
         System.err.println("Task request failed");
+        System.err.println("Attempting again.");
+        Request request = Network.getInstance().makeRequest(
+                "taskmanager/task/" + this.presenter.getModel().getId(), HttpMethod.GET);
+        request.addObserver(this);
+        request.setConnectTimeout(10000);
+        request.send();
         exception.printStackTrace();
     }
 }

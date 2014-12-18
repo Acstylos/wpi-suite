@@ -20,6 +20,9 @@ import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.updater.ChangeModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.updater.UpdateEntityManager;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 /**
  * This is the entity manager for {@link WorkflowModel}s in the Workflow Manager
@@ -60,6 +63,9 @@ public class WorkflowEntityManager implements EntityManager<WorkflowModel> {
         if (!db.save(workflowModel, s.getProject())) {
             throw new WPISuiteException("Error saving Workflow to database");
         }
+        
+        UpdateEntityManager.registerChange(new ChangeModel(HttpMethod.PUT,
+                ChangeModel.ChangeObjectType.WORKFLOW, workflowModel.getId()), s);
 
         return workflowModel;
     }
@@ -125,6 +131,9 @@ public class WorkflowEntityManager implements EntityManager<WorkflowModel> {
 			throw new WPISuiteException();
 		} 
         
+        UpdateEntityManager.registerChange(new ChangeModel(HttpMethod.POST,
+                ChangeModel.ChangeObjectType.WORKFLOW, newWorkflowModel.getId()), s);
+        
         return currentModel;
     }
 
@@ -140,6 +149,8 @@ public class WorkflowEntityManager implements EntityManager<WorkflowModel> {
     @Override
     public boolean deleteEntity(Session s, String id) throws WPISuiteException {
         System.out.println("Delete Workflow ID: " + id);
+        UpdateEntityManager.registerChange(new ChangeModel(HttpMethod.DELETE,
+                ChangeModel.ChangeObjectType.WORKFLOW, Integer.valueOf(id)), s);
         return (db.delete(getEntity(s, id)[0]) != null) ? true : false;
     }
 
