@@ -128,6 +128,10 @@ public class BucketPresenter {
                 taskMap.put(i, new TaskPresenter(i, this, ViewMode.EDITING));
             }
             taskMap.get(i).updateFromDatabase();
+
+            MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
+            miniTaskView.setModel(taskMap.get(i).getModel());
+            view.addTaskToView(miniTaskView);
         }
         addMiniTaskstoView();
         view.revalidate();
