@@ -33,7 +33,7 @@ public class MainView extends JTabbedPane {
     private JScrollPane workflowScrollPane = new JScrollPane();
     private WorkflowPresenter workflowPresenter = new WorkflowPresenter(0);
     private static final MainView mainView = new MainView();
-    private boolean showArchived = false;
+    private boolean showArchived = true;
     private MainView() {
         this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         this.addTab("Workflow", Icons.WORKFLOW, workflowScrollPane);

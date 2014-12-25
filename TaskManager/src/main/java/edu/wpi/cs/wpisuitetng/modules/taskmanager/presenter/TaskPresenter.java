@@ -98,6 +98,9 @@ public class TaskPresenter {
     /**
      * Register callbacks with the local view.
      */
+    /**
+     * 
+     */
     private void registerCallbacks() {
         // onclick listener to open new tabs when minitaskview is clicked
         miniView.addOnClickOpenTabView(new MouseAdapter() {
@@ -122,7 +125,7 @@ public class TaskPresenter {
         });
 
         /**
-         * Open the task tab when a task is clicked
+         * Add listeners to the taskView okButton
          * 
          * @param ActionListener
          */
@@ -147,6 +150,7 @@ public class TaskPresenter {
                         model.setIsArchived(false);
                         saveView();
                         updateView();
+                        view.enableEdits();
 
                     }
                     else{
@@ -288,6 +292,7 @@ public class TaskPresenter {
                         model.setIsArchived(true);
                         saveView();
                         updateView();
+                        view.disableEdits();
                         MainView.getInstance().resetAllBuckets();
                     }
                 }
@@ -489,10 +494,12 @@ public class TaskPresenter {
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         addUsersToView();
         if(model.getIsArchived()){
-            miniView.setBackground(Color.CYAN);
+            miniView.setBackground(new Color(210,210,210));
+            miniView.getTaskNameLabel().setForeground(new Color(240,240,240));
         }
         else{
             miniView.setBackground(new Color(240,240,240));
+            miniView.getTaskNameLabel().setForeground(Color.BLACK);
         }
         view.revalidate();
         view.repaint();

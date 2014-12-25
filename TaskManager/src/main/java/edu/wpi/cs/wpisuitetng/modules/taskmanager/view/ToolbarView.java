@@ -57,24 +57,28 @@ public class ToolbarView extends JPanel
                 MainView.getInstance().setSelectedIndex(tabCount-1);
             }
         });
-        add(createNewTaskButton, "cell 0 0");
+        add(createNewTaskButton, "cell 0 0,growy");
         
-        JToggleButton tglbtnArchive = new JToggleButton("Show Archive");
-        add(tglbtnArchive, "cell 1 0");
-        
+        JToggleButton tglbtnArchive = new JToggleButton("<html>Hide<br/>Archived</html>");
+        tglbtnArchive.setIcon(Icons.HIDE_ARCHIVE_LARGE);
+        tglbtnArchive.setSelected(true);
+        add(tglbtnArchive, "cell 0 0,growy");
+
         tglbtnArchive.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                if(tglbtnArchive.getText() == "Show Archive"){//show everything
-                    tglbtnArchive.setText("Hide Archive");
+                if (tglbtnArchive.isSelected()) {
+                    /* Show all tasks */
+                    tglbtnArchive.setText("<html>Hide<br/>Archived</html>");
                     MainView.getInstance().setShowArchived(true);
-                }
-                
-                else{//only shows non-archived
-                    tglbtnArchive.setText("Show Archive");
+                    tglbtnArchive.setIcon(Icons.HIDE_ARCHIVE_LARGE);
+                } else {
+                    /* Only show non-archived tasks */
+                    tglbtnArchive.setText("<html>Show<br/>Archived</html>");
                     MainView.getInstance().setShowArchived(false);
+                    tglbtnArchive.setIcon(Icons.SHOW_ARCHIVE_LARGE);
                 }
+
                 MainView.getInstance().resetAllBuckets();
-            
             }
         });
     }
