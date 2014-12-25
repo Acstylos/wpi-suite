@@ -32,6 +32,7 @@ public class MainView extends JTabbedPane {
     private static final long serialVersionUID = -346061317795260862L;
     private JScrollPane workflowScrollPane = new JScrollPane();
     private WorkflowPresenter workflowPresenter = new WorkflowPresenter(0);
+    private GhostGlassPane glassPane = new GhostGlassPane();
     private static final MainView mainView = new MainView();
     private boolean showArchived = true;
     private MainView() {
@@ -44,6 +45,22 @@ public class MainView extends JTabbedPane {
         addPropertyChangeListener("ancestor", (PropertyChangeEvent evt) -> {
             this.workflowPresenter.load();
         });
+    }
+    
+    /**
+     * Sets the glass pane when the main view is added to the window
+     */
+    public void addNotify() {
+        super.addNotify();
+        
+        this.getRootPane().setGlassPane(this.glassPane);
+    }
+    
+    /**
+     * @return The glass pane for this component
+     */
+    public GhostGlassPane getGlassPane() {
+        return this.glassPane;
     }
 
     public static MainView getInstance() {
