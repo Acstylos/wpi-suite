@@ -55,7 +55,6 @@ public class TaskObserver implements RequestObserver {
             break;
 
         case PUT:
-            System.out.println("Successfully saved new tasks!");
             model = TaskModel.fromJson(json);
             /*
              * Set the new model and update the view to reflect the new data.
