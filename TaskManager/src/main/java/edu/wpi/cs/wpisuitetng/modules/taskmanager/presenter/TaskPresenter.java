@@ -572,12 +572,10 @@ public class TaskPresenter {
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         addUsersToView();
         if(model.getIsArchived()){
-            miniView.setBackground(new Color(210,210,210));
-            miniView.getTaskNameLabel().setForeground(new Color(240,240,240));
+            miniView.setColorArchived();
         }
         else{
-            miniView.setBackground(new Color(240,240,240));
-            miniView.getTaskNameLabel().setForeground(Color.BLACK);
+            miniView.setColorNotArchived();
         }
         view.revalidate();
         view.repaint();

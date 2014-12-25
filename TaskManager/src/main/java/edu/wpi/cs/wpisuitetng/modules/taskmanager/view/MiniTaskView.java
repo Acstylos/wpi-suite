@@ -10,6 +10,7 @@
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.dnd.DragSource;
 import java.awt.dnd.DragSourceAdapter;
@@ -225,6 +226,31 @@ public class MiniTaskView extends JPanel {
         return this.model;
     }
 
+    /**
+     * Set the colors of the view to reflect that the task is archived
+     */
+    public void setColorArchived() {
+        Color archived = new Color(210,210,210);
+        setBackground(archived);
+        this.taskNameLabel.setForeground(Color.DARK_GRAY);
+        this.userPanel.setBackground(archived);     
+        this.userScrollPane.setBackground(archived);
+    }
+    
+    /**
+     * set the colors of the view to reflect that the task is not archived
+     */
+    public void setColorNotArchived() {
+        Color original = new Color(240,240,240);
+        setBackground(original);
+        this.taskNameLabel.setForeground(Color.BLACK);
+        this.userPanel.setBackground(original);
+        this.userScrollPane.setBackground(original);
+    }
+
+    /**
+     * @return the label containing the task name within this view
+     */
     public JLabel getTaskNameLabel() {
         return this.taskNameLabel;
     }
