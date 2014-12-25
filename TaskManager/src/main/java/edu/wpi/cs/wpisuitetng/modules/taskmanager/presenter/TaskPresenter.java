@@ -138,9 +138,11 @@ public class TaskPresenter {
                         Icons.TASK, view);// this line chooses tab title
                 if(model.getIsArchived()){
                     view.setViewMode(ViewMode.ARCHIVING);
+                    view.disableEdits();
                 }
                 else{
                     view.setViewMode(ViewMode.EDITING);
+                    view.enableEdits();
                 }
                 viewMode = view.getViewMode();
                 int tabCount = MainView.getInstance().getTabCount();
