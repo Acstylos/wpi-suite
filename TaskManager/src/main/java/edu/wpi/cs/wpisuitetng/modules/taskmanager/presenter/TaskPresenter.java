@@ -203,7 +203,7 @@ public class TaskPresenter {
                 GhostGlassPane glassPane = MainView.getInstance().getGlassPane();
                 if(action != NONE) {
                     glassPane.setVisible(false);
-                    miniView.setHighlighted(false);
+                    miniView.setColorHighlighted(false);
                 } else {
                     Point end = new Point(source.getLocationOnScreen());
                     SwingUtilities.convertPointFromScreen(end, glassPane);
@@ -213,7 +213,7 @@ public class TaskPresenter {
                     
                     Timer backTimer = new Timer(1000 / 60, new ReturnToOrigin(glassPane, glassPane.getPoint(), end));
                     backTimer.start();
-                    miniView.setHighlighted(false);
+                    miniView.setColorHighlighted(false);
                 }
             }
         });
@@ -571,13 +571,11 @@ public class TaskPresenter {
         updateCommentView();
         assignedUserList = new ArrayList<Integer>(model.getAssignedTo());
         addUsersToView();
-        if(model.getIsArchived()){
-            miniView.setBackground(new Color(210,210,210));
-            miniView.getTaskNameLabel().setForeground(new Color(240,240,240));
+        if(model.getIsArchived()) {
+            miniView.setColorArchived(true);
         }
-        else{
-            miniView.setBackground(new Color(240,240,240));
-            miniView.getTaskNameLabel().setForeground(Color.BLACK);
+        else {
+            miniView.setColorArchived(false);
         }
         view.revalidate();
         view.repaint();
