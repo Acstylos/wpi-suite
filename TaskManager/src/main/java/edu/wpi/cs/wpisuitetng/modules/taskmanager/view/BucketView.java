@@ -97,9 +97,7 @@ public class BucketView extends JPanel
      */
     public void addTaskToView(MiniTaskView task){
         this.taskViews.add(task);
-        this.taskViewHolderPanel.add(task, "north");
-        Component spacerStrut = Box.createVerticalStrut(5);
-        this.taskViewHolderPanel.add(spacerStrut, "north");
+        this.taskViewHolderPanel.add(task, "dock north");
     }
 
     

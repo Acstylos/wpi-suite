@@ -12,22 +12,34 @@ package edu.wpi.cs.wpisuitetng.modules.taskmanager.presenter;
 import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import javax.swing.TransferHandler;
+
 import edu.wpi.cs.wpisuitetng.janeway.config.ConfigManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.GhostGlassPane;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.Icons;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MainView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.MiniTaskView;
+import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ReturnToOrigin;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.TaskView;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.VerifyActionDialog;
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.view.ViewMode;
@@ -62,6 +74,8 @@ public class TaskPresenter {
 
     private BucketPresenter bucket;
     private List<ActivityPresenter> activityPresenters;
+    
+    public final static DataFlavor TASK_DATA_FLAVOR = new DataFlavor(TaskPresenter.class, "Task");
 
     /**
      * Constructs a TaskPresenter for the given model. Constructs the view
@@ -141,6 +155,71 @@ public class TaskPresenter {
                 miniView.setCollapsedView();
             }
         });
+        
+        /* Set a handler to move the task when it's dragged and dropped */ 
+        miniView.setTransferHandler(new TransferHandler() {
+            /**
+             * @return {@link TransferHandler#MOVE}. At least for now, tasks
+             * are moved, never copied or linked.
+             */
+            @Override
+            public int getSourceActions(JComponent c) {
+                return MOVE;
+            }
+            
+            /**
+             * @return false always, since things can't be dragged onto tasks
+             */
+            @Override
+            public boolean canImport(TransferSupport support) {
+                return false;
+            }
+            
+            /**
+             * @return A transferable for the task presenter
+             */
+            @Override
+            protected Transferable createTransferable(JComponent c) {
+                return new Transferable() {
+                    @Override
+                    public DataFlavor[] getTransferDataFlavors() {
+                        return new DataFlavor[] { TASK_DATA_FLAVOR };
+                    }
+
+                    @Override
+                    public boolean isDataFlavorSupported(DataFlavor flavor) {
+                        return flavor == TASK_DATA_FLAVOR;
+                    }
+
+                    @Override
+                    public Object getTransferData(DataFlavor flavor)
+                            throws UnsupportedFlavorException, IOException {
+                        return TaskPresenter.this;
+                    }
+                };
+            }
+            
+            /**
+             * Hide the ghosted image after the drag and drop is done
+             */
+            protected void exportDone(JComponent source, Transferable data, int action) {
+                GhostGlassPane glassPane = MainView.getInstance().getGlassPane();
+                if(action != NONE) {
+                    glassPane.setVisible(false);
+                    miniView.setHighlighted(false);
+                } else {
+                    Point end = new Point(source.getLocationOnScreen());
+                    SwingUtilities.convertPointFromScreen(end, glassPane);
+                    
+                    end.x += glassPane.getStartDragPoint().x;
+                    end.y += glassPane.getStartDragPoint().y;
+                    
+                    Timer backTimer = new Timer(1000 / 60, new ReturnToOrigin(glassPane, glassPane.getPoint(), end));
+                    backTimer.start();
+                    miniView.setHighlighted(false);
+                }
+            }
+        });
 
         /**
          * Add listeners to the taskView okButton
@@ -162,6 +241,7 @@ public class TaskPresenter {
                 }
 
                 else {
+
      if(viewMode == ViewMode.ARCHIVING){
                         int newIndex = MainView.getInstance().indexOfComponent(view);
                         MainView.getInstance().remove(newIndex);
@@ -200,6 +280,13 @@ public class TaskPresenter {
                             addHistory(beforeModel, model);
                         }
                     }
+                    updateBeforeModel();
+                    saveView();
+                    updateView();
+                    MainView.getInstance().setTitleAt(index,
+                            model.getShortTitle());
+                    MainView.getInstance().setToolTipTextAt(index, model.getTitle());
+                    addHistory(beforeModel, model);
                 }
 
                 MainView.getInstance().resetAllBuckets();
@@ -502,16 +589,12 @@ public class TaskPresenter {
         model.setDescription(view.getDescriptionText());
         model.setDueDate(view.getDueDate());
         model.setAssignedTo(assignedUserList);
-        model.setStatus(view.getStatus());
-        this.bucket = MainView.getInstance().getWorkflowPresenter()
-                .getBucket(view.getStatus());
     }
 
     /**
      * Update the view with data from the model
      */
     public void updateView() {
-        view.setStatus(model.getStatus());
         view.setModel(model);
         miniView.setModel(model);
         updateCommentView();
@@ -614,6 +697,14 @@ public class TaskPresenter {
      */
     public BucketPresenter getBucket() {
         return bucket;
+    }
+
+    /**
+     * @param bucket the bucket that this task is in
+     */
+    public void setBucket(BucketPresenter bucket) {
+        this.bucket = bucket;
+        this.model.setStatus(bucket.getModel().getId());
     }
 
     /**

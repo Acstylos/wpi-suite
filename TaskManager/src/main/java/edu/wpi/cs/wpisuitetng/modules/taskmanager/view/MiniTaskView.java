@@ -9,9 +9,15 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
-import java.awt.Component;
-import java.awt.event.ActionListener;
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.dnd.DragSource;
+import java.awt.dnd.DragSourceAdapter;
+import java.awt.dnd.DragSourceDragEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -19,15 +25,21 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
+import javax.swing.UIManager;
 
 import net.miginfocom.swing.MigLayout;
+
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+
 import edu.wpi.cs.wpisuitetng.modules.taskmanager.model.TaskModel;
-import java.awt.Dimension;
 
 /**
  * This is the TaskView shown inside of buckets to reduce the amount of clutter on screen
@@ -48,19 +60,72 @@ public class MiniTaskView extends JPanel {
      * @param model The model to render in this view
      */
     public MiniTaskView(TaskModel model) {
-        setMaximumSize(new Dimension(60, 60));
-        this.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setLayout(new MigLayout("fill"));
+        taskNameLabel.setBorder(new EmptyBorder(8, 8, 8, 8));
+        this.add(taskNameLabel, "dock west");
+        this.taskNameLabel.setIcon(Icons.TASK);
+        this.setBorder(new CompoundBorder(new LineBorder(Color.LIGHT_GRAY, 1), new EmptyBorder(0, 8, 0, 8)));
         this.setExpandedView();
         this.setModel(model);
+
+        /* Initialize a drag when the user clicks on the MiniTaskView */
+        MouseAdapter dragAdapter = new MouseAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                TransferHandler handler = getTransferHandler();
+                handler.exportAsDrag(MiniTaskView.this, e, TransferHandler.MOVE);
+                
+                /* Set a ghost version of this view to show under the cursor as
+                 * it gets dragged.
+                 */
+                GhostGlassPane glassPane = (GhostGlassPane) getRootPane().getGlassPane();
+                glassPane.setGhostComponent(MiniTaskView.this, e.getPoint());
+                glassPane.setVisible(true);
+                
+                /* Highlight the MiniTaskView to show which task is being dragged */
+                setHighlighted(true);
+                
+                setCollapsedView();
+            }
+        };
         
+        DragSource.getDefaultDragSource().addDragSourceMotionListener(new DragSourceAdapter() {
+            @Override
+            public void dragMouseMoved(DragSourceDragEvent dsde) {
+                /* Move the ghost image when the mouse is moved during a drag */
+                GhostGlassPane glassPane = MainView.getInstance().getGlassPane();
+                Point point = dsde.getLocation();
+                SwingUtilities.convertPointFromScreen(point, glassPane);
+                glassPane.setPoint(point);
+                glassPane.repaint();
+            }
+        });
+
+        this.addMouseMotionListener(dragAdapter);
+        this.taskNameLabel.addMouseMotionListener(dragAdapter);
+
         this.userPanel.setLayout(new MigLayout("fill"));
         this.userScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         this.userScrollPane.setBorder(new TitledBorder(null, "Assigned Users", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         this.userScrollPane.setViewportView(userPanel);
-        
-        this.setTransferHandler(new TransferHandler("model"));
+        this.setHighlighted(false);
     }
-    
+
+    /**
+     * @param If <code>true</code>, this view will be rendered with a different
+     * color scheme to suggest that it's selected.  This is used to indicate
+     * that a task is being dragged and dropped.
+     */
+    public void setHighlighted(boolean highlighted) {
+        if (highlighted) {
+            this.setBackground(UIManager.getColor("textHighlight"));
+            this.taskNameLabel.setForeground(UIManager.getColor("textHighlight").darker());
+        } else {
+            this.setBackground(UIManager.getColor("menu"));
+            this.taskNameLabel.setForeground(UIManager.getColor("textText"));
+        }
+    }
+
     /**
      * Remove all of the components in the view, then add them back in
      * with the proper layout for a collapsed view.
