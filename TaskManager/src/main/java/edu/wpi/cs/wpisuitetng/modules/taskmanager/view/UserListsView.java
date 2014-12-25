@@ -10,6 +10,8 @@
 
 package edu.wpi.cs.wpisuitetng.modules.taskmanager.view;
 
+import java.awt.Container;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -83,4 +85,17 @@ public class UserListsView extends JPanel {
         this.unassignedUsersPanel.removeAll();
     }
 
+    /**
+     * @return the assigned user panel
+     */
+    public JPanel getAssignedUserListPanel(){
+        return this.assignedUsersPanel;
+    }
+
+    /**
+     * @return the unassigned user panel
+     */
+    public JPanel getUnassignedUserListPanel() {
+        return this.unassignedUsersPanel;
+    }
 }

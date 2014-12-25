@@ -57,20 +57,20 @@ public class ToolbarView extends JPanel
                 MainView.getInstance().setSelectedIndex(tabCount-1);
             }
         });
-        add(createNewTaskButton, "cell 0 0");
+        add(createNewTaskButton, "cell 0 0,growy");
         
-        JToggleButton tglbtnArchive = new JToggleButton("Show Archive");
-        add(tglbtnArchive, "cell 1 0");
+        JToggleButton tglbtnArchive = new JToggleButton("<html>Show<br/>Archive</html>");
+        add(tglbtnArchive, "cell 0 0,growy");
         
         tglbtnArchive.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                if(tglbtnArchive.getText() == "Show Archive"){//show everything
-                    tglbtnArchive.setText("Hide Archive");
+                if(tglbtnArchive.getText() == "<html>Show<br/>Archive</html>"){//show everything
+                    tglbtnArchive.setText("<html>Hide<br/>Archive</html>");
                     MainView.getInstance().setShowArchived(true);
                 }
                 
                 else{//only shows non-archived
-                    tglbtnArchive.setText("Show Archive");
+                    tglbtnArchive.setText("<html>Show<br/>Archive</html>");
                     MainView.getInstance().setShowArchived(false);
                 }
                 MainView.getInstance().resetAllBuckets();
