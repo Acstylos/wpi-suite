@@ -44,19 +44,8 @@ public class BucketPresenter {
 
     private BucketView view;
     private BucketModel model;
-    private Map<Integer, TaskPresenter> taskMap;
+    private Map<Integer, TaskPresenter> taskMap = new HashMap<Integer, TaskPresenter>();
     private WorkflowPresenter workflow;
-
-    /**
-     * Constructs a BucketPresenter for the given model.
-     * 
-     * @param model
-     * @param workflow
-     */
-    public BucketPresenter(BucketModel model, WorkflowPresenter workflow) {
-        this.model = model;
-        this.workflow = workflow;
-    }
 
     /**
      * Constructor for a bucket presenter
@@ -67,7 +56,6 @@ public class BucketPresenter {
     public BucketPresenter(int bucketId, WorkflowPresenter workflow) {
         this.workflow = workflow;
         this.model = new BucketModel();
-        this.taskMap = new HashMap<Integer, TaskPresenter>();
         this.model.setId(bucketId);
         this.view = new BucketView(this.model);
         registerCallbacks();
@@ -127,16 +115,17 @@ public class BucketPresenter {
         }
 
         this.view.setModel(this.model);
-        List<Integer> taskIds = model.getTaskIds();
-        for (int i : taskIds) {
+        for (int i : model.getTaskIds()) {
             if (!taskMap.containsKey(i)) {
                 taskMap.put(i, new TaskPresenter(i, this, ViewMode.EDITING));
             }
             taskMap.get(i).updateFromDatabase();
 
+
             MiniTaskView miniTaskView = taskMap.get(i).getMiniView();
             miniTaskView.setModel(taskMap.get(i).getModel());
             view.addTaskToView(miniTaskView);
+            this.addMiniTaskView(taskMap.get(i).getMiniView());
         }
         addMiniTaskstoView();
         view.revalidate();
@@ -206,6 +195,7 @@ public class BucketPresenter {
         taskView.setIndex(tabCount - 1);
         MainView.getInstance().setSelectedIndex(tabCount - 1);
     }
+
 
     /**
      * Remove a task ID from the list of taskIDs in the model, update the
@@ -336,7 +326,7 @@ public class BucketPresenter {
      */
     public void setModel(BucketModel model) {
         this.model = model;
-        writeModelToView();
+        this.writeModelToView();
     }
 
     /**

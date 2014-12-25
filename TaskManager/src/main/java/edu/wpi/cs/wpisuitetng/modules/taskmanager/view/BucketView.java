@@ -98,6 +98,10 @@ public class BucketView extends JPanel
     public void addTaskToView(MiniTaskView task){
         this.taskViews.add(task);
         this.taskViewHolderPanel.add(task, "dock north");
+        
+        Dimension maxView = new Dimension((int) this.getPreferredSize().getWidth()-32, (int) this.getMaximumSize().getHeight());
+        task.setMaximumSize(maxView);//prevent horizontal scroll
+        task.getTaskNameLabel().setMaximumSize(maxView);
     }
 
     

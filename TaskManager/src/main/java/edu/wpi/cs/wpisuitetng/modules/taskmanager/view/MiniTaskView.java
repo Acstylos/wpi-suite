@@ -207,6 +207,8 @@ public class MiniTaskView extends JPanel {
         if(this.model.getDueDate() != null){
             this.dueDateLabel.setText("Due : " + dateFormat.format(this.model.getDueDate()));
         }
+        this.revalidate();
+        this.repaint();
     }
 
     /**
